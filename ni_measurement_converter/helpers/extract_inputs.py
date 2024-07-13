@@ -1,5 +1,6 @@
+"""Implementation of inputs extraction."""
+
 import ast
-import pathlib
 
 
 def extract_input_details(file_path, method_name):

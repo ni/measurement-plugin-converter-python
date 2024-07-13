@@ -2,25 +2,7 @@ import ast
 from typing import Any, Iterable, List, Tuple
 
 
-def extract_type(node):
-    if isinstance(node, ast.Name):
-        return node.id
-    elif isinstance(node, ast.Subscript):
-        generic_type = extract_type(node.value)
-        if isinstance(node.slice, ast.Tuple):
-            inner_types = [extract_type(elt) for elt in node.slice.elts]
-            return inner_types
-        elif isinstance(node.slice, ast.Index):
-            slice_id = extract_type(node.slice.value)
-            return f"{generic_type}[{slice_id}]"
-        else:
-            slice_id = extract_type(node.slice)
-            return f"{generic_type}[{slice_id}]"
-    else:
-        return ""
-
-
-def get_return_details(file_path: str, method_name: str) -> Tuple[List[str], List[Any]]:
+def get_return_details(file_path: str, method_name: str) -> Tuple[List[str], Iterable[Any]]:
     with open(file_path, "r") as file:
         source_code = file.read()
 
@@ -34,10 +16,12 @@ def get_return_details(file_path: str, method_name: str) -> Tuple[List[str], Lis
         raise ValueError(f"Method '{method_name}' not found in file '{file_path}'")
 
     # Extract return type annotation from method node
-    return_type_annotation = method_node.returns
+    return_type_annotation = (method_node.returns)
 
     # Extract the return type
-    return_type = [extract_type(return_type_annotation)]
+    return_type = (extract_type(return_type_annotation),)
+
+    # return_type = ("List[float]", "List[float]")
 
     # Parse the method's source code to find variables in the return statement
     method_source = ast.get_source_segment(source_code, method_node)
@@ -65,12 +49,28 @@ def extract_list_types(node):
     else:
         return []
 
+def extract_return_type(return_type_annotations):
+    ...
 
-def flatten_list(lst):
-    flat_list = []
-    for item in lst:
-        if isinstance(item, list):
-            flat_list.extend(item)
+
+def extract_type(node):
+    if isinstance(node, ast.Name):
+        return node.id
+
+    elif isinstance(node, ast.Subscript):
+        generic_type = extract_type(node.value)
+
+        if isinstance(node.slice, ast.Tuple):
+            inner_types = [extract_type(elt) for elt in node.slice.elts]
+            return inner_types
+
+        elif isinstance(node.slice, ast.Index):
+            slice_id = extract_type(node.slice.value)
+            return f"{generic_type}[{slice_id}]"
+
         else:
-            flat_list.append(item)
-    return flat_list
+            slice_id = extract_type(node.slice)
+            return f"{generic_type}[{slice_id}]"
+
+    else:
+        return ""

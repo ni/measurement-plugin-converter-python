@@ -17,7 +17,8 @@ def replace_session_initialization(file_path, method_name, driver_names):
                     if isinstance(item.context_expr, ast.Call):
                         call = item.context_expr
                         if isinstance(call.func, ast.Attribute) and isinstance(
-                            call.func.value, ast.Name
+                            call.func.value,
+                            ast.Name,
                         ):
                             if call.func.value.id == driver_name and call.func.attr == "Session":
                                 actual_session_name = item.optional_vars.id
@@ -25,7 +26,11 @@ def replace_session_initialization(file_path, method_name, driver_names):
                                 call.func.attr = f"initialize_{driver_name}_session"
                                 call.func.value.id = "reservation"
                                 replacements.append(
-                                    (driver_name, call.keywords[0].value.s, actual_session_name)
+                                    (
+                                        driver_name,
+                                        call.keywords[0].value.s,
+                                        actual_session_name,
+                                    )
                                 )
                                 call.keywords.clear()
 

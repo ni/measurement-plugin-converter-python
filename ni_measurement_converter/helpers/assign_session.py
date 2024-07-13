@@ -1,3 +1,5 @@
+"""Implementation of session assignment."""
+
 import ast
 
 

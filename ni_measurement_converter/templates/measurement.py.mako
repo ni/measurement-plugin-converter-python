@@ -1,4 +1,4 @@
-<%page args="display_name, version, service_class, serviceconfig_file,resource_name,instrument_type,nims_instrument,input_configurations,output_configurations,input_signature,input_param_names,output_param_types,updated_file_name,method_name"/>\
+<%page args="display_name, version, service_class, serviceconfig_file, resource_name, instrument_type, nims_instrument, input_configurations, output_configurations, input_signature, input_param_names, output_param_types, updated_file_name, method_name, tuple_of_output"/>\
 \
 """A default measurement with an array in and out."""
 
@@ -7,7 +7,7 @@ import pathlib
 import sys
 from typing import List, Tuple, Iterable
 import ${instrument_type}
-from ${updated_file_name} import ${method_name}
+from .${updated_file_name} import ${method_name}
 
 import click
 import ni_measurementlink_service as nims
@@ -34,11 +34,15 @@ measurement_service = nims.MeasurementService(
     %for output_config in output_configurations:
 @measurement_service.output("${output_config['name']}", ${output_config['type']})
     %endfor
+% if not tuple_of_output:
 def measure(pin_names: Iterable[str], ${input_signature}) -> Tuple[${output_param_types}]:
     with measurement_service.context.reserve_session(pin_names) as reservation:
+        return (${method_name}(reservation, ${input_param_names}),)
+% else:
+def measure(pin_names: Iterable[str], ${input_signature}) -> ${output_param_types}:
+    with measurement_service.context.reserve_session(pin_names) as reservation:
         return ${method_name}(reservation, ${input_param_names})
-
-
+%endif
 def main() -> None:
     with measurement_service.host_service():
         input("Press enter to close the measurement service.\n")
