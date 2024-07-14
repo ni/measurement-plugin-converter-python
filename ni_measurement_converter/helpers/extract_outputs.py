@@ -19,9 +19,7 @@ def get_return_details(file_path: str, method_name: str) -> Tuple[List[str], Ite
     return_type_annotation = (method_node.returns)
 
     # Extract the return type
-    return_type = (extract_type(return_type_annotation),)
-
-    # return_type = ("List[float]", "List[float]")
+    return_type = extract_type(return_type_annotation)
 
     # Parse the method's source code to find variables in the return statement
     method_source = ast.get_source_segment(source_code, method_node)
@@ -60,8 +58,8 @@ def extract_type(node):
     elif isinstance(node, ast.Subscript):
         generic_type = extract_type(node.value)
 
-        if isinstance(node.slice, ast.Tuple):
-            inner_types = [extract_type(elt) for elt in node.slice.elts]
+        if isinstance(node.slice.value, ast.Tuple):
+            inner_types = [extract_type(elt) for elt in node.slice.value.elts]
             return inner_types
 
         elif isinstance(node.slice, ast.Index):

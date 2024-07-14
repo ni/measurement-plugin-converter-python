@@ -5,7 +5,7 @@ class UserMessages:
     """User Facing console messages."""
 
     STARTED_EXECUTION = "Starting the NI Measurement Plugin Converter..."
-    CHECK_LOG_FILE = "Please check the log file for further details."
+    CHECK_LOG_FILE = "Error occurred. Please check the log file for further details."
     LOG_FILE_LOCATION = "Log File Directory: {log_dir}"
     PROCESS_COMPLETED = "Process Completed."
     VERSION = "Package Version - {version}"
@@ -14,3 +14,4 @@ class UserMessages:
     EXTRACT_INPUTS = "Extracting inputs..."
     EXTRACT_OUTPUTS = "Extracting outputs..."
     INVALID_FILE_DIR = "Invalid measurement file directory."
+    TEMPLATE_ERROR = "An error occurred while rendering template '{template_name}'."

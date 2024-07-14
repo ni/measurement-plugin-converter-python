@@ -39,25 +39,6 @@ resource_name = ""
 actual_session_name = ""
 
 
-def __add_file_handler(output_path: str, logger: Logger) -> Tuple[Logger, str]:
-    log_folder_path = output_path
-    add_file_handler(logger=logger, log_folder_path=log_folder_path)
-    logger.debug(UserMessages.VERSION.format(version=__version__))
-
-    return logger, log_folder_path
-
-
-def __initialize_logger(name: str, folder_path: str) -> Tuple[Logger, str]:
-    logger = initialize_logger(name=name)
-
-    if folder_path:
-        logger, folder_path = __add_file_handler(output_path=folder_path, logger=logger)
-
-    add_stream_handler(logger=logger)
-
-    return logger, folder_path
-
-
 @click.command()
 @click.option("-d", "--display-name", help="Display Name", required=True)
 @click.option(
@@ -103,6 +84,11 @@ def convert_measurement(
 
         output_variable_names, output_variable_types = get_return_details(file_dir, method_name)
 
+        tuple_of_output = True
+        if isinstance(output_variable_types, str):
+            output_variable_types = (output_variable_types,)
+            tuple_of_output = False
+
         input_configurations = _extract_inputs(input_parameters)
 
         logger.info(UserMessages.EXTRACT_OUTPUTS)
@@ -114,7 +100,8 @@ def convert_measurement(
         output_param_types = _get_ouput_types(output_configurations)
 
         migrated_file_directory = os.path.join(
-            measurement_plugin_path, MIGRATED_MEASUREMENT_FILENAME
+            measurement_plugin_path,
+            MIGRATED_MEASUREMENT_FILENAME,
         )
 
         add_parameter_to_method(
@@ -152,7 +139,7 @@ def convert_measurement(
             display_name=display_name,
             version=MEASUREMENT_VERSION,
             service_class=service_class,
-            serviceconfig_file=serviceconfig_file,
+            serviceconfig_file=f"{display_name_for_filenames}.serviceconfig",
             resource_name=resource_name,
             instrument_type=instrument_type,
             nims_instrument=nims_instrument,
@@ -161,10 +148,10 @@ def convert_measurement(
             input_signature=input_signature,
             input_param_names=input_param_names,
             output_param_types=output_param_types,
-            updated_file_name=Path(MIGRATED_MEASUREMENT_FILENAME).stem,
+            updated_file_name=f"{measurement_plugin_path}.{Path(MIGRATED_MEASUREMENT_FILENAME).stem}",
             method_name=method_name,
             directory_out=measurement_plugin_path,
-            tuple_of_output=False,
+            tuple_of_output=tuple_of_output,
         )
         _create_file(
             TemplateFile.SERVICE_CONFIG_TEMPLATE,
@@ -184,14 +171,37 @@ def convert_measurement(
             directory_out=measurement_plugin_path,
         )
 
-    except (BadParameter, ClickException) as error:
-        logger.error(error.message)
+    except ClickException:
+        logger.error(UserMessages.TEMPLATE_ERROR)
 
-    except (PermissionError, OSError) as error:
+    except (PermissionError, OSError):
         logger.error(UserMessages.ACCESS_DENIED)
+
+    except Exception as error:
+        logger.debug(error)
+        logger.error(UserMessages.CHECK_LOG_FILE)
 
     finally:
         logger.info(UserMessages.PROCESS_COMPLETED)
+
+
+def __add_file_handler(output_path: str, logger: Logger) -> Tuple[Logger, str]:
+    log_folder_path = output_path
+    add_file_handler(logger=logger, log_folder_path=log_folder_path)
+    logger.debug(UserMessages.VERSION.format(version=__version__))
+
+    return logger, log_folder_path
+
+
+def __initialize_logger(name: str, folder_path: str) -> Tuple[Logger, str]:
+    logger = initialize_logger(name=name)
+
+    if folder_path:
+        logger, folder_path = __add_file_handler(output_path=folder_path, logger=logger)
+
+    add_stream_handler(logger=logger)
+
+    return logger, folder_path
 
 
 def _extract_inputs(inputs):
@@ -220,6 +230,7 @@ def _extract_outputs(output_variable_names, output_return_types):
     return output_data
 
 
+# To Enum
 def _to_nims_type(type):
     if type == "int":
         return "nims.DataType.Int32"
@@ -229,8 +240,6 @@ def _to_nims_type(type):
         return "nims.DataType.Double"
     elif type == "List[float]":
         return "nims.DataType.FloatArray1D"
-    elif type == "Tuple[]":
-        return "Tuple[List[float], List[float]]"
     else:
         raise click.BadParameter("Invalid parameter")
 
@@ -255,6 +264,7 @@ def _get_ouput_types(outputs):
     return ", ".join(parameter_types)
 
 
+# To Enum
 def _get_nims_instrument(instrument_type):
     if instrument_type == "nidcpower":
         return "nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER"
@@ -268,11 +278,9 @@ def _create_file(
     directory_out: pathlib.Path,
     **template_args: Any,
 ) -> None:
-    output_file = file_name
-
     output = _render_template(template_name, **template_args)
 
-    with open(output_file, "wb") as f:
+    with open(file_name, "wb") as f:
         f.write(output)
 
 
@@ -283,7 +291,4 @@ def _render_template(template_name: str, **template_args: Any) -> bytes:
     try:
         return template.render(**template_args)
     except Exception as e:
-        # logger.error(exceptions.text_error_template().render())
-        raise click.ClickException(
-            f'An error occurred while rendering template "{template_name}".'
-        ) from e
+        raise e

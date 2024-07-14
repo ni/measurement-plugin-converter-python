@@ -7,7 +7,7 @@ import pathlib
 import sys
 from typing import List, Tuple, Iterable
 import ${instrument_type}
-from .${updated_file_name} import ${method_name}
+from ${updated_file_name} import ${method_name}
 
 import click
 import ni_measurementlink_service as nims
@@ -39,7 +39,7 @@ def measure(pin_names: Iterable[str], ${input_signature}) -> Tuple[${output_para
     with measurement_service.context.reserve_session(pin_names) as reservation:
         return (${method_name}(reservation, ${input_param_names}),)
 % else:
-def measure(pin_names: Iterable[str], ${input_signature}) -> ${output_param_types}:
+def measure(pin_names: Iterable[str], ${input_signature}) -> Tuple[${output_param_types}]:
     with measurement_service.context.reserve_session(pin_names) as reservation:
         return ${method_name}(reservation, ${input_param_names})
 %endif
