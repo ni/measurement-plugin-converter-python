@@ -38,7 +38,7 @@ resource_name = ""
 actual_session_name = ""
 
 
-@click.command()
+@click.command(context_settings = {"help_option_names": ["-h", "--help"]})
 @click.option("-d", "--display-name", help="Display Name", required=True)
 @click.option(
     "-f",
@@ -155,7 +155,7 @@ def convert_measurement(
             input_signature=input_signature,
             input_param_names=input_param_names,
             output_param_types=output_param_types,
-            updated_file_name=f"{measurement_plugin_path}.{Path(MIGRATED_MEASUREMENT_FILENAME).stem}",
+            updated_file_name=f"{cli_args.display_name}.{Path(MIGRATED_MEASUREMENT_FILENAME).stem}",
             method_name=method_name,
             directory_out=measurement_plugin_path,
             tuple_of_output=tuple_of_output,
