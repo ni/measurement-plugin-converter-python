@@ -16,7 +16,6 @@ from ni_measurement_converter import __version__
 from ni_measurement_converter.constants import (
     MEASUREMENT_VERSION,
     MIGRATED_MEASUREMENT_FILENAME,
-    OUTPUT_DIRECTORY,
     TemplateFile,
     UserMessages,
 )
@@ -68,8 +67,14 @@ def convert_measurement(
         logger.info(UserMessages.STARTED_EXECUTION)
         cli_args = CliInputs(display_name=display_name, file_dir=file_dir, method_name=method_name)
 
-        measurement_plugin_path = os.path.join(os.path.dirname(cli_args.file_dir), OUTPUT_DIRECTORY)
+        measurement_plugin_path = os.path.normpath(
+            os.path.join(
+                os.path.dirname(cli_args.file_dir),
+                cli_args.display_name,
+            )
+        )
 
+        logger.debug(UserMessages.FILE_MIGRATED)
         shutil.copy(file_dir, os.path.join(measurement_plugin_path, MIGRATED_MEASUREMENT_FILENAME))
 
         remove_handlers(logger)
@@ -130,9 +135,11 @@ def convert_measurement(
         service_class = f"{display_name}_Python"
         display_name_for_filenames = re.sub(r"\s+", "", display_name)
         serviceconfig_file = os.path.join(
-            measurement_plugin_path, f"{display_name_for_filenames}.serviceconfig"
+            measurement_plugin_path,
+            f"{display_name_for_filenames}.serviceconfig",
         )
 
+        logger.debug(UserMessages.MEASUREMENT_FILE_CREATED)
         _create_file(
             TemplateFile.MEASUREMENT_TEMPLATE,
             os.path.join(measurement_plugin_path, TemplateFile.MEASUREMENT_FILENAME),
@@ -153,6 +160,7 @@ def convert_measurement(
             directory_out=measurement_plugin_path,
             tuple_of_output=tuple_of_output,
         )
+        logger.debug(UserMessages.SERVICE_CONFIG_CREATED)
         _create_file(
             TemplateFile.SERVICE_CONFIG_TEMPLATE,
             serviceconfig_file,
@@ -160,15 +168,20 @@ def convert_measurement(
             service_class=service_class,
             directory_out=measurement_plugin_path,
         )
+        logger.debug(UserMessages.BATCH_FILE_CREATED)
         _create_file(
             TemplateFile.BATCH_TEMPLATE,
             os.path.join(measurement_plugin_path, TemplateFile.BATCH_FILENAME),
             directory_out=measurement_plugin_path,
         )
+        logger.debug(UserMessages.HELPER_FILE_CREATED)
         _create_file(
             TemplateFile.HELPER_TEMPLATE,
             os.path.join(measurement_plugin_path, TemplateFile.HELPER_FILENAME),
             directory_out=measurement_plugin_path,
+        )
+        logger.info(
+            UserMessages.MEASUREMENT_PLUGIN_CREATED.format(file_dir=measurement_plugin_path)
         )
 
     except ClickException:

@@ -4,7 +4,7 @@ import os
 
 from pydantic import BaseModel, model_validator
 
-from ni_measurement_converter.constants import UserMessages, OUTPUT_DIRECTORY
+from ni_measurement_converter.constants import UserMessages
 
 
 class CliInputs(BaseModel):
@@ -25,7 +25,7 @@ class CliInputs(BaseModel):
             raise FileNotFoundError(UserMessages.INVALID_FILE_DIR)
 
         base_path = os.path.dirname(self.file_dir)
-        measurement_plugin = os.path.join(base_path, OUTPUT_DIRECTORY)
+        measurement_plugin = os.path.join(base_path, self.display_name)
         try:
             os.makedirs(measurement_plugin, exist_ok=True)
         except (PermissionError, OSError) as error:
