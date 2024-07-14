@@ -11,6 +11,6 @@ from ni_measurement_converter.constants.messages import UserMessages
 from ni_measurement_converter.constants.template_files import (
     MEASUREMENT_VERSION,
     MIGRATED_MEASUREMENT_FILENAME,
-    OUTPUT_DIRECTORY_NAME,
+    OUTPUT_DIRECTORY,
     TemplateFile,
 )

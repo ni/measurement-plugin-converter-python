@@ -7,6 +7,7 @@ from ni_measurement_converter.helpers.logger import (
     add_file_handler,
     add_stream_handler,
     initialize_logger,
+    remove_handlers,
 )
 from ni_measurement_converter.helpers.modify_input_args import add_parameter_to_method
 from ni_measurement_converter.helpers.modify_session_initializer import (

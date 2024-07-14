@@ -9,6 +9,8 @@ class UserMessages:
     LOG_FILE_LOCATION = "Log File Directory: {log_dir}"
     PROCESS_COMPLETED = "Process Completed."
     VERSION = "Package Version - {version}"
-    INTERACTIVE_MODE_ON = "Interactive mode enabled."
     ACCESS_DENIED = "Access is denied.\
  Please run the tool with Admin privileges or provide a different output directory."
+    EXTRACT_INPUTS = "Extracting inputs..."
+    EXTRACT_OUTPUTS = "Extracting outputs..."
+    INVALID_FILE_DIR = "Invalid measurement file directory."

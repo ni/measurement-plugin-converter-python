@@ -1,6 +1,6 @@
-"""Template File."""
+"""Output File Constants."""
 
-OUTPUT_DIRECTORY_NAME = "Measurement Plugin"
+OUTPUT_DIRECTORY = "measurement_plugin"
 MEASUREMENT_VERSION = 1.0
 
 MIGRATED_MEASUREMENT_FILENAME = "_migrated.py"

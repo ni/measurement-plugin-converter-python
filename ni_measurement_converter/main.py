@@ -10,13 +10,13 @@ from typing import Any, Tuple
 
 import click
 from click import BadParameter, ClickException
-from mako import exceptions
 from mako.template import Template
 
 from ni_measurement_converter import __version__
 from ni_measurement_converter.constants import (
     MEASUREMENT_VERSION,
     MIGRATED_MEASUREMENT_FILENAME,
+    OUTPUT_DIRECTORY,
     TemplateFile,
     UserMessages,
 )
@@ -28,8 +28,10 @@ from ni_measurement_converter.helpers import (
     get_return_details,
     initialize_logger,
     insert_session_assigning,
+    remove_handlers,
     replace_session_initialization,
 )
+from ni_measurement_converter.models import CliInputs
 
 _drivers = ["nidcpower"]
 instrument_type = ""
@@ -57,20 +59,22 @@ def __initialize_logger(name: str, folder_path: str) -> Tuple[Logger, str]:
 
 
 @click.command()
-@click.option("-d", "--display-name", help="Display Name")
+@click.option("-d", "--display-name", help="Display Name", required=True)
 @click.option(
     "-f",
-    "--file-path",
-    help="Path of the Measurement file",
+    "--file-dir",
+    help="Directory of the Measurement file",
+    required=True,
 )
 @click.option(
     "-m",
     "--method-name",
     help="Name of the Measurement method",
+    required=True,
 )
 def convert_measurement(
     display_name: str,
-    file_path: str,
+    file_dir: str,
     method_name: str,
 ) -> None:
     try:
@@ -81,27 +85,27 @@ def convert_measurement(
         )
 
         logger.info(UserMessages.STARTED_EXECUTION)
+        cli_args = CliInputs(display_name=display_name, file_dir=file_dir, method_name=method_name)
 
-        measurement_plugin_path = os.path.join(
-            os.path.dirname(file_path), f"{display_name} Measurement Plugin"
-        )
-        os.makedirs(measurement_plugin_path, exist_ok=True)
+        measurement_plugin_path = os.path.join(os.path.dirname(cli_args.file_dir), OUTPUT_DIRECTORY)
 
-        shutil.copy(file_path, os.path.join(measurement_plugin_path, MIGRATED_MEASUREMENT_FILENAME))
+        shutil.copy(file_dir, os.path.join(measurement_plugin_path, MIGRATED_MEASUREMENT_FILENAME))
+
+        remove_handlers(logger)
 
         logger, log_folder_path = __initialize_logger(
             name="debug_logger",
             folder_path=measurement_plugin_path,
         )
 
-        input_parameters = extract_input_details(file_path, method_name)
+        logger.info(UserMessages.EXTRACT_INPUTS)
+        input_parameters = extract_input_details(file_dir, method_name)
 
-        output_variable_names, output_variable_types = get_return_details(
-            file_path,
-            method_name,
-        )
+        output_variable_names, output_variable_types = get_return_details(file_dir, method_name)
 
         input_configurations = _extract_inputs(input_parameters)
+
+        logger.info(UserMessages.EXTRACT_OUTPUTS)
         output_configurations = _extract_outputs(output_variable_names, output_variable_types)
 
         input_signature = _generate_method_signature(input_configurations)
@@ -109,13 +113,17 @@ def convert_measurement(
         input_param_names = _get_input_names(input_configurations)
         output_param_types = _get_ouput_types(output_configurations)
 
+        migrated_file_directory = os.path.join(
+            measurement_plugin_path, MIGRATED_MEASUREMENT_FILENAME
+        )
+
         add_parameter_to_method(
-            os.path.join(measurement_plugin_path, MIGRATED_MEASUREMENT_FILENAME),
+            migrated_file_directory,
             method_name,
             "reservation",
         )
         session_details = replace_session_initialization(
-            os.path.join(measurement_plugin_path, MIGRATED_MEASUREMENT_FILENAME),
+            migrated_file_directory,
             method_name,
             _drivers,
         )
@@ -125,7 +133,7 @@ def convert_measurement(
             actual_session_name = actual_name
 
         insert_session_assigning(
-            os.path.join(measurement_plugin_path, MIGRATED_MEASUREMENT_FILENAME),
+            migrated_file_directory,
             method_name,
             actual_session_name + " = session_info.session",
         )
@@ -178,6 +186,9 @@ def convert_measurement(
 
     except (BadParameter, ClickException) as error:
         logger.error(error.message)
+
+    except (PermissionError, OSError) as error:
+        logger.error(UserMessages.ACCESS_DENIED)
 
     finally:
         logger.info(UserMessages.PROCESS_COMPLETED)
@@ -248,7 +259,7 @@ def _get_nims_instrument(instrument_type):
     if instrument_type == "nidcpower":
         return "nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER"
     else:
-        raise click.BadParameter(f"Invalid instrument")
+        raise click.BadParameter("Invalid instrument")
 
 
 def _create_file(
@@ -266,9 +277,9 @@ def _create_file(
 
 
 def _render_template(template_name: str, **template_args: Any) -> bytes:
-    file_path = str(pathlib.Path(__file__).parent / "templates" / template_name)
+    file_dir = str(pathlib.Path(__file__).parent / "templates" / template_name)
 
-    template = Template(filename=file_path, input_encoding="utf-8", output_encoding="utf-8")
+    template = Template(filename=file_dir, input_encoding="utf-8", output_encoding="utf-8")
     try:
         return template.render(**template_args)
     except Exception as e:
