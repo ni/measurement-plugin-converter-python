@@ -184,8 +184,11 @@ def convert_measurement(
             UserMessages.MEASUREMENT_PLUGIN_CREATED.format(file_dir=measurement_plugin_path)
         )
 
-    except ClickException:
-        logger.error(UserMessages.TEMPLATE_ERROR)
+    except ClickException as e: 
+        logger.error(e.message)
+    
+    except BadParameter as e:
+        logger.error(e.message)
 
     except (PermissionError, OSError):
         logger.error(UserMessages.ACCESS_DENIED)
@@ -236,6 +239,7 @@ def _extract_inputs(inputs):
 
 def _extract_outputs(output_variable_names, output_return_types):
     output_data = []
+
     for var_name, return_type in zip(output_variable_names, output_return_types):
         output_type = _to_nims_type(return_type)
         output_data.append({"name": var_name, "actual_type": return_type, "type": output_type})
@@ -254,7 +258,7 @@ def _to_nims_type(type):
     elif type == "List[float]":
         return "nims.DataType.FloatArray1D"
     else:
-        raise click.BadParameter("Invalid parameter")
+        raise click.BadParameter("Unsupported Data type.")
 
 
 def _generate_method_signature(inputs):

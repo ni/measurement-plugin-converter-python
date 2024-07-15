@@ -35,7 +35,7 @@ ni-python-styleguide = "^0.4.1"
 mypy = "^1.0"
 
 [tool.poetry.scripts]
-ni-measurement-converter = "ni_measurement_converter.template:convert_measurement"
+ni-measurement-converter = "ni_measurement_converter.main:convert_measurement"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

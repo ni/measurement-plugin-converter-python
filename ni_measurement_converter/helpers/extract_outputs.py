@@ -47,9 +47,6 @@ def extract_list_types(node):
     else:
         return []
 
-def extract_return_type(return_type_annotations):
-    ...
-
 
 def extract_type(node):
     if isinstance(node, ast.Name):

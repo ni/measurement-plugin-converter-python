@@ -2,14 +2,11 @@
 \
 """A default measurement with an array in and out."""
 
-import logging
 import pathlib
 import sys
 from typing import List, Tuple, Iterable
-import ${instrument_type}
 from ${updated_file_name} import ${method_name}
 
-import click
 import ni_measurementlink_service as nims
 
 script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__

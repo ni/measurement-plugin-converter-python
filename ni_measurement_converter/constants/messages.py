@@ -10,7 +10,7 @@ class UserMessages:
     PROCESS_COMPLETED = "Process Completed."
     VERSION = "Package Version - {version}"
     ACCESS_DENIED = "Access is denied.\
-Please run the tool with Admin privileges or provide a different output directory."
+ Please run the tool with Admin privileges or provide a different file directory."
     EXTRACT_INPUTS = "Extracting inputs..."
     EXTRACT_OUTPUTS = "Extracting outputs..."
     INVALID_FILE_DIR = "Invalid measurement file directory."
