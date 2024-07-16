@@ -7,7 +7,7 @@ import sys
 from logging import Logger
 from pathlib import Path
 
-from ni_measurement_converter.constants.logger import (
+from ni_measurement_plugin_converter.constants.logger import (
     LOG_DATE_FORMAT,
     LOG_FILE_COUNT_LIMIT,
     LOG_FILE_MSG_FORMAT,

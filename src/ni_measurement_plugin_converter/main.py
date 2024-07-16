@@ -12,14 +12,14 @@ import click
 from click import BadParameter, ClickException
 from mako.template import Template
 
-from ni_measurement_converter import __version__
-from ni_measurement_converter.constants import (
+from ni_measurement_plugin_converter import __version__
+from ni_measurement_plugin_converter.constants import (
     MEASUREMENT_VERSION,
     MIGRATED_MEASUREMENT_FILENAME,
     TemplateFile,
     UserMessages,
 )
-from ni_measurement_converter.helpers import (
+from ni_measurement_plugin_converter.helpers import (
     add_file_handler,
     add_parameter_to_method,
     add_stream_handler,
@@ -30,7 +30,7 @@ from ni_measurement_converter.helpers import (
     remove_handlers,
     replace_session_initialization,
 )
-from ni_measurement_converter.models import CliInputs
+from ni_measurement_plugin_converter.models import CliInputs
 
 _drivers = ["nidcpower"]
 instrument_type = ""

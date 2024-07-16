@@ -4,7 +4,7 @@ import os
 
 from pydantic import BaseModel, model_validator
 
-from ni_measurement_converter.constants import UserMessages
+from ni_measurement_plugin_converter.constants import UserMessages
 
 
 class CliInputs(BaseModel):
