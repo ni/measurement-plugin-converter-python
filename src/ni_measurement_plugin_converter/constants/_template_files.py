@@ -1,4 +1,4 @@
-"""Output File Constants."""
+"""Constants utilized in accessing template files."""
 
 MEASUREMENT_VERSION = 1.0
 MIGRATED_MEASUREMENT_FILENAME = "_migrated.py"

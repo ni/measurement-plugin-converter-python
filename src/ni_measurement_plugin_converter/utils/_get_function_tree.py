@@ -1,10 +1,13 @@
 """Get measurement function node."""
 
-from ast import FunctionDef, parse, walk
+import ast
 from typing import Union
 
 
-def get_measurement_function(measurement_file_dir: str, function: str) -> Union[None, FunctionDef]:
+def get_measurement_function(
+    measurement_file_dir: str,
+    function: str,
+) -> Union[None, ast.FunctionDef]:
     """Get measurement `function` node from `measurement_file_dir`.
 
     1. Read the measurement file.
@@ -18,17 +21,17 @@ def get_measurement_function(measurement_file_dir: str, function: str) -> Union[
         function (str): Name of measurement function.
 
     Returns:
-        Union[None, FunctionDef]: Function node is returned if present. `None` is returned if not.
+        Union[None, ast.FunctionDef]: Function node is returned if present. `None` is returned if not.
     """
     function_node = None
 
     with open(measurement_file_dir, "r") as file:
         code = file.read()
 
-    code_tree = parse(code)
+    code_tree = ast.parse(code)
 
-    for node in walk(code_tree):
-        if isinstance(node, FunctionDef) and node.name == function:
+    for node in ast.walk(code_tree):
+        if isinstance(node, ast.FunctionDef) and node.name == function:
             function_node = node
             break
 

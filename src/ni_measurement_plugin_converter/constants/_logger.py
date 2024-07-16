@@ -1,4 +1,4 @@
-"""Log file constants."""
+"""Constants utilized in logger implementation."""
 
 LOG_FILE_NAME = "log.txt"
 LOG_FILE_COUNT_LIMIT = 20

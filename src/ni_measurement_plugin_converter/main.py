@@ -16,24 +16,24 @@ from ni_measurement_plugin_converter.constants import (
     CONTEXT_SETTINGS,
     MEASUREMENT_VERSION,
     MIGRATED_MEASUREMENT_FILENAME,
-    NIMS_TYPE,
     ArgsDescription,
-    DriverSession,
+    DebugMessage,
     TemplateFile,
     UserMessage,
-    DebugMessage,
-)
-from ni_measurement_plugin_converter.helpers import (
-    add_parameter_to_method,
-    get_measurement_function,
-    extract_inputs,
-    get_return_details,
-    initialize_logger,
-    insert_session_assigning,
-    remove_handlers,
-    replace_session_initialization,
 )
 from ni_measurement_plugin_converter.models import CliInputs, InvalidCliArgsError
+from ni_measurement_plugin_converter.utils import (
+    extract_inputs,
+    extract_outputs,
+    generate_input_params,
+    generate_input_signature,
+    generate_output_signature,
+    get_measurement_function,
+    get_nims_instrument,
+    initialize_logger,
+    remove_handlers,
+    manage_session,
+)
 
 # Refactor
 _drivers = ["nidcpower"]
@@ -43,7 +43,7 @@ actual_session_name = ""
 
 
 @click.command(context_settings=CONTEXT_SETTINGS)
-@click.option("-d", "--display-name", help=ArgsDescription.SERVICE, required=True)
+@click.option("-d", "--display-name", help=ArgsDescription.DISPLAY_NAME, required=True)
 @click.option(
     "-m",
     "--measurement-file-dir",
@@ -63,14 +63,20 @@ def run(
         logger = initialize_logger(name="console_logger", log_directory=log_directory)
         logger.info(UserMessage.STARTING_EXECUTION)
 
-        cli_args = CliInputs(display_name=display_name, measurement_file_dir=measurement_file_dir, function=function, output_dir=output_dir)
+        CliInputs(
+            display_name=display_name,
+            measurement_file_dir=measurement_file_dir,
+            function=function,
+            output_dir=output_dir,
+        )
 
         remove_handlers(logger)
         logger = initialize_logger(name="debug_logger", log_directory=output_dir)
+        logger.debug(DebugMessage.VERSION.format(version=__version__))
 
         logger.info(UserMessage.VALIDATE_CLI_ARGS)
 
-        shutil.copy(output_dir, os.path.join(output_dir, MIGRATED_MEASUREMENT_FILENAME))
+        shutil.copy(measurement_file_dir, os.path.join(output_dir, MIGRATED_MEASUREMENT_FILENAME))
         logger.debug(DebugMessage.FILE_MIGRATED)
 
         logger.debug(DebugMessage.GET_FUNCTION)
@@ -78,50 +84,21 @@ def run(
 
         logger.info(UserMessage.EXTRACT_INPUT_INFO)
 
-        inputs = extract_inputs(function_node)
-        input_configurations = get_input_configurations(inputs)
-        input_param_names = get_input_variables(input_configurations)
-        input_signature = generate_method_signature(input_configurations)
+        input_configurations = extract_inputs(function_node)
+        input_param_names = generate_input_params(input_configurations)
+        input_signature = generate_input_signature(input_configurations)
 
         logger.info(UserMessage.EXTRACT_OUTPUT_INFO)
 
-        output_variable_names, output_variable_types = get_return_details(
-            measurement_file_dir,
-            function,
-        )
-        output_configurations = _extract_outputs(output_variable_names, output_variable_types)
-        output_param_types = _get_ouput_types(output_configurations)
-
-        tuple_of_output = True
-        if isinstance(output_variable_types, str):
-            output_variable_types = (output_variable_types,)
-            tuple_of_output = False
-
-        migrated_file_directory = os.path.join(output_dir, MIGRATED_MEASUREMENT_FILENAME)
+        output_configurations, tuple_of_outputs = extract_outputs(function_node)
+        output_param_types = generate_output_signature(output_configurations)
 
         logger.info(UserMessage.ADD_RESERVE_SESSION)
-        add_parameter_to_method(
-            migrated_file_directory,
-            function,
-            "reservation",
-        )
+
+        migrated_file_dir = os.path.join(output_dir, MIGRATED_MEASUREMENT_FILENAME)
+        instrument_type, resource_name = manage_session(migrated_file_dir, function_node, _drivers)
 
         logger.info(UserMessage.ADD_SESSION_INITIALIZATION)
-        session_details = replace_session_initialization(
-            migrated_file_directory,
-            function,
-            _drivers,
-        )
-        for driver_name, param_value, actual_name in session_details:
-            instrument_type = driver_name
-            resource_name = param_value
-            actual_session_name = actual_name
-
-        insert_session_assigning(
-            migrated_file_directory,
-            function,
-            actual_session_name + " = session_info.session",
-        )
 
         nims_instrument = get_nims_instrument(instrument_type)
 
@@ -147,10 +124,10 @@ def run(
             input_signature=input_signature,
             input_param_names=input_param_names,
             output_param_types=output_param_types,
-            updated_file_name=f"{cli_args.display_name}.{Path(MIGRATED_MEASUREMENT_FILENAME).stem}",
+            updated_file_name=f"{output_dir}.{Path(MIGRATED_MEASUREMENT_FILENAME).stem}",
             method_name=function,
             directory_out=output_dir,
-            tuple_of_output=tuple_of_output,
+            tuple_of_outputs=tuple_of_outputs,
         )
         logger.debug(DebugMessage.MEASUREMENT_FILE_CREATED)
         _create_file(
@@ -182,72 +159,11 @@ def run(
         logger.error(e.message)
 
     except Exception as error:
+        logger.error(UserMessage.ERROR_OCCURRED)
         logger.error(error)
-        logger.error(UserMessage.CHECK_LOG_FILE)
 
     finally:
         logger.info(UserMessage.PROCESS_COMPLETED)
-
-
-def get_input_configurations(inputs):
-    input_data = []
-
-    for param_name, param_info in inputs.items():
-        input_type = get_nims_datatype(param_info["type"])
-        input_data.append(
-            {
-                "name": param_name,
-                "actual_type": param_info["type"],
-                "type": input_type,
-                "default_value": param_info["default"],
-            }
-        )
-
-    return input_data
-
-
-def _extract_outputs(output_variable_names, output_return_types):
-    output_data = []
-
-    for var_name, return_type in zip(output_variable_names, output_return_types):
-        output_type = get_nims_datatype(return_type)
-        output_data.append({"name": var_name, "actual_type": return_type, "type": output_type})
-
-    return output_data
-
-
-def get_nims_datatype(type):
-    try:
-        return NIMS_TYPE[type]
-    except KeyError:
-        ...
-
-
-def get_nims_instrument(instrument_type):
-    try:
-        return DriverSession[instrument_type].value
-    except KeyError:
-        ...
-
-
-def generate_method_signature(inputs):
-    parameter_info = []
-    for input_param in inputs:
-        parameter_info.append(f"{input_param['name']}:{input_param['actual_type']}")
-
-    return ", ".join(parameter_info)
-
-
-def get_input_variables(inputs):
-    parameter_names = [param["name"] for param in inputs]
-    return ", ".join(parameter_names)
-
-
-def _get_ouput_types(outputs):
-    parameter_types = []
-    for param in outputs:
-        parameter_types.append(param["actual_type"])
-    return ", ".join(parameter_types)
 
 
 def _create_file(

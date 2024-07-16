@@ -9,9 +9,13 @@ from ni_measurement_plugin_converter.constants._logger import (
     LOG_FILE_NAME,
     LOG_FILE_SIZE_LIMIT_IN_BYTES,
 )
-from ni_measurement_plugin_converter.constants._measurement import NIMS_TYPE, DriverSession
+from ni_measurement_plugin_converter.constants._measurement_service import (
+    NIMS_TYPE,
+    TYPE_DEFAULT_VALUES,
+    DriverSession,
+)
 from ni_measurement_plugin_converter.constants._messages import DebugMessage, UserMessage
-from ni_measurement_plugin_converter.constants.template_files import (
+from ni_measurement_plugin_converter.constants._template_files import (
     MEASUREMENT_VERSION,
     MIGRATED_MEASUREMENT_FILENAME,
     TemplateFile,

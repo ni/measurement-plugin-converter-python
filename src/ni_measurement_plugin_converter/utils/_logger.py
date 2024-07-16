@@ -1,10 +1,9 @@
-"""A module to initialize logger functions."""
+"""Implementation of logger."""
 
 import logging
 import os
 import sys
 from logging import Logger, StreamHandler, handlers
-from pathlib import Path
 
 from ni_measurement_plugin_converter.constants import (
     LOG_CONSOLE_MSG_FORMAT,
@@ -30,7 +29,7 @@ def initialize_logger(name: str, log_directory: str) -> Logger:
     logger.setLevel(logging.DEBUG)
 
     if log_directory:
-        logger, log_directory = add_file_handler(logger, log_directory)
+        add_file_handler(logger, log_directory)
 
     add_stream_handler(logger=logger)
 
