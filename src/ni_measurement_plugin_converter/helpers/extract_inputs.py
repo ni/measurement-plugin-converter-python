@@ -3,29 +3,11 @@
 import ast
 
 
-def extract_input_details(file_path, method_name):
-    # Parse the Python file to extract the AST
-    with open(file_path, "r") as file:
-        code = file.read()
-    tree = ast.parse(code)
-
-    # Find the method node in the AST
-    method_node = next(
-        (
-            node
-            for node in ast.walk(tree)
-            if isinstance(node, ast.FunctionDef) and node.name == method_name
-        ),
-        None,
-    )
-    if method_node is None:
-        print(f"Method '{method_name}' not found in the file.")
-        return {}
-
+def extract_inputs(function_node):
     # Analyze types of default values for parameters
     parameter_types = {}
-    defaults = method_node.args.defaults or []
-    args_without_defaults = method_node.args.args[: len(method_node.args.args) - len(defaults)]
+    defaults = function_node.args.defaults or []
+    args_without_defaults = function_node.args.args[: len(function_node.args.args) - len(defaults)]
 
     for arg in args_without_defaults:
         param_name = arg.arg
@@ -45,7 +27,7 @@ def extract_input_details(file_path, method_name):
         parameter_types[param_name] = {"type": param_type, "default": default_value}
 
     # Assign default values for the remaining parameters
-    for arg, default_node in zip(method_node.args.args[len(args_without_defaults) :], defaults):
+    for arg, default_node in zip(function_node.args.args[len(args_without_defaults) :], defaults):
         param_name = arg.arg
         param_type = None
 

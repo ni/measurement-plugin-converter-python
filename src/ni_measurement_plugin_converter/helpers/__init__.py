@@ -1,7 +1,7 @@
 # flake8: noqa
 
 from ni_measurement_plugin_converter.helpers.assign_session import insert_session_assigning
-from ni_measurement_plugin_converter.helpers.extract_inputs import extract_input_details
+from ni_measurement_plugin_converter.helpers.extract_inputs import extract_inputs
 from ni_measurement_plugin_converter.helpers.extract_outputs import get_return_details
 from ni_measurement_plugin_converter.helpers.logger import (
     add_file_handler,
@@ -13,3 +13,4 @@ from ni_measurement_plugin_converter.helpers.modify_input_args import add_parame
 from ni_measurement_plugin_converter.helpers.modify_session_initializer import (
     replace_session_initialization,
 )
+from ni_measurement_plugin_converter.helpers._get_function_tree import get_measurement_function

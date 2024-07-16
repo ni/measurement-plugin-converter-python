@@ -4,126 +4,109 @@ import os
 import pathlib
 import re
 import shutil
-from logging import Logger
 from pathlib import Path
-from typing import Any, Tuple
+from typing import Any
 
 import click
-from click import BadParameter, ClickException
+from click import ClickException
 from mako.template import Template
 
 from ni_measurement_plugin_converter import __version__
 from ni_measurement_plugin_converter.constants import (
+    CONTEXT_SETTINGS,
     MEASUREMENT_VERSION,
     MIGRATED_MEASUREMENT_FILENAME,
+    NIMS_TYPE,
+    ArgsDescription,
+    DriverSession,
     TemplateFile,
-    UserMessages,
+    UserMessage,
+    DebugMessage,
 )
 from ni_measurement_plugin_converter.helpers import (
-    add_file_handler,
     add_parameter_to_method,
-    add_stream_handler,
-    extract_input_details,
+    get_measurement_function,
+    extract_inputs,
     get_return_details,
     initialize_logger,
     insert_session_assigning,
     remove_handlers,
     replace_session_initialization,
 )
-from ni_measurement_plugin_converter.models import CliInputs
+from ni_measurement_plugin_converter.models import CliInputs, InvalidCliArgsError
 
+# Refactor
 _drivers = ["nidcpower"]
 instrument_type = ""
 resource_name = ""
 actual_session_name = ""
 
 
-@click.command(context_settings={"help_option_names": ["-h", "--help"]})
-@click.option("-s", "--service-name", help="Name of the service", required=True)
+@click.command(context_settings=CONTEXT_SETTINGS)
+@click.option("-d", "--display-name", help=ArgsDescription.SERVICE, required=True)
 @click.option(
     "-m",
     "--measurement-file-dir",
-    help="Directory of the Measurement file",
+    help=ArgsDescription.MEASUREMENT_FILE_DIR,
     required=True,
 )
-@click.option(
-    "-f",
-    "--function",
-    help="Name of the Measurement function",
-    required=True,
-)
-def convert_measurement(
-    service_name: str,
+@click.option("-f", "--function", help=ArgsDescription.FUNCTION, required=True)
+@click.option("-o", "--output-dir", help=ArgsDescription.OUTPUT_DIR, required=True)
+def run(
+    display_name: str,
     measurement_file_dir: str,
     function: str,
+    output_dir: str,
 ) -> None:
     try:
-        log_folder_path = None
-        logger, log_folder_path = __initialize_logger(
-            name="console_logger",
-            folder_path=log_folder_path,
-        )
+        log_directory = None
+        logger = initialize_logger(name="console_logger", log_directory=log_directory)
+        logger.info(UserMessage.STARTING_EXECUTION)
 
-        logger.info(UserMessages.STARTED_EXECUTION)
-        cli_args = CliInputs(
-            service_name=service_name,
-            measurement_file_dir=measurement_file_dir,
-            function=function,
-        )
-
-        measurement_plugin_path = os.path.normpath(
-            os.path.join(
-                os.path.dirname(cli_args.measurement_file_dir),
-                cli_args.service_name,
-            )
-        )
-
-        shutil.copy(
-            measurement_file_dir,
-            os.path.join(measurement_plugin_path, MIGRATED_MEASUREMENT_FILENAME),
-        )
-        logger.debug(UserMessages.FILE_MIGRATED)
+        cli_args = CliInputs(display_name=display_name, measurement_file_dir=measurement_file_dir, function=function, output_dir=output_dir)
 
         remove_handlers(logger)
+        logger = initialize_logger(name="debug_logger", log_directory=output_dir)
 
-        logger, log_folder_path = __initialize_logger(
-            name="debug_logger",
-            folder_path=measurement_plugin_path,
-        )
+        logger.info(UserMessage.VALIDATE_CLI_ARGS)
 
-        logger.info(UserMessages.EXTRACT_INPUTS)
-        input_parameters = extract_input_details(measurement_file_dir, function)
+        shutil.copy(output_dir, os.path.join(output_dir, MIGRATED_MEASUREMENT_FILENAME))
+        logger.debug(DebugMessage.FILE_MIGRATED)
+
+        logger.debug(DebugMessage.GET_FUNCTION)
+        function_node = get_measurement_function(measurement_file_dir, function)
+
+        logger.info(UserMessage.EXTRACT_INPUT_INFO)
+
+        inputs = extract_inputs(function_node)
+        input_configurations = get_input_configurations(inputs)
+        input_param_names = get_input_variables(input_configurations)
+        input_signature = generate_method_signature(input_configurations)
+
+        logger.info(UserMessage.EXTRACT_OUTPUT_INFO)
 
         output_variable_names, output_variable_types = get_return_details(
             measurement_file_dir,
             function,
         )
+        output_configurations = _extract_outputs(output_variable_names, output_variable_types)
+        output_param_types = _get_ouput_types(output_configurations)
 
         tuple_of_output = True
         if isinstance(output_variable_types, str):
             output_variable_types = (output_variable_types,)
             tuple_of_output = False
 
-        input_configurations = _extract_inputs(input_parameters)
+        migrated_file_directory = os.path.join(output_dir, MIGRATED_MEASUREMENT_FILENAME)
 
-        logger.info(UserMessages.EXTRACT_OUTPUTS)
-        output_configurations = _extract_outputs(output_variable_names, output_variable_types)
-
-        input_signature = _generate_method_signature(input_configurations)
-
-        input_param_names = _get_input_names(input_configurations)
-        output_param_types = _get_ouput_types(output_configurations)
-
-        migrated_file_directory = os.path.join(
-            measurement_plugin_path,
-            MIGRATED_MEASUREMENT_FILENAME,
-        )
-
+        logger.info(UserMessage.ADD_RESERVE_SESSION)
         add_parameter_to_method(
             migrated_file_directory,
             function,
             "reservation",
         )
+
+        logger.info(UserMessage.ADD_SESSION_INITIALIZATION)
         session_details = replace_session_initialization(
             migrated_file_directory,
             function,
@@ -140,19 +123,19 @@ def convert_measurement(
             actual_session_name + " = session_info.session",
         )
 
-        nims_instrument = _get_nims_instrument(instrument_type)
+        nims_instrument = get_nims_instrument(instrument_type)
 
-        service_class = f"{service_name}_Python"
-        display_name_for_filenames = re.sub(r"\s+", "", service_name)
+        service_class = f"{display_name}_Python"
+        display_name_for_filenames = re.sub(r"\s+", "", display_name)
         serviceconfig_file = os.path.join(
-            measurement_plugin_path,
+            output_dir,
             f"{display_name_for_filenames}.serviceconfig",
         )
 
         _create_file(
             TemplateFile.MEASUREMENT_TEMPLATE,
-            os.path.join(measurement_plugin_path, TemplateFile.MEASUREMENT_FILENAME),
-            service_name=service_name,
+            os.path.join(output_dir, TemplateFile.MEASUREMENT_FILENAME),
+            display_name=display_name,
             version=MEASUREMENT_VERSION,
             service_class=service_class,
             serviceconfig_file=f"{display_name_for_filenames}.serviceconfig",
@@ -164,74 +147,53 @@ def convert_measurement(
             input_signature=input_signature,
             input_param_names=input_param_names,
             output_param_types=output_param_types,
-            updated_file_name=f"{cli_args.service_name}.{Path(MIGRATED_MEASUREMENT_FILENAME).stem}",
+            updated_file_name=f"{cli_args.display_name}.{Path(MIGRATED_MEASUREMENT_FILENAME).stem}",
             method_name=function,
-            directory_out=measurement_plugin_path,
+            directory_out=output_dir,
             tuple_of_output=tuple_of_output,
         )
-        logger.debug(UserMessages.MEASUREMENT_FILE_CREATED)
+        logger.debug(DebugMessage.MEASUREMENT_FILE_CREATED)
         _create_file(
             TemplateFile.SERVICE_CONFIG_TEMPLATE,
             serviceconfig_file,
-            service_name=service_name,
+            display_name=display_name,
             service_class=service_class,
-            directory_out=measurement_plugin_path,
+            directory_out=output_dir,
         )
-        logger.debug(UserMessages.SERVICE_CONFIG_CREATED)
+        logger.debug(DebugMessage.SERVICE_CONFIG_CREATED)
         _create_file(
             TemplateFile.BATCH_TEMPLATE,
-            os.path.join(measurement_plugin_path, TemplateFile.BATCH_FILENAME),
-            directory_out=measurement_plugin_path,
+            os.path.join(output_dir, TemplateFile.BATCH_FILENAME),
+            directory_out=output_dir,
         )
-        logger.debug(UserMessages.BATCH_FILE_CREATED)
+        logger.debug(DebugMessage.BATCH_FILE_CREATED)
         _create_file(
             TemplateFile.HELPER_TEMPLATE,
-            os.path.join(measurement_plugin_path, TemplateFile.HELPER_FILENAME),
-            directory_out=measurement_plugin_path,
+            os.path.join(output_dir, TemplateFile.HELPER_FILENAME),
+            directory_out=output_dir,
         )
-        logger.debug(UserMessages.HELPER_FILE_CREATED)
-        logger.info(
-            UserMessages.MEASUREMENT_PLUGIN_CREATED.format(file_dir=measurement_plugin_path)
-        )
+        logger.debug(DebugMessage.HELPER_FILE_CREATED)
+        logger.info(UserMessage.MEASUREMENT_PLUGIN_CREATED.format(plugin_dir=output_dir))
+
+    except InvalidCliArgsError as input_error:
+        logger.error(input_error)
 
     except ClickException as e:
         logger.error(e.message)
 
-    except (PermissionError, OSError):
-        logger.error(UserMessages.ACCESS_DENIED)
-
     except Exception as error:
-        logger.debug(error)
-        logger.error(UserMessages.CHECK_LOG_FILE)
+        logger.error(error)
+        logger.error(UserMessage.CHECK_LOG_FILE)
 
     finally:
-        logger.info(UserMessages.PROCESS_COMPLETED)
+        logger.info(UserMessage.PROCESS_COMPLETED)
 
 
-def __add_file_handler(output_path: str, logger: Logger) -> Tuple[Logger, str]:
-    log_folder_path = output_path
-    add_file_handler(logger=logger, log_folder_path=log_folder_path)
-    logger.debug(UserMessages.VERSION.format(version=__version__))
-
-    return logger, log_folder_path
-
-
-def __initialize_logger(name: str, folder_path: str) -> Tuple[Logger, str]:
-    logger = initialize_logger(name=name)
-
-    if folder_path:
-        logger, folder_path = __add_file_handler(output_path=folder_path, logger=logger)
-
-    add_stream_handler(logger=logger)
-
-    return logger, folder_path
-
-
-def _extract_inputs(inputs):
+def get_input_configurations(inputs):
     input_data = []
 
     for param_name, param_info in inputs.items():
-        input_type = _to_nims_type(param_info["type"])
+        input_type = get_nims_datatype(param_info["type"])
         input_data.append(
             {
                 "name": param_name,
@@ -248,33 +210,27 @@ def _extract_outputs(output_variable_names, output_return_types):
     output_data = []
 
     for var_name, return_type in zip(output_variable_names, output_return_types):
-        output_type = _to_nims_type(return_type)
+        output_type = get_nims_datatype(return_type)
         output_data.append({"name": var_name, "actual_type": return_type, "type": output_type})
 
     return output_data
 
 
-# To Enum
-def _to_nims_type(type):
-    if type == "int":
-        return "nims.DataType.Int32"
-    elif type == "bool":
-        return "nims.DataType.Boolean"
-    elif type == "float":
-        return "nims.DataType.Double"
-    elif type == "str":
-        return "nims.DataType.String"
-    elif type == "List[str]":
-        return "nims.DataType.StringArray1D"
-    elif type == "List[float]":
-        return "nims.DataType.FloatArray1D"
-    elif type == "List[int]":
-        return "nims.DataType.Int32Array1D"
-    else:
-        raise click.BadParameter("Unsupported Data type.")
+def get_nims_datatype(type):
+    try:
+        return NIMS_TYPE[type]
+    except KeyError:
+        ...
 
 
-def _generate_method_signature(inputs):
+def get_nims_instrument(instrument_type):
+    try:
+        return DriverSession[instrument_type].value
+    except KeyError:
+        ...
+
+
+def generate_method_signature(inputs):
     parameter_info = []
     for input_param in inputs:
         parameter_info.append(f"{input_param['name']}:{input_param['actual_type']}")
@@ -282,7 +238,7 @@ def _generate_method_signature(inputs):
     return ", ".join(parameter_info)
 
 
-def _get_input_names(inputs):
+def get_input_variables(inputs):
     parameter_names = [param["name"] for param in inputs]
     return ", ".join(parameter_names)
 
@@ -294,18 +250,9 @@ def _get_ouput_types(outputs):
     return ", ".join(parameter_types)
 
 
-# To Enum
-def _get_nims_instrument(instrument_type):
-    if instrument_type == "nidcpower":
-        return "nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER"
-    else:
-        raise click.BadParameter("Invalid instrument")
-
-
 def _create_file(
     template_name: str,
     file_name: str,
-    directory_out: pathlib.Path,
     **template_args: Any,
 ) -> None:
     output = _render_template(template_name, **template_args)
@@ -317,7 +264,11 @@ def _create_file(
 def _render_template(template_name: str, **template_args: Any) -> bytes:
     file_dir = str(pathlib.Path(__file__).parent / "templates" / template_name)
 
-    template = Template(filename=file_dir, input_encoding="utf-8", output_encoding="utf-8")
+    template = Template(
+        filename=file_dir,
+        input_encoding=TemplateFile.ENCODING,
+        output_encoding=TemplateFile.ENCODING,
+    )
     try:
         return template.render(**template_args)
     except Exception as e:

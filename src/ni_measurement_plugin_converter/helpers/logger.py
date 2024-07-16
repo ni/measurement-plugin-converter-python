@@ -1,13 +1,13 @@
 """A module to initialize logger functions."""
 
 import logging
-import logging.handlers
 import os
 import sys
-from logging import Logger
+from logging import Logger, StreamHandler, handlers
 from pathlib import Path
 
-from ni_measurement_plugin_converter.constants.logger import (
+from ni_measurement_plugin_converter.constants import (
+    LOG_CONSOLE_MSG_FORMAT,
     LOG_DATE_FORMAT,
     LOG_FILE_COUNT_LIMIT,
     LOG_FILE_MSG_FORMAT,
@@ -16,17 +16,42 @@ from ni_measurement_plugin_converter.constants.logger import (
 )
 
 
-def __create_file_handler(
-    log_folder_path: str,
-    file_name: str,
-) -> logging.handlers.RotatingFileHandler:
-    log_file = os.path.join(log_folder_path, file_name)
-    folder_path_obj = Path(log_folder_path)
+def initialize_logger(name: str, log_directory: str) -> Logger:
+    """Initialize logger object.
 
-    if not folder_path_obj.exists():
-        folder_path_obj.mkdir(parents=True)
+    Args:
+        name (str): Logger name.
+        log_directory (str): Log directory.
 
-    handler = logging.handlers.RotatingFileHandler(
+    Returns:
+        Logger: Logger object.
+    """
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.DEBUG)
+
+    if log_directory:
+        logger, log_directory = add_file_handler(logger, log_directory)
+
+    add_stream_handler(logger=logger)
+
+    return logger
+
+
+def add_file_handler(logger: Logger, log_directory: str) -> None:
+    """Add file handler.
+
+    Args:
+        logger (Logger): Logger object.
+        log_directory (str): Log directory.
+    """
+    handler = __create_file_handler(log_directory=log_directory, file_name=LOG_FILE_NAME)
+    logger.addHandler(handler)
+
+
+def __create_file_handler(log_directory: str, file_name: str) -> handlers.RotatingFileHandler:
+    log_file = os.path.join(log_directory, file_name)
+
+    handler = handlers.RotatingFileHandler(
         log_file,
         maxBytes=LOG_FILE_SIZE_LIMIT_IN_BYTES,
         backupCount=LOG_FILE_COUNT_LIMIT,
@@ -39,28 +64,6 @@ def __create_file_handler(
     return handler
 
 
-def __create_stream_handler():
-    handler = logging.StreamHandler(sys.stdout)
-    handler.setLevel(logging.INFO)
-
-    return handler
-
-
-def initialize_logger(name: str) -> Logger:
-    """Initialize logger object for logging.
-
-    Args:
-        name (str): Logger name.
-
-    Returns:
-        Logger: Logger object.
-    """
-    new_logger = logging.getLogger(name)
-    new_logger.setLevel(logging.DEBUG)
-
-    return new_logger
-
-
 def add_stream_handler(logger: Logger) -> None:
     """Add stream handler.
 
@@ -71,15 +74,14 @@ def add_stream_handler(logger: Logger) -> None:
     logger.addHandler(stream_handler)
 
 
-def add_file_handler(logger: Logger, log_folder_path: str) -> None:
-    """Add file handler.
+def __create_stream_handler() -> StreamHandler:
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setLevel(logging.INFO)
 
-    Args:
-        logger (Logger): Logger object.
-        log_folder_path (str): Log folder path.
-    """
-    handler = __create_file_handler(log_folder_path=log_folder_path, file_name=LOG_FILE_NAME)
-    logger.addHandler(handler)
+    formatter = logging.Formatter(LOG_CONSOLE_MSG_FORMAT, LOG_DATE_FORMAT)
+    handler.setFormatter(formatter)
+
+    return handler
 
 
 def remove_handlers(log: Logger) -> None:
