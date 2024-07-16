@@ -1,6 +1,5 @@
-<%page args="display_name, version, service_class, serviceconfig_file, resource_name, instrument_type, nims_instrument, input_configurations, output_configurations, input_signature, input_param_names, output_param_types, updated_file_name, method_name, tuple_of_output"/>\
+<%page args="service_name, version, service_class, serviceconfig_file, resource_name, instrument_type, nims_instrument, input_configurations, output_configurations, input_signature, input_param_names, output_param_types, updated_file_name, method_name, tuple_of_output"/>\
 \
-"""A default measurement with an array in and out."""
 
 import pathlib
 import sys
@@ -14,7 +13,7 @@ service_directory = pathlib.Path(script_or_exe).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "${serviceconfig_file}",
     version="${version}",
-    ui_file_paths=[service_directory / "test.measui"],
+    ui_file_paths=[service_directory / "${service_name}.measui"],
 )
 
 
@@ -26,7 +25,11 @@ measurement_service = nims.MeasurementService(
     instrument_type=${nims_instrument},
 )
     %for input_config in input_configurations:
+        %if input_config['type'] == "nims.DataType.String":
+@measurement_service.configuration("${input_config['name']}", ${input_config['type']}, "${input_config['default_value']}")
+        %else:
 @measurement_service.configuration("${input_config['name']}", ${input_config['type']}, ${input_config['default_value']})
+        %endif
     %endfor
     %for output_config in output_configurations:
 @measurement_service.output("${output_config['name']}", ${output_config['type']})

@@ -20,4 +20,4 @@ class UserMessages:
     HELPER_FILE_CREATED = "Helper file is created."
     MEASUREMENT_FILE_CREATED = "Measurement file is created."
     SERVICE_CONFIG_CREATED = "Service config is created."
-    MEASUREMENT_PLUGIN_CREATED = "Measurement plugin is created. Please find at {file_dir}"
+    MEASUREMENT_PLUGIN_CREATED = "Measurement plugin is created at {file_dir}"

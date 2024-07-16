@@ -1,11 +1,11 @@
-<%page args="display_name, service_class"/>\
+<%page args="service_name, service_class"/>\
 <%
     import json
 
     service_config = {
       "services": [
           {
-              "displayName": display_name,
+              "displayName": service_name,
               "serviceClass": service_class,
               "descriptionUrl": "",
               "providedInterfaces": [

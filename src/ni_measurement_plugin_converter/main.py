@@ -38,24 +38,24 @@ resource_name = ""
 actual_session_name = ""
 
 
-@click.command(context_settings = {"help_option_names": ["-h", "--help"]})
-@click.option("-d", "--display-name", help="Display Name", required=True)
+@click.command(context_settings={"help_option_names": ["-h", "--help"]})
+@click.option("-s", "--service-name", help="Name of the service", required=True)
 @click.option(
-    "-f",
-    "--file-dir",
+    "-m",
+    "--measurement-file-dir",
     help="Directory of the Measurement file",
     required=True,
 )
 @click.option(
-    "-m",
-    "--method-name",
-    help="Name of the Measurement method",
+    "-f",
+    "--function",
+    help="Name of the Measurement function",
     required=True,
 )
 def convert_measurement(
-    display_name: str,
-    file_dir: str,
-    method_name: str,
+    service_name: str,
+    measurement_file_dir: str,
+    function: str,
 ) -> None:
     try:
         log_folder_path = None
@@ -65,17 +65,24 @@ def convert_measurement(
         )
 
         logger.info(UserMessages.STARTED_EXECUTION)
-        cli_args = CliInputs(display_name=display_name, file_dir=file_dir, method_name=method_name)
+        cli_args = CliInputs(
+            service_name=service_name,
+            measurement_file_dir=measurement_file_dir,
+            function=function,
+        )
 
         measurement_plugin_path = os.path.normpath(
             os.path.join(
-                os.path.dirname(cli_args.file_dir),
-                cli_args.display_name,
+                os.path.dirname(cli_args.measurement_file_dir),
+                cli_args.service_name,
             )
         )
 
+        shutil.copy(
+            measurement_file_dir,
+            os.path.join(measurement_plugin_path, MIGRATED_MEASUREMENT_FILENAME),
+        )
         logger.debug(UserMessages.FILE_MIGRATED)
-        shutil.copy(file_dir, os.path.join(measurement_plugin_path, MIGRATED_MEASUREMENT_FILENAME))
 
         remove_handlers(logger)
 
@@ -85,9 +92,12 @@ def convert_measurement(
         )
 
         logger.info(UserMessages.EXTRACT_INPUTS)
-        input_parameters = extract_input_details(file_dir, method_name)
+        input_parameters = extract_input_details(measurement_file_dir, function)
 
-        output_variable_names, output_variable_types = get_return_details(file_dir, method_name)
+        output_variable_names, output_variable_types = get_return_details(
+            measurement_file_dir,
+            function,
+        )
 
         tuple_of_output = True
         if isinstance(output_variable_types, str):
@@ -111,12 +121,12 @@ def convert_measurement(
 
         add_parameter_to_method(
             migrated_file_directory,
-            method_name,
+            function,
             "reservation",
         )
         session_details = replace_session_initialization(
             migrated_file_directory,
-            method_name,
+            function,
             _drivers,
         )
         for driver_name, param_value, actual_name in session_details:
@@ -126,24 +136,23 @@ def convert_measurement(
 
         insert_session_assigning(
             migrated_file_directory,
-            method_name,
+            function,
             actual_session_name + " = session_info.session",
         )
 
         nims_instrument = _get_nims_instrument(instrument_type)
 
-        service_class = f"{display_name}_Python"
-        display_name_for_filenames = re.sub(r"\s+", "", display_name)
+        service_class = f"{service_name}_Python"
+        display_name_for_filenames = re.sub(r"\s+", "", service_name)
         serviceconfig_file = os.path.join(
             measurement_plugin_path,
             f"{display_name_for_filenames}.serviceconfig",
         )
 
-        logger.debug(UserMessages.MEASUREMENT_FILE_CREATED)
         _create_file(
             TemplateFile.MEASUREMENT_TEMPLATE,
             os.path.join(measurement_plugin_path, TemplateFile.MEASUREMENT_FILENAME),
-            display_name=display_name,
+            service_name=service_name,
             version=MEASUREMENT_VERSION,
             service_class=service_class,
             serviceconfig_file=f"{display_name_for_filenames}.serviceconfig",
@@ -155,39 +164,37 @@ def convert_measurement(
             input_signature=input_signature,
             input_param_names=input_param_names,
             output_param_types=output_param_types,
-            updated_file_name=f"{cli_args.display_name}.{Path(MIGRATED_MEASUREMENT_FILENAME).stem}",
-            method_name=method_name,
+            updated_file_name=f"{cli_args.service_name}.{Path(MIGRATED_MEASUREMENT_FILENAME).stem}",
+            method_name=function,
             directory_out=measurement_plugin_path,
             tuple_of_output=tuple_of_output,
         )
-        logger.debug(UserMessages.SERVICE_CONFIG_CREATED)
+        logger.debug(UserMessages.MEASUREMENT_FILE_CREATED)
         _create_file(
             TemplateFile.SERVICE_CONFIG_TEMPLATE,
             serviceconfig_file,
-            display_name=display_name,
+            service_name=service_name,
             service_class=service_class,
             directory_out=measurement_plugin_path,
         )
-        logger.debug(UserMessages.BATCH_FILE_CREATED)
+        logger.debug(UserMessages.SERVICE_CONFIG_CREATED)
         _create_file(
             TemplateFile.BATCH_TEMPLATE,
             os.path.join(measurement_plugin_path, TemplateFile.BATCH_FILENAME),
             directory_out=measurement_plugin_path,
         )
-        logger.debug(UserMessages.HELPER_FILE_CREATED)
+        logger.debug(UserMessages.BATCH_FILE_CREATED)
         _create_file(
             TemplateFile.HELPER_TEMPLATE,
             os.path.join(measurement_plugin_path, TemplateFile.HELPER_FILENAME),
             directory_out=measurement_plugin_path,
         )
+        logger.debug(UserMessages.HELPER_FILE_CREATED)
         logger.info(
             UserMessages.MEASUREMENT_PLUGIN_CREATED.format(file_dir=measurement_plugin_path)
         )
 
-    except ClickException as e: 
-        logger.error(e.message)
-    
-    except BadParameter as e:
+    except ClickException as e:
         logger.error(e.message)
 
     except (PermissionError, OSError):
@@ -255,8 +262,14 @@ def _to_nims_type(type):
         return "nims.DataType.Boolean"
     elif type == "float":
         return "nims.DataType.Double"
+    elif type == "str":
+        return "nims.DataType.String"
+    elif type == "List[str]":
+        return "nims.DataType.StringArray1D"
     elif type == "List[float]":
         return "nims.DataType.FloatArray1D"
+    elif type == "List[int]":
+        return "nims.DataType.Int32Array1D"
     else:
         raise click.BadParameter("Unsupported Data type.")
 

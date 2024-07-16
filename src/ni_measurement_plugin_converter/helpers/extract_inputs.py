@@ -32,14 +32,7 @@ def extract_input_details(file_path, method_name):
         param_type = None
 
         # Extract parameter type from annotation
-        if arg.annotation:
-            if isinstance(arg.annotation, ast.Name):
-                param_type = arg.annotation.id  # Simple type like int, str, etc.
-            elif isinstance(arg.annotation, ast.Subscript):
-                if isinstance(arg.annotation.value, ast.Name):
-                    param_type = arg.annotation.value.id
-                    if isinstance(arg.annotation.slice, ast.Name):
-                        param_type += f"[{arg.annotation.slice.id}]"
+        param_type = extract_type(arg.annotation)
 
         # Assign default value based on parameter type if it's not provided
         default_value = None
@@ -58,13 +51,8 @@ def extract_input_details(file_path, method_name):
 
         # Extract parameter type from annotation
         if arg.annotation:
-            if isinstance(arg.annotation, ast.Name):
-                param_type = arg.annotation.id  # Simple type like int, str, etc.
-            elif isinstance(arg.annotation, ast.Subscript):
-                if isinstance(arg.annotation.value, ast.Name):
-                    param_type = arg.annotation.value.id
-                    if isinstance(arg.annotation.slice, ast.Name):
-                        param_type += f"[{arg.annotation.slice.id}]"
+            param_type = extract_type(arg.annotation)
+                
 
         # Extract default value
         default_value = ast.literal_eval(default_node)
@@ -73,3 +61,26 @@ def extract_input_details(file_path, method_name):
         parameter_types[param_name] = {"type": param_type, "default": default_value}
 
     return parameter_types
+
+
+def extract_type(node):
+    if isinstance(node, ast.Name):
+        return node.id
+
+    elif isinstance(node, ast.Subscript):
+        generic_type = extract_type(node.value)
+
+        if isinstance(node.slice.value, ast.Tuple):
+            inner_types = [extract_type(elt) for elt in node.slice.value.elts]
+            return inner_types
+
+        elif isinstance(node.slice, ast.Index):
+            slice_id = extract_type(node.slice.value)
+            return f"{generic_type}[{slice_id}]"
+
+        else:
+            slice_id = extract_type(node.slice)
+            return f"{generic_type}[{slice_id}]"
+
+    else:
+        return ""

@@ -10,9 +10,9 @@ from ni_measurement_converter.constants import UserMessages
 class CliInputs(BaseModel):
     """Represent Command Line Interface inputs."""
 
-    display_name: str
-    file_dir: str
-    method_name: str
+    service_name: str
+    measurement_file_dir: str
+    function: str
 
     @model_validator(mode="after")
     def validate_cli_inputs(self) -> "CliInputs":
@@ -21,11 +21,11 @@ class CliInputs(BaseModel):
         Returns:
             CliInputs: Validated CLI inputs.
         """
-        if not os.path.exists(self.file_dir):
+        if not os.path.exists(self.measurement_file_dir):
             raise FileNotFoundError(UserMessages.INVALID_FILE_DIR)
 
-        base_path = os.path.dirname(self.file_dir)
-        measurement_plugin = os.path.join(base_path, self.display_name)
+        base_path = os.path.dirname(self.measurement_file_dir)
+        measurement_plugin = os.path.join(base_path, self.service_name)
         try:
             os.makedirs(measurement_plugin, exist_ok=True)
         except (PermissionError, OSError) as error:
