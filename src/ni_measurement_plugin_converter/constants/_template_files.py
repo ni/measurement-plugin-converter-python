@@ -2,7 +2,7 @@
 
 MEASUREMENT_VERSION = 1.0
 MIGRATED_MEASUREMENT_FILENAME = "_migrated.py"
-
+TEMPLATE_DIR = "templates"
 
 class TemplateFile:
     """Template file names."""

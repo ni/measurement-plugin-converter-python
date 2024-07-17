@@ -1,7 +1,7 @@
 """Implementation of extraction of outputs from measurement function."""
 
 import ast
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 from ni_measurement_plugin_converter.models import OutputConfigurations
 from ._measurement_service import extract_type, get_nims_datatype
@@ -20,6 +20,7 @@ def extract_outputs(function_node: ast.FunctionDef) -> Tuple[List[OutputConfigur
     output_variables = extract_variables(function_node.body)
     output_types = extract_type(function_node.returns)
 
+    tuple_of_outputs = True
     if isinstance(output_types, str):
         tuple_of_outputs = False
         output_types = (output_types,)
@@ -29,7 +30,7 @@ def extract_outputs(function_node: ast.FunctionDef) -> Tuple[List[OutputConfigur
     return output_configurations, tuple_of_outputs
 
 
-def extract_variables(function_body:ast.FunctionDef) -> List[str]:
+def extract_variables(function_body: ast.FunctionDef) -> List[str]:
     """Extract measurement funciton output variables.
 
     Args:
@@ -42,7 +43,7 @@ def extract_variables(function_body:ast.FunctionDef) -> List[str]:
 
     for node in function_body:
         if isinstance(node, ast.Return):
-            if isinstance(node.value, ast.Tuple):  # Check if return value is a tuple
+            if isinstance(node.value, ast.Tuple):  # Check if return value is a tuple.
                 for element in node.value.elts:
                     output_variables.extend(expand_list_type(element))
 
@@ -52,22 +53,25 @@ def extract_variables(function_body:ast.FunctionDef) -> List[str]:
     return output_variables
 
 
-def expand_list_type(node) -> List[str]:
-    """_summary_
+def expand_list_type(node: Union[ast.Name, ast.List, ast.Call]) -> List[str]:
+    """Expand list data type objects.
 
     Args:
-        node (_type_): _description_
+        node (Union[ast.Name, ast.List, ast.Call]): Return node object.
 
     Returns:
-        List[str]: 
+        List[str]: Expanded output variables.
     """
     if isinstance(node, ast.Name):
         return [node.id]
-    elif isinstance(node, List):
+
+    elif isinstance(node, ast.List):
         inner_types = [extract_type(elt) for elt in node.elts]
         return inner_types
+
     elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == "List":
         return [extract_type(arg) for arg in node.args]
+
     else:
         return []
 
@@ -76,14 +80,17 @@ def get_output_configuration(
     output_variable_names: List[str],
     output_return_types: Tuple[str],
 ) -> List[OutputConfigurations]:
-    """
+    """Get output configurations.
+
+    1. Get measurement service data type for each argument.
+    2. Format output configurations to `OutputConfigurations`.
 
     Args:
-        output_variable_names (List[str]): _description_
-        output_return_types (Tuple[str]): _description_
+        output_variable_names (List[str]): Output variable names.
+        output_return_types (Tuple[str]): Output variable types.
 
     Returns:
-        List[OutputConfigurations]: _description_
+        List[OutputConfigurations]: Update output with measurement service data type.
     """
     output_configurations = []
 

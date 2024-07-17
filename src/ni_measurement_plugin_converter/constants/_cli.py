@@ -1,4 +1,4 @@
-"""Constants utilized in Command Line Interface"""
+"""Constants utilized in Command Line Interface."""
 
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 

@@ -41,7 +41,8 @@ class CliInputs(BaseModel):
         """Validate the CLI inputs.
 
         Returns:
-            Union[ast.FunctionDef, None]: If function is found in measurement file. Else `None` is returned.
+            Union[ast.FunctionDef, None]: Function node if function is found in measurement file. \
+                Else `None` is returned.
         """
         with open(self.measurement_file_dir, "r") as file:
             code = file.read()

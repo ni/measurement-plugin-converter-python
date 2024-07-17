@@ -1,15 +1,13 @@
 """Utilizes command line args to create a measurement using template files."""
 
 import os
-import pathlib
 import re
 import shutil
 from pathlib import Path
-from typing import Any
 
 import click
 from click import ClickException
-from mako.template import Template
+from mako.exceptions import TemplateLookupException, CompileException
 
 from ni_measurement_plugin_converter import __version__
 from ni_measurement_plugin_converter.constants import (
@@ -23,6 +21,7 @@ from ni_measurement_plugin_converter.constants import (
 )
 from ni_measurement_plugin_converter.models import CliInputs, InvalidCliArgsError
 from ni_measurement_plugin_converter.utils import (
+    create_file,
     extract_inputs,
     extract_outputs,
     generate_input_params,
@@ -34,12 +33,6 @@ from ni_measurement_plugin_converter.utils import (
     remove_handlers,
     manage_session,
 )
-
-# Refactor
-_drivers = ["nidcpower"]
-instrument_type = ""
-resource_name = ""
-actual_session_name = ""
 
 
 @click.command(context_settings=CONTEXT_SETTINGS)
@@ -96,20 +89,14 @@ def run(
         logger.info(UserMessage.ADD_RESERVE_SESSION)
 
         migrated_file_dir = os.path.join(output_dir, MIGRATED_MEASUREMENT_FILENAME)
-        instrument_type, resource_name = manage_session(migrated_file_dir, function_node, _drivers)
-
-        logger.info(UserMessage.ADD_SESSION_INITIALIZATION)
-
+        instrument_type, resource_name = manage_session(migrated_file_dir, function_node, logger)
         nims_instrument = get_nims_instrument(instrument_type)
 
         service_class = f"{display_name}_Python"
         display_name_for_filenames = re.sub(r"\s+", "", display_name)
-        serviceconfig_file = os.path.join(
-            output_dir,
-            f"{display_name_for_filenames}.serviceconfig",
-        )
+        serviceconfig_file = os.path.join(output_dir, f"{display_name_for_filenames}.serviceconfig")
 
-        _create_file(
+        create_file(
             TemplateFile.MEASUREMENT_TEMPLATE,
             os.path.join(output_dir, TemplateFile.MEASUREMENT_FILENAME),
             display_name=display_name,
@@ -130,7 +117,8 @@ def run(
             tuple_of_outputs=tuple_of_outputs,
         )
         logger.debug(DebugMessage.MEASUREMENT_FILE_CREATED)
-        _create_file(
+
+        create_file(
             TemplateFile.SERVICE_CONFIG_TEMPLATE,
             serviceconfig_file,
             display_name=display_name,
@@ -138,54 +126,29 @@ def run(
             directory_out=output_dir,
         )
         logger.debug(DebugMessage.SERVICE_CONFIG_CREATED)
-        _create_file(
+
+        create_file(
             TemplateFile.BATCH_TEMPLATE,
             os.path.join(output_dir, TemplateFile.BATCH_FILENAME),
             directory_out=output_dir,
         )
         logger.debug(DebugMessage.BATCH_FILE_CREATED)
-        _create_file(
+
+        create_file(
             TemplateFile.HELPER_TEMPLATE,
             os.path.join(output_dir, TemplateFile.HELPER_FILENAME),
             directory_out=output_dir,
         )
         logger.debug(DebugMessage.HELPER_FILE_CREATED)
+
         logger.info(UserMessage.MEASUREMENT_PLUGIN_CREATED.format(plugin_dir=output_dir))
 
-    except InvalidCliArgsError as input_error:
+    except (InvalidCliArgsError, ClickException, TemplateLookupException, CompileException) as input_error:
         logger.error(input_error)
-
-    except ClickException as e:
-        logger.error(e.message)
-
+    
     except Exception as error:
         logger.error(UserMessage.ERROR_OCCURRED)
         logger.error(error)
 
     finally:
         logger.info(UserMessage.PROCESS_COMPLETED)
-
-
-def _create_file(
-    template_name: str,
-    file_name: str,
-    **template_args: Any,
-) -> None:
-    output = _render_template(template_name, **template_args)
-
-    with open(file_name, "wb") as f:
-        f.write(output)
-
-
-def _render_template(template_name: str, **template_args: Any) -> bytes:
-    file_dir = str(pathlib.Path(__file__).parent / "templates" / template_name)
-
-    template = Template(
-        filename=file_dir,
-        input_encoding=TemplateFile.ENCODING,
-        output_encoding=TemplateFile.ENCODING,
-    )
-    try:
-        return template.render(**template_args)
-    except Exception as e:
-        raise e

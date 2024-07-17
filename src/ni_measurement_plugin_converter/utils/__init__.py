@@ -17,9 +17,9 @@ from ni_measurement_plugin_converter.utils._logger import (
     remove_handlers,
 )
 from ni_measurement_plugin_converter.utils._manage_session import manage_session
-
 from ni_measurement_plugin_converter.utils._measurement_service import (
     extract_type,
     get_nims_datatype,
     get_nims_instrument,
 )
+from ni_measurement_plugin_converter.utils._write_data import create_file

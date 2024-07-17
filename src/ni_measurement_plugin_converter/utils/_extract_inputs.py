@@ -1,7 +1,7 @@
 """Implementation of extraction of inputs from measurement function."""
 
 import ast
-from typing import Dict, List
+from typing import Dict, List, Union
 
 from ni_measurement_plugin_converter.constants import TYPE_DEFAULT_VALUES
 from ni_measurement_plugin_converter.models import InputConfigurations
@@ -9,7 +9,7 @@ from ._measurement_service import extract_type, get_nims_datatype
 
 
 def extract_inputs(function_node: ast.FunctionDef) -> List[InputConfigurations]:
-    """Extract inputs from `function_node`
+    """Extract inputs from `function_node`.
 
     Args:
         function_node (FunctionDef): Measurement function node.
@@ -32,7 +32,15 @@ def extract_inputs(function_node: ast.FunctionDef) -> List[InputConfigurations]:
     return input_configuration
 
 
-def get_input_params_without_defaults(args):
+def get_input_params_without_defaults(args: List[ast.arg]) -> Dict[str, Dict[str, str]]:
+    """Get input parameters with its default values assigned externally.
+
+    Args:
+        args (List[ast.arg]): Input arguments object without default values.
+
+    Returns:
+        Dict[str, Dict[str, str]]: Argument name as key and its type and default value as values.
+    """
     parameter_types = {}
     for arg in args:
         param_name = arg.arg
@@ -53,7 +61,16 @@ def get_input_params_without_defaults(args):
     return parameter_types
 
 
-def get_input_params_with_defaults(args, defaults):
+def get_input_params_with_defaults(args: List[ast.arg], defaults: List[Union[ast.Constant, ast.List]]) -> Dict[str, Dict[str, str]]:
+    """Get input parameters with its default values assigned
+
+    Args:
+        args (List[ast.arg]): Input arguments object.
+        defaults (List[Union[ast.Constant, ast.List]]): User inputted default values.
+
+    Returns:
+        Dict[str, Dict[str, str]]: Argument name as key and its type and default value as values.
+    """
     parameter_types = {}
 
     # Assign default values for the remaining parameters
@@ -75,6 +92,17 @@ def get_input_params_with_defaults(args, defaults):
 
 
 def get_input_configurations(inputs: Dict[str, Dict[str, str]]) -> List[InputConfigurations]:
+    """Get input configurations.
+
+    1. Get measurement service data type for each argument.
+    2. Format input configurations to `InputConfigurations`. 
+
+    Args:
+        inputs (Dict[str, Dict[str, str]]): Input configurations as dictionary.
+
+    Returns:
+        List[InputConfigurations]: Updated input with measurement service data type.
+    """
     input_data = []
 
     for param_name, param_info in inputs.items():
@@ -105,7 +133,8 @@ def generate_input_params(input_configurations: List[InputConfigurations]) -> st
 
 
 def generate_input_signature(input_configurations: List[InputConfigurations]) -> str:
-    """Generate string separated by comma where each element represents an input parameter with its data type.
+    """Generate string separated by comma where each element represents an \
+        input parameter with its data type.
 
     Args:
         input_configurations (List[InputConfigurations]): Input configurations.

@@ -18,5 +18,6 @@ from ni_measurement_plugin_converter.constants._messages import DebugMessage, Us
 from ni_measurement_plugin_converter.constants._template_files import (
     MEASUREMENT_VERSION,
     MIGRATED_MEASUREMENT_FILENAME,
+    TEMPLATE_DIR,
     TemplateFile,
 )
