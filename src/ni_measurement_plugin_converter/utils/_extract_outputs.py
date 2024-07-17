@@ -4,11 +4,12 @@ import ast
 from typing import List, Tuple, Union
 
 from ni_measurement_plugin_converter.models import OutputConfigurations
+
 from ._measurement_service import extract_type, get_nims_datatype
 
 
 def extract_outputs(function_node: ast.FunctionDef) -> Tuple[List[OutputConfigurations], bool]:
-    """Extract outputs from `function_node`
+    """Extract outputs from `function_node`.
 
     Args:
         function_node (ast.FunctionDef): Measurement function node.

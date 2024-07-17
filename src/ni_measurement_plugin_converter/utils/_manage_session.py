@@ -67,13 +67,14 @@ def __get_source_code(migrated_file_dir: str):
 
 def add_reservation_param(
     migrated_file_dir: str,
-    source_code: str,
+    source_code: ast.Module,
     function_node: ast.FunctionDef,
 ) -> None:
     """Add reservation parameter to migrated measurement file.
 
     Args:
         migrated_file_dir (str): Migrated measurement file directory.
+        source_code (ast.Moduel): Source code object.
         function_node (ast.FunctionDef): Measurement function node.
     """
     code_tree = ast.parse(source_code)
@@ -90,16 +91,16 @@ def add_reservation_param(
 
 def replace_session_initialization(
     migrated_file_dir: str,
-    source_code: str,
-    function_node: str,
+    source_code: ast.Module,
+    function_node: ast.FunctionDef,
     drivers: List[str],
 ) -> List[Tuple[str, str, str]]:
     """Replace session initialization in the migrated file.
 
     Args:
         migrated_file_dir (str): Migrated file directory.
-        source_code (str): Source code object.
-        function_node (str): Function node object.
+        source_code (ast.Module): Source code object.
+        function_node (ast.FunctionDef): Function node object.
         drivers (List[str]): Drivers
 
     Returns:
@@ -154,7 +155,7 @@ def __replace_session(node: ast.With, driver: List[str]) -> List[Tuple[str, str,
 
 def insert_session_assignment(
     migrated_file_dir: str,
-    source_code: str,
+    source_code: ast.Module,
     function_node: ast.FunctionDef,
     session_info: str,
 ) -> None:
@@ -162,21 +163,23 @@ def insert_session_assignment(
 
     Args:
         migrated_file_dir (str): Migrated file directory.
-        source_code (str): Source code object.
+        source_code (ast.Module): Source code object.
         function_node (ast.FunctionDef): Function node object.
         session_info (str): Session information.
     """
     for _, child_node in enumerate(function_node.body):
         if isinstance(child_node, ast.With):
             # Get the indentation level of the with statement
-            indent = " " * (child_node.col_offset + 4)  # Assuming 4 spaces per level
+            indent = " " * (child_node.col_offset + 4)
+
             # Construct the text to insert with proper indentation
             text_line = f"{indent}{session_info}\n"
+
             # Insert the text immediately after the with block
             source_lines = source_code.split("\n")
             source_lines.insert(child_node.lineno, text_line)
-            # Join the modified source lines
             modified_source = "\n".join(source_lines)
+
             return modified_source
 
     with open(migrated_file_dir, "w") as file:

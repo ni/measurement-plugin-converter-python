@@ -5,6 +5,7 @@ from typing import Dict, List, Union
 
 from ni_measurement_plugin_converter.constants import TYPE_DEFAULT_VALUES
 from ni_measurement_plugin_converter.models import InputConfigurations
+
 from ._measurement_service import extract_type, get_nims_datatype
 
 
@@ -61,8 +62,11 @@ def get_input_params_without_defaults(args: List[ast.arg]) -> Dict[str, Dict[str
     return parameter_types
 
 
-def get_input_params_with_defaults(args: List[ast.arg], defaults: List[Union[ast.Constant, ast.List]]) -> Dict[str, Dict[str, str]]:
-    """Get input parameters with its default values assigned
+def get_input_params_with_defaults(
+    args: List[ast.arg],
+    defaults: List[Union[ast.Constant, ast.List]],
+) -> Dict[str, Dict[str, str]]:
+    """Get input parameters with its default values assigned.
 
     Args:
         args (List[ast.arg]): Input arguments object.
@@ -95,7 +99,7 @@ def get_input_configurations(inputs: Dict[str, Dict[str, str]]) -> List[InputCon
     """Get input configurations.
 
     1. Get measurement service data type for each argument.
-    2. Format input configurations to `InputConfigurations`. 
+    2. Format input configurations to `InputConfigurations`.
 
     Args:
         inputs (Dict[str, Dict[str, str]]): Input configurations as dictionary.

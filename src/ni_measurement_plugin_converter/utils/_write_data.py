@@ -1,7 +1,11 @@
-from typing import Any
+"""Implementation of file writing."""
+
 import pathlib
+from typing import Any
+
 from mako.template import Template
-from ni_measurement_plugin_converter.constants import TemplateFile, TEMPLATE_DIR
+
+from ni_measurement_plugin_converter.constants import TEMPLATE_DIR, TemplateFile
 
 
 def create_file(template_name: str, file_name: str, **template_args: Any) -> None:

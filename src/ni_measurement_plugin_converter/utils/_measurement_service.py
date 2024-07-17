@@ -1,7 +1,7 @@
-"""NI Measurement Service Datatype and Instrument."""
+"""Implementation of Get NI Measurement Service Datatype and Instrument."""
 
 import ast
-from typing import List, Union
+from typing import Union
 
 from ni_measurement_plugin_converter.constants import NIMS_TYPE, DriverSession
 
@@ -62,4 +62,3 @@ def extract_type(node: Union[ast.Name, ast.Subscript]) -> str:
         else:
             slice_id = extract_type(node.slice)
             return f"{generic_type}[{slice_id}]"
-

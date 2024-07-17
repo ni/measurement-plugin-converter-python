@@ -1,4 +1,4 @@
-"""Get measurement function node."""
+"""Implementation of Get measurement function node."""
 
 import ast
 from typing import Union
@@ -7,7 +7,7 @@ from typing import Union
 def get_measurement_function(
     measurement_file_dir: str,
     function: str,
-) -> Union[None, ast.FunctionDef]:
+) -> Union[ast.FunctionDef, None]:
     """Get measurement `function` node from `measurement_file_dir`.
 
     1. Read the measurement file.
@@ -21,7 +21,8 @@ def get_measurement_function(
         function (str): Name of measurement function.
 
     Returns:
-        Union[None, ast.FunctionDef]: Function node is returned if present. `None` is returned if not.
+        Union[ast.FunctionDef, None]: Function node is returned if present. \
+            `None` is returned if not.
     """
     function_node = None
 

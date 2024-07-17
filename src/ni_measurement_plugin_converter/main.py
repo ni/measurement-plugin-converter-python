@@ -51,6 +51,14 @@ def run(
     function: str,
     output_dir: str,
 ) -> None:
+    """Run the CLI tool.
+
+    Args:
+        display_name (str): Display name.
+        measurement_file_dir (str): Measurement file directory.
+        function (str): Measurement function name.
+        output_dir (str): Output directory.
+    """
     try:
         log_directory = None
         logger = initialize_logger(name="console_logger", log_directory=log_directory)
@@ -143,9 +151,14 @@ def run(
 
         logger.info(UserMessage.MEASUREMENT_PLUGIN_CREATED.format(plugin_dir=output_dir))
 
-    except (InvalidCliArgsError, ClickException, TemplateLookupException, CompileException) as input_error:
+    except (
+        InvalidCliArgsError,
+        ClickException,
+        TemplateLookupException,
+        CompileException,
+    ) as input_error:
         logger.error(input_error)
-    
+
     except Exception as error:
         logger.error(UserMessage.ERROR_OCCURRED)
         logger.error(error)

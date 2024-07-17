@@ -83,11 +83,11 @@ def __create_stream_handler() -> StreamHandler:
     return handler
 
 
-def remove_handlers(log: Logger) -> None:
+def remove_handlers(logger: Logger) -> None:
     """Remove Log Handlers.
 
     Args:
         logger (Logger): Logger object.
     """
-    for handler in log.handlers:
-        log.removeHandler(handler)
+    for handler in logger.handlers:
+        logger.removeHandler(handler)
