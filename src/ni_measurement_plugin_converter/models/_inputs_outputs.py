@@ -1,4 +1,4 @@
-"""Inputs and Outputs Models."""
+"""Models utilized in inputs and outputs extraction."""
 
 from typing import List, Union
 

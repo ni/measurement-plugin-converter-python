@@ -6,7 +6,7 @@ TEMPLATE_DIR = "templates"
 
 
 class TemplateFile:
-    """Template file names."""
+    """Template file."""
 
     MEASUREMENT_TEMPLATE = "measurement.py.mako"
     MEASUREMENT_FILENAME = "measurement.py"

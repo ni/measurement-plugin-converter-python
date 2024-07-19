@@ -1,4 +1,4 @@
-"""CLI Arguments Model."""
+"""Models utilized in Command Line Interface implementation."""
 
 import ast
 import os
@@ -28,7 +28,12 @@ class CliInputs(BaseModel):
             raise InvalidCliArgsError(UserMessage.INVALID_FILE_DIR)
 
         if not self.validate_function():
-            raise InvalidCliArgsError(UserMessage.FUNCTION_NOT_FOUND)
+            raise InvalidCliArgsError(
+                UserMessage.FUNCTION_NOT_FOUND.format(
+                    function=self.function,
+                    measurement_file_dir=self.measurement_file_dir,
+                )
+            )
 
         try:
             os.makedirs(self.output_dir, exist_ok=True)

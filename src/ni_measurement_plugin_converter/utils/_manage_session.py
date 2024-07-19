@@ -65,7 +65,7 @@ def add_reservation_param(code_tree: ast.Module, function: str) -> str:
     """Add reservation parameter to source code.
 
     Args:
-        code_tree (ast.Module): Migrated measurement source code.
+        code_tree (ast.Module): Migrated measurement source code tree.
         function (str): Measurement function name.
 
     Returns:
@@ -87,8 +87,8 @@ def replace_session_initialization(
     """Replace session initialization in the migrated file.
 
     Args:
-        source_code (ast.Module): Migrated measurement source code.
-        function (ast.FunctionDef): Measurement function name.
+        source_code (str): Migrated measurement source code.
+        function (str): Measurement function name.
 
     Returns:
         Tuple[str, List[Tuple[str, str, str]]]: Updated source code and List of tuple of \

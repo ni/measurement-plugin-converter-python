@@ -1,4 +1,4 @@
-"""Implementation of Get measurement function."""
+"""Implementation of get measurement function."""
 
 import ast
 from typing import Union

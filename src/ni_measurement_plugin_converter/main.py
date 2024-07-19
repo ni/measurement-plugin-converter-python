@@ -1,4 +1,4 @@
-"""Implementation of command line interface and convert to measurement plugin."""
+"""Implementation of command line interface and measurement plugin conversion."""
 
 import os
 import re
@@ -7,7 +7,7 @@ from pathlib import Path
 
 import click
 from click import ClickException
-from mako.exceptions import TemplateLookupException, CompileException
+from mako.exceptions import CompileException, TemplateLookupException
 
 from ni_measurement_plugin_converter import __version__
 from ni_measurement_plugin_converter.constants import (
@@ -30,8 +30,8 @@ from ni_measurement_plugin_converter.utils import (
     get_measurement_function,
     get_nims_instrument,
     initialize_logger,
-    remove_handlers,
     manage_session,
+    remove_handlers,
 )
 
 
@@ -77,7 +77,8 @@ def run(
 
         logger.info(UserMessage.VALIDATE_CLI_ARGS)
 
-        shutil.copy(measurement_file_dir, os.path.join(output_dir, MIGRATED_MEASUREMENT_FILENAME))
+        migrated_file_dir = os.path.join(output_dir, MIGRATED_MEASUREMENT_FILENAME)
+        shutil.copy(measurement_file_dir, migrated_file_dir)
         logger.debug(DebugMessage.FILE_MIGRATED)
 
         logger.debug(DebugMessage.GET_FUNCTION)
@@ -94,7 +95,7 @@ def run(
         outputs_infos, iterable_outputs = extract_outputs(function_node)
         output_signature = generate_output_signature(outputs_infos)
 
-        migrated_file_dir = os.path.join(output_dir, MIGRATED_MEASUREMENT_FILENAME)
+        # Manage session.
         instrument_type, resource_name = manage_session(migrated_file_dir, function, logger)
 
         nims_instrument = get_nims_instrument(instrument_type)
