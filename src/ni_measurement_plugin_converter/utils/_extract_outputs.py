@@ -23,7 +23,7 @@ def extract_outputs(function_node: ast.FunctionDef) -> Tuple[List[OutputInfo], b
     output_types = extract_type(function_node.returns)
 
     if isinstance(output_types, str) and iterable_output:
-        # Get combined output types to separate elements.
+        # Separate each output types from combined output types.
         output_types = re.findall(r"'([^']*)'", output_types)
 
     elif isinstance(output_types, str) and not iterable_output:
@@ -77,7 +77,7 @@ def get_all_output_variables(elements: List[ast.Name]) -> List[str]:
 
 def get_outputs_infos(
     output_variable_names: List[str],
-    output_return_types: Tuple[str],
+    output_return_types: List[str],
 ) -> List[OutputInfo]:
     """Get outputs' information.
 
@@ -86,7 +86,7 @@ def get_outputs_infos(
 
     Args:
         output_variable_names (List[str]): Output variable names.
-        output_return_types (Tuple[str]): Output variable types.
+        output_return_types (List[str]): Output variable types.
 
     Returns:
         List[OutputInfo]: Updated output infos with measurement service data type.
