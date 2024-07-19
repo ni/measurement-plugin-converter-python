@@ -1,31 +1,30 @@
-# Contributing to \<reponame\> 
+# Contributing to *python-code-migration-utility* 
 
-Contributions to \<reponame\> are welcome from all!
+Contributions to *python-code-migration-utility* are welcome from all!
 
-\<reponame\> is managed via [git](https://git-scm.com), with the canonical upstream
-repository hosted on [GitHub](https://github.com/ni/<reponame>/).
+*python-code-migration-utility* is managed via [git](https://git-scm.com), with the canonical upstream
+repository hosted on [GitHub](https://github.com/ni/ni-spec-server-proxy).
 
-\<reponame\> follows a pull-request model for development.  If you wish to
-contribute, you will need to create a GitHub account, fork this project, push a
-branch with your changes to your project, and then submit a pull request.
+*python-code-migration-utility* follows a pull-request model for development.  If
+you wish to contribute, you will need to create a GitHub account, clone this
+project, push a branch with your changes to your project, and then submit a
+pull request.
 
-Please remember to sign off your commits (e.g., by using `git commit -s` if you
-are using the command line client). This amends your git commit message with a line
-of the form `Signed-off-by: Name Lastname <name.lastmail@emailaddress.com>`. Please
-include all authors of any given commit into the commit message with a
-`Signed-off-by` line. This indicates that you have read and signed the Developer
-Certificate of Origin (see below) and are able to legally submit your code to
-this repository.
+See [GitHub's official documentation](https://help.github.com/articles/using-pull-requests/)
+for more details.
 
-See [GitHub's official documentation](https://help.github.com/articles/using-pull-requests/) for more details.
+**Important:** Commit titles and messages should adhere to the
+[Angular style](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#commits)
+to ensure proper semantic versioning.
 
 # Getting Started
 
-- TODO: include build steps here.
+To contribute to this project, it is recommended that you follow these steps:
 
-# Testing
-
-- TODO: include testing steps here.
+1. Clone this repository on GitHub.
+2. Make your change.
+3. Send a GitHub Pull Request to the main repository's master branch. GitHub
+   Pull Requests are the expected method of code collaboration on this project.
 
 # Developer Certificate of Origin (DCO)
 
@@ -57,5 +56,5 @@ See [GitHub's official documentation](https://help.github.com/articles/using-pul
 
 (taken from [developercertificate.org](https://developercertificate.org/))
 
-See [LICENSE](https://github.com/ni/<reponame>/blob/main/LICENSE)
-for details about how \<reponame\> is licensed.
+See [LICENSE](https://github.com/ni/python-code-migration-utility/blob/main/LICENSE)
+for details about how *python-code-migration-utility* is licensed.

@@ -1,20 +1,40 @@
-# MeasurementLink™ Code Converter for Python
+# NI Measurement Plugin Converter for Python
 
----
+### Description
 
-## Introduction
+- NI Measurement Plugin Converter for Python is a CLI tool used to convert python measurements to NI Measurement Plugins.
 
-MeasurementLink Code Converter for Python (`ni-measurementlink-converter`) is a
-tool for generating reusable measurement plug-ins using gRPC services.
+### Code Setup
 
-For installation and usage, see [MeasurementLink Support for Python (`ni-measurementlink-service`)](https://pypi.org/project/ni-measurementlink-service/).
+- Clone the repository using `git clone <repository link>`.
+- Check out to the required branch using `git checkout <branch name>`
 
----
+### Setup Virtual Environment
 
-## Dependencies
+- Open terminal.
+- Run `cd python-code-migration-utility`
+- Run `poetry env use <Python 3.8 path>`
+- Run `poetry shell` to activate virtual environment.
+- Run `poetry install` to install dependency files.
 
-- Python >= 3.8 [(3.9 recommended)](https://www.python.org/downloads/release/python-3913/)
-- [mako >= 1.2.1, < 2.x](https://pypi.org/project/Mako/1.2.1/)
-- [click >= 8.1.3](https://pypi.org/project/click/8.1.3/)
+### Example usage
 
----
+- Run `ni-measurement-plugin-converter --help` to know required CLI arguments.
+```
+Usage: ni-measurement-plugin-converter [OPTIONS]
+
+  Run the CLI tool.
+
+  Args:     display_name (str): Display name.     measurement_file_dir (str):
+  Measurement file directory.     function (str): Measurement function name.
+  output_dir (str): Output directory.
+
+Options:
+  -d, --display-name TEXT         Display name.  [required]
+  -m, --measurement-file-dir TEXT
+                                  Measurement file directory.  [required]
+  -f, --function TEXT             Measurement function name.  [required]
+  -o, --output-dir TEXT           Output directory.  [required]
+  -h, --help                      Show this message and exit.
+```
+- Run `ni-measurement-plugin-converter -d <display name> -m <measurement file direcotry> -f <measurement function name> -o <output directory>` to get convert python measurement to measurement plugin.
