@@ -15,7 +15,7 @@ class TemplateFile:
     HELPER_FILENAME = "_helpers.py"
 
     SERVICE_CONFIG_TEMPLATE = "measurement.serviceconfig.mako"
-    SERVICE_CONFIG_FILENAME = "measurement.serviceconfig"
+    SERVICE_CONFIG_FILE_EXTENSION = ".serviceconfig"
 
     BATCH_TEMPLATE = "start.bat.mako"
     BATCH_FILENAME = "start.bat"

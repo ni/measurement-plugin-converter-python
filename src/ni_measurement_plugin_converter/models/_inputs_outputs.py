@@ -5,8 +5,8 @@ from typing import List, Union
 from pydantic import BaseModel
 
 
-class InputConfigurations(BaseModel):
-    """Measurement inputs configurations."""
+class InputInfo(BaseModel):
+    """Measurement function input's info."""
 
     param_name: str
     param_type: str
@@ -14,8 +14,8 @@ class InputConfigurations(BaseModel):
     default_value: Union[int, float, str, bool, List[int], List[float], List[str], List[bool]]
 
 
-class OutputConfigurations(BaseModel):
-    """Measurement outputs configurations."""
+class OutputInfo(BaseModel):
+    """Measurement function output's info."""
 
     variable_name: str
     variable_type: str

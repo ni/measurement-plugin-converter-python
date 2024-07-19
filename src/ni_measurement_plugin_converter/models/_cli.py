@@ -2,7 +2,7 @@
 
 import ast
 import os
-from typing import Union
+from typing import Optional
 
 from pydantic import BaseModel, model_validator
 
@@ -37,13 +37,15 @@ class CliInputs(BaseModel):
 
         return self
 
-    def validate_function(self) -> Union[ast.FunctionDef, None]:
+    def validate_function(self) -> Optional[ast.FunctionDef]:
         """Validate the CLI inputs.
 
         Returns:
-            Union[ast.FunctionDef, None]: Function node if function is found in measurement file. \
+            Optional[ast.FunctionDef]: Function node if function is found in measurement file. \
                 Else `None` is returned.
         """
+        function_node = None
+
         with open(self.measurement_file_dir, "r") as file:
             code = file.read()
 

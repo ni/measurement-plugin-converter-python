@@ -18,7 +18,7 @@ def get_nims_datatype(type: str) -> str:
     try:
         return NIMS_TYPE[type]
     except KeyError:
-        ...
+        pass
 
 
 def get_nims_instrument(instrument_type: str) -> str:
@@ -33,7 +33,7 @@ def get_nims_instrument(instrument_type: str) -> str:
     try:
         return DriverSession[instrument_type].value
     except KeyError:
-        ...
+        pass
 
 
 def extract_type(node: Union[ast.Name, ast.Subscript]) -> str:

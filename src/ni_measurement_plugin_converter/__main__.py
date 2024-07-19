@@ -1,4 +1,4 @@
-""""Creates a measurement through use of template.py."""
+""""Convert python measurements to python measurement plugin."""
 
 from ni_measurement_plugin_converter.main import run
 

@@ -1,10 +1,10 @@
-<%page args="display_name, version, service_class, serviceconfig_file, resource_name, instrument_type, nims_instrument, input_configurations, output_configurations, input_signature, input_param_names, output_param_types, updated_file_name, method_name, tuple_of_outputs"/>\
+<%page args="display_name, version, serviceconfig_file, resource_name, instrument_type, nims_instrument, inputs_infos, outputs_infos, input_signature, input_param_names, output_signature, migrated_file, function_name, iterable_outputs"/>\
 \
 
 import pathlib
 import sys
-from typing import List, Tuple, Iterable
-from ${updated_file_name} import ${method_name}
+from typing import Iterable, List, Union
+from ${migrated_file} import ${function_name}
 
 import ni_measurementlink_service as nims
 
@@ -24,24 +24,24 @@ measurement_service = nims.MeasurementService(
     ["${resource_name}"],
     instrument_type=${nims_instrument},
 )
-    %for input_config in input_configurations:
-        %if input_config.nims_type == "nims.DataType.String":
-@measurement_service.configuration("${input_config.param_name}", ${input_config.nims_type}, "${input_config.default_value}")
+    %for input_infos in inputs_infos:
+        %if input_infos.nims_type == "nims.DataType.String":
+@measurement_service.configuration("${input_infos.param_name}", ${input_infos.nims_type}, "${input_infos.default_value}")
         %else:
-@measurement_service.configuration("${input_config.param_name}", ${input_config.nims_type}, ${input_config.default_value})
+@measurement_service.configuration("${input_infos.param_name}", ${input_infos.nims_type}, ${input_infos.default_value})
         %endif
     %endfor
-    %for output_config in output_configurations:
-@measurement_service.output("${output_config.variable_name}", ${output_config.variable_type})
+    %for output_infos in outputs_infos:
+@measurement_service.output("${output_infos.variable_name}", ${output_infos.nims_type})
     %endfor
-% if not tuple_of_outputs:
-def measure(pin_names: Iterable[str], ${input_signature}) -> Tuple[${output_param_types}]:
+% if not iterable_outputs:
+def measure(pin_names: Iterable[str], ${input_signature}) -> Iterable[Union[${output_signature}]]:
     with measurement_service.context.reserve_session(pin_names) as reservation:
-        return (${method_name}(reservation, ${input_param_names}),)
+        return (${function_name}(reservation, ${input_param_names}),)
 % else:
-def measure(pin_names: Iterable[str], ${input_signature}) -> Tuple[${output_param_types}]:
+def measure(pin_names: Iterable[str], ${input_signature}) -> Iterable[Union[${output_signature}]]:
     with measurement_service.context.reserve_session(pin_names) as reservation:
-        return ${method_name}(reservation, ${input_param_names})
+        return ${function_name}(reservation, ${input_param_names})
 %endif
 def main() -> None:
     with measurement_service.host_service():

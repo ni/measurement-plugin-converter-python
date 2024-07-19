@@ -23,12 +23,12 @@ NIMS_TYPE = {
 
 # Default values for datatypes.
 TYPE_DEFAULT_VALUES = {
-    "int": 0,
-    "float": 0.1,
+    "int": 1,
+    "float": 1.1,
     "str": "",
     "bool": True,
-    "List[int]": [0],
-    "List[float]": [0.1],
+    "List[int]": [1],
+    "List[float]": [1.1],
     "List[str]": [""],
     "List[bool]": [True],
 }

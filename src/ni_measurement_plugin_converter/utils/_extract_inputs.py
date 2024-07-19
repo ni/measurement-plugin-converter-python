@@ -4,62 +4,63 @@ import ast
 from typing import Dict, List, Union
 
 from ni_measurement_plugin_converter.constants import TYPE_DEFAULT_VALUES
-from ni_measurement_plugin_converter.models import InputConfigurations
+from ni_measurement_plugin_converter.models import InputInfo
 
 from ._measurement_service import extract_type, get_nims_datatype
 
+_TYPE = "type"
+_DEFAULT = "default"
 
-def extract_inputs(function_node: ast.FunctionDef) -> List[InputConfigurations]:
-    """Extract inputs from `function_node`.
+
+def extract_inputs(function_node: ast.FunctionDef) -> List[InputInfo]:
+    """Extract inputs' info from `function_node`.
 
     Args:
         function_node (FunctionDef): Measurement function node.
 
     Returns:
-        List[Inputs]: Measurement function input details.
+        List[InputInfo]: Measurement function input information.
     """
-    # Analyze types of default values for parameters
-    parameter_types = {}
-    defaults = function_node.args.defaults or []
+    inputs_infos = {}
+    param_defaults = function_node.args.defaults or []
 
-    args_without_defaults = function_node.args.args[: len(function_node.args.args) - len(defaults)]
-    args_with_defaults = function_node.args.args[len(args_without_defaults) :]
+    params_without_defaults = function_node.args.args[
+        : len(function_node.args.args) - len(param_defaults)
+    ]
+    params_with_defaults = function_node.args.args[len(params_without_defaults) :]
 
-    parameter_types.update(get_input_params_with_defaults(args_with_defaults, defaults))
-    parameter_types.update(get_input_params_without_defaults(args_without_defaults))
+    inputs_infos.update(get_input_params_without_defaults(params_without_defaults))
+    inputs_infos.update(get_input_params_with_defaults(params_with_defaults, param_defaults))
 
-    input_configuration = get_input_configurations(inputs=parameter_types)
+    inputs_infos = update_inputs_infos(inputs_infos=inputs_infos)
 
-    return input_configuration
+    return inputs_infos
 
 
 def get_input_params_without_defaults(args: List[ast.arg]) -> Dict[str, Dict[str, str]]:
-    """Get input parameters with its default values assigned externally.
+    """Get input parameters whose default values are not available.
 
     Args:
         args (List[ast.arg]): Input arguments object without default values.
 
     Returns:
-        Dict[str, Dict[str, str]]: Argument name as key and its type and default value as values.
+        Dict[str, Dict[str, str]]: Parameter name as key and its type and default value as values.
     """
-    parameter_types = {}
+    input_params = {}
     for arg in args:
         param_name = arg.arg
         param_type = None
 
-        # Extract parameter type from annotation
         param_type = extract_type(arg.annotation)
 
-        # Assign default value based on parameter type if it's not provided
         try:
             default_value = TYPE_DEFAULT_VALUES[param_type]
         except KeyError:
             default_value = None
 
-        # Store parameter name, type, and default value
-        parameter_types[param_name] = {"type": param_type, "default": default_value}
+        input_params[param_name] = {_TYPE: param_type, _DEFAULT: default_value}
 
-    return parameter_types
+    return input_params
 
 
 def get_input_params_with_defaults(
@@ -75,7 +76,7 @@ def get_input_params_with_defaults(
     Returns:
         Dict[str, Dict[str, str]]: Argument name as key and its type and default value as values.
     """
-    parameter_types = {}
+    input_params = {}
 
     # Assign default values for the remaining parameters
     for arg, default_node in zip(args, defaults):
@@ -90,64 +91,63 @@ def get_input_params_with_defaults(
         default_value = ast.literal_eval(default_node)
 
         # Store parameter name, type, and default value
-        parameter_types[param_name] = {"type": param_type, "default": default_value}
+        input_params[param_name] = {_TYPE: param_type, _DEFAULT: default_value}
 
-    return parameter_types
+    return input_params
 
 
-def get_input_configurations(inputs: Dict[str, Dict[str, str]]) -> List[InputConfigurations]:
-    """Get input configurations.
+def update_inputs_infos(inputs_infos: Dict[str, Dict[str, str]]) -> List[InputInfo]:
+    """Update inputs' information.
 
     1. Get measurement service data type for each argument.
-    2. Format input configurations to `InputConfigurations`.
+    2. Format inputs information to `InputInfo`.
 
     Args:
-        inputs (Dict[str, Dict[str, str]]): Input configurations as dictionary.
+        inputs_infos (Dict[str, Dict[str, str]]): Input info as dictionary.
 
     Returns:
-        List[InputConfigurations]: Updated input with measurement service data type.
+        List[InputInfo]: Updated input info with measurement service data type.
     """
-    input_data = []
+    updated_inputs_infos = []
 
-    for param_name, param_info in inputs.items():
-        input_type = get_nims_datatype(param_info["type"])
-        input_data.append(
-            InputConfigurations(
+    for param_name, param_info in inputs_infos.items():
+        input_type = get_nims_datatype(param_info[_TYPE])
+        updated_inputs_infos.append(
+            InputInfo(
                 param_name=param_name,
-                param_type=param_info["type"],
+                param_type=param_info[_TYPE],
                 nims_type=input_type,
-                default_value=param_info["default"],
+                default_value=param_info[_DEFAULT],
             )
         )
 
-    return input_data
+    return updated_inputs_infos
 
 
-def generate_input_params(input_configurations: List[InputConfigurations]) -> str:
+def generate_input_params(inputs_infos: List[InputInfo]) -> str:
     """Generate string separated by comma where each element represents an input parameter.
 
     Args:
-        input_configurations (List[InputConfigurations]): Input configurations.
+        inputs_infos (List[InputInfo]): Input details.
 
     Returns:
-        str: Input parameters as a comma separated string.
+        str: Input parameters names as a comma separated string.
     """
-    parameter_names = [input_config.param_name for input_config in input_configurations]
+    parameter_names = [input_infos.param_name for input_infos in inputs_infos]
     return ", ".join(parameter_names)
 
 
-def generate_input_signature(input_configurations: List[InputConfigurations]) -> str:
+def generate_input_signature(inputs_infos: List[InputInfo]) -> str:
     """Generate string separated by comma where each element represents an \
         input parameter with its data type.
 
     Args:
-        input_configurations (List[InputConfigurations]): Input configurations.
+        inputs_infos (List[InputInfo]): Input information.
 
     Returns:
         str: Each input parameters and its data type as a comma separated string.
     """
-    parameter_info = []
-    for input_config in input_configurations:
-        parameter_info.append(f"{input_config.param_name}:{input_config.param_type}")
-
+    parameter_info = [
+        f"{input_infos.param_name}:{input_infos.param_type}" for input_infos in inputs_infos
+    ]
     return ", ".join(parameter_info)
