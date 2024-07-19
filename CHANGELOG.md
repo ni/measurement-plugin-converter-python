@@ -10,10 +10,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- Support for interger, float, string, boolean and the corresponding array elements.
+- Support for interger, float, string, boolean and the corresponding array data types.
 - Support for nidcpower instrument driver.
 
 ### Note
 
-- The pinmap and measurement UI file is not created by the tool.
+- Measurement Plugin created by the tool doesn't include Measurement UI and pinmap files.
   

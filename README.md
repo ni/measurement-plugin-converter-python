@@ -37,4 +37,4 @@ Options:
   -o, --output-dir TEXT           Output directory.  [required]
   -h, --help                      Show this message and exit.
 ```
-- Run `ni-measurement-plugin-converter -d <display name> -m <measurement file direcotry> -f <measurement function name> -o <output directory>` to get convert python measurement to measurement plugin.
+- Run `ni-measurement-plugin-converter -d <display name> -m <measurement file direcotry> -f <measurement function name> -o <output directory>` to convert python measurement to measurement plugin.

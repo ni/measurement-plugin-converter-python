@@ -13,7 +13,7 @@ class UserMessage:
         "Access is denied. "
         "Please run the tool with Admin privileges or provide a different file directory."
     )
-    FUNCTION_NOT_FOUND = "Function {function} not found in file {measurement_file_dir}"
+    FUNCTION_NOT_FOUND = "Measurement function {function} not found in file {measurement_file_dir}"
     VALIDATE_CLI_ARGS = "Inputs validated successfully."
 
     EXTRACT_INPUT_INFO = "Extracting inputs information from measurement function..."
@@ -40,5 +40,4 @@ class DebugMessage:
     MEASUREMENT_FILE_CREATED = "Measurement file is created."
     FILE_MIGRATED = "Migrated file is created."
     BATCH_FILE_CREATED = "Batch file is created."
-    HELPER_FILE_CREATED = "Helper file is created."
     SERVICE_CONFIG_CREATED = "Service config is created."

@@ -3,7 +3,7 @@
 Contributions to *python-code-migration-utility* are welcome from all!
 
 *python-code-migration-utility* is managed via [git](https://git-scm.com), with the canonical upstream
-repository hosted on [GitHub](https://github.com/ni/ni-spec-server-proxy).
+repository hosted on [GitHub](https://github.com/ni/python-code-migration-utility).
 
 *python-code-migration-utility* follows a pull-request model for development.  If
 you wish to contribute, you will need to create a GitHub account, clone this

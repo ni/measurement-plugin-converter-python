@@ -118,7 +118,7 @@ def run(
             input_signature=input_signature,
             input_param_names=input_param_names,
             output_signature=output_signature,
-            migrated_file=f"{Path(MIGRATED_MEASUREMENT_FILENAME).stem}",
+            migrated_file=Path(MIGRATED_MEASUREMENT_FILENAME).stem,
             function_name=function,
             directory_out=output_dir,
             iterable_outputs=iterable_outputs,
@@ -143,13 +143,6 @@ def run(
             directory_out=output_dir,
         )
         logger.debug(DebugMessage.BATCH_FILE_CREATED)
-
-        create_file(
-            TemplateFile.HELPER_TEMPLATE,
-            os.path.join(output_dir, TemplateFile.HELPER_FILENAME),
-            directory_out=output_dir,
-        )
-        logger.debug(DebugMessage.HELPER_FILE_CREATED)
 
         logger.info(UserMessage.MEASUREMENT_PLUGIN_CREATED.format(plugin_dir=output_dir))
 
