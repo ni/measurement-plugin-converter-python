@@ -14,8 +14,8 @@
               ],
               "path": "start.bat",              
               "annotations": {
-                "ni/service.description": "MeasurementLink example that sources and measures a DC voltage with an NI SMU.",
-                "ni/service.collection": "NI.Examples",
+                "ni/service.description": "",
+                "ni/service.collection": "",
                 "ni/service.tags": []
               }
           }

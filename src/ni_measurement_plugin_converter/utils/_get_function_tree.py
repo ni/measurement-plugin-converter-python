@@ -3,6 +3,8 @@
 import ast
 from typing import Union
 
+from ni_measurement_plugin_converter.constants import ENCODING
+
 
 def get_measurement_function(
     measurement_file_dir: str,
@@ -12,20 +14,20 @@ def get_measurement_function(
 
     1. Parse measurement file code into abstract syntax tree.
     2. Find the measurement function in the parsed code.
-    3. If `function` is present in `measurement_file_dir`, the function node is returned. `None`
-    is returned if not.
+    3. If `function` is present in `measurement_file_dir`, then the function node is returned. If \
+    not, then `None` is returned.
 
     Args:
         measurement_file_dir (str): Measurement file directory.
         function (str): Name of measurement function.
 
     Returns:
-        Union[ast.FunctionDef, None]: Function node is returned if present. \
-            `None` is returned if not.
+        Union[ast.FunctionDef, None]: If `function` is present in `measurement_file_dir`, \
+        then the function node is returned. If not, then `None` is returned.
     """
     function_node = None
 
-    with open(measurement_file_dir, "r") as file:
+    with open(measurement_file_dir, "r", encoding=ENCODING) as file:
         code = file.read()
 
     code_tree = ast.parse(code)

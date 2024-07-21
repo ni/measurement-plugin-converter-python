@@ -5,7 +5,7 @@ from typing import Any
 
 from mako.template import Template
 
-from ni_measurement_plugin_converter.constants import TEMPLATE_DIR, TemplateFile
+from ni_measurement_plugin_converter.constants import ENCODING, TEMPLATE_DIR
 
 
 def create_file(template_name: str, file_name: str, **template_args: Any) -> None:
@@ -34,8 +34,8 @@ def render_template(template_name: str, **template_args: Any) -> bytes:
 
     template = Template(
         filename=file_dir,
-        input_encoding=TemplateFile.ENCODING,
-        output_encoding=TemplateFile.ENCODING,
+        input_encoding=ENCODING,
+        output_encoding=ENCODING,
     )
 
     return template.render(**template_args)

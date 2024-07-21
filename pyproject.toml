@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "ni_measurement_plugin_converter"
 version = "1.0.0-dev0"
-description = "Measurement Plugin Converter for Python"
+description = "Measurement Plug-in Converter for Python"
 authors = ["NI <opensource@ni.com>"]
 readme = "README.md"
 packages = [{ include = "ni_measurement_plugin_converter", from = "src" }]

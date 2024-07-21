@@ -1,4 +1,4 @@
-<%page args="display_name, version, serviceconfig_file, resource_name, instrument_type, nims_instrument, inputs_infos, outputs_infos, input_signature, input_param_names, output_signature, migrated_file, function_name, iterable_outputs"/>\
+<%page args="display_name, version, serviceconfig_file, resource_name, instrument_type, nims_instrument, inputs_info, outputs_info, input_signature, input_param_names, output_signature, migrated_file, function_name, iterable_outputs"/>\
 \
 
 import pathlib
@@ -24,15 +24,15 @@ measurement_service = nims.MeasurementService(
     ["${resource_name}"],
     instrument_type=${nims_instrument},
 )
-    %for input_infos in inputs_infos:
-        %if input_infos.nims_type == "nims.DataType.String":
-@measurement_service.configuration("${input_infos.param_name}", ${input_infos.nims_type}, "${input_infos.default_value}")
+    %for input_info in inputs_info:
+        %if input_info.nims_type == "nims.DataType.String":
+@measurement_service.configuration("${input_info.param_name}", ${input_info.nims_type}, "${input_info.default_value}")
         %else:
-@measurement_service.configuration("${input_infos.param_name}", ${input_infos.nims_type}, ${input_infos.default_value})
+@measurement_service.configuration("${input_info.param_name}", ${input_info.nims_type}, ${input_info.default_value})
         %endif
     %endfor
-    %for output_infos in outputs_infos:
-@measurement_service.output("${output_infos.variable_name}", ${output_infos.nims_type})
+    %for output_info in outputs_info:
+@measurement_service.output("${output_info.variable_name}", ${output_info.nims_type})
     %endfor
 % if not iterable_outputs:
 def measure(pin_names: Iterable[str], ${input_signature}) -> Iterable[Union[${output_signature}]]:

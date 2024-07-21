@@ -6,7 +6,12 @@ from typing import List, Tuple
 
 import astor
 
-from ni_measurement_plugin_converter.constants import DebugMessage, DriverSession, UserMessage
+from ni_measurement_plugin_converter.constants import (
+    ENCODING,
+    DebugMessage,
+    DriverSession,
+    UserMessage,
+)
 
 _RESERVATION = "reservation"
 _SESSION_INFO = "session_info"
@@ -27,7 +32,7 @@ def manage_session(migrated_file_dir: str, function: str, logger: Logger) -> Tup
     Returns:
         Tuple[str, str]: Instrument name and resource name.
     """
-    with open(migrated_file_dir, "r") as file:
+    with open(migrated_file_dir, "r", encoding=ENCODING) as file:
         source_code = file.read()
 
     code_tree = ast.parse(source_code)
@@ -53,7 +58,7 @@ def manage_session(migrated_file_dir: str, function: str, logger: Logger) -> Tup
         session_info=f"{actual_session_name} = {_SESSION_INFO}.session",
     )
 
-    with open(migrated_file_dir, "w") as file:
+    with open(migrated_file_dir, "w", encoding=ENCODING) as file:
         file.write(session_inserted_source_code)
 
     logger.debug(DebugMessage.MIGRATED_FILE_MODIFIED)

@@ -3,7 +3,7 @@
 Contributions to *python-code-migration-utility* are welcome from all!
 
 *python-code-migration-utility* is managed via [git](https://git-scm.com), with the canonical upstream
-repository hosted on [GitHub](https://github.com/ni/python-code-migration-utility).
+repository hosted on [GitHub](https://github.com/ni/ni-measurement-plugin-converter).     
 
 *python-code-migration-utility* follows a pull-request model for development.  If
 you wish to contribute, you will need to create a GitHub account, clone this
@@ -56,5 +56,5 @@ To contribute to this project, it is recommended that you follow these steps:
 
 (taken from [developercertificate.org](https://developercertificate.org/))
 
-See [LICENSE](https://github.com/ni/python-code-migration-utility/blob/main/LICENSE)
+See [LICENSE](https://github.com/ni/ni-measurement-plugin-converter/blob/main/LICENSE)
 for details about how *python-code-migration-utility* is licensed.

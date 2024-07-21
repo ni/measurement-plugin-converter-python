@@ -4,16 +4,15 @@ All notable change to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## NI Measurement Plugin Converter
+## NI Measurement Plug-in Converter
 
 ## [1.0.0-dev0] - 2024-07-19
 
 ### Added
 
-- Support for interger, float, string, boolean and the corresponding array data types.
-- Support for nidcpower instrument driver.
+- Support for integer, float, string, boolean and the corresponding array data types.
+- Support for NI-DCPower instrument driver.
 
 ### Note
 
-- Measurement Plugin created by the tool doesn't include Measurement UI and pinmap files.
-  
+- This measurement plug-in created by this tool doesn't include Measurement UI file.

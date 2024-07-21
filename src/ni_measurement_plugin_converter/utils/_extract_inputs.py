@@ -21,7 +21,7 @@ def extract_inputs(function_node: ast.FunctionDef) -> List[InputInfo]:
     Returns:
         List[InputInfo]: Measurement function input information.
     """
-    inputs_infos = {}
+    inputs_info = {}
     param_defaults = function_node.args.defaults or []
 
     params_without_defaults = function_node.args.args[
@@ -29,12 +29,12 @@ def extract_inputs(function_node: ast.FunctionDef) -> List[InputInfo]:
     ]
     params_with_defaults = function_node.args.args[len(params_without_defaults) :]
 
-    inputs_infos.update(get_input_params_without_defaults(params_without_defaults))
-    inputs_infos.update(get_input_params_with_defaults(params_with_defaults, param_defaults))
+    inputs_info.update(get_input_params_without_defaults(params_without_defaults))
+    inputs_info.update(get_input_params_with_defaults(params_with_defaults, param_defaults))
 
-    inputs_infos = update_inputs_infos(inputs_infos=inputs_infos)
+    inputs_info = update_inputs_info(inputs_info=inputs_info)
 
-    return inputs_infos
+    return inputs_info
 
 
 def get_input_params_without_defaults(args: List[ast.arg]) -> Dict[str, Dict[str, str]]:
@@ -51,7 +51,9 @@ def get_input_params_without_defaults(args: List[ast.arg]) -> Dict[str, Dict[str
         param_name = arg.arg
         param_type = None
 
-        param_type = extract_type(arg.annotation)
+        # Extract parameter type from annotation
+        if arg.annotation:
+            param_type = extract_type(arg.annotation)
 
         try:
             default_value = TYPE_DEFAULT_VALUES[param_type]
@@ -96,23 +98,23 @@ def get_input_params_with_defaults(
     return input_params
 
 
-def update_inputs_infos(inputs_infos: Dict[str, Dict[str, str]]) -> List[InputInfo]:
+def update_inputs_info(inputs_info: Dict[str, Dict[str, str]]) -> List[InputInfo]:
     """Update inputs' information.
 
     1. Get measurement service data type for each argument.
     2. Format inputs information to `InputInfo`.
 
     Args:
-        inputs_infos (Dict[str, Dict[str, str]]): Input info as dictionary.
+        inputs_info (Dict[str, Dict[str, str]]): Input info as dictionary.
 
     Returns:
         List[InputInfo]: Updated input info with measurement service data type.
     """
-    updated_inputs_infos = []
+    updated_inputs_info = []
 
-    for param_name, param_info in inputs_infos.items():
-        input_type = get_nims_datatype(param_info[_TYPE])
-        updated_inputs_infos.append(
+    for param_name, param_info in inputs_info.items():
+        input_type = get_nims_datatype(python_native_data_type=param_info[_TYPE])
+        updated_inputs_info.append(
             InputInfo(
                 param_name=param_name,
                 param_type=param_info[_TYPE],
@@ -121,33 +123,33 @@ def update_inputs_infos(inputs_infos: Dict[str, Dict[str, str]]) -> List[InputIn
             )
         )
 
-    return updated_inputs_infos
+    return updated_inputs_info
 
 
-def generate_input_params(inputs_infos: List[InputInfo]) -> str:
+def generate_input_params(inputs_info: List[InputInfo]) -> str:
     """Generate string separated by comma where each element represents an input parameter.
 
     Args:
-        inputs_infos (List[InputInfo]): Input details.
+        inputs_info (List[InputInfo]): Input details.
 
     Returns:
         str: Input parameters names as a comma separated string.
     """
-    parameter_names = [input_infos.param_name for input_infos in inputs_infos]
+    parameter_names = [input_info.param_name for input_info in inputs_info]
     return ", ".join(parameter_names)
 
 
-def generate_input_signature(inputs_infos: List[InputInfo]) -> str:
+def generate_input_signature(inputs_info: List[InputInfo]) -> str:
     """Generate string separated by comma where each element represents an \
         input parameter with its data type.
 
     Args:
-        inputs_infos (List[InputInfo]): Input information.
+        inputs_info (List[InputInfo]): Input information.
 
     Returns:
         str: Each input parameters and its data type as a comma separated string.
     """
     parameter_info = [
-        f"{input_infos.param_name}:{input_infos.param_type}" for input_infos in inputs_infos
+        f"{input_info.param_name}:{input_info.param_type}" for input_info in inputs_info
     ]
     return ", ".join(parameter_info)

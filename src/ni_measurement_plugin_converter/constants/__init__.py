@@ -1,6 +1,13 @@
 # flake8: noqa
 
 from ni_measurement_plugin_converter.constants._cli import CONTEXT_SETTINGS, ArgsDescription
+from ni_measurement_plugin_converter.constants._files import (
+    ENCODING,
+    MEASUREMENT_VERSION,
+    MIGRATED_MEASUREMENT_FILENAME,
+    TEMPLATE_DIR,
+    TemplateFile,
+)
 from ni_measurement_plugin_converter.constants._logger import (
     LOG_CONSOLE_MSG_FORMAT,
     LOG_DATE_FORMAT,
@@ -15,9 +22,3 @@ from ni_measurement_plugin_converter.constants._measurement_service import (
     DriverSession,
 )
 from ni_measurement_plugin_converter.constants._messages import DebugMessage, UserMessage
-from ni_measurement_plugin_converter.constants._template_files import (
-    MEASUREMENT_VERSION,
-    MIGRATED_MEASUREMENT_FILENAME,
-    TEMPLATE_DIR,
-    TemplateFile,
-)

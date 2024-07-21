@@ -86,14 +86,14 @@ def run(
 
         logger.info(UserMessage.EXTRACT_INPUT_INFO)
 
-        inputs_infos = extract_inputs(function_node)
-        input_param_names = generate_input_params(inputs_infos)
-        input_signature = generate_input_signature(inputs_infos)
+        inputs_info = extract_inputs(function_node)
+        input_param_names = generate_input_params(inputs_info)
+        input_signature = generate_input_signature(inputs_info)
 
         logger.info(UserMessage.EXTRACT_OUTPUT_INFO)
 
-        outputs_infos, iterable_outputs = extract_outputs(function_node)
-        output_signature = generate_output_signature(outputs_infos)
+        outputs_info, iterable_outputs = extract_outputs(function_node)
+        output_signature = generate_output_signature(outputs_info)
 
         # Manage session.
         instrument_type, resource_name = manage_session(migrated_file_dir, function, logger)
@@ -113,8 +113,8 @@ def run(
             resource_name=resource_name,
             instrument_type=instrument_type,
             nims_instrument=nims_instrument,
-            inputs_infos=inputs_infos,
-            outputs_infos=outputs_infos,
+            inputs_info=inputs_info,
+            outputs_info=outputs_info,
             input_signature=input_signature,
             input_param_names=input_param_names,
             output_signature=output_signature,
@@ -143,6 +143,13 @@ def run(
             directory_out=output_dir,
         )
         logger.debug(DebugMessage.BATCH_FILE_CREATED)
+
+        create_file(
+            TemplateFile.HELPER_TEMPLATE,
+            os.path.join(output_dir, TemplateFile.HELPER_FILENAME),
+            directory_out=output_dir,
+        )
+        logger.debug(DebugMessage.HELPER_FILE_CREATED)
 
         logger.info(UserMessage.MEASUREMENT_PLUGIN_CREATED.format(plugin_dir=output_dir))
 

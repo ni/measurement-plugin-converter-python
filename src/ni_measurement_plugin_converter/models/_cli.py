@@ -6,7 +6,9 @@ from typing import Optional
 
 from pydantic import BaseModel, model_validator
 
-from ni_measurement_plugin_converter.constants import UserMessage
+from ni_measurement_plugin_converter.constants import ENCODING, UserMessage
+
+from ._exceptions import InvalidCliArgsError
 
 
 class CliInputs(BaseModel):
@@ -51,7 +53,7 @@ class CliInputs(BaseModel):
         """
         function_node = None
 
-        with open(self.measurement_file_dir, "r") as file:
+        with open(self.measurement_file_dir, "r", encoding=ENCODING) as file:
             code = file.read()
 
         code_tree = ast.parse(code)
@@ -62,15 +64,3 @@ class CliInputs(BaseModel):
                 break
 
         return function_node
-
-
-class InvalidCliArgsError(Exception):
-    """Invalid CLI arguments error."""
-
-    def __init__(self, message: str) -> None:
-        """Initialize the exception.
-
-        Args:
-            message (str): Error message.
-        """
-        super().__init__(message)

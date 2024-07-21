@@ -29,7 +29,7 @@ def extract_outputs(function_node: ast.FunctionDef) -> Tuple[List[OutputInfo], b
     elif isinstance(output_types, str) and not iterable_output:
         output_types = [output_types]
 
-    output_configurations = get_outputs_infos(output_variables, output_types)
+    output_configurations = get_output_info(output_variables, output_types)
 
     return output_configurations, iterable_output
 
@@ -48,9 +48,9 @@ def extract_type_and_variable_names(function_body: List[Any]) -> Tuple[bool, Lis
 
     for node in function_body:
         if isinstance(node, ast.Return):
-            if isinstance(node.value, ast.Tuple) or isinstance(node.value, ast.List):
+            if isinstance(node.value, (ast.Tuple, ast.List)):
                 iterable_output = True
-                output_variables.extend(get_all_output_variables(node.value.elts))
+                output_variables.extend(get_output_variables(node.value.elts))
 
             elif isinstance(node.value, ast.Name):
                 output_variables.append(node.value.id)
@@ -58,8 +58,8 @@ def extract_type_and_variable_names(function_body: List[Any]) -> Tuple[bool, Lis
     return iterable_output, output_variables
 
 
-def get_all_output_variables(elements: List[ast.Name]) -> List[str]:
-    """Get all output variables of list and tuple type output.
+def get_output_variables(elements: List[ast.Name]) -> List[str]:
+    """Get output variables of list and tuple type output.
 
     Args:
         elements (ast.Return): Return elements.
@@ -67,15 +67,11 @@ def get_all_output_variables(elements: List[ast.Name]) -> List[str]:
     Returns:
         List[str]: List of variable names.
     """
-    output_variables = []
-
-    for element in elements:
-        output_variables.append(element.id)
-
+    output_variables = [element.id for element in elements]
     return output_variables
 
 
-def get_outputs_infos(
+def get_output_info(
     output_variable_names: List[str],
     output_return_types: List[str],
 ) -> List[OutputInfo]:
@@ -89,12 +85,12 @@ def get_outputs_infos(
         output_return_types (List[str]): Output variable types.
 
     Returns:
-        List[OutputInfo]: Updated output infos with measurement service data type.
+        List[OutputInfo]: Updated output info with measurement service data type.
     """
     output_configurations = []
 
     for variable_name, return_type in zip(output_variable_names, output_return_types):
-        output_type = get_nims_datatype(return_type)
+        output_type = get_nims_datatype(python_native_data_type=return_type)
         output_configurations.append(
             OutputInfo(
                 variable_name=variable_name,
@@ -106,14 +102,14 @@ def get_outputs_infos(
     return output_configurations
 
 
-def generate_output_signature(outputs_infos: List[OutputInfo]) -> str:
+def generate_output_signature(outputs_info: List[OutputInfo]) -> str:
     """Generate string separated by comma where each element represents output data type.
 
     Args:
-        outputs_infos (List[Output]): Outputs information.
+        outputs_info (List[Output]): Outputs information.
 
     Returns:
         str: Output data type as comma separated string.
     """
-    variable_types = [output_infos.variable_type for output_infos in outputs_infos]
+    variable_types = [output_info.variable_type for output_info in outputs_info]
     return ", ".join(variable_types)
