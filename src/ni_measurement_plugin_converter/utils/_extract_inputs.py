@@ -8,7 +8,7 @@ from ni_measurement_plugin_converter.models import InputInfo
 
 from ._measurement_service import extract_type, get_nims_datatype
 
-_TYPE = "type"
+PYTHON_DATATYPE = "python datatype"
 _DEFAULT = "default"
 
 
@@ -60,7 +60,7 @@ def get_input_params_without_defaults(args: List[ast.arg]) -> Dict[str, Dict[str
         except KeyError:
             default_value = None
 
-        input_params[param_name] = {_TYPE: param_type, _DEFAULT: default_value}
+        input_params[param_name] = {PYTHON_DATATYPE: param_type, _DEFAULT: default_value}
 
     return input_params
 
@@ -93,7 +93,7 @@ def get_input_params_with_defaults(
         default_value = ast.literal_eval(default_node)
 
         # Store parameter name, type, and default value
-        input_params[param_name] = {_TYPE: param_type, _DEFAULT: default_value}
+        input_params[param_name] = {PYTHON_DATATYPE: param_type, _DEFAULT: default_value}
 
     return input_params
 
@@ -113,11 +113,11 @@ def update_inputs_info(inputs_info: Dict[str, Dict[str, str]]) -> List[InputInfo
     updated_inputs_info = []
 
     for param_name, param_info in inputs_info.items():
-        input_type = get_nims_datatype(python_native_data_type=param_info[_TYPE])
+        input_type = get_nims_datatype(python_native_data_type=param_info[PYTHON_DATATYPE])
         updated_inputs_info.append(
             InputInfo(
                 param_name=param_name,
-                param_type=param_info[_TYPE],
+                param_type=param_info[PYTHON_DATATYPE],
                 nims_type=input_type,
                 default_value=param_info[_DEFAULT],
             )
@@ -135,7 +135,7 @@ def generate_input_params(inputs_info: List[InputInfo]) -> str:
     Returns:
         str: Input parameters names as a comma separated string.
     """
-    parameter_names = [input_info.param_name for input_info in inputs_info]
+    parameter_names = [info.param_name for info in inputs_info]
     return ", ".join(parameter_names)
 
 
@@ -150,6 +150,6 @@ def generate_input_signature(inputs_info: List[InputInfo]) -> str:
         str: Each input parameters and its data type as a comma separated string.
     """
     parameter_info = [
-        f"{input_info.param_name}:{input_info.param_type}" for input_info in inputs_info
+        f"{info.param_name}:{info.param_type}" for info in inputs_info
     ]
     return ", ".join(parameter_info)

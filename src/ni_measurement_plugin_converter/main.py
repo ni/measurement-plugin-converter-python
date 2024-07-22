@@ -158,8 +158,8 @@ def run(
         ClickException,
         TemplateLookupException,
         CompileException,
-    ) as input_error:
-        logger.error(input_error)
+    ) as error:
+        logger.error(error)
 
     except Exception as error:
         logger.error(UserMessage.ERROR_OCCURRED)

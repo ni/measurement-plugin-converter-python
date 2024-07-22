@@ -111,5 +111,5 @@ def generate_output_signature(outputs_info: List[OutputInfo]) -> str:
     Returns:
         str: Output data type as comma separated string.
     """
-    variable_types = [output_info.variable_type for output_info in outputs_info]
+    variable_types = [info.variable_type for info in outputs_info]
     return ", ".join(variable_types)
