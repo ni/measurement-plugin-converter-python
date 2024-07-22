@@ -24,7 +24,8 @@ def extract_outputs(function_node: ast.FunctionDef) -> Tuple[List[OutputInfo], b
 
     if isinstance(output_types, str) and iterable_output:
         # Separate each output types from combined output types.
-        output_types = re.findall(r"'([^']*)'", output_types)
+        output_types = re.findall(r'\b\w+\[[^\[\]]+\]|\b\w+', output_types)
+        output_types = output_types[1:]
 
     elif isinstance(output_types, str) and not iterable_output:
         output_types = [output_types]

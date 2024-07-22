@@ -7,6 +7,7 @@ class DriverSession(Enum):
     """Instrument drivers' session."""
 
     nidcpower = "nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER"
+    nidmm = "nims.session_management.INSTRUMENT_TYPE_NI_DMM"
 
 
 # Python native data types and its corresponding measurement service data types.
