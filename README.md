@@ -1,8 +1,8 @@
-# NI Measurement Plug-in Converter for Python
+# NI Measurement Plug-In Converter for Python
 
 ### Description
 
-- NI Measurement Plug-in Converter for Python is a CLI tool used to convert python measurements to NI Measurement Plug-ins.
+- NI Measurement Plug-In Converter for Python is a CLI tool used to convert python measurements to NI measurement plug-ins.
 
 ### Code Setup
 
@@ -13,7 +13,7 @@
 
 - Open terminal.
 - Run `cd python-code-migration-utility`
-- Run `poetry env use <Python 3.8 path>`
+- Run `poetry env use <Python exe path>`
 - Run `poetry shell` to activate virtual environment.
 - Run `poetry install` to install dependency files.
 

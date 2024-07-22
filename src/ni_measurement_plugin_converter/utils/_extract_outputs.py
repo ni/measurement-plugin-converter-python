@@ -62,7 +62,7 @@ def get_output_variables(elements: List[ast.Name]) -> List[str]:
     """Get output variables of list and tuple type output.
 
     Args:
-        elements (ast.Return): Return elements.
+        elements (ast.Name): Return elements.
 
     Returns:
         List[str]: List of variable names.

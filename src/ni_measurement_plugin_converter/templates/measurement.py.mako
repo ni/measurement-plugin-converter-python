@@ -6,7 +6,7 @@ import sys
 from typing import Iterable, List, Union
 from ${migrated_file} import ${function_name}
 
-import ni_measurementlink_service as nims
+import ni_measurement_plugin_sdk_service as nims
 
 script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent
