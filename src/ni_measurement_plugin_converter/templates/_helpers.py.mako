@@ -1,4 +1,4 @@
-"""Helper classes and functions for MeasurementLink examples."""
+"""Helper classes and functions for MeasurementPlugIns."""
 
 import logging
 import pathlib
@@ -21,13 +21,13 @@ class TestStandSupport(object):
         self._sequence_context = sequence_context
 
     def get_active_pin_map_id(self) -> str:
-        """Get the active pin map id from the NI.MeasurementLink.PinMapId runtime variable.
+        """Get the active pin map id from the NI.MeasurementPlugIns.PinMapId runtime variable.
 
         Returns:
             The resource id of the pin map that is registered to the pin map service.
         """
         return self._sequence_context.Execution.RunTimeVariables.GetValString(
-            "NI.MeasurementLink.PinMapId", 0x0
+            "NI.MeasurementPlugIns.PinMapId", 0x0
         )
 
     def resolve_file_path(self, file_path: str) -> str:

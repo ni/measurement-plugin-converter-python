@@ -1,11 +1,11 @@
-# Contributing to *python-code-migration-utility* 
+# Contributing to *ni-measurement-plugin-converter* 
 
-Contributions to *python-code-migration-utility* are welcome from all!
+Contributions to *ni-measurement-plugin-converter* are welcome from all!
 
-*python-code-migration-utility* is managed via [git](https://git-scm.com), with the canonical upstream
+*ni-measurement-plugin-converter* is managed via [git](https://git-scm.com), with the canonical upstream
 repository hosted on [GitHub](https://github.com/ni/ni-measurement-plugin-converter).     
 
-*python-code-migration-utility* follows a pull-request model for development.  If
+*ni-measurement-plugin-converter* follows a pull-request model for development.  If
 you wish to contribute, you will need to create a GitHub account, clone this
 project, push a branch with your changes to your project, and then submit a
 pull request.
@@ -57,4 +57,4 @@ To contribute to this project, it is recommended that you follow these steps:
 (taken from [developercertificate.org](https://developercertificate.org/))
 
 See [LICENSE](https://github.com/ni/ni-measurement-plugin-converter/blob/main/LICENSE)
-for details about how *python-code-migration-utility* is licensed.
+for details about how *ni-measurement-plugin-converter* is licensed.

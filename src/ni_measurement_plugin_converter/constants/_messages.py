@@ -4,7 +4,7 @@
 class UserMessage:
     """User facing messages logged in console and log file."""
 
-    STARTING_EXECUTION = "Starting NI Measurement Plug-in Converter..."
+    STARTING_EXECUTION = "Starting NI Measurement Plug-In Converter..."
 
     INVALID_FILE_DIR = (
         "Invalid measurement file directory. Please provide valid measurement file directory."
@@ -34,7 +34,7 @@ class UserMessage:
 class DebugMessage:
     """Debug messages logged in log file."""
 
-    VERSION = "NI Measurement Plug-in Converter - {version}"
+    VERSION = "NI Measurement Plug-In Converter - {version}"
 
     GET_FUNCTION = "Getting function node tree..."
     MIGRATED_FILE_MODIFIED = "Migrated file is modified."
