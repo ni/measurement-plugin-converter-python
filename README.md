@@ -1,15 +1,40 @@
-# GitHub Repo Template
+# NI Measurement Plug-In Converter for Python
 
-GitHub Repo Template is a template for creation of open source projects made
-available on GitHub. It includes a permissive open source license, a developer
-certificate of origin, and a pull request template. This provides everything
-necessary to have a properly licensed open source project.
+### Description
 
-## Using GitHub Repo Template
+- NI Measurement Plug-In Converter for Python is a CLI tool used to convert python measurements to NI measurement plug-ins.
 
-1. Clone or download this repository.
-2. Copy its contents into your project (including the hidden .github directory). 
-3. Customize each file to suit your project's needs (including the README). Look through the files for "TODO" and \<reponame\>, and replace with content appropriate to your project.
-4. (Optional) Check out [GitHub Template Guidelines](https://github.com/cezaraugusto/github-template-guidelines) for ideas about how to customize your project.
+### Code Setup
 
-TODO: describe a project in detail, what it does, how to use it, etc.
+- Clone the repository using `git clone <repository link>`.
+- Check out to the required branch using `git checkout <branch name>`
+
+### Setup Virtual Environment
+
+- Open terminal.
+- Run `cd python-code-migration-utility`
+- Run `poetry env use <Python exe path>`
+- Run `poetry shell` to activate virtual environment.
+- Run `poetry install` to install dependency files.
+
+### Example usage
+
+- Run `ni-measurement-plugin-converter --help` to know required CLI arguments.
+```
+Usage: ni-measurement-plugin-converter [OPTIONS]
+
+  Run the CLI tool.
+
+  Args:     display_name (str): Display name.     measurement_file_dir (str):
+  Measurement file directory.     function (str): Measurement function name.
+  output_dir (str): Output directory.
+
+Options:
+  -d, --display-name TEXT         Display name.  [required]
+  -m, --measurement-file-dir TEXT
+                                  Measurement file directory.  [required]
+  -f, --function TEXT             Measurement function name.  [required]
+  -o, --output-dir TEXT           Output directory.  [required]
+  -h, --help                      Show this message and exit.
+```
+- Run `ni-measurement-plugin-converter -d <display name> -m <measurement file direcotry> -f <measurement function name> -o <output directory>` to convert python measurement to measurement plug-in.
