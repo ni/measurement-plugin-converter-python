@@ -10,7 +10,7 @@ class DriverSession(Enum):
     nidmm = "nims.session_management.INSTRUMENT_TYPE_NI_DMM"
 
 
-# Python native data types and its corresponding measurement service data types.
+# Python native data types and its corresponding `measurement_plugin_sdk_service` data types.
 NIMS_TYPE = {
     "int": "nims.DataType.Int64",
     "float": "nims.DataType.Float",

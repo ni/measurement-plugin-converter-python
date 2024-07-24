@@ -1,4 +1,4 @@
-"""Implementation of Get NI Measurement Service Datatype and Instrument."""
+"""Implementation of Get NI Measurement Plugin SDK Service Data type and Instrument."""
 
 import ast
 from typing import Union
@@ -7,13 +7,13 @@ from ni_measurement_plugin_converter.constants import NIMS_TYPE, DriverSession
 
 
 def get_nims_datatype(python_native_data_type: str) -> str:
-    """Get measurement service data type.
+    """Get `measurement_plugin_sdk_service` data type.
 
     Args:
         python_native_data_type (str): Python native data type.
 
     Returns:
-        str: Corresponding measurement service data type.
+        str: Corresponding `measurement_plugin_sdk_service` data type.
     """
     try:
         return NIMS_TYPE[python_native_data_type]
@@ -22,13 +22,13 @@ def get_nims_datatype(python_native_data_type: str) -> str:
 
 
 def get_nims_instrument(instrument_type: str) -> str:
-    """Get measurement service instruments.
+    """Get `measurement_plugin_sdk_service` instruments.
 
     Args:
         instrument_type (str): Instrument type.
 
     Returns:
-        str: Corresponding measurement service instrument.
+        str: Corresponding `measurement_plugin_sdk_service` instrument.
     """
     try:
         return DriverSession[instrument_type].value

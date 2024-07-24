@@ -78,7 +78,7 @@ def get_output_info(
 ) -> List[OutputInfo]:
     """Get outputs' information.
 
-    1. Get measurement service data type for each argument.
+    1. Get `measurement_plugin_sdk_service` data type for each argument.
     2. Format outputs information to `OutputInfo`.
 
     Args:
@@ -86,7 +86,7 @@ def get_output_info(
         output_return_types (List[str]): Output variable types.
 
     Returns:
-        List[OutputInfo]: Updated output info with measurement service data type.
+        List[OutputInfo]: Updated output info with `measurement_plugin_sdk_service` data type.
     """
     output_configurations = []
 

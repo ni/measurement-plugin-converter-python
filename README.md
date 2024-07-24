@@ -37,4 +37,17 @@ Options:
   -o, --output-dir TEXT           Output directory.  [required]
   -h, --help                      Show this message and exit.
 ```
-- Run `ni-measurement-plugin-converter -d <display name> -m <measurement file direcotry> -f <measurement function name> -o <output directory>` to convert python measurement to measurement plug-in.
+- Run `ni-measurement-plugin-converter -d <display name> -m <measurement file directory> -f <measurement function name> -o <output directory>` to convert python measurement to measurement plug-in.
+
+
+### Note
+
+The user measurement should
+- Contain a measurement function which should
+  - Contain a return value.
+  - Have properly type hinted inputs and outputs.
+  - Use one of the supported drivers.
+- Initialize the instrument driver's session inside the measurement function.
+- Use keyword argument in driver's session initialization for `resource_name` argument.
+
+The measurement plug-in created by this tool doesn't include Measurement UI file.
