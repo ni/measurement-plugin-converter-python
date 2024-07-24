@@ -1,4 +1,4 @@
-"""Implementation of Get NI Measurement Plugin SDK Service Data type and Instrument."""
+"""Implementation of Get NI Measurement Plug In SDK Service Data type and Instrument."""
 
 import ast
 from typing import Union
