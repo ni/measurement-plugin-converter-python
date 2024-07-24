@@ -479,7 +479,9 @@ files = [
 ]
 
 [package.dependencies]
+grpcio = {version = ">=1.59.0,<2.0", optional = true, markers = "extra == \"grpc\""}
 hightime = ">=0.2.0"
+protobuf = {version = ">=4.21.6,<5.0", optional = true, markers = "extra == \"grpc\""}
 
 [package.extras]
 grpc = ["grpcio (>=1.59.0,<2.0)", "protobuf (>=4.21.6,<5.0)"]
@@ -496,7 +498,9 @@ files = [
 ]
 
 [package.dependencies]
+grpcio = {version = ">=1.59.0,<2.0", optional = true, markers = "extra == \"grpc\""}
 hightime = ">=0.2.0"
+protobuf = {version = ">=4.21.6,<5.0", optional = true, markers = "extra == \"grpc\""}
 
 [package.extras]
 grpc = ["grpcio (>=1.59.0,<2.0)", "protobuf (>=4.21.6,<5.0)"]
@@ -901,4 +905,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "089d72115fde7324f4c1f6c09fccc4012d02531813b90e5a37718e7670396a84"
+content-hash = "996c846084f070438b6160d9c90acc4f8ff557444c6a281fa1cbf869fc15ea44"
