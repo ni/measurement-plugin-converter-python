@@ -1,8 +1,10 @@
 """Implementation of session management."""
 
+import inspect
+import importlib
 import ast
 from logging import Logger
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 import astor
 
@@ -15,6 +17,7 @@ from ni_measurement_plugin_converter.constants import (
 
 _RESERVATION = "reservation"
 _SESSION_INFO = "session_info"
+_SESSION = "Session"
 
 
 def manage_session(migrated_file_dir: str, function: str, logger: Logger) -> Tuple[str, str]:
@@ -136,11 +139,7 @@ def __replace_session(node: ast.With, driver: str) -> List[Tuple[str, str, str]]
                 call.func.attr = f"initialize_{driver}_session"
                 call.func.value.id = _RESERVATION
 
-                resource = ""
-                if isinstance(call.keywords[0].value, ast.Name):
-                    resource = call.keywords[0].value.id
-                elif isinstance(call.keywords[0].value, ast.Constant):
-                    resource = call.keywords[0].value.value
+                resource = get_resource_name(call, driver)
 
                 replacements.append(
                     (
@@ -151,6 +150,7 @@ def __replace_session(node: ast.With, driver: str) -> List[Tuple[str, str, str]]
                 )
 
                 call.keywords.clear()
+                call.args.clear()
 
     return replacements
 
@@ -185,3 +185,60 @@ def insert_session_assignment(
                     modified_source = "\n".join(source_lines)
 
     return modified_source
+
+
+# ----------------Prototype Design to Get `resource_name`.------------------------------------------
+def get_resource_name(call: ast.Call, driver: str) -> str:
+    if call.keywords:
+        return get_resource_name_from_keyword_args(call)
+    if call.args:
+        return get_resource_name_from_args(call, driver)
+
+
+# If session is initialized as
+# with nidcpower.Session(resource_name='DCPower') as session
+def get_resource_name_from_keyword_args(call: ast.Call) -> str:
+    args = call.keywords
+    for arg in args:
+        if arg.arg == "resource_name":
+            resource = __get_resource_name(arg.value)
+            break
+    return resource
+
+
+# If session is initialized as
+# with nidcpower.Session('DCPower') as session
+def get_resource_name_from_args(call: ast.Call, driver: str) -> str:
+    args = call.args
+    index = __get_resource_name_index(driver)
+    resource_obj = args[index]
+    resource = __get_resource_name(resource_obj)
+
+    return resource
+
+
+def __get_resource_name(arg: Union[ast.Constant, ast.Name]):
+    if isinstance(arg, ast.Constant):
+        resource = arg.value
+    elif isinstance(arg, ast.Name):
+        resource = arg.id
+
+    return resource
+
+
+def __get_resource_name_index(driver: str) -> int:
+    index = 0
+
+    try:
+        module = importlib.import_module(name=driver)
+        session_class = getattr(module, _SESSION)
+        constructor_signature = list(inspect.signature(session_class.__init__).parameters.keys())
+
+        # Assuming `self` as its first argument.
+        index = constructor_signature.index("resource_name") - 1
+
+    except (ModuleNotFoundError, AttributeError, ValueError):
+        pass
+
+    finally:
+        return index
