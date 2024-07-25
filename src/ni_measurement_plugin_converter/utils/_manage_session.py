@@ -136,10 +136,16 @@ def __replace_session(node: ast.With, driver: str) -> List[Tuple[str, str, str]]
                 call.func.attr = f"initialize_{driver}_session"
                 call.func.value.id = _RESERVATION
 
+                resource = ""
+                if isinstance(call.keywords[0].value, ast.Name):
+                    resource = call.keywords[0].value.id
+                elif isinstance(call.keywords[0].value, ast.Constant):
+                    resource = call.keywords[0].value.value
+
                 replacements.append(
                     (
                         driver,
-                        call.keywords[0].value.s,
+                        resource,
                         actual_session_name,
                     )
                 )

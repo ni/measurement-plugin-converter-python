@@ -101,14 +101,14 @@ def get_input_params_with_defaults(
 def update_inputs_info(inputs_info: Dict[str, Dict[str, str]]) -> List[InputInfo]:
     """Update inputs' information.
 
-    1. Get measurement service data type for each argument.
+    1. Get `measurement_plugin_sdk_service` data type for each argument.
     2. Format inputs information to `InputInfo`.
 
     Args:
         inputs_info (Dict[str, Dict[str, str]]): Input info as dictionary.
 
     Returns:
-        List[InputInfo]: Updated input info with measurement service data type.
+        List[InputInfo]: Updated input info with `measurement_plugin_sdk_service` data type.
     """
     updated_inputs_info = []
 

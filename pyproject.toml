@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ni_measurement_plugin_converter"
-version = "1.0.0-dev0"
+version = "1.0.0-dev1"
 description = "Measurement Plug-In Converter for Python"
 authors = ["NI <opensource@ni.com>"]
 readme = "README.md"
@@ -28,6 +28,8 @@ ni-measurement-plugin-sdk-service = "^2.0.0"
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"
 ni-python-styleguide = "^0.4.1"
+nidcpower = { version = "^1.4.8", extras = ["grpc"] }
+nidmm = { version = "^1.4.8", extras = ["grpc"] }
 
 [tool.poetry.scripts]
 ni-measurement-plugin-converter = "ni_measurement_plugin_converter.main:run"
