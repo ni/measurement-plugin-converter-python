@@ -8,7 +8,10 @@ class DriverSession(Enum):
 
     nidcpower = "nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER"
     nidmm = "nims.session_management.INSTRUMENT_TYPE_NI_DMM"
-
+    nidigital = "nims.session_management.INSTRUMENT_TYPE_NI_DIGITAL_PATTERN"
+    nifgen = "nims.session_management.INSTRUMENT_TYPE_NI_FGEN"
+    niscope = "nims.session_management.INSTRUMENT_TYPE_NI_SCOPE"
+    niswitch = "nims.session_management.INSTRUMENT_TYPE_NI_SWITCH"
 
 # Python native data types and its corresponding `measurement_plugin_sdk_service` data types.
 NIMS_TYPE = {
