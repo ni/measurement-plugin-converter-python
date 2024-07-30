@@ -19,6 +19,7 @@ python = "^3.8"
 ni-measurementlink-service = { version = "^1.4.0" }
 pydantic = "^2.7.1"
 click = "^8.1.7"
+mako = "^1.3.5"
 
 [tool.poetry.scripts]
 ni-measurement-ui-creator = "ni_measurement_ui_creator.main:run"
