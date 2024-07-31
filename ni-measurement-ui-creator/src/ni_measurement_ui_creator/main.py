@@ -1,4 +1,4 @@
-"""CLI tool to create measui from Measurement Plug-Ins."""
+"""Command-line tool to create measui for measurements."""
 
 import os
 from pathlib import Path
@@ -22,7 +22,7 @@ from ni_measurement_ui_creator.utils._ui_elements import (
     create_input_elements_from_client,
     create_output_elements_from_client,
 )
-from ni_measurement_ui_creator.utils._write_xml import write_to_xml
+from ni_measurement_ui_creator.utils._create_measui import create_measui
 
 
 @click.command(context_settings=CLI_CONTEXT_SETTINGS)
@@ -33,16 +33,16 @@ from ni_measurement_ui_creator.utils._write_xml import write_to_xml
     required=True,
     help=CliHelpMessage.OUTPUT_FOLDER,
 )
-def run(output_dir: Path):
+def run(output_dir: Path) -> None:
     """NI Measurement UI Creator is a CLI tool to create measui file from running \
 measurement services."""
     try:
         log_file_path = os.path.join(output_dir, "Logs")
         logger = get_logger(log_file_path=log_file_path)
 
-        logger.info(UserMessage.STARTING)
+        logger.info(UserMessage.CLI_STARTING)
         logger.info(UserMessage.SUPPORTED_ELEMENTS.format(elements=SUPPORTED_UI_ELEMENTS))
-        logger.info(UserMessage.GET_MEASUREMENTS_RUNNING)
+        logger.info(UserMessage.GET_ACTIVE_MEASUREMENTS)
 
         os.environ["GRPC_VERBOSITY"] = "NONE"
         discovery_client = DiscoveryClient()
@@ -58,13 +58,13 @@ measurement services."""
             outputs = metadata.measurement_signature.outputs
             output_elements = create_output_elements_from_client(outputs=outputs)
 
-            filepath = os.path.join(output_dir, metadata.measurement_details.display_name)
+            measui_path = os.path.join(output_dir, metadata.measurement_details.display_name)
 
-            write_to_xml(
-                filepath=filepath,
+            create_measui(
+                filepath=measui_path,
                 input_output_elements=input_elements + output_elements,
             )
-            logger.info(UserMessage.CREATED_UI.format(filepath=f"{filepath}.measui"))
+            logger.info(UserMessage.CREATED_UI.format(filepath=f"{measui_path}.measui"))
 
     except InvalidCliInputError as error:
         logger.warning(error)

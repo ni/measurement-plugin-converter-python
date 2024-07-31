@@ -2,18 +2,19 @@
 
 ### Description
 
-- NI Measurement UI Creator is a CLI tool to create measui file from running measurement services.
+- NI Measurement UI Creator is a command-line tool for generating `measui` files for active measurements.
 
 ### Code Setup
 
 - Clone the repository using `git clone <respository link>`.
 - Check out to the required branch using `git checkout <branch name>`.
+- Please find the branch [here](https://github.com/ni/ni-measurement-plugin-converter/tree/ni-measui-creator)
 
 ### Setup Virtual Environment
 
 - Open terminal.
 - Run `cd ni-measurement-ui-creator`
-- Run `poetry env use "<Python39 Path>"`.
+- Run `poetry env use "<Python38 Path>"`.
 - Run `poetry shell` to activate virtual environment.
 - Run `pip install dependencies\<whl files>`.
 - Run `poetry install` to install dependency files.

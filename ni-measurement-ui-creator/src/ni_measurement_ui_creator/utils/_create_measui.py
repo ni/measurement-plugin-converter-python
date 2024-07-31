@@ -33,12 +33,15 @@ def render_template(
     )
 
 
-def write_to_xml(filepath: str, input_output_elements: str) -> None:
-    """Write XML file.
+def create_measui(filepath: str, input_output_elements: str) -> None:
+    """Create `measui` file.
 
     Args:
         filepath (str): MeasUI File Path.
         input_output_elements (str): Input and Output XML tags.
+
+    Returns:
+        None.
     """
     file_content = render_template(
         template_name=TEMPLATE_FILEPATH,

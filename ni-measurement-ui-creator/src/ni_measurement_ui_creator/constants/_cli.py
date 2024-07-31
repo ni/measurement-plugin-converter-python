@@ -12,16 +12,16 @@ class CliHelpMessage:
 class UserMessage:
     """Messages displayed."""
 
-    STARTING = "Starting the NI Measurement UI Creator..."
+    CLI_STARTING = "Starting the NI Measurement UI Creator..."
     SUPPORTED_ELEMENTS = "Supported UI Elements: {elements}"
 
-    GET_MEASUREMENTS_RUNNING = "Getting the measurements running..."
+    GET_ACTIVE_MEASUREMENTS = "Getting the active measurements..."
     NO_MEASUREMENTS_RUNNING = "No measurement services are running."
     AVAILABLE_MEASUREMENTS = "Available services:"
 
     INVALID_MEASUREMENT_CHOICE = "Invalid measurement plug-in selected."
-    SELECT_MEASUREMENT = "Select Measurement Service index ({start}-{end}) to run\
- [Press Enter to exit]: "
+    SELECT_MEASUREMENT = "Select a measurement service index ({start}-{end})\
+ to generate measui file: "
 
     CREATED_UI = "Measurement UI created successfully at {filepath}"
     CREATING_FILE = "Creating Measurement UI..."

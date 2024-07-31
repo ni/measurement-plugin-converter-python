@@ -10,7 +10,7 @@ from ni_measurement_ui_creator.utils._numeric_elements import (
     create_numeric_controls,
     create_numeric_indicators,
 )
-from ni_measurement_ui_creator.utils._write_xml import write_to_xml
+from ni_measurement_ui_creator.utils._create_measui import create_measui
 
 # Refer `SupportedDataType` Enum for supported `value_type`.
 # Use corresponding key strings according to the needs.
@@ -50,7 +50,7 @@ numeric_indicator_elements = create_numeric_indicators(
 )
 
 # Create a .measui file
-write_to_xml(
+create_measui(
     filepath="numeric_controls_indicators",
     input_output_elements=numeric_indicator_elements + numeric_control_elements,
 )

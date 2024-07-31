@@ -2,7 +2,7 @@
 
 import uuid
 
-from ni_measurement_ui_creator.constants._ui_elements import MeasUiElement
+from ni_measurement_ui_creator.constants._ui_elements import MeasUIElement
 from ni_measurement_ui_creator.models._ui_elements import LabelElement
 
 
@@ -25,7 +25,7 @@ def create_label(element_parameter: LabelElement) -> str:
     Returns:
         str: MeasUI Label Element.
     """
-    label = MeasUiElement.LABEL.format(
+    label = MeasUIElement.LABEL.format(
         id=element_parameter.id,
         shared_id=element_parameter.shared_id,
         input_output_name=element_parameter.name,

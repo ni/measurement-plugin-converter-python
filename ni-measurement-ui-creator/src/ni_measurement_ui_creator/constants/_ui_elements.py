@@ -7,7 +7,7 @@ from enum import Enum
 CLIENT_ID = uuid.uuid4()
 
 
-class MeasUiElement:
+class MeasUIElement:
     """Measurement UI Elements."""
 
     SCREEN_SURFACE = '<ScreenSurface BackgroundColor="[SMSolidColorBrush]#00ffffff" Height="[float]1000" Id="c47bc3494c0244bab74b59853ae5087f" Left="[float]0" PanelSizeMode="Fixed" Top="[float]0" Width="[float]520" xmlns="http://www.ni.com/ConfigurationBasedSoftware.Core">'
@@ -32,7 +32,7 @@ class MeasUiElement:
     LABEL = '<Label Height="[float]16" Id="{id}" LabelOwner="[UIModel]{shared_id}" Left="[float]{left_value}" Text="[string]{input_output_name}" Top="[float]{top_value}" Width="[float]100" xmlns="http://www.ni.com/PanelCommon" />'
 
 
-class MeasUiElementPosition:
+class MeasUIElementPosition:
     """Measurement UI Element's Position."""
 
     LEFT_START_VALUE = 50

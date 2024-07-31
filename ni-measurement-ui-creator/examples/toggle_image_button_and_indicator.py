@@ -10,7 +10,7 @@ from ni_measurement_ui_creator.utils._toggle_elements import (
     create_toggle_image_buttons,
     create_toggle_image_indicators,
 )
-from ni_measurement_ui_creator.utils._write_xml import write_to_xml
+from ni_measurement_ui_creator.utils._create_measui import create_measui
 
 # Any unique id will work.
 client_id = uuid.uuid4()
@@ -30,7 +30,7 @@ toggle_image_indicators = create_toggle_image_indicators(
 )
 
 # Create a .measui file.
-write_to_xml(
+create_measui(
     filepath="toggle_image_buttons_indicators",
     input_output_elements=toggle_image_buttons + toggle_image_indicators,
 )

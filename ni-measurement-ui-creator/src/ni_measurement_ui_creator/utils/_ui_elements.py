@@ -3,7 +3,7 @@
 from ni_measurement_ui_creator.constants import (
     CLIENT_ID,
     NUMERIC_DATA_TYPE_VALUES,
-    MeasUiElementPosition,
+    MeasUIElementPosition,
     SupportedDataType,
 )
 from ni_measurement_ui_creator.models import DataElement
@@ -23,7 +23,7 @@ def create_input_elements_from_client(inputs) -> str:
         str: MeasUI input elements.
     """
     input_elements = []
-    inputs_top_value = MeasUiElementPosition.TOP_START_VALUE
+    inputs_top_value = MeasUIElementPosition.TOP_START_VALUE
 
     for input in inputs:
         try:
@@ -38,8 +38,8 @@ def create_input_elements_from_client(inputs) -> str:
                     DataElement(
                         client_id=CLIENT_ID,
                         name=input.name,
-                        left_value=MeasUiElementPosition.LEFT_START_VALUE,
-                        top_value=inputs_top_value,
+                        left_alignment=MeasUIElementPosition.LEFT_START_VALUE,
+                        top_alignment=inputs_top_value,
                         value_type=input_datatype.name,
                         is_array=True,
                     )
@@ -52,8 +52,8 @@ def create_input_elements_from_client(inputs) -> str:
                     DataElement(
                         client_id=CLIENT_ID,
                         name=input.name,
-                        left_value=MeasUiElementPosition.LEFT_START_VALUE,
-                        top_value=inputs_top_value,
+                        left_alignment=MeasUIElementPosition.LEFT_START_VALUE,
+                        top_alignment=inputs_top_value,
                         value_type=input_datatype.name,
                     )
                 )
@@ -65,8 +65,8 @@ def create_input_elements_from_client(inputs) -> str:
                     DataElement(
                         client_id=CLIENT_ID,
                         name=input.name,
-                        left_value=MeasUiElementPosition.LEFT_START_VALUE,
-                        top_value=inputs_top_value,
+                        left_alignment=MeasUIElementPosition.LEFT_START_VALUE,
+                        top_alignment=inputs_top_value,
                         value_type=input_datatype.name,
                     )
                 )
@@ -76,14 +76,14 @@ def create_input_elements_from_client(inputs) -> str:
                     DataElement(
                         client_id=CLIENT_ID,
                         name=input.name,
-                        left_value=MeasUiElementPosition.LEFT_START_VALUE,
-                        top_value=inputs_top_value,
-                        lable_left_value=MeasUiElementPosition.LEFT_START_VALUE,
+                        left_alignment=MeasUIElementPosition.LEFT_START_VALUE,
+                        top_alignment=inputs_top_value,
+                        lable_left_value=MeasUIElementPosition.LEFT_START_VALUE,
                         value_type=input_datatype.name,
                     )
                 )
 
-            inputs_top_value += MeasUiElementPosition.TOP_INCREMENTAL_VALUE
+            inputs_top_value += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
 
         except ValueError:
             pass
@@ -102,9 +102,9 @@ def create_output_elements_from_client(outputs) -> str:
     """
     output_elements = []
     output_start_position = (
-        MeasUiElementPosition.LEFT_START_VALUE + MeasUiElementPosition.LEFT_INCREMENTAL_VALUE
+        MeasUIElementPosition.LEFT_START_VALUE + MeasUIElementPosition.LEFT_INCREMENTAL_VALUE
     )
-    outputs_top_value = MeasUiElementPosition.TOP_START_VALUE
+    outputs_top_value = MeasUIElementPosition.TOP_START_VALUE
 
     for output in outputs:
         try:
@@ -113,24 +113,14 @@ def create_output_elements_from_client(outputs) -> str:
             if (
                 hasattr(output, "repeated")
                 and output.repeated
-                and (
-                    output.type
-                    in [
-                        SupportedDataType.Int32.value,
-                        SupportedDataType.Int64.value,
-                        SupportedDataType.UInt32.value,
-                        SupportedDataType.UInt64.value,
-                        SupportedDataType.Single.value,
-                        SupportedDataType.Double.value,
-                    ]
-                )
+                and output.type in NUMERIC_DATA_TYPE_VALUES
             ):
                 output_elements.append(
                     DataElement(
                         client_id=CLIENT_ID,
                         name=output.name,
-                        left_value=output_start_position,
-                        top_value=outputs_top_value,
+                        left_alignment=output_start_position,
+                        top_alignment=outputs_top_value,
                         value_type=output_datatype.name,
                         is_array=True,
                     )
@@ -143,8 +133,8 @@ def create_output_elements_from_client(outputs) -> str:
                     DataElement(
                         client_id=CLIENT_ID,
                         name=output.name,
-                        left_value=output_start_position,
-                        top_value=outputs_top_value,
+                        left_alignment=output_start_position,
+                        top_alignment=outputs_top_value,
                         value_type=output_datatype.name,
                     )
                 )
@@ -156,31 +146,24 @@ def create_output_elements_from_client(outputs) -> str:
                     DataElement(
                         client_id=CLIENT_ID,
                         name=output.name,
-                        left_value=output_start_position,
-                        top_value=outputs_top_value,
+                        left_alignment=output_start_position,
+                        top_alignment=outputs_top_value,
                         value_type=output_datatype.name,
                     )
                 )
 
-            elif output.type in [
-                SupportedDataType.Int32.value,
-                SupportedDataType.Int64.value,
-                SupportedDataType.UInt32.value,
-                SupportedDataType.UInt64.value,
-                SupportedDataType.Single.value,
-                SupportedDataType.Double.value,
-            ]:
+            elif output.type in NUMERIC_DATA_TYPE_VALUES:
                 output_elements.append(
                     DataElement(
                         client_id=CLIENT_ID,
                         name=output.name,
-                        left_value=output_start_position,
-                        top_value=outputs_top_value,
+                        left_alignment=output_start_position,
+                        top_alignment=outputs_top_value,
                         value_type=output_datatype.name,
                     )
                 )
 
-            outputs_top_value += MeasUiElementPosition.TOP_INCREMENTAL_VALUE
+            outputs_top_value += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
 
         except ValueError:
             pass

@@ -10,7 +10,7 @@ from ni_measurement_ui_creator.utils._numeric_elements import (
     create_numeric_array_inputs,
     create_numeric_array_outputs,
 )
-from ni_measurement_ui_creator.utils._write_xml import write_to_xml
+from ni_measurement_ui_creator.utils._create_measui import create_measui
 
 
 # Refer `SupportedDataType` Enum for supported `value_type`.
@@ -50,7 +50,7 @@ array_output_elements = create_numeric_array_outputs(
 )
 
 # Create a .measui file.
-write_to_xml(
+create_measui(
     filepath="numeric_arrays",
     input_output_elements=array_input_elements + array_output_elements,
 )

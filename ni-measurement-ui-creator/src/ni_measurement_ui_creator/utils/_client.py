@@ -19,21 +19,21 @@ from ni_measurement_ui_creator.constants import (
 from ._exceptions import InvalidCliInputError
 
 
-def get_available_measurement_services(
+def get_active_measurement_services(
     discovery_client: DiscoveryClient,
 ) -> Optional[Sequence[ServiceLocation]]:
     """Get available measurement services.
 
     Args:
-        discovery_client (DiscoveryClient): Client for accessing MeasurementLink discovery service.
+        discovery_client (DiscoveryClient): Client for accessing NI Discovery service.
 
     Returns:
-        Optional[Sequence[ServiceLocation]]: Sequence of available services.
+        Optional[Sequence[ServiceLocation]]: Sequence of active measurement services.
     """
-    v1_available_services = discovery_client.enumerate_services(MEASUREMENT_SERVICE_INTERFACE_V1)
-    v2_available_services = discovery_client.enumerate_services(MEASUREMENT_SERVICE_INTERFACE_V2)
+    v1_measurement_services = discovery_client.enumerate_services(MEASUREMENT_SERVICE_INTERFACE_V1)
+    v2_measurement_services = discovery_client.enumerate_services(MEASUREMENT_SERVICE_INTERFACE_V2)
 
-    available_services = v1_available_services + v2_available_services
+    available_services = v1_measurement_services + v2_measurement_services
     return available_services
 
 
@@ -45,24 +45,24 @@ def get_insecure_grpc_channel_for(
     """Get insecure GRPC channel.
 
     Args:
-        discovery_client (DiscoveryClient): Client for accessing MeasurementLink discovery service.
-        service_class (str): Client to discover the running measurement services.
+        discovery_client (DiscoveryClient): Client for accessing NI Discovery service.
+        service_class (str): Measurement Service Class name.
         logger (Logger): Logger object.
 
     Returns:
         Channel: Channel to server.
     """
-    resolved_services = None
+    resolved_service = None
 
     try:
-        resolved_services = discovery_client.resolve_service(
+        resolved_service = discovery_client.resolve_service(
             MEASUREMENT_SERVICE_INTERFACE_V2,
             service_class,
         )
 
     except _InactiveRpcError:
         try:
-            resolved_services = discovery_client.resolve_service(
+            resolved_service = discovery_client.resolve_service(
                 MEASUREMENT_SERVICE_INTERFACE_V1,
                 service_class,
             )
@@ -70,7 +70,7 @@ def get_insecure_grpc_channel_for(
             logger.debug(exp)
 
     finally:
-        return grpc.insecure_channel(resolved_services.insecure_address)
+        return grpc.insecure_channel(resolved_service.insecure_address)
 
 
 def get_measurement_selection(total_measurements: int) -> int:
@@ -103,13 +103,13 @@ def get_measurement_service_stub(
     """Get measurement services.
 
     Args:
-        discovery_client (DiscoveryClient): Client for accessing MeasurementLink discovery service
+        discovery_client (DiscoveryClient): Client for accessing NI Discovery service.
         logger (Logger): Logger object.
 
     Returns:
         Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub]: Measurement services.
     """
-    available_services = get_available_measurement_services(discovery_client)
+    available_services = get_active_measurement_services(discovery_client)
 
     if not available_services:
         logger.warning(UserMessage.NO_MEASUREMENTS_RUNNING)

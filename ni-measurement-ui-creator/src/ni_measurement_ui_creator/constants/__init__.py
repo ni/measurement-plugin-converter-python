@@ -1,4 +1,5 @@
 # flake8: noqa
+
 from ._cli import CLI_CONTEXT_SETTINGS, CliHelpMessage, UserMessage
 from ._ui_elements import (
     CLIENT_ID,
@@ -9,7 +10,7 @@ from ._ui_elements import (
     NUMERIC_DATA_TYPE_VALUES,
     SUPPORTED_UI_ELEMENTS,
     TEMPLATE_FILEPATH,
-    MeasUiElement,
-    MeasUiElementPosition,
+    MeasUIElement,
+    MeasUIElementPosition,
     SupportedDataType,
 )
