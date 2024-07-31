@@ -30,6 +30,10 @@ pytest = "^7.2.0"
 ni-python-styleguide = "^0.4.1"
 nidcpower = { version = "^1.4.8", extras = ["grpc"] }
 nidmm = { version = "^1.4.8", extras = ["grpc"] }
+nidigital = { version = "^1.4.8", extras = ["grpc"] }
+niswitch = { version = "^1.4.8", extras = ["grpc"] }
+niscope = { version = "^1.4.8", extras = ["grpc"] }
+nifgen = { version = "^1.4.8", extras = ["grpc"] }
 
 [tool.poetry.scripts]
 ni-measurement-plugin-converter = "ni_measurement_plugin_converter.main:run"
