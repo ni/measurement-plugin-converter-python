@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## NI Measurement Plug-In Converter
 
+## [1.0.0-dev2] - 2024-07-31
+
+### Added
+
+- Support for NI-Digital, NI-Switch, NI-FGEN, NI-Scope instrument drivers.
+
 ## [1.0.0-dev1] - 2024-07-24
 
 ### Added
