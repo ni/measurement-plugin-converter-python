@@ -149,7 +149,5 @@ def generate_input_signature(inputs_info: List[InputInfo]) -> str:
     Returns:
         str: Each input parameters and its data type as a comma separated string.
     """
-    parameter_info = [
-        f"{info.param_name}:{info.param_type}" for info in inputs_info
-    ]
+    parameter_info = [f"{info.param_name}:{info.param_type}" for info in inputs_info]
     return ", ".join(parameter_info)

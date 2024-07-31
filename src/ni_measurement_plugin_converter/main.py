@@ -162,8 +162,8 @@ def run(
         logger.error(error)
 
     except Exception as error:
+        logger.debug(error)
         logger.error(UserMessage.ERROR_OCCURRED)
-        logger.error(error)
 
     finally:
         logger.info(UserMessage.PROCESS_COMPLETED)

@@ -27,7 +27,9 @@ class UserMessage:
 
     MEASUREMENT_PLUGIN_CREATED = "Measurement plug-in is created at {plugin_dir}"
 
-    ERROR_OCCURRED = "Error occurred."
+    ERROR_OCCURRED = (
+        "Error occurred. Please verify that the provided measurement is in the expected format."
+    )
     PROCESS_COMPLETED = "Process completed."
 
 
