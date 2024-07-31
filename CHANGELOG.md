@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- Support for NI-Digital, NI-Switch, NI-FGEN, NI-Scope instrument drivers.
+- Support for NI-Digital, NI-Switch, NI-FGEN and NI-Scope instrument drivers.
 
 ## [1.0.0-dev1] - 2024-07-24
 
