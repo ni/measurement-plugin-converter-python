@@ -107,7 +107,7 @@ def get_measurement_service_class(
         measurement_name (str): Measurement name.
 
     Returns:
-        str: Measurement service class information.
+        Union[str, None]: Measurement service class information.
     """
     for service in measurement_services:
         if service.display_name == measurement_name:

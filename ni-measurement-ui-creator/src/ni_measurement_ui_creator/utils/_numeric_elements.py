@@ -80,7 +80,7 @@ def create_numeric_indicator(element_parameter: DataElement) -> str:
     return numeric_indicator + label
 
 
-def create_numeric_array_input(element_parameter: DataElement) -> str:
+def create_numeric_array_control(element_parameter: DataElement) -> str:
     """Create `Numeric Array Input` MeasUI Element.
 
     Args:
@@ -117,7 +117,7 @@ def create_numeric_array_input(element_parameter: DataElement) -> str:
     return numeric_array + label
 
 
-def create_numeric_array_control(element_parameter: DataElement) -> str:
+def create_numeric_array_indicator(element_parameter: DataElement) -> str:
     """Create `Numeric Array Output` MeasUI Element.
 
     Args:
@@ -178,7 +178,7 @@ def create_numeric_indicators(elements_parameter: List[DataElement]) -> str:
     return numeric_indicators
 
 
-def create_numeric_array_inputs(elements_parameter: List[DataElement]) -> str:
+def create_numeric_array_controls(elements_parameter: List[DataElement]) -> str:
     """Create Multiple `Numeric Array Input` MeasUI Elements.
 
     Args:
@@ -194,12 +194,12 @@ def create_numeric_array_inputs(elements_parameter: List[DataElement]) -> str:
         element_parameter.top_alignment = top_alignment
         top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
 
-        numeric_array_inputs += create_numeric_array_input(element_parameter=element_parameter)
+        numeric_array_inputs += create_numeric_array_control(element_parameter=element_parameter)
 
     return numeric_array_inputs
 
 
-def create_numeric_array_outputs(elements_parameter: List[DataElement]) -> str:
+def create_numeric_array_indicators(elements_parameter: List[DataElement]) -> str:
     """Create Multiple `Numeric Array Output` MeasUI Elements.
 
     Args:
@@ -219,7 +219,7 @@ def create_numeric_array_outputs(elements_parameter: List[DataElement]) -> str:
         element_parameter.top_alignment = top_alignment
         top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
 
-        numeric_array_outputs += create_numeric_array_control(element_parameter=element_parameter)
+        numeric_array_outputs += create_numeric_array_indicator(element_parameter=element_parameter)
 
     return numeric_array_outputs
 

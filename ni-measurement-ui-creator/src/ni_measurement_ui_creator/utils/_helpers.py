@@ -8,8 +8,8 @@ from ni_measurement_ui_creator.constants import (
 )
 from ni_measurement_ui_creator.models import DataElement
 from ni_measurement_ui_creator.utils._numeric_elements import (
-    create_numeric_array_input,
     create_numeric_array_control,
+    create_numeric_array_indicator,
     create_numeric_control,
     create_numeric_indicator,
 )
@@ -36,7 +36,7 @@ def create_control_elements(inputs: List[DataElement]) -> str:
 
     for data_element in inputs:
         if data_element.value_type in NUMERIC_DATA_TYPE_NAMES and data_element.is_array:
-            input_elements += create_numeric_array_input(data_element)
+            input_elements += create_numeric_array_control(data_element)
 
         elif data_element.value_type == SupportedDataType.Boolean.name and not (
             data_element.is_array
@@ -67,7 +67,7 @@ def create_indicator_elements(outputs: List[DataElement]) -> str:
 
     for output in outputs:
         if output.value_type in NUMERIC_DATA_TYPE_NAMES and output.is_array:
-            output_elements += create_numeric_array_control(output)
+            output_elements += create_numeric_array_indicator(output)
 
         elif output.value_type == SupportedDataType.Boolean.name and not output.is_array:
             output_elements += create_toggle_image_indicator(output)
