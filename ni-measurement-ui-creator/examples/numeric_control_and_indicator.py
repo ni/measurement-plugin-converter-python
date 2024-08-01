@@ -5,11 +5,12 @@ Note: CLIENT ID should be same throughout a measui file.
 
 import uuid
 
+from ni_measurement_ui_creator.constants._ui_elements import MeasUIElementPosition
 from ni_measurement_ui_creator.models import DataElement
 from ni_measurement_ui_creator.utils._create_measui import create_measui
-from ni_measurement_ui_creator.utils._numeric_elements import (
-    create_numeric_controls,
-    create_numeric_indicators,
+from ni_measurement_ui_creator.utils._helpers import (
+    create_control_elements,
+    create_indicator_elements,
 )
 
 
@@ -19,33 +20,51 @@ from ni_measurement_ui_creator.utils._numeric_elements import (
 # Any unique id will work.
 client_id = uuid.uuid4()
 
-numeric_control_elements = create_numeric_controls(
-    elements_parameter=[
+numeric_control_elements = create_control_elements(
+    inputs=[
         DataElement(
             client_id=client_id,
             name="Numeric input",
             value_type="Double",  # Refer `SupportedDataType`.
+            left_alignment=MeasUIElementPosition.LEFT_START_VALUE,
+            top_alignment=MeasUIElementPosition.TOP_START_VALUE,
         ),
         DataElement(
             client_id=client_id,
             name="Second Numeric input",
             value_type="UInt64",  # Refer `SupportedDataType`.
+            left_alignment=MeasUIElementPosition.LEFT_START_VALUE,
+            top_alignment=(
+                MeasUIElementPosition.TOP_START_VALUE + MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+            ),
         ),
     ]
 )
 
 
-numeric_indicator_elements = create_numeric_indicators(
-    elements_parameter=[
+numeric_indicator_elements = create_indicator_elements(
+    outputs=[
         DataElement(
             client_id=client_id,
             name="Numeric output",
             value_type="Double",  # Refer `SupportedDataType`.
+            left_alignment=(
+                MeasUIElementPosition.LEFT_START_VALUE
+                + MeasUIElementPosition.LEFT_INCREMENTAL_VALUE
+            ),
+            top_alignment=MeasUIElementPosition.TOP_START_VALUE,
         ),
         DataElement(
             client_id=client_id,
             name="Second Numeric output",
             value_type="UInt64",  # Refer `SupportedDataType`.
+            left_alignment=(
+                MeasUIElementPosition.LEFT_START_VALUE
+                + MeasUIElementPosition.LEFT_INCREMENTAL_VALUE
+            ),
+            top_alignment=(
+                MeasUIElementPosition.TOP_START_VALUE + MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+            ),
         ),
     ]
 )

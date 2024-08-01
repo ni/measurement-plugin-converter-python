@@ -5,28 +5,59 @@ Note: CLIENT_ID should be same throughout a measui file.
 
 import uuid
 
+from ni_measurement_ui_creator.constants._ui_elements import MeasUIElementPosition
 from ni_measurement_ui_creator.models import DataElement
 from ni_measurement_ui_creator.utils._create_measui import create_measui
-from ni_measurement_ui_creator.utils._toggle_elements import (
-    create_toggle_image_buttons,
-    create_toggle_image_indicators,
+from ni_measurement_ui_creator.utils._helpers import (
+    create_control_elements,
+    create_indicator_elements,
 )
 
 
 # Any unique id will work.
 client_id = uuid.uuid4()
 
-toggle_image_buttons = create_toggle_image_buttons(
-    elements_parameter=[
-        DataElement(client_id=client_id, name="Bool In"),
-        DataElement(client_id=client_id, name="Second Bool In"),
+toggle_image_buttons = create_control_elements(
+    inputs=[
+        DataElement(
+            client_id=client_id,
+            name="Bool In",
+            left_alignment=MeasUIElementPosition.LEFT_START_VALUE,
+            top_alignment=MeasUIElementPosition.TOP_START_VALUE,
+        ),
+        DataElement(
+            client_id=client_id,
+            name="Second Bool In",
+            left_alignment=MeasUIElementPosition.LEFT_START_VALUE,
+            top_alignment=(
+                MeasUIElementPosition.TOP_START_VALUE + MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+            ),
+        ),
     ]
 )
 
-toggle_image_indicators = create_toggle_image_indicators(
-    elements_parameter=[
-        DataElement(client_id=client_id, name="Bool Out"),
-        DataElement(client_id=client_id, name="Second Bool Out"),
+toggle_image_indicators = create_indicator_elements(
+    outputs=[
+        DataElement(
+            client_id=client_id,
+            name="Bool Out",
+            left_alignment=(
+                MeasUIElementPosition.LEFT_START_VALUE
+                + MeasUIElementPosition.LEFT_INCREMENTAL_VALUE
+            ),
+            top_alignment=MeasUIElementPosition.TOP_START_VALUE,
+        ),
+        DataElement(
+            client_id=client_id,
+            name="Second Bool Out",
+            left_alignment=(
+                MeasUIElementPosition.LEFT_START_VALUE
+                + MeasUIElementPosition.LEFT_INCREMENTAL_VALUE
+            ),
+            top_alignment=(
+                MeasUIElementPosition.TOP_START_VALUE + MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+            ),
+        ),
     ]
 )
 
