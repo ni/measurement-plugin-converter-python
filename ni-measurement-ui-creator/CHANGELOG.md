@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## NI Measurement UI Creator
 
-## [1.0.0-dev2] - 2024-07-30
+## [1.0.0-dev2] - 2024-08-02
 
 ### Added
 
