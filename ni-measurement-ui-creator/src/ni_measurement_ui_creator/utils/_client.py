@@ -1,11 +1,14 @@
 """Measurement Plug-In Client."""
 
 from logging import Logger
-from typing import Optional, Sequence, Union
+from typing import Optional, Sequence, Tuple, Union
 
 import grpc
 from grpc import Channel
 from grpc._channel import _InactiveRpcError
+from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v1 import (
+    measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
+)
 from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
 )
@@ -41,7 +44,7 @@ def get_insecure_grpc_channel_for(
     discovery_client: DiscoveryClient,
     service_class: str,
     logger: Logger,
-) -> Channel:
+) -> Tuple[Channel, str]:
     """Get insecure GRPC channel.
 
     Args:
@@ -50,15 +53,17 @@ def get_insecure_grpc_channel_for(
         logger (Logger): Logger object.
 
     Returns:
-        Channel: Channel to server.
+        Tuple[Channel, str]: Channel to server and measurement service interface name.
     """
     resolved_service = None
+    measurement_service_interace = None
 
     try:
         resolved_service = discovery_client.resolve_service(
             MEASUREMENT_SERVICE_INTERFACE_V2,
             service_class,
         )
+        measurement_service_interace = MEASUREMENT_SERVICE_INTERFACE_V2
 
     except _InactiveRpcError:
         try:
@@ -66,11 +71,11 @@ def get_insecure_grpc_channel_for(
                 MEASUREMENT_SERVICE_INTERFACE_V1,
                 service_class,
             )
+            measurement_service_interace = MEASUREMENT_SERVICE_INTERFACE_V1
         except _InactiveRpcError as exp:
             logger.debug(exp)
 
-    finally:
-        return grpc.insecure_channel(resolved_service.insecure_address)
+    return grpc.insecure_channel(resolved_service.insecure_address), measurement_service_interace
 
 
 def get_measurement_selection(total_measurements: int) -> int:
@@ -119,7 +124,10 @@ def get_measurement_service_class(
 def get_measurement_service_stub(
     discovery_client: DiscoveryClient,
     logger: Logger,
-) -> Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub]:
+) -> Union[
+    v2_measurement_service_pb2_grpc.MeasurementServiceStub,
+    v1_measurement_service_pb2_grpc.MeasurementServiceStub,
+]:
     """Get measurement services.
 
     Args:
@@ -127,7 +135,7 @@ def get_measurement_service_stub(
         logger (Logger): Logger object.
 
     Returns:
-        Optional[v2_measurement_service_pb2_grpc.MeasurementServiceStub]: Measurement services.
+        Union[v2_measurement_service_pb2_grpc.MeasurementServiceStub, v1_measurement_service_pb2_grpc.MeasurementServiceStub: Measurement services. # noqa: W505
     """
     available_services = get_active_measurement_services(discovery_client)
 
@@ -147,10 +155,13 @@ def get_measurement_service_stub(
         available_services,
         measurements[selected_measurement - 1],
     )
-    channel = get_insecure_grpc_channel_for(
+    channel, measurement_service_interface = get_insecure_grpc_channel_for(
         discovery_client,
         measurement_service_class,
         logger=logger,
     )
 
-    return v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
+    if measurement_service_interface == MEASUREMENT_SERVICE_INTERFACE_V2:
+        return v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
+
+    return v1_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
