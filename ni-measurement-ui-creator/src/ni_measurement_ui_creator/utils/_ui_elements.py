@@ -81,7 +81,6 @@ def create_input_elements_from_client(inputs) -> str:
                         name=input.name,
                         left_alignment=MeasUIElementPosition.LEFT_START_VALUE,
                         top_alignment=input_top_alignment,
-                        lable_left_value=MeasUIElementPosition.LEFT_START_VALUE,
                         value_type=input_datatype.name,
                     )
                 )
