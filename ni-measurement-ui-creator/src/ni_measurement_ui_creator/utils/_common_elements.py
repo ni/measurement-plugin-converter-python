@@ -29,8 +29,8 @@ def create_label(element_parameter: LabelElement) -> str:
         id=element_parameter.id,
         shared_id=element_parameter.shared_id,
         input_output_name=element_parameter.name,
-        left_value=element_parameter.left_value,
-        top_value=element_parameter.top_value,
+        left_value=element_parameter.left_alignment,
+        top_value=element_parameter.top_alignment,
     )
 
     return label

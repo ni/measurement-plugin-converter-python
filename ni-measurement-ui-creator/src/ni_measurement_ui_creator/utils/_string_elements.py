@@ -27,8 +27,8 @@ def create_string_control(element_parameter: DataElement) -> str:
         name=element_parameter.name,
         label_id=label_id,
         shared_id=shared_id,
-        left_value=element_parameter.left_value,
-        top_value=element_parameter.top_value,
+        left_value=element_parameter.left_alignment,
+        top_value=element_parameter.top_alignment,
     )
 
     label = create_label(
@@ -36,8 +36,8 @@ def create_string_control(element_parameter: DataElement) -> str:
             id=label_id,
             shared_id=shared_id,
             name=element_parameter.name,
-            left_value=element_parameter.left_value,
-            top_value=element_parameter.top_value,
+            left_value=element_parameter.left_alignment,
+            top_value=element_parameter.top_alignment,
         )
     )
 
@@ -61,8 +61,8 @@ def create_string_indicator(element_parameter: DataElement) -> str:
         name=element_parameter.name,
         label_id=label_id,
         shared_id=shared_id,
-        left_value=element_parameter.left_value,
-        top_value=element_parameter.top_value,
+        left_value=element_parameter.left_alignment,
+        top_value=element_parameter.top_alignment,
     )
 
     label = create_label(
@@ -70,8 +70,8 @@ def create_string_indicator(element_parameter: DataElement) -> str:
             id=label_id,
             shared_id=shared_id,
             name=element_parameter.name,
-            left_value=element_parameter.left_value,
-            top_value=element_parameter.top_value,
+            left_value=element_parameter.left_alignment,
+            top_value=element_parameter.top_alignment,
         )
     )
 
@@ -91,7 +91,7 @@ def create_string_controls(elements_parameter: List[DataElement]) -> str:
     top_value = MeasUIElementPosition.TOP_START_VALUE
 
     for element_parameter in elements_parameter:
-        element_parameter.top_value = top_value
+        element_parameter.top_alignment = top_value
         top_value += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
 
         string_controls += create_string_control(element_parameter=element_parameter)
@@ -112,10 +112,10 @@ def create_string_indicators(elements_parameter: List[DataElement]) -> str:
     top_value = MeasUIElementPosition.TOP_START_VALUE
 
     for element_parameter in elements_parameter:
-        element_parameter.left_value = (
+        element_parameter.left_alignment = (
             MeasUIElementPosition.LEFT_START_VALUE + MeasUIElementPosition.LEFT_INCREMENTAL_VALUE
         )
-        element_parameter.top_value = top_value
+        element_parameter.top_alignment = top_value
         top_value += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
 
         string_indicators += create_string_indicator(element_parameter=element_parameter)

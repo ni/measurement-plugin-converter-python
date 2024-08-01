@@ -23,7 +23,7 @@ def create_input_elements_from_client(inputs) -> str:
         str: MeasUI input elements.
     """
     input_elements = []
-    inputs_top_value = MeasUIElementPosition.TOP_START_VALUE
+    input_top_alignment = MeasUIElementPosition.TOP_START_VALUE
 
     for input in inputs:
         try:
@@ -39,7 +39,7 @@ def create_input_elements_from_client(inputs) -> str:
                         client_id=CLIENT_ID,
                         name=input.name,
                         left_alignment=MeasUIElementPosition.LEFT_START_VALUE,
-                        top_alignment=inputs_top_value,
+                        top_alignment=input_top_alignment,
                         value_type=input_datatype.name,
                         is_array=True,
                     )
@@ -53,7 +53,7 @@ def create_input_elements_from_client(inputs) -> str:
                         client_id=CLIENT_ID,
                         name=input.name,
                         left_alignment=MeasUIElementPosition.LEFT_START_VALUE,
-                        top_alignment=inputs_top_value,
+                        top_alignment=input_top_alignment,
                         value_type=input_datatype.name,
                     )
                 )
@@ -66,7 +66,7 @@ def create_input_elements_from_client(inputs) -> str:
                         client_id=CLIENT_ID,
                         name=input.name,
                         left_alignment=MeasUIElementPosition.LEFT_START_VALUE,
-                        top_alignment=inputs_top_value,
+                        top_alignment=input_top_alignment,
                         value_type=input_datatype.name,
                     )
                 )
@@ -77,13 +77,13 @@ def create_input_elements_from_client(inputs) -> str:
                         client_id=CLIENT_ID,
                         name=input.name,
                         left_alignment=MeasUIElementPosition.LEFT_START_VALUE,
-                        top_alignment=inputs_top_value,
+                        top_alignment=input_top_alignment,
                         lable_left_value=MeasUIElementPosition.LEFT_START_VALUE,
                         value_type=input_datatype.name,
                     )
                 )
 
-            inputs_top_value += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+            input_top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
 
         except ValueError:
             pass
@@ -101,10 +101,10 @@ def create_output_elements_from_client(outputs) -> str:
         str: MeasUI output elements.
     """
     output_elements = []
-    output_start_position = (
+    output_left_alignment = (
         MeasUIElementPosition.LEFT_START_VALUE + MeasUIElementPosition.LEFT_INCREMENTAL_VALUE
     )
-    outputs_top_value = MeasUIElementPosition.TOP_START_VALUE
+    output_top_alignment = MeasUIElementPosition.TOP_START_VALUE
 
     for output in outputs:
         try:
@@ -119,8 +119,8 @@ def create_output_elements_from_client(outputs) -> str:
                     DataElement(
                         client_id=CLIENT_ID,
                         name=output.name,
-                        left_alignment=output_start_position,
-                        top_alignment=outputs_top_value,
+                        left_alignment=output_left_alignment,
+                        top_alignment=output_top_alignment,
                         value_type=output_datatype.name,
                         is_array=True,
                     )
@@ -133,8 +133,8 @@ def create_output_elements_from_client(outputs) -> str:
                     DataElement(
                         client_id=CLIENT_ID,
                         name=output.name,
-                        left_alignment=output_start_position,
-                        top_alignment=outputs_top_value,
+                        left_alignment=output_left_alignment,
+                        top_alignment=output_top_alignment,
                         value_type=output_datatype.name,
                     )
                 )
@@ -146,8 +146,8 @@ def create_output_elements_from_client(outputs) -> str:
                     DataElement(
                         client_id=CLIENT_ID,
                         name=output.name,
-                        left_alignment=output_start_position,
-                        top_alignment=outputs_top_value,
+                        left_alignment=output_left_alignment,
+                        top_alignment=output_top_alignment,
                         value_type=output_datatype.name,
                     )
                 )
@@ -157,13 +157,13 @@ def create_output_elements_from_client(outputs) -> str:
                     DataElement(
                         client_id=CLIENT_ID,
                         name=output.name,
-                        left_alignment=output_start_position,
-                        top_alignment=outputs_top_value,
+                        left_alignment=output_left_alignment,
+                        top_alignment=output_top_alignment,
                         value_type=output_datatype.name,
                     )
                 )
 
-            outputs_top_value += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+            output_top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
 
         except ValueError:
             pass

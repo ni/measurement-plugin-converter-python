@@ -34,8 +34,7 @@ from ni_measurement_ui_creator.utils._create_measui import create_measui
     help=CliHelpMessage.OUTPUT_FOLDER,
 )
 def run(output_dir: Path) -> None:
-    """NI Measurement UI Creator is a CLI tool to create measui file from running \
-measurement services."""
+    """NI Measurement UI Creator is a Command Line tool for creating measui files."""
     try:
         log_file_path = os.path.join(output_dir, "Logs")
         logger = get_logger(log_file_path=log_file_path)
