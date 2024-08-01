@@ -6,11 +6,12 @@ Note: CLIENT_ID should be same throughout a measui file.
 import uuid
 
 from ni_measurement_ui_creator.models import DataElement
+from ni_measurement_ui_creator.utils._create_measui import create_measui
 from ni_measurement_ui_creator.utils._toggle_elements import (
     create_toggle_image_buttons,
     create_toggle_image_indicators,
 )
-from ni_measurement_ui_creator.utils._create_measui import create_measui
+
 
 # Any unique id will work.
 client_id = uuid.uuid4()

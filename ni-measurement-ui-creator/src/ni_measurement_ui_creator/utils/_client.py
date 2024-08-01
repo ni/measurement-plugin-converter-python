@@ -1,7 +1,7 @@
 """Measurement Plug-In Client."""
 
 from logging import Logger
-from typing import Optional, Sequence
+from typing import Optional, Sequence, Union
 
 import grpc
 from grpc import Channel
@@ -96,6 +96,26 @@ def get_measurement_selection(total_measurements: int) -> int:
         raise InvalidCliInputError(UserMessage.ABORTED)
 
 
+def get_measurement_service_class(
+    measurement_services: Optional[Sequence[ServiceLocation]],
+    measurement_name: str,
+) -> Union[str, None]:
+    """Get measurement service class information.
+
+    Args:
+        measurement_services (Optional[Sequence[ServiceLocation]]): List of measurement services.
+        measurement_name (str): Measurement name.
+
+    Returns:
+        str: Measurement service class information.
+    """
+    for service in measurement_services:
+        if service.display_name == measurement_name:
+            return service.service_class
+
+    return None
+
+
 def get_measurement_service_stub(
     discovery_client: DiscoveryClient,
     logger: Logger,
@@ -115,15 +135,21 @@ def get_measurement_service_stub(
         logger.warning(UserMessage.NO_MEASUREMENTS_RUNNING)
         return None
 
+    measurements = list(set([services.display_name for services in available_services]))
+
     logger.info(UserMessage.AVAILABLE_MEASUREMENTS)
-    for serial_num, services in enumerate(available_services):
-        logger.info(f"{serial_num + 1}. {services.display_name}")
+    for serial_num, services in enumerate(measurements):
+        logger.info(f"{serial_num + 1}. {services}")
 
-    selected_measurement = get_measurement_selection(total_measurements=len(available_services))
+    selected_measurement = get_measurement_selection(total_measurements=len(measurements))
 
+    measurement_service_class = get_measurement_service_class(
+        available_services,
+        measurements[selected_measurement - 1],
+    )
     channel = get_insecure_grpc_channel_for(
         discovery_client,
-        available_services[selected_measurement - 1].service_class,
+        measurement_service_class,
         logger=logger,
     )
 

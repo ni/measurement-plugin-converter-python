@@ -37,8 +37,8 @@ def create_numeric_control(element_parameter: DataElement) -> str:
             id=shared_id,
             shared_id=shared_id,
             name=element_parameter.name,
-            left_value=element_parameter.left_alignment,
-            top_value=element_parameter.top_alignment,
+            left_alignment=element_parameter.left_alignment,
+            top_alignment=element_parameter.top_alignment,
         )
     )
 
@@ -72,8 +72,8 @@ def create_numeric_indicator(element_parameter: DataElement) -> str:
             id=shared_id,
             shared_id=shared_id,
             name=element_parameter.name,
-            left_value=element_parameter.left_alignment,
-            top_value=element_parameter.top_alignment,
+            left_alignment=element_parameter.left_alignment,
+            top_alignment=element_parameter.top_alignment,
         )
     )
 
@@ -109,8 +109,8 @@ def create_numeric_array_input(element_parameter: DataElement) -> str:
             id=label_id,
             shared_id=shared_id,
             name=element_parameter.name,
-            left_value=element_parameter.left_alignment,
-            top_value=element_parameter.top_alignment,
+            left_alignment=element_parameter.left_alignment,
+            top_alignment=element_parameter.top_alignment,
         )
     )
 
@@ -146,8 +146,8 @@ def create_numeric_array_control(element_parameter: DataElement) -> str:
             id=label_id,
             shared_id=shared_id,
             name=element_parameter.name,
-            left_value=element_parameter.left_alignment,
-            top_value=element_parameter.top_alignment,
+            left_alignment=element_parameter.left_alignment,
+            top_alignment=element_parameter.top_alignment,
         )
     )
 
@@ -164,14 +164,14 @@ def create_numeric_indicators(elements_parameter: List[DataElement]) -> str:
         str: MeasUI Numeric Indicator Elements.
     """
     numeric_indicators = ""
-    top_value = MeasUIElementPosition.TOP_START_VALUE
+    top_alignment = MeasUIElementPosition.TOP_START_VALUE
 
     for element_parameter in elements_parameter:
         element_parameter.left_alignment = (
             MeasUIElementPosition.LEFT_START_VALUE + MeasUIElementPosition.LEFT_INCREMENTAL_VALUE
         )
-        element_parameter.top_alignment = top_value
-        top_value += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+        element_parameter.top_alignment = top_alignment
+        top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
 
         numeric_indicators += create_numeric_indicator(element_parameter=element_parameter)
 
@@ -188,11 +188,11 @@ def create_numeric_array_inputs(elements_parameter: List[DataElement]) -> str:
         str: MeasUI Numeric Array Input Elements.
     """
     numeric_array_inputs = ""
-    top_value = MeasUIElementPosition.TOP_START_VALUE
+    top_alignment = MeasUIElementPosition.TOP_START_VALUE
 
     for element_parameter in elements_parameter:
-        element_parameter.top_alignment = top_value
-        top_value += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+        element_parameter.top_alignment = top_alignment
+        top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
 
         numeric_array_inputs += create_numeric_array_input(element_parameter=element_parameter)
 
@@ -210,14 +210,14 @@ def create_numeric_array_outputs(elements_parameter: List[DataElement]) -> str:
         str: MeasUI Array Output Elements.
     """
     numeric_array_outputs = ""
-    top_value = MeasUIElementPosition.TOP_START_VALUE
+    top_alignment = MeasUIElementPosition.TOP_START_VALUE
 
     for element_parameter in elements_parameter:
         element_parameter.left_alignment = (
             MeasUIElementPosition.LEFT_START_VALUE + MeasUIElementPosition.LEFT_INCREMENTAL_VALUE
         )
-        element_parameter.top_alignment = top_value
-        top_value += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+        element_parameter.top_alignment = top_alignment
+        top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
 
         numeric_array_outputs += create_numeric_array_control(element_parameter=element_parameter)
 
@@ -234,11 +234,11 @@ def create_numeric_controls(elements_parameter: List[DataElement]) -> str:
         str: MeasUI Numeric control Elements.
     """
     numeric_controls = ""
-    top_value = MeasUIElementPosition.TOP_START_VALUE
+    top_alignment = MeasUIElementPosition.TOP_START_VALUE
 
     for element_parameter in elements_parameter:
-        element_parameter.top_alignment = top_value
-        top_value += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+        element_parameter.top_alignment = top_alignment
+        top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
 
         numeric_controls += create_numeric_control(element_parameter=element_parameter)
 

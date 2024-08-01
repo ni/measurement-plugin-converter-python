@@ -16,13 +16,13 @@ from ni_measurement_ui_creator.constants import (
     UserMessage,
 )
 from ni_measurement_ui_creator.utils._client import get_measurement_service_stub
+from ni_measurement_ui_creator.utils._create_measui import create_measui
 from ni_measurement_ui_creator.utils._exceptions import InvalidCliInputError
 from ni_measurement_ui_creator.utils._logger import get_logger
 from ni_measurement_ui_creator.utils._ui_elements import (
     create_input_elements_from_client,
     create_output_elements_from_client,
 )
-from ni_measurement_ui_creator.utils._create_measui import create_measui
 
 
 @click.command(context_settings=CLI_CONTEXT_SETTINGS)

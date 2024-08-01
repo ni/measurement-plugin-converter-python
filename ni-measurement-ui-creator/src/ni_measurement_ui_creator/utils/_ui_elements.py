@@ -44,6 +44,7 @@ def create_input_elements_from_client(inputs) -> str:
                         is_array=True,
                     )
                 )
+                input_top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
 
             elif input.type == SupportedDataType.Boolean.value and not (
                 hasattr(input, "repeated") and input.repeated
@@ -57,6 +58,7 @@ def create_input_elements_from_client(inputs) -> str:
                         value_type=input_datatype.name,
                     )
                 )
+                input_top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
 
             elif input.type == SupportedDataType.String.value and not (
                 hasattr(input, "repeated") and input.repeated
@@ -70,6 +72,7 @@ def create_input_elements_from_client(inputs) -> str:
                         value_type=input_datatype.name,
                     )
                 )
+                input_top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
 
             elif input.type in NUMERIC_DATA_TYPE_VALUES:
                 input_elements.append(
@@ -82,8 +85,7 @@ def create_input_elements_from_client(inputs) -> str:
                         value_type=input_datatype.name,
                     )
                 )
-
-            input_top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+                input_top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
 
         except ValueError:
             pass
@@ -125,6 +127,7 @@ def create_output_elements_from_client(outputs) -> str:
                         is_array=True,
                     )
                 )
+                output_top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
 
             elif output.type == SupportedDataType.Boolean.value and not (
                 hasattr(output, "repeated") and output.repeated
@@ -138,6 +141,7 @@ def create_output_elements_from_client(outputs) -> str:
                         value_type=output_datatype.name,
                     )
                 )
+                output_top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
 
             elif output.type == SupportedDataType.String.value and not (
                 hasattr(output, "repeated") and output.repeated
@@ -151,6 +155,7 @@ def create_output_elements_from_client(outputs) -> str:
                         value_type=output_datatype.name,
                     )
                 )
+                output_top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
 
             elif output.type in NUMERIC_DATA_TYPE_VALUES:
                 output_elements.append(
@@ -162,8 +167,7 @@ def create_output_elements_from_client(outputs) -> str:
                         value_type=output_datatype.name,
                     )
                 )
-
-            output_top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+                output_top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
 
         except ValueError:
             pass
