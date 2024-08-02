@@ -9,6 +9,7 @@
   - [Installation](#installation)
   - [Alternative implementations and designs](#alternative-implementations-and-designs)
   - [Open issues](#open-issues)
+  - [Future Plans](#future-plans)
 
 ## Who
 
@@ -67,3 +68,11 @@ This python package can be installed using the pip install `<path_to_ni_measurem
 ## Alternative implementations and designs
 
 No alternative implementations.
+
+## Open issues
+
+- It supports for only limited UI elements.
+
+## Future Plans
+
+- To integrate this tool with measurement plugin converter to automate UI creation along with code migration.
