@@ -22,15 +22,15 @@ toggle_image_buttons = create_control_elements(
         DataElement(
             client_id=client_id,
             name="Bool In",
-            left_alignment=MeasUIElementPosition.LEFT_START_VALUE,
-            top_alignment=MeasUIElementPosition.TOP_START_VALUE,
+            left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
+            top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
         ),
         DataElement(
             client_id=client_id,
             name="Second Bool In",
-            left_alignment=MeasUIElementPosition.LEFT_START_VALUE,
+            left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
             top_alignment=(
-                MeasUIElementPosition.TOP_START_VALUE + MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+                MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
             ),
         ),
     ]
@@ -42,20 +42,20 @@ toggle_image_indicators = create_indicator_elements(
             client_id=client_id,
             name="Bool Out",
             left_alignment=(
-                MeasUIElementPosition.LEFT_START_VALUE
-                + MeasUIElementPosition.LEFT_INCREMENTAL_VALUE
+                MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
+                + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
             ),
-            top_alignment=MeasUIElementPosition.TOP_START_VALUE,
+            top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
         ),
         DataElement(
             client_id=client_id,
             name="Second Bool Out",
             left_alignment=(
-                MeasUIElementPosition.LEFT_START_VALUE
-                + MeasUIElementPosition.LEFT_INCREMENTAL_VALUE
+                MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
+                + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
             ),
             top_alignment=(
-                MeasUIElementPosition.TOP_START_VALUE + MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+                MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
             ),
         ),
     ]

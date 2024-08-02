@@ -88,11 +88,11 @@ def create_string_controls(elements_parameter: List[DataElement]) -> str:
         str: MeasUI String Control Elements.
     """
     string_controls = ""
-    top_alignment = MeasUIElementPosition.TOP_START_VALUE
+    top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
 
     for element_parameter in elements_parameter:
         element_parameter.top_alignment = top_alignment
-        top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+        top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
         string_controls += create_string_control(element_parameter=element_parameter)
 
@@ -109,14 +109,14 @@ def create_string_indicators(elements_parameter: List[DataElement]) -> str:
         str: MeasUI String Indicator Elements.
     """
     string_indicators = ""
-    top_alignment = MeasUIElementPosition.TOP_START_VALUE
+    top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
 
     for element_parameter in elements_parameter:
         element_parameter.left_alignment = (
-            MeasUIElementPosition.LEFT_START_VALUE + MeasUIElementPosition.LEFT_INCREMENTAL_VALUE
+            MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
         )
         element_parameter.top_alignment = top_alignment
-        top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+        top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
         string_indicators += create_string_indicator(element_parameter=element_parameter)
 

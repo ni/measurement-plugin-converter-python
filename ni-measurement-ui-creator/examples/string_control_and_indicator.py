@@ -21,15 +21,15 @@ string_control_elements = create_control_elements(
         DataElement(
             client_id=client_id,
             name="String In",
-            left_alignment=MeasUIElementPosition.LEFT_START_VALUE,
-            top_alignment=MeasUIElementPosition.TOP_START_VALUE,
+            left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
+            top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
         ),
         DataElement(
             client_id=client_id,
             name="Second String In",
-            left_alignment=MeasUIElementPosition.LEFT_START_VALUE,
+            left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
             top_alignment=(
-                MeasUIElementPosition.TOP_START_VALUE + MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+                MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
             ),
         ),
     ]
@@ -41,20 +41,20 @@ string_indicator_elements = create_indicator_elements(
             client_id=client_id,
             name="String Out",
             left_alignment=(
-                MeasUIElementPosition.LEFT_START_VALUE
-                + MeasUIElementPosition.LEFT_INCREMENTAL_VALUE
+                MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
+                + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
             ),
-            top_alignment=MeasUIElementPosition.TOP_START_VALUE,
+            top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
         ),
         DataElement(
             client_id=client_id,
             name="Second String Out",
             left_alignment=(
-                MeasUIElementPosition.LEFT_START_VALUE
-                + MeasUIElementPosition.LEFT_INCREMENTAL_VALUE
+                MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
+                + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
             ),
             top_alignment=(
-                MeasUIElementPosition.TOP_START_VALUE + MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+                MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
             ),
         ),
     ]

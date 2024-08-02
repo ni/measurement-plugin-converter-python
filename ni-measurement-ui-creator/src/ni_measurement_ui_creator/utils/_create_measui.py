@@ -1,4 +1,4 @@
-"""Write xml content to a `.measui` file."""
+"""Create `.measui` file for the measurements."""
 
 import os
 

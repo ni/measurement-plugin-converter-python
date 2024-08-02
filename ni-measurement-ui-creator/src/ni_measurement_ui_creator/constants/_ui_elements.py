@@ -35,11 +35,11 @@ class MeasUIElement:
 class MeasUIElementPosition:
     """Measurement UI Element's Position."""
 
-    LEFT_START_VALUE = 50
-    LEFT_INCREMENTAL_VALUE = 200
+    LEFT_ALIGNMENT_START_VALUE = 50
+    LEFT_ALIGNMENT_INCREMENTAL_VALUE = 200
 
-    TOP_START_VALUE = 50
-    TOP_INCREMENTAL_VALUE = 200
+    TOP_ALIGNMENT_START_VALUE = 50
+    TOP_ALIGNMENT_INCREMENTAL_VALUE = 200
 
 
 class SupportedDataType(Enum):

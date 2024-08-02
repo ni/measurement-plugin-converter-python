@@ -23,7 +23,7 @@ def create_input_elements_from_client(inputs) -> str:
         str: MeasUI input elements.
     """
     input_elements = []
-    input_top_alignment = MeasUIElementPosition.TOP_START_VALUE
+    input_top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
 
     for input in inputs:
         try:
@@ -38,13 +38,13 @@ def create_input_elements_from_client(inputs) -> str:
                     DataElement(
                         client_id=CLIENT_ID,
                         name=input.name,
-                        left_alignment=MeasUIElementPosition.LEFT_START_VALUE,
+                        left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
                         top_alignment=input_top_alignment,
                         value_type=input_datatype.name,
                         is_array=True,
                     )
                 )
-                input_top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+                input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
             elif input.type == SupportedDataType.Boolean.value and not (
                 hasattr(input, "repeated") and input.repeated
@@ -53,12 +53,12 @@ def create_input_elements_from_client(inputs) -> str:
                     DataElement(
                         client_id=CLIENT_ID,
                         name=input.name,
-                        left_alignment=MeasUIElementPosition.LEFT_START_VALUE,
+                        left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
                         top_alignment=input_top_alignment,
                         value_type=input_datatype.name,
                     )
                 )
-                input_top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+                input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
             elif input.type == SupportedDataType.String.value and not (
                 hasattr(input, "repeated") and input.repeated
@@ -67,24 +67,24 @@ def create_input_elements_from_client(inputs) -> str:
                     DataElement(
                         client_id=CLIENT_ID,
                         name=input.name,
-                        left_alignment=MeasUIElementPosition.LEFT_START_VALUE,
+                        left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
                         top_alignment=input_top_alignment,
                         value_type=input_datatype.name,
                     )
                 )
-                input_top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+                input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
             elif input.type in NUMERIC_DATA_TYPE_VALUES:
                 input_elements.append(
                     DataElement(
                         client_id=CLIENT_ID,
                         name=input.name,
-                        left_alignment=MeasUIElementPosition.LEFT_START_VALUE,
+                        left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
                         top_alignment=input_top_alignment,
                         value_type=input_datatype.name,
                     )
                 )
-                input_top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+                input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
         except ValueError:
             pass
@@ -103,9 +103,9 @@ def create_output_elements_from_client(outputs) -> str:
     """
     output_elements = []
     output_left_alignment = (
-        MeasUIElementPosition.LEFT_START_VALUE + MeasUIElementPosition.LEFT_INCREMENTAL_VALUE
+        MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
     )
-    output_top_alignment = MeasUIElementPosition.TOP_START_VALUE
+    output_top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
 
     for output in outputs:
         try:
@@ -126,7 +126,7 @@ def create_output_elements_from_client(outputs) -> str:
                         is_array=True,
                     )
                 )
-                output_top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+                output_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
             elif output.type == SupportedDataType.Boolean.value and not (
                 hasattr(output, "repeated") and output.repeated
@@ -140,7 +140,7 @@ def create_output_elements_from_client(outputs) -> str:
                         value_type=output_datatype.name,
                     )
                 )
-                output_top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+                output_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
             elif output.type == SupportedDataType.String.value and not (
                 hasattr(output, "repeated") and output.repeated
@@ -154,7 +154,7 @@ def create_output_elements_from_client(outputs) -> str:
                         value_type=output_datatype.name,
                     )
                 )
-                output_top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+                output_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
             elif output.type in NUMERIC_DATA_TYPE_VALUES:
                 output_elements.append(
@@ -166,7 +166,7 @@ def create_output_elements_from_client(outputs) -> str:
                         value_type=output_datatype.name,
                     )
                 )
-                output_top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+                output_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
         except ValueError:
             pass

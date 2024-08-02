@@ -99,11 +99,11 @@ def create_toggle_image_buttons(elements_parameter: List[DataElement]) -> str:
         str: MeasUI Toggle Image Button Elements.
     """
     toggle_image_buttons = ""
-    top_alignment = MeasUIElementPosition.TOP_START_VALUE
+    top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
 
     for element_parameter in elements_parameter:
         element_parameter.top_alignment = top_alignment
-        top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+        top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
         toggle_image_buttons += create_toggle_image_button(element_parameter=element_parameter)
 
@@ -121,14 +121,14 @@ def create_toggle_image_indicators(elements_parameter: List[DataElement]) -> str
         str: MeasUI Toggle Image Indicator Elements.
     """
     toggle_image_indicators = ""
-    top_alignment = MeasUIElementPosition.TOP_START_VALUE
+    top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
 
     for element_parameter in elements_parameter:
         element_parameter.left_alignment = (
-            MeasUIElementPosition.LEFT_START_VALUE + MeasUIElementPosition.LEFT_INCREMENTAL_VALUE
+            MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
         )
         element_parameter.top_alignment = top_alignment
-        top_alignment += MeasUIElementPosition.TOP_INCREMENTAL_VALUE
+        top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
         toggle_image_indicators += create_toggle_image_indicator(
             element_parameter=element_parameter
