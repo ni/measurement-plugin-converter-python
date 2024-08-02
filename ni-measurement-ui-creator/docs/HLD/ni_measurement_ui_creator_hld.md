@@ -5,6 +5,7 @@
   - [Links to relevant work items](#links-to-relevant-work-items)
   - [Implementation and Design](#implemenation-and-design)
     - [Workflow](#work-flow)
+    - [Creating measui files](#creating-measui-files)
     - [Logger implementation](#logger-implementation)
   - [Installation](#installation)
   - [Alternative implementations and designs](#alternative-implementations-and-designs)
@@ -18,7 +19,7 @@ Team: ModernLab Success
 
 ## Problem statement
 
-- For a test engineer who develop python measurements needs their `.measui` files to be updated as per the modified measurement, but they have to do that manually after developing the measurements.
+- For the test engineer who develops Python measurements needs the `.measui` files to be updated as per the modified measurement, but they must do that manually after developing the measurements.
 
 ## Links to relevant work items
 
@@ -30,9 +31,9 @@ Team: ModernLab Success
 
 Create a Python package `NI Measurement UI Creator` which creates `.measui` files for the measurements, thereby reducing the manual efforts of creating measui files after modifying the measurement.
 
-The CLI tool prompts the user with necessary information about the measurements and the output files created. The measui files measurements are available under the file location given by the user. If any unexpected event occurs, the tool prompts the user to go through the `log.txt` file which will be created in the same file location as measui files. The available running measurements in the system will listed down for the user using `ni_measurement_sdk_service` package, to create UI files for those measurements.
+The CLI tool prompts the user with necessary information about the measurements and the output files created. The measui files will be created at the user-provided output path. If any unexpected event occurs, the tool prompts the user to go through the `log.txt` file which will be created in the same file location as measui files. The active measurements in the system will be listed down for the user using `ni_measurement_sdk_service` package, to create UI files for the selected measurements.
 
-It supports the following the UI elements,
+It supports the following UI elements,
 
 - Numeric Indicator
 - Numeric Control
@@ -43,23 +44,29 @@ It supports the following the UI elements,
 - String Control
 - String Indicator
 
-To start the cli tool,
+To start the CLI tool,
 
 ```
 ni-measurement-ui-creator --ouput-directory <output_folder_path>
 ```
 
-#### Logger implementation
+### Creating measui files
+
+For creating measui files, the input and output configured in the measurement are required. It will create `xml` file contents for each supported UI element and finally create the `.measui` file.
+
+![measui_file](measui_file.png)
+
+### Logger implementation
 
 Logger implementation plays a crucial role in this tool for displaying the status messages of the built measurement and as a debugger for debugging any unexpected behavior.
-Two types of loggers have been implemented in this tool, one is `console logger` and another is `File logger`. Console logger is used for displaying messages in the console whereas the File logger is used for logging all types of messages in a separate file called `log.txt`. Both the logger logs the messages with different formats, the console logger logs the message as plain text whereas the file logger logs the messages along with the time stamp.
+Two types of loggers have been implemented in this tool, one is a `Console logger` and another is a `File logger`. Console logger is used for displaying messages in the console whereas the File logger is used for logging all types of messages in a separate file called `log.txt`. Both the logger logs the messages in different formats. The console logger logs the message as plain text whereas the file logger logs the messages along with the time stamp.
 
 For example,
 ![file_logger](file_logger.png)
 
-Initially, the console logger gets loaded followed by the file logger. The file logger contains all messages, including console messages, as well as any exception messages and their traceback.
+The console logger gets loaded and then the file logger. The file logger contains all messages, including console messages, as well as any exceptions that occured during the execution.
 
-The log file will be created under the folder `Logs` inside the user-provided output path, these folders will be created during the execution of the tool, if it does not exist.
+The log file will be created under the folder `Logs` inside the user-provided output path, this folder will be created during the execution of the tool, if it does not exist.
 
 ## Installation
 
@@ -75,4 +82,4 @@ No alternative implementations.
 
 ## Future Plans
 
-- To integrate this tool with measurement plugin converter to automate UI creation along with code migration.
+- To integrate this tool with a measurement plugin converter to automate UI creation along with code migration.
