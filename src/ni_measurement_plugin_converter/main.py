@@ -86,13 +86,13 @@ def run(
 
         logger.info(UserMessage.EXTRACT_INPUT_INFO)
 
-        inputs_info = extract_inputs(function_node)
+        inputs_info = extract_inputs(function_node, logger)
         input_param_names = generate_input_params(inputs_info)
         input_signature = generate_input_signature(inputs_info)
 
         logger.info(UserMessage.EXTRACT_OUTPUT_INFO)
 
-        outputs_info, iterable_outputs = extract_outputs(function_node)
+        outputs_info, iterable_outputs = extract_outputs(function_node, logger)
         output_signature = generate_output_signature(outputs_info)
 
         # Manage session.

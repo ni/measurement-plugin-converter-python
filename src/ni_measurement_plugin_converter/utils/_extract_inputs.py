@@ -1,9 +1,10 @@
 """Implementation of extraction of inputs from measurement function."""
 
 import ast
+from logging import Logger
 from typing import Dict, List, Union
 
-from ni_measurement_plugin_converter.constants import TYPE_DEFAULT_VALUES
+from ni_measurement_plugin_converter.constants import TYPE_DEFAULT_VALUES, UserMessage
 from ni_measurement_plugin_converter.models import InputInfo
 
 from ._measurement_service import extract_type, get_nims_datatype
@@ -12,11 +13,12 @@ PYTHON_DATATYPE = "python datatype"
 _DEFAULT = "default"
 
 
-def extract_inputs(function_node: ast.FunctionDef) -> List[InputInfo]:
+def extract_inputs(function_node: ast.FunctionDef, logger: Logger) -> List[InputInfo]:
     """Extract inputs' info from `function_node`.
 
     Args:
         function_node (FunctionDef): Measurement function node.
+        logger (Logger): Logger object.
 
     Returns:
         List[InputInfo]: Measurement function input information.
@@ -32,7 +34,7 @@ def extract_inputs(function_node: ast.FunctionDef) -> List[InputInfo]:
     inputs_info.update(get_input_params_without_defaults(params_without_defaults))
     inputs_info.update(get_input_params_with_defaults(params_with_defaults, param_defaults))
 
-    inputs_info = update_inputs_info(inputs_info=inputs_info)
+    inputs_info = update_inputs_info(inputs_info=inputs_info, logger=logger)
 
     return inputs_info
 
@@ -98,7 +100,7 @@ def get_input_params_with_defaults(
     return input_params
 
 
-def update_inputs_info(inputs_info: Dict[str, Dict[str, str]]) -> List[InputInfo]:
+def update_inputs_info(inputs_info: Dict[str, Dict[str, str]], logger: Logger) -> List[InputInfo]:
     """Update inputs' information.
 
     1. Get `measurement_plugin_sdk_service` data type for each argument.
@@ -106,16 +108,19 @@ def update_inputs_info(inputs_info: Dict[str, Dict[str, str]]) -> List[InputInfo
 
     Args:
         inputs_info (Dict[str, Dict[str, str]]): Input info as dictionary.
+        logger (Logger): Logger object.
 
     Returns:
         List[InputInfo]: Updated input info with `measurement_plugin_sdk_service` data type.
     """
     updated_inputs_info = []
+    unsupported_inputs = []
 
     for param_name, param_info in inputs_info.items():
         input_type = get_nims_datatype(python_native_data_type=param_info[PYTHON_DATATYPE])
 
         if not input_type:
+            unsupported_inputs.append(param_name)
             continue
 
         updated_inputs_info.append(
@@ -126,6 +131,9 @@ def update_inputs_info(inputs_info: Dict[str, Dict[str, str]]) -> List[InputInfo
                 default_value=param_info[_DEFAULT],
             )
         )
+
+    if unsupported_inputs:
+        logger.info(UserMessage.UNSUPPORTED_INPUTS.format(params=unsupported_inputs))
 
     return updated_inputs_info
 
