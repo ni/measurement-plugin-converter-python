@@ -12,6 +12,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Support for NI-DAQmx.
 
+### Changed
+
+- Handling of unsupported data types. Inform users about unsupported inputs and outputs.
+
 ## [1.0.0-dev2] - 2024-07-31
 
 ### Added
