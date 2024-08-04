@@ -92,6 +92,10 @@ def get_output_info(
 
     for variable_name, return_type in zip(output_variable_names, output_return_types):
         output_type = get_nims_datatype(python_native_data_type=return_type)
+
+        if not output_type:
+            continue
+
         output_configurations.append(
             OutputInfo(
                 variable_name=variable_name,

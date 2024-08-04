@@ -96,7 +96,7 @@ def run(
         output_signature = generate_output_signature(outputs_info)
 
         # Manage session.
-        instrument_type, resource_name = manage_session(migrated_file_dir, function, logger)
+        instrument_type = manage_session(migrated_file_dir, function, logger)
 
         nims_instrument = get_nims_instrument(instrument_type)
         service_class = f"{display_name}_Python"
@@ -110,7 +110,6 @@ def run(
             serviceconfig_file=(
                 f"{display_name_for_filenames}{TemplateFile.SERVICE_CONFIG_FILE_EXTENSION}"
             ),
-            resource_name=resource_name,
             instrument_type=instrument_type,
             nims_instrument=nims_instrument,
             inputs_info=inputs_info,

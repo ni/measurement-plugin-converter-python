@@ -114,6 +114,10 @@ def update_inputs_info(inputs_info: Dict[str, Dict[str, str]]) -> List[InputInfo
 
     for param_name, param_info in inputs_info.items():
         input_type = get_nims_datatype(python_native_data_type=param_info[PYTHON_DATATYPE])
+
+        if not input_type:
+            continue
+
         updated_inputs_info.append(
             InputInfo(
                 param_name=param_name,

@@ -17,7 +17,7 @@ _RESERVATION = "reservation"
 _SESSION_INFO = "session_info"
 
 
-def manage_session(migrated_file_dir: str, function: str, logger: Logger) -> Tuple[str, str]:
+def manage_session(migrated_file_dir: str, function: str, logger: Logger) -> str:
     """Manage session.
 
     1. Add session reservation variable to migrated file.
@@ -30,7 +30,7 @@ def manage_session(migrated_file_dir: str, function: str, logger: Logger) -> Tup
         logger (Logger): Logger object.
 
     Returns:
-        Tuple[str, str]: Instrument name and resource name.
+        str: Instrument name.
     """
     with open(migrated_file_dir, "r", encoding=ENCODING) as file:
         source_code = file.read()
@@ -46,9 +46,8 @@ def manage_session(migrated_file_dir: str, function: str, logger: Logger) -> Tup
         function=function,
     )
 
-    for driver, param_value, actual_name in session_details:
+    for driver, actual_name in session_details:
         instrument_type = driver
-        resource_name = param_value
         actual_session_name = actual_name
 
     logger.info(UserMessage.ASSIGN_SESSION_INFO)
@@ -63,7 +62,7 @@ def manage_session(migrated_file_dir: str, function: str, logger: Logger) -> Tup
 
     logger.debug(DebugMessage.MIGRATED_FILE_MODIFIED)
 
-    return instrument_type, resource_name
+    return instrument_type
 
 
 def add_reservation_param(code_tree: ast.Module, function: str) -> str:
@@ -96,8 +95,8 @@ def replace_session_initialization(
         function (str): Measurement function name.
 
     Returns:
-        Tuple[str, List[Tuple[str, str, str]]]: Updated source code and List of tuple of \
-            replaced drivers, resource names, sessions.
+        Tuple[str, List[Tuple[str, str]]]: Updated source code and List of tuple of \
+            replaced drivers, sessions.
     """
     replacements = []
     code_tree = ast.parse(source_code)
@@ -136,16 +135,30 @@ def __replace_session(node: ast.With, driver: str) -> List[Tuple[str, str, str]]
                 call.func.attr = f"initialize_{driver}_session"
                 call.func.value.id = _RESERVATION
 
-                resource = ""
-                if isinstance(call.keywords[0].value, ast.Name):
-                    resource = call.keywords[0].value.id
-                elif isinstance(call.keywords[0].value, ast.Constant):
-                    resource = call.keywords[0].value.value
+                replacements.append(
+                    (
+                        driver,
+                        actual_session_name,
+                    )
+                )
+
+                call.keywords.clear()
+
+            elif (
+                isinstance(call.func, ast.Attribute)
+                and isinstance(call.func.value, ast.Name)
+                and call.func.value.id == driver
+                and call.func.attr == "Task"
+            ):
+                actual_session_name = item.optional_vars.id
+
+                item.optional_vars.id = _SESSION_INFO
+                call.func.attr = f"create_nidaqmx_task"
+                call.func.value.id = _RESERVATION
 
                 replacements.append(
                     (
                         driver,
-                        resource,
                         actual_session_name,
                     )
                 )
