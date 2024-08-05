@@ -5,6 +5,8 @@
   - [Links to relevant work items](#links-to-relevant-work-items)
   - [Implementation and Design](#implemenation-and-design)
     - [Workflow](#work-flow)
+    - [Generation of measui files while Measurement migration](#generation-of-measui-files-while-measurement-migration)
+    - [Generation of measui files after Measurement migration](#generation-of-measui-files-after-measurement-migration)
     - [Creating measui files](#creating-measui-files)
     - [Logger implementation](#logger-implementation)
   - [Installation](#installation)
@@ -31,7 +33,7 @@ Team: ModernLab Success
 
 Create a Python package `NI Measurement UI Creator` which creates `.measui` files for the measurements, thereby reducing the manual efforts of creating measui files after modifying the measurement.
 
-The CLI tool prompts the user with necessary information about the measurements and the output files created. The measui files will be created at the user-provided output path. If any unexpected event occurs, the tool prompts the user to go through the `log.txt` file which will be created in the same file location as measui files. The active measurements in the system will be listed down for the user using `ni_measurement_sdk_service` package, to create UI files for the selected measurements.
+The CLI tool prompts the user with necessary information about the measurements and the output files created. The measui files will be created at the user-provided output path. If any error occurs, the tool prompts the user to go through the `log.txt` file which will be created in the same file location as the measui files. The active measurements in the system will be listed down for the user using the `ni_measurement_sdk_service` package.
 
 It supports the following UI elements,
 
@@ -43,6 +45,14 @@ It supports the following UI elements,
 - Toggle Image Indicator
 - String Control
 - String Indicator
+
+### Generation of measui files while Measurement migration
+
+For the users, who want to generate measui files while migrating their measurement files as per `measurement plugin format`, they can use the helper functions written for this tool. It contains the certain examples on how to use those helper functions in their measurement files.
+
+### Generation of measui files after Measurement migration
+
+For the users, who want to generate measui files after migration of their measurement files as per `measurement plugin format`, they can use the CLI implementation.
 
 To start the CLI tool,
 
