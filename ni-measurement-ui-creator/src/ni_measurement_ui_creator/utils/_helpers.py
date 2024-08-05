@@ -13,6 +13,7 @@ from ni_measurement_ui_creator.utils._numeric_elements import (
     create_numeric_control,
     create_numeric_indicator,
 )
+from ni_measurement_ui_creator.utils._pin_element import create_pin_control
 from ni_measurement_ui_creator.utils._string_elements import (
     create_string_control,
     create_string_indicator,
@@ -50,6 +51,9 @@ def create_control_elements(inputs: List[DataElement]) -> str:
 
         elif data_element.value_type in NUMERIC_DATA_TYPE_NAMES:
             input_elements += create_numeric_control(data_element)
+
+        elif data_element.value_type == SupportedDataType.Pin.name:
+            input_elements += create_pin_control(data_element)
 
     return input_elements
 

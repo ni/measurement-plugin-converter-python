@@ -86,6 +86,18 @@ def create_input_elements_from_client(inputs) -> str:
                 )
                 input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
+            elif input.type == SupportedDataType.Pin.value:
+                input_elements.append(
+                    DataElement(
+                        client_id=CLIENT_ID,
+                        name=input.name,
+                        left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
+                        top_alignment=input_top_alignment,
+                        value_type=input_datatype.name,
+                    )
+                )
+                input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+
         except ValueError:
             pass
 
