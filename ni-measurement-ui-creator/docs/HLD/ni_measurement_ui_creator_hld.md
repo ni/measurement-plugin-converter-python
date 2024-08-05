@@ -52,13 +52,15 @@ For the users, who want to generate measui files while migrating their measureme
 
 ### Generation of measui files after Measurement migration
 
-For the users, who want to generate measui files after migration of their measurement files as per `measurement plugin format`, they have to run the migrated measurement and use the CLI implementation.
+For the users, who want to generate measui files after migration of their measurement files as per `measurement plugin format`, they have to install the `ni-measurement-ui-creator` tool, run the migrated measurement and generate the measui using the CLI tool.
 
 To start the CLI tool,
 
 ```
 ni-measurement-ui-creator --ouput-directory <output_folder_path>
 ```
+
+where `--output-directory` is the path where the created `.measui` files will be stored.
 
 ### Creating measui files
 
@@ -92,4 +94,4 @@ No alternative implementations.
 
 ## Future Plans
 
-- To integrate this tool with a measurement plugin converter to automate UI creation along with code migration.
+- Integrate this tool with the measurement plugin converter to automate UI creation during measurement migration.
