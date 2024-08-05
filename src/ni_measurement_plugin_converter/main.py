@@ -12,6 +12,7 @@ from mako.exceptions import CompileException, TemplateLookupException
 from ni_measurement_plugin_converter import __version__
 from ni_measurement_plugin_converter.constants import (
     CONTEXT_SETTINGS,
+    DEBUG_LOGGER,
     MEASUREMENT_VERSION,
     MIGRATED_MEASUREMENT_FILENAME,
     ArgsDescription,
@@ -72,7 +73,7 @@ def run(
         )
 
         remove_handlers(logger)
-        logger = initialize_logger(name="debug_logger", log_directory=output_dir)
+        logger = initialize_logger(name=DEBUG_LOGGER, log_directory=output_dir)
         logger.debug(DebugMessage.VERSION.format(version=__version__))
 
         logger.info(UserMessage.VALIDATE_CLI_ARGS)
@@ -86,17 +87,17 @@ def run(
 
         logger.info(UserMessage.EXTRACT_INPUT_INFO)
 
-        inputs_info = extract_inputs(function_node, logger)
+        inputs_info = extract_inputs(function_node)
         input_param_names = generate_input_params(inputs_info)
         input_signature = generate_input_signature(inputs_info)
 
         logger.info(UserMessage.EXTRACT_OUTPUT_INFO)
 
-        outputs_info, iterable_outputs = extract_outputs(function_node, logger)
+        outputs_info, iterable_outputs = extract_outputs(function_node)
         output_signature = generate_output_signature(outputs_info)
 
         # Manage session.
-        instrument_type = manage_session(migrated_file_dir, function, logger)
+        instrument_type = manage_session(migrated_file_dir, function)
 
         nims_instrument = get_nims_instrument(instrument_type)
         service_class = f"{display_name}_Python"

@@ -1,12 +1,13 @@
 """Implementation of session management."""
 
 import ast
-from logging import Logger
+from logging import getLogger
 from typing import List, Tuple
 
 import astor
 
 from ni_measurement_plugin_converter.constants import (
+    DEBUG_LOGGER,
     ENCODING,
     DebugMessage,
     DriverSession,
@@ -17,7 +18,7 @@ _RESERVATION = "reservation"
 _SESSION_INFO = "session_info"
 
 
-def manage_session(migrated_file_dir: str, function: str, logger: Logger) -> str:
+def manage_session(migrated_file_dir: str, function: str) -> str:
     """Manage session.
 
     1. Add session reservation variable to migrated file.
@@ -27,11 +28,12 @@ def manage_session(migrated_file_dir: str, function: str, logger: Logger) -> str
     Args:
         migrated_file_dir (str): Migrated measurement file directory.
         function (str): Measurement function name.
-        logger (Logger): Logger object.
 
     Returns:
         str: Instrument name.
     """
+    logger = getLogger(DEBUG_LOGGER)
+
     with open(migrated_file_dir, "r", encoding=ENCODING) as file:
         source_code = file.read()
 
@@ -46,15 +48,15 @@ def manage_session(migrated_file_dir: str, function: str, logger: Logger) -> str
         function=function,
     )
 
-    for driver, actual_name in session_details:
+    for driver, session_name in session_details:
         instrument_type = driver
-        actual_session_name = actual_name
+        session_name = session_name
 
     logger.info(UserMessage.ASSIGN_SESSION_INFO)
     session_inserted_source_code = insert_session_assignment(
         source_code=session_replaced_source_code,
         function=function,
-        session_info=f"{actual_session_name} = {_SESSION_INFO}.session",
+        session_info=f"{session_name} = {_SESSION_INFO}.session",
     )
 
     with open(migrated_file_dir, "w", encoding=ENCODING) as file:

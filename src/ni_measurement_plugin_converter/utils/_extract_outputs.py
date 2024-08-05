@@ -2,24 +2,20 @@
 
 import ast
 import re
-from logging import Logger
+from logging import getLogger
 from typing import Any, List, Tuple
 
-from ni_measurement_plugin_converter.constants import UserMessage
+from ni_measurement_plugin_converter.constants import DEBUG_LOGGER, UserMessage
 from ni_measurement_plugin_converter.models import OutputInfo
 
 from ._measurement_service import extract_type, get_nims_datatype
 
 
-def extract_outputs(
-    function_node: ast.FunctionDef,
-    logger: Logger,
-) -> Tuple[List[OutputInfo], bool]:
+def extract_outputs(function_node: ast.FunctionDef) -> Tuple[List[OutputInfo], bool]:
     """Extract outputs information from `function_node`.
 
     Args:
         function_node (ast.FunctionDef): Measurement function node.
-        logger (Logger): Logger object.
 
     Returns:
         Tuple[List[Output], bool]: Measurement function outputs info and \
@@ -36,7 +32,7 @@ def extract_outputs(
     elif isinstance(output_types, str) and not iterable_output:
         output_types = [output_types]
 
-    output_configurations = get_output_info(output_variables, output_types, logger)
+    output_configurations = get_output_info(output_variables, output_types)
 
     return output_configurations, iterable_output
 
@@ -81,7 +77,6 @@ def get_output_variables(elements: List[ast.Name]) -> List[str]:
 def get_output_info(
     output_variable_names: List[str],
     output_return_types: List[str],
-    logger: Logger,
 ) -> List[OutputInfo]:
     """Get outputs' information.
 
@@ -91,11 +86,11 @@ def get_output_info(
     Args:
         output_variable_names (List[str]): Output variable names.
         output_return_types (List[str]): Output variable types.
-        logger (Logger): Logger object.
 
     Returns:
         List[OutputInfo]: Updated output info with `measurement_plugin_sdk_service` data type.
     """
+    logger = getLogger(DEBUG_LOGGER)
     output_configurations = []
     unsupported_outputs = []
 

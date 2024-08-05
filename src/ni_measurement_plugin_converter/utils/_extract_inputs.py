@@ -1,10 +1,10 @@
 """Implementation of extraction of inputs from measurement function."""
 
 import ast
-from logging import Logger
+from logging import getLogger
 from typing import Dict, List, Union
 
-from ni_measurement_plugin_converter.constants import TYPE_DEFAULT_VALUES, UserMessage
+from ni_measurement_plugin_converter.constants import DEBUG_LOGGER, TYPE_DEFAULT_VALUES, UserMessage
 from ni_measurement_plugin_converter.models import InputInfo
 
 from ._measurement_service import extract_type, get_nims_datatype
@@ -13,12 +13,11 @@ PYTHON_DATATYPE = "python datatype"
 _DEFAULT = "default"
 
 
-def extract_inputs(function_node: ast.FunctionDef, logger: Logger) -> List[InputInfo]:
+def extract_inputs(function_node: ast.FunctionDef) -> List[InputInfo]:
     """Extract inputs' info from `function_node`.
 
     Args:
         function_node (FunctionDef): Measurement function node.
-        logger (Logger): Logger object.
 
     Returns:
         List[InputInfo]: Measurement function input information.
@@ -34,7 +33,7 @@ def extract_inputs(function_node: ast.FunctionDef, logger: Logger) -> List[Input
     inputs_info.update(get_input_params_without_defaults(params_without_defaults))
     inputs_info.update(get_input_params_with_defaults(params_with_defaults, param_defaults))
 
-    inputs_info = update_inputs_info(inputs_info=inputs_info, logger=logger)
+    inputs_info = update_inputs_info(inputs_info=inputs_info)
 
     return inputs_info
 
@@ -100,7 +99,7 @@ def get_input_params_with_defaults(
     return input_params
 
 
-def update_inputs_info(inputs_info: Dict[str, Dict[str, str]], logger: Logger) -> List[InputInfo]:
+def update_inputs_info(inputs_info: Dict[str, Dict[str, str]]) -> List[InputInfo]:
     """Update inputs' information.
 
     1. Get `measurement_plugin_sdk_service` data type for each argument.
@@ -108,11 +107,11 @@ def update_inputs_info(inputs_info: Dict[str, Dict[str, str]], logger: Logger) -
 
     Args:
         inputs_info (Dict[str, Dict[str, str]]): Input info as dictionary.
-        logger (Logger): Logger object.
 
     Returns:
         List[InputInfo]: Updated input info with `measurement_plugin_sdk_service` data type.
     """
+    logger = getLogger(DEBUG_LOGGER)
     updated_inputs_info = []
     unsupported_inputs = []
 
