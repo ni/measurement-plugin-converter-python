@@ -48,11 +48,11 @@ It supports the following UI elements,
 
 ### Generation of measui files while Measurement migration
 
-For the users, who want to generate measui files while migrating their measurement files as per `measurement plugin format`, they can use the helper functions written for this tool. It contains the certain examples on how to use those helper functions in their measurement files.
+For the users, who want to generate measui files while migrating their measurement files as per `measurement plugin format`, they can use the helper functions written for this tool. This tool contains certain examples of using those helper functions in their measurement files.
 
 ### Generation of measui files after Measurement migration
 
-For the users, who want to generate measui files after migration of their measurement files as per `measurement plugin format`, they can use the CLI implementation.
+For the users, who want to generate measui files after migration of their measurement files as per `measurement plugin format`, they have to run the migrated measurement and use the CLI implementation.
 
 To start the CLI tool,
 
