@@ -42,6 +42,7 @@ array_input_elements = create_control_elements(
                 MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
             ),
+            is_array=True,
         ),
     ]
 )
@@ -71,6 +72,7 @@ array_output_elements = create_indicator_elements(
                 MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
             ),
+            is_array=True,
         ),
     ]
 )
