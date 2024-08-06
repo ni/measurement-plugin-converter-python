@@ -1,4 +1,4 @@
-<%page args="display_name, version, serviceconfig_file, resource_name, instrument_type, nims_instrument, inputs_info, outputs_info, input_signature, input_param_names, output_signature, migrated_file, function_name, iterable_outputs"/>\
+<%page args="display_name, version, serviceconfig_file, instrument_type, nims_instrument, inputs_info, outputs_info, input_signature, input_param_names, output_signature, migrated_file, function_name, iterable_outputs"/>\
 \
 
 import pathlib
@@ -20,8 +20,8 @@ measurement_service = nims.MeasurementService(
 @measurement_service.register_measurement
 @measurement_service.configuration(
     "pin_names",
-    nims.DataType.PinArray1D,
-    ["${resource_name}"],
+    nims.DataType.IOResourceArray1D,
+    ["Pin1"],
     instrument_type=${nims_instrument},
 )
     %for input_info in inputs_info:

@@ -9,7 +9,7 @@ from ni_measurement_plugin_converter.constants._files import (
     TemplateFile,
 )
 from ni_measurement_plugin_converter.constants._logger import (
-    LOG_CONSOLE_MSG_FORMAT,
+    DEBUG_LOGGER,
     LOG_DATE_FORMAT,
     LOG_FILE_COUNT_LIMIT,
     LOG_FILE_MSG_FORMAT,

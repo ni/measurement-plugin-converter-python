@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ni_measurement_plugin_converter"
-version = "1.0.0-dev1"
+version = "1.0.0-dev3"
 description = "Measurement Plug-In Converter for Python"
 authors = ["NI <opensource@ni.com>"]
 readme = "README.md"
@@ -34,6 +34,7 @@ nidigital = { version = "^1.4.8", extras = ["grpc"] }
 niswitch = { version = "^1.4.8", extras = ["grpc"] }
 niscope = { version = "^1.4.8", extras = ["grpc"] }
 nifgen = { version = "^1.4.8", extras = ["grpc"] }
+nidaqmx = { version = "^1.0.0", extras = ["grpc"] }
 
 [tool.poetry.scripts]
 ni-measurement-plugin-converter = "ni_measurement_plugin_converter.main:run"

@@ -2,8 +2,10 @@
 
 import ast
 import re
+from logging import getLogger
 from typing import Any, List, Tuple
 
+from ni_measurement_plugin_converter.constants import DEBUG_LOGGER, UserMessage
 from ni_measurement_plugin_converter.models import OutputInfo
 
 from ._measurement_service import extract_type, get_nims_datatype
@@ -88,10 +90,17 @@ def get_output_info(
     Returns:
         List[OutputInfo]: Updated output info with `measurement_plugin_sdk_service` data type.
     """
+    logger = getLogger(DEBUG_LOGGER)
     output_configurations = []
+    unsupported_outputs = []
 
     for variable_name, return_type in zip(output_variable_names, output_return_types):
         output_type = get_nims_datatype(python_native_data_type=return_type)
+
+        if not output_type:
+            unsupported_outputs.append(variable_name)
+            continue
+
         output_configurations.append(
             OutputInfo(
                 variable_name=variable_name,
@@ -99,6 +108,9 @@ def get_output_info(
                 nims_type=output_type,
             )
         )
+
+    if unsupported_outputs:
+        logger.info(UserMessage.UNSUPPORTED_OUTPUTS.format(variables=unsupported_outputs))
 
     return output_configurations
 

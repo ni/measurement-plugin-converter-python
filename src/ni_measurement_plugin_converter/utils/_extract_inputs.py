@@ -1,9 +1,10 @@
 """Implementation of extraction of inputs from measurement function."""
 
 import ast
+from logging import getLogger
 from typing import Dict, List, Union
 
-from ni_measurement_plugin_converter.constants import TYPE_DEFAULT_VALUES
+from ni_measurement_plugin_converter.constants import DEBUG_LOGGER, TYPE_DEFAULT_VALUES, UserMessage
 from ni_measurement_plugin_converter.models import InputInfo
 
 from ._measurement_service import extract_type, get_nims_datatype
@@ -110,10 +111,17 @@ def update_inputs_info(inputs_info: Dict[str, Dict[str, str]]) -> List[InputInfo
     Returns:
         List[InputInfo]: Updated input info with `measurement_plugin_sdk_service` data type.
     """
+    logger = getLogger(DEBUG_LOGGER)
     updated_inputs_info = []
+    unsupported_inputs = []
 
     for param_name, param_info in inputs_info.items():
         input_type = get_nims_datatype(python_native_data_type=param_info[PYTHON_DATATYPE])
+
+        if not input_type:
+            unsupported_inputs.append(param_name)
+            continue
+
         updated_inputs_info.append(
             InputInfo(
                 param_name=param_name,
@@ -122,6 +130,9 @@ def update_inputs_info(inputs_info: Dict[str, Dict[str, str]]) -> List[InputInfo
                 default_value=param_info[_DEFAULT],
             )
         )
+
+    if unsupported_inputs:
+        logger.info(UserMessage.UNSUPPORTED_INPUTS.format(params=unsupported_inputs))
 
     return updated_inputs_info
 

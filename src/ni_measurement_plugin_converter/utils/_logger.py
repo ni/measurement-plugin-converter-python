@@ -6,7 +6,6 @@ import sys
 from logging import Logger, StreamHandler, handlers
 
 from ni_measurement_plugin_converter.constants import (
-    LOG_CONSOLE_MSG_FORMAT,
     LOG_DATE_FORMAT,
     LOG_FILE_COUNT_LIMIT,
     LOG_FILE_MSG_FORMAT,
@@ -76,9 +75,6 @@ def add_stream_handler(logger: Logger) -> None:
 def __create_stream_handler() -> StreamHandler:
     handler = logging.StreamHandler(sys.stdout)
     handler.setLevel(logging.INFO)
-
-    formatter = logging.Formatter(LOG_CONSOLE_MSG_FORMAT, LOG_DATE_FORMAT)
-    handler.setFormatter(formatter)
 
     return handler
 

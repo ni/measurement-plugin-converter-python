@@ -48,6 +48,5 @@ The user measurement should
   - Have properly type hinted inputs and outputs.
   - Use one of the supported drivers.
 - Initialize the instrument driver's session inside the measurement function.
-- Use keyword argument in driver's session initialization for `resource_name` argument.
 
 The measurement plug-in created by this tool doesn't include a measurement UI file.

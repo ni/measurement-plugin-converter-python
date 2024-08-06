@@ -17,7 +17,7 @@ def get_nims_datatype(python_native_data_type: str) -> str:
     """
     try:
         return NIMS_TYPE[python_native_data_type]
-    except KeyError:
+    except (KeyError, TypeError):
         pass
 
 
@@ -32,7 +32,7 @@ def get_nims_instrument(instrument_type: str) -> str:
     """
     try:
         return DriverSession[instrument_type].value
-    except KeyError:
+    except (KeyError, TypeError):
         pass
 
 
