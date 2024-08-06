@@ -43,7 +43,21 @@ class MeasUIElementPosition:
     TOP_ALIGNMENT_INCREMENTAL_VALUE = 200
 
 
-class SupportedDataType(Enum):
+class SupportedDataType:
+    """Supported data types in UI creator."""
+
+    DOUBLE = "Double"
+    SINGLE = "Single"
+    INT32 = "Int32"
+    INT64 = "Int64"
+    UINT32 = "UInt32"
+    UINT64 = "UInt64"
+    BOOL = "Boolean"
+    STR = "String"
+    PIN = "Pin"
+
+
+class DataType(Enum):
     """Supported data types and its corresponding input values."""
 
     Double = 1
@@ -56,7 +70,7 @@ class SupportedDataType(Enum):
     String = 9
 
 
-class SpecialDataTypes:
+class SpecializedDataType:
     """Special data types supported."""
 
     PIN = "Pin"
@@ -78,20 +92,20 @@ SUPPORTED_UI_ELEMENTS = [
     "Pin",
 ]
 NUMERIC_DATA_TYPE_NAMES = [
-    SupportedDataType.Int32.name,
-    SupportedDataType.Int64.name,
-    SupportedDataType.UInt32.name,
-    SupportedDataType.UInt64.name,
-    SupportedDataType.Single.name,
-    SupportedDataType.Double.name,
+    DataType.Int32.name,
+    DataType.Int64.name,
+    DataType.UInt32.name,
+    DataType.UInt64.name,
+    DataType.Single.name,
+    DataType.Double.name,
 ]
 NUMERIC_DATA_TYPE_VALUES = [
-    SupportedDataType.Int32.value,
-    SupportedDataType.Int64.value,
-    SupportedDataType.UInt32.value,
-    SupportedDataType.UInt64.value,
-    SupportedDataType.Single.value,
-    SupportedDataType.Double.value,
+    DataType.Int32.value,
+    DataType.Int64.value,
+    DataType.UInt32.value,
+    DataType.UInt64.value,
+    DataType.Single.value,
+    DataType.Double.value,
 ]
 
 ENCODING = "utf-8"

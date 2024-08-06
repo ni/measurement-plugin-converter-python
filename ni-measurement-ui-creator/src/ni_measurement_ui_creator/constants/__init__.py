@@ -11,8 +11,8 @@ from ._ui_elements import (
     SUPPORTED_UI_ELEMENTS,
     TEMPLATE_FILEPATH,
     TYPE_SPECIFICATION,
+    DataType,
     MeasUIElement,
     MeasUIElementPosition,
-    SupportedDataType,
-    SpecialDataTypes,
+    SpecializedDataType,
 )

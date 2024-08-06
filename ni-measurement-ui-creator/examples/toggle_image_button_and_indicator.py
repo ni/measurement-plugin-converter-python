@@ -5,7 +5,10 @@ Note: CLIENT_ID should be same throughout a measui file.
 
 import uuid
 
-from ni_measurement_ui_creator.constants._ui_elements import MeasUIElementPosition
+from ni_measurement_ui_creator.constants._ui_elements import (
+    MeasUIElementPosition,
+    SupportedDataType,
+)
 from ni_measurement_ui_creator.models import DataElement
 from ni_measurement_ui_creator.utils._create_measui import create_measui
 from ni_measurement_ui_creator.utils._helpers import (
@@ -13,6 +16,9 @@ from ni_measurement_ui_creator.utils._helpers import (
     create_indicator_elements,
 )
 
+
+# Refer `SupportedDataType` class for supported `value_type`.
+# Use corresponding key strings according to the needs.
 
 # Any unique id will work.
 client_id = uuid.uuid4()
@@ -24,6 +30,7 @@ toggle_image_buttons = create_control_elements(
             name="Bool In",
             left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
             top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
+            value_type=SupportedDataType.BOOL,  # Refer `SupportedDataType`
         ),
         DataElement(
             client_id=client_id,
@@ -33,6 +40,7 @@ toggle_image_buttons = create_control_elements(
                 MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
             ),
+            value_type=SupportedDataType.BOOL,  # Refer `SupportedDataType`
         ),
     ]
 )
@@ -47,6 +55,7 @@ toggle_image_indicators = create_indicator_elements(
                 + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
             ),
             top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
+            value_type=SupportedDataType.BOOL,  # Refer `SupportedDataType`
         ),
         DataElement(
             client_id=client_id,
@@ -59,6 +68,7 @@ toggle_image_indicators = create_indicator_elements(
                 MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
             ),
+            value_type=SupportedDataType.BOOL,  # Refer `SupportedDataType`
         ),
     ]
 )

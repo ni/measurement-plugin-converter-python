@@ -5,7 +5,10 @@ Note: CLIENT ID should be same throughout a measui file.
 
 import uuid
 
-from ni_measurement_ui_creator.constants._ui_elements import MeasUIElementPosition
+from ni_measurement_ui_creator.constants._ui_elements import (
+    MeasUIElementPosition,
+    SupportedDataType,
+)
 from ni_measurement_ui_creator.models import DataElement
 from ni_measurement_ui_creator.utils._create_measui import create_measui
 from ni_measurement_ui_creator.utils._helpers import (
@@ -14,7 +17,7 @@ from ni_measurement_ui_creator.utils._helpers import (
 )
 
 
-# Refer `SupportedDataType` Enum for supported `value_type`.
+# Refer `SupportedDataType` class for supported `value_type`.
 # Use corresponding key strings according to the needs.
 
 # Any unique id will work.
@@ -25,14 +28,14 @@ numeric_control_elements = create_control_elements(
         DataElement(
             client_id=client_id,
             name="Numeric input",
-            value_type="Double",  # Refer `SupportedDataType`.
+            value_type=SupportedDataType.DOUBLE,  # Refer `SupportedDataType`.
             left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
             top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
         ),
         DataElement(
             client_id=client_id,
             name="Second Numeric input",
-            value_type="UInt64",  # Refer `SupportedDataType`.
+            value_type=SupportedDataType.UINT64,  # Refer `SupportedDataType`.
             left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
             top_alignment=(
                 MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
@@ -48,7 +51,7 @@ numeric_indicator_elements = create_indicator_elements(
         DataElement(
             client_id=client_id,
             name="Numeric output",
-            value_type="Double",  # Refer `SupportedDataType`.
+            value_type=SupportedDataType.DOUBLE,  # Refer `SupportedDataType`.
             left_alignment=(
                 MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
@@ -58,7 +61,7 @@ numeric_indicator_elements = create_indicator_elements(
         DataElement(
             client_id=client_id,
             name="Second Numeric output",
-            value_type="UInt64",  # Refer `SupportedDataType`.
+            value_type=SupportedDataType.UINT64,  # Refer `SupportedDataType`.
             left_alignment=(
                 MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE

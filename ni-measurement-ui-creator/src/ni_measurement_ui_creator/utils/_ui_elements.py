@@ -5,8 +5,8 @@ from ni_measurement_ui_creator.constants import (
     NUMERIC_DATA_TYPE_VALUES,
     TYPE_SPECIFICATION,
     MeasUIElementPosition,
-    SupportedDataType,
-    SpecialDataTypes,
+    DataType,
+    SpecializedDataType,
 )
 from ni_measurement_ui_creator.models import DataElement
 from ni_measurement_ui_creator.utils._helpers import (
@@ -29,7 +29,7 @@ def create_input_elements_from_client(inputs) -> str:
 
     for input in inputs:
         try:
-            input_datatype = SupportedDataType(input.type)
+            input_datatype = DataType(input.type)
 
             if (
                 hasattr(input, "repeated")
@@ -48,7 +48,7 @@ def create_input_elements_from_client(inputs) -> str:
                 )
                 input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
-            elif input.type == SupportedDataType.Boolean.value and not (
+            elif input.type == DataType.Boolean.value and not (
                 hasattr(input, "repeated") and input.repeated
             ):
                 input_elements.append(
@@ -62,22 +62,7 @@ def create_input_elements_from_client(inputs) -> str:
                 )
                 input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
-            elif (
-                input.annotations
-                and input.annotations[TYPE_SPECIFICATION] == SpecialDataTypes.PIN.lower()
-            ):
-                input_elements.append(
-                    DataElement(
-                        client_id=CLIENT_ID,
-                        name=input.name,
-                        left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
-                        top_alignment=input_top_alignment,
-                        value_type=SpecialDataTypes.PIN,
-                    )
-                )
-                input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
-
-            elif input.type == SupportedDataType.String.value and not (
+            elif input.type == DataType.String.value and not (
                 hasattr(input, "repeated") and input.repeated and not input.annotations
             ):
                 input_elements.append(
@@ -99,6 +84,21 @@ def create_input_elements_from_client(inputs) -> str:
                         left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
                         top_alignment=input_top_alignment,
                         value_type=input_datatype.name,
+                    )
+                )
+                input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+
+            elif (
+                input.annotations
+                and input.annotations[TYPE_SPECIFICATION] == SpecializedDataType.PIN.lower()
+            ):
+                input_elements.append(
+                    DataElement(
+                        client_id=CLIENT_ID,
+                        name=input.name,
+                        left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
+                        top_alignment=input_top_alignment,
+                        value_type=SpecializedDataType.PIN,
                     )
                 )
                 input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
@@ -127,7 +127,7 @@ def create_output_elements_from_client(outputs) -> str:
 
     for output in outputs:
         try:
-            output_datatype = SupportedDataType(output.type)
+            output_datatype = DataType(output.type)
 
             if (
                 hasattr(output, "repeated")
@@ -146,7 +146,7 @@ def create_output_elements_from_client(outputs) -> str:
                 )
                 output_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
-            elif output.type == SupportedDataType.Boolean.value and not (
+            elif output.type == DataType.Boolean.value and not (
                 hasattr(output, "repeated") and output.repeated
             ):
                 output_elements.append(
@@ -160,7 +160,7 @@ def create_output_elements_from_client(outputs) -> str:
                 )
                 output_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
-            elif output.type == SupportedDataType.String.value and not (
+            elif output.type == DataType.String.value and not (
                 hasattr(output, "repeated") and output.repeated
             ):
                 output_elements.append(
