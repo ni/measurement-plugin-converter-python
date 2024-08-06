@@ -51,6 +51,6 @@ Team: ModernLab Success
 
 - It supports integer, float, string, boolean and their array counter part data types only.
 - It supports NI-DCPower, NI-DMM, NI-Digital, NI-FGEN, NI-Switch, NI-Scope and NI-DAQmx instrument drivers only.
-- Inputted Python measurements should contain a measurement function with properly type hinted return value.
+- The user measurements should contain a measurement function with properly type hinted return value.
 - Initialization of session should be done inside the measurement function.
 - The measurement plug-in created by this tool doesn't include a measurement UI file.
