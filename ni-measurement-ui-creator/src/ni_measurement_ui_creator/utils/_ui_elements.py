@@ -6,6 +6,7 @@ from ni_measurement_ui_creator.constants import (
     TYPE_SPECIFICATION,
     MeasUIElementPosition,
     SupportedDataType,
+    SpecialDataTypes,
 )
 from ni_measurement_ui_creator.models import DataElement
 from ni_measurement_ui_creator.utils._helpers import (
@@ -63,7 +64,7 @@ def create_input_elements_from_client(inputs) -> str:
 
             elif (
                 input.annotations
-                and input.annotations[TYPE_SPECIFICATION] == SupportedDataType.Pin.name.lower()
+                and input.annotations[TYPE_SPECIFICATION] == SpecialDataTypes.PIN.lower()
             ):
                 input_elements.append(
                     DataElement(
@@ -71,7 +72,7 @@ def create_input_elements_from_client(inputs) -> str:
                         name=input.name,
                         left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
                         top_alignment=input_top_alignment,
-                        value_type=SupportedDataType.Pin.name,
+                        value_type=SpecialDataTypes.PIN,
                     )
                 )
                 input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE

@@ -56,6 +56,12 @@ class SupportedDataType(Enum):
     String = 9
 
 
+class SpecialDataTypes:
+    """Special data types supported."""
+
+    PIN = "Pin"
+
+
 TYPE_SPECIFICATION = "ni/type_specialization"
 TEMPLATE_FILEPATH = os.path.join(os.getcwd(), "templates", "measurement.measui.mako")
 MEASUREMENT_SERVICE_INTERFACE_V1 = "ni.measurementlink.measurement.v1.MeasurementService"

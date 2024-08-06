@@ -5,6 +5,7 @@ from typing import List
 from ni_measurement_ui_creator.constants import (
     NUMERIC_DATA_TYPE_NAMES,
     SupportedDataType,
+    SpecialDataTypes,
 )
 from ni_measurement_ui_creator.models import DataElement
 from ni_measurement_ui_creator.utils._numeric_elements import (
@@ -52,7 +53,7 @@ def create_control_elements(inputs: List[DataElement]) -> str:
         elif data_element.value_type in NUMERIC_DATA_TYPE_NAMES:
             input_elements += create_numeric_control(data_element)
 
-        elif data_element.value_type == SupportedDataType.Pin.name:
+        elif data_element.value_type == SpecialDataTypes.PIN:
             input_elements += create_pin_control(data_element)
 
     return input_elements
