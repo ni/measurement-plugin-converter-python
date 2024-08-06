@@ -4,7 +4,6 @@ from typing import Dict, List, Union
 
 from ni_measurement_ui_creator.constants import (
     NUMERIC_DATA_TYPE_NAMES,
-    TYPE_SPECIFICATION,
     DataType,
     SpecializedDataType,
 )
@@ -15,7 +14,10 @@ from ni_measurement_ui_creator.utils._numeric_elements import (
     create_numeric_control,
     create_numeric_indicator,
 )
-from ni_measurement_ui_creator.utils._pin_element import create_pin_control
+from ni_measurement_ui_creator.utils._special_data_elements import (
+    create_ioresource_control,
+    create_pin_control,
+)
 from ni_measurement_ui_creator.utils._string_elements import (
     create_string_control,
     create_string_indicator,
@@ -24,25 +26,6 @@ from ni_measurement_ui_creator.utils._toggle_elements import (
     create_toggle_image_button,
     create_toggle_image_indicator,
 )
-
-
-def get_specialized_data_type_name(input_data: Dict[str, str]) -> Union[str, None]:
-    """Get specialized data type name.
-
-    Args:
-        input_data (Dict[str, str]): Input data from client.
-
-    Returns:
-        Union[str, None]: Specialized data type name.
-    """
-    data_type = None
-
-    if input_data[TYPE_SPECIFICATION] == SpecializedDataType.PIN.lower():
-        data_type = SpecializedDataType.PIN
-    elif input_data[TYPE_SPECIFICATION] == SpecializedDataType.IORESOURCE.lower():
-        data_type = SpecializedDataType.IORESOURCE
-
-    return data_type
 
 
 def create_control_elements(inputs: List[DataElement]) -> str:
@@ -69,8 +52,11 @@ def create_control_elements(inputs: List[DataElement]) -> str:
         elif data_element.value_type in NUMERIC_DATA_TYPE_NAMES:
             input_elements += create_numeric_control(data_element)
 
-        elif data_element.value_type in [SpecializedDataType.PIN, SpecializedDataType.IORESOURCE]:
+        elif data_element.value_type == SpecializedDataType.PIN:
             input_elements += create_pin_control(data_element)
+
+        elif data_element.value_type == SpecializedDataType.IORESOURCE:
+            input_elements += create_ioresource_control(data_element)
 
     return input_elements
 
