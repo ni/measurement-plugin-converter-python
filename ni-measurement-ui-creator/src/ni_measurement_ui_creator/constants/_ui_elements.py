@@ -1,6 +1,5 @@
 """Measurement UI constants."""
 
-import os
 import uuid
 from enum import Enum
 
@@ -74,6 +73,7 @@ class SpecializedDataType:
     """Special data types supported."""
 
     PIN = "Pin"
+    IORESOURCE = "IOResource"
 
 
 TYPE_SPECIFICATION = "ni/type_specialization"

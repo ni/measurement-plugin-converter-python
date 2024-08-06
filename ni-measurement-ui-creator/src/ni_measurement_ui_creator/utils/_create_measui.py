@@ -45,7 +45,7 @@ def create_measui(filepath: str, input_output_elements: str) -> None:
     """
     current_dir = os.path.dirname(os.path.abspath(__file__))
     template_file_path = os.path.join(
-        os.path.dirname(current_dir), "templates" , "measurement.measui.mako"
+        os.path.dirname(current_dir), "templates", "measurement.measui.mako"
     )
 
     file_content = render_template(

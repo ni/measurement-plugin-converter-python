@@ -62,8 +62,10 @@ def create_input_elements_from_client(inputs) -> str:
                 )
                 input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
-            elif input.type == DataType.String.value and not (
-                hasattr(input, "repeated") and input.repeated and not input.annotations
+            elif (
+                input.type == DataType.String.value
+                and not (hasattr(input, "repeated") and input.repeated)
+                and not input.annotations
             ):
                 input_elements.append(
                     DataElement(
@@ -90,7 +92,11 @@ def create_input_elements_from_client(inputs) -> str:
 
             elif (
                 input.annotations
-                and input.annotations[TYPE_SPECIFICATION] == SpecializedDataType.PIN.lower()
+                and (
+                    input.annotations[TYPE_SPECIFICATION] == SpecializedDataType.PIN.lower()
+                    or
+                    input.annotations[TYPE_SPECIFICATION] == SpecializedDataType.IORESOURCE.lower()
+                )
             ):
                 input_elements.append(
                     DataElement(

@@ -40,14 +40,10 @@ def create_control_elements(inputs: List[DataElement]) -> str:
         if data_element.value_type in NUMERIC_DATA_TYPE_NAMES and data_element.is_array:
             input_elements += create_numeric_array_control(data_element)
 
-        elif data_element.value_type == DataType.Boolean.name and not (
-            data_element.is_array
-        ):
+        elif data_element.value_type == DataType.Boolean.name:
             input_elements += create_toggle_image_button(data_element)
 
-        elif data_element.value_type == DataType.String.name and not (
-            data_element.is_array
-        ):
+        elif data_element.value_type == DataType.String.name and not data_element.is_array:
             input_elements += create_string_control(data_element)
 
         elif data_element.value_type in NUMERIC_DATA_TYPE_NAMES:
@@ -74,7 +70,7 @@ def create_indicator_elements(outputs: List[DataElement]) -> str:
         if output.value_type in NUMERIC_DATA_TYPE_NAMES and output.is_array:
             output_elements += create_numeric_array_indicator(output)
 
-        elif output.value_type == DataType.Boolean.name and not output.is_array:
+        elif output.value_type == DataType.Boolean.name:
             output_elements += create_toggle_image_indicator(output)
 
         elif output.value_type == DataType.String.name and not output.is_array:
