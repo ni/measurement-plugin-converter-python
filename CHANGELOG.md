@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- Support for NI-DAQmx.
+- Support for NI-DAQmx instrument driver.
 
 ### Changed
 

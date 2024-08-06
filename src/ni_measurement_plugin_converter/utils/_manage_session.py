@@ -155,7 +155,7 @@ def __replace_session(node: ast.With, driver: str) -> List[Tuple[str, str, str]]
                 actual_session_name = item.optional_vars.id
 
                 item.optional_vars.id = _SESSION_INFO
-                call.func.attr = f"create_nidaqmx_task"
+                call.func.attr = "create_nidaqmx_task"
                 call.func.value.id = _RESERVATION
 
                 replacements.append(

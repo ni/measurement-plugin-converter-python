@@ -22,10 +22,10 @@ class UserMessage:
     EXTRACT_OUTPUT_INFO = "Extracting outputs information from measurement function..."
 
     UNSUPPORTED_INPUTS = (
-        "The inputs {params} were skipped because their data types are unsupported."
+        "The inputs {params} are skipped because their data types are unsupported."
     )
     UNSUPPORTED_OUTPUTS = (
-        "The outputs {variables} were skipped because their data types are unsupported."
+        "The outputs {variables} are skipped because their data types are unsupported."
     )
 
     ADD_RESERVE_SESSION = "Adding session reservation..."
