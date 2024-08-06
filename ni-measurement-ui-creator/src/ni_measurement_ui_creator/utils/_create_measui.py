@@ -4,7 +4,7 @@ import os
 
 from mako.template import Template
 
-from ni_measurement_ui_creator.constants import CLIENT_ID, ENCODING, TEMPLATE_FILEPATH
+from ni_measurement_ui_creator.constants import CLIENT_ID, ENCODING
 
 
 def render_template(
@@ -43,8 +43,13 @@ def create_measui(filepath: str, input_output_elements: str) -> None:
     Returns:
         None.
     """
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    template_file_path = os.path.join(
+        os.path.dirname(current_dir), "templates" , "measurement.measui.mako"
+    )
+
     file_content = render_template(
-        template_name=TEMPLATE_FILEPATH,
+        template_name=template_file_path,
         client_id=CLIENT_ID,
         display_name=os.path.basename(filepath),
         input_output_elements=input_output_elements,

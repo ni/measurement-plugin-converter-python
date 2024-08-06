@@ -9,7 +9,6 @@ from ._ui_elements import (
     NUMERIC_DATA_TYPE_NAMES,
     NUMERIC_DATA_TYPE_VALUES,
     SUPPORTED_UI_ELEMENTS,
-    TEMPLATE_FILEPATH,
     TYPE_SPECIFICATION,
     DataType,
     MeasUIElement,

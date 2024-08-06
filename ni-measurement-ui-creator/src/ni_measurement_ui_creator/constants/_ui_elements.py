@@ -77,7 +77,6 @@ class SpecializedDataType:
 
 
 TYPE_SPECIFICATION = "ni/type_specialization"
-TEMPLATE_FILEPATH = os.path.join(os.getcwd(), "templates", "measurement.measui.mako")
 MEASUREMENT_SERVICE_INTERFACE_V1 = "ni.measurementlink.measurement.v1.MeasurementService"
 MEASUREMENT_SERVICE_INTERFACE_V2 = "ni.measurementlink.measurement.v2.MeasurementService"
 SUPPORTED_UI_ELEMENTS = [
