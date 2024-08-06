@@ -54,7 +54,6 @@ class SupportedDataType(Enum):
     UInt64 = 4
     Boolean = 8
     String = 9
-    Pin = 10
 
 
 TYPE_SPECIFICATION = "ni/type_specialization"
