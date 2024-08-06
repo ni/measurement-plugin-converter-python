@@ -35,7 +35,8 @@ numeric_control_elements = create_control_elements(
             value_type="UInt64",  # Refer `SupportedDataType`.
             left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
             top_alignment=(
-                MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+                MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
+                + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
             ),
         ),
     ]
@@ -63,7 +64,8 @@ numeric_indicator_elements = create_indicator_elements(
                 + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
             ),
             top_alignment=(
-                MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+                MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
+                + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
             ),
         ),
     ]

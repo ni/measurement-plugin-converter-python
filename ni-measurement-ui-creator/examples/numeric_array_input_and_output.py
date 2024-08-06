@@ -63,7 +63,8 @@ array_output_elements = create_indicator_elements(
                 + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
             ),
             top_alignment=(
-                MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+                MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
+                + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
             ),
         ),
     ]

@@ -113,7 +113,8 @@ def create_string_indicators(elements_parameter: List[DataElement]) -> str:
 
     for element_parameter in elements_parameter:
         element_parameter.left_alignment = (
-            MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
+            MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
+            + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
         )
         element_parameter.top_alignment = top_alignment
         top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE

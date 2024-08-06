@@ -30,7 +30,8 @@ toggle_image_buttons = create_control_elements(
             name="Second Bool In",
             left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
             top_alignment=(
-                MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+                MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
+                + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
             ),
         ),
     ]
@@ -55,7 +56,8 @@ toggle_image_indicators = create_indicator_elements(
                 + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
             ),
             top_alignment=(
-                MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+                MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
+                + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
             ),
         ),
     ]

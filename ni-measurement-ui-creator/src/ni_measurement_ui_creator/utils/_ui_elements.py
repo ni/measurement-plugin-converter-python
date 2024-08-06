@@ -3,6 +3,7 @@
 from ni_measurement_ui_creator.constants import (
     CLIENT_ID,
     NUMERIC_DATA_TYPE_VALUES,
+    TYPE_SPECIFICATION,
     MeasUIElementPosition,
     SupportedDataType,
 )
@@ -60,8 +61,23 @@ def create_input_elements_from_client(inputs) -> str:
                 )
                 input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
+            elif (
+                input.annotations
+                and input.annotations[TYPE_SPECIFICATION] == SupportedDataType.Pin.name.lower()
+            ):
+                input_elements.append(
+                    DataElement(
+                        client_id=CLIENT_ID,
+                        name=input.name,
+                        left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
+                        top_alignment=input_top_alignment,
+                        value_type=SupportedDataType.Pin.name,
+                    )
+                )
+                input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+
             elif input.type == SupportedDataType.String.value and not (
-                hasattr(input, "repeated") and input.repeated
+                hasattr(input, "repeated") and input.repeated and not input.annotations
             ):
                 input_elements.append(
                     DataElement(
@@ -75,18 +91,6 @@ def create_input_elements_from_client(inputs) -> str:
                 input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
             elif input.type in NUMERIC_DATA_TYPE_VALUES:
-                input_elements.append(
-                    DataElement(
-                        client_id=CLIENT_ID,
-                        name=input.name,
-                        left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
-                        top_alignment=input_top_alignment,
-                        value_type=input_datatype.name,
-                    )
-                )
-                input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
-
-            elif input.type == SupportedDataType.Pin.value:
                 input_elements.append(
                     DataElement(
                         client_id=CLIENT_ID,
@@ -115,7 +119,8 @@ def create_output_elements_from_client(outputs) -> str:
     """
     output_elements = []
     output_left_alignment = (
-        MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
+        MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
+        + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
     )
     output_top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
 
