@@ -1,6 +1,5 @@
 """Measurement UI constants."""
 
-import os
 import uuid
 from enum import Enum
 
@@ -29,6 +28,8 @@ class MeasUIElement:
     STRING_CONTROL = '<ChannelStringControl AcceptsReturn="[bool]False" BaseName="[string]String" Channel="[string]{client_id}/Configuration/{name}" Enabled="[bool]True" Height="[float]24" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" Id="{shared_id}" Label="[UIModel]{label_id}" Left="[float]{left_value}" Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" Width="[float]72" />'
     STRING_INDICATOR = '<ChannelStringControl AcceptsReturn="[bool]False" BaseName="[string]String" Channel="[string]{client_id}/Output/{name}" Height="[float]24" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" Id="{shared_id}" IsReadOnly="[bool]True" Label="[UIModel]{label_id}" Left="[float]{left_value}" Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" Width="[float]72" />'
 
+    PIN_SELECTOR = '<ChannelPinSelector AllowUndefinedValues="[bool]True" BaseName="[string]Pin" Channel="[string]{client_id}/Configuration/{name}" DataType="[Type]String" Enabled="[bool]True" Height="[float]24" Id="{shared_id}" IsLabelBoundToChannel="[bool]False" Label="[UIModel]{label_id}" Left="[float]{left_value}" SelectedResource="[NI_Core_DataValues_TagRefnum]Pin1" Top="[float]{top_value}" Width="[float]127" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument" />'
+    IORESOURCE_ARRAY = '<ChannelPinSelector AllowUndefinedValues="[bool]True" BaseName="[string]Pin" Channel="[string]{client_id}/Configuration/{name}" DataType="[Type]String" Enabled="[bool]True" Height="[float]24" Id="{shared_id}" IsLabelBoundToChannel="[bool]False" Label="[UIModel]{label_id}" Left="[float]{left_value}" MultipleSelectionMode="[MultipleSelectionModes]List" SelectedResource="[NI_Core_DataValues_TagRefnum]PinGroup1" Top="[float]{top_value}" Width="[float]244" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument" />'
     LABEL = '<Label Height="[float]16" Id="{id}" LabelOwner="[UIModel]{shared_id}" Left="[float]{left_value}" Text="[string]{input_output_name}" Top="[float]{top_value}" Width="[float]100" xmlns="http://www.ni.com/PanelCommon" />'
 
 
@@ -36,13 +37,28 @@ class MeasUIElementPosition:
     """Measurement UI Element's Position."""
 
     LEFT_ALIGNMENT_START_VALUE = 50
-    LEFT_ALIGNMENT_INCREMENTAL_VALUE = 200
+    LEFT_ALIGNMENT_INCREMENTAL_VALUE = 250
 
     TOP_ALIGNMENT_START_VALUE = 50
     TOP_ALIGNMENT_INCREMENTAL_VALUE = 200
 
 
-class SupportedDataType(Enum):
+class SupportedDataType:
+    """Supported data types in UI creator."""
+
+    DOUBLE = "Double"
+    SINGLE = "Single"
+    INT32 = "Int32"
+    INT64 = "Int64"
+    UINT32 = "UInt32"
+    UINT64 = "UInt64"
+    BOOL = "Boolean"
+    STR = "String"
+    PIN = "Pin"
+    IORESOURCE_ARR = "IOResourceArray1D"
+
+
+class DataType(Enum):
     """Supported data types and its corresponding input values."""
 
     Double = 1
@@ -55,7 +71,15 @@ class SupportedDataType(Enum):
     String = 9
 
 
-TEMPLATE_FILEPATH = os.path.join(os.getcwd(), "templates", "measurement.measui.mako")
+class SpecializedDataType:
+    """Special data types supported."""
+
+    PIN = "Pin"
+    IORESOURCE = "IOResource"
+    IORESOURCE_ARR = "IOResourceArray1D"
+
+
+TYPE_SPECIFICATION = "ni/type_specialization"
 MEASUREMENT_SERVICE_INTERFACE_V1 = "ni.measurementlink.measurement.v1.MeasurementService"
 MEASUREMENT_SERVICE_INTERFACE_V2 = "ni.measurementlink.measurement.v2.MeasurementService"
 SUPPORTED_UI_ELEMENTS = [
@@ -67,22 +91,23 @@ SUPPORTED_UI_ELEMENTS = [
     "Toggle Image Indicator",
     "String Control",
     "String Indicator",
+    "Pin",
 ]
 NUMERIC_DATA_TYPE_NAMES = [
-    SupportedDataType.Int32.name,
-    SupportedDataType.Int64.name,
-    SupportedDataType.UInt32.name,
-    SupportedDataType.UInt64.name,
-    SupportedDataType.Single.name,
-    SupportedDataType.Double.name,
+    DataType.Int32.name,
+    DataType.Int64.name,
+    DataType.UInt32.name,
+    DataType.UInt64.name,
+    DataType.Single.name,
+    DataType.Double.name,
 ]
 NUMERIC_DATA_TYPE_VALUES = [
-    SupportedDataType.Int32.value,
-    SupportedDataType.Int64.value,
-    SupportedDataType.UInt32.value,
-    SupportedDataType.UInt64.value,
-    SupportedDataType.Single.value,
-    SupportedDataType.Double.value,
+    DataType.Int32.value,
+    DataType.Int64.value,
+    DataType.UInt32.value,
+    DataType.UInt64.value,
+    DataType.Single.value,
+    DataType.Double.value,
 ]
 
 ENCODING = "utf-8"

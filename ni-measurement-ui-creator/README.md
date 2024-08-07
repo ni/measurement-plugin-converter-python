@@ -24,3 +24,15 @@
 - Run `pip install <ni-measurement-ui-creator whl file>`.
 - Run `ni-measurement-ui-creator --output-directory <output folder path>` to run the tool.
 - Ensure measurement services are running.
+
+### Supported data elements
+
+- Numeric Indicator
+- Numeric Control
+- Numeric Array Input
+- Numeric Array Output
+- Toggle Image Button
+- Toggle Image Indicator
+- String Control
+- String Indicator
+- Pin

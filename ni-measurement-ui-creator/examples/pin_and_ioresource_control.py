@@ -1,6 +1,6 @@
-"""Example to create numeric array input and numeric array output measui elements.
+"""Example to create Pin control  and IOResource element.
 
-Note: CLIENT ID should be same throughout a measui file.
+Note: CLIENT_ID should be same throughout a measui file.
 """
 
 import uuid
@@ -13,7 +13,6 @@ from ni_measurement_ui_creator.models import DataElement
 from ni_measurement_ui_creator.utils._create_measui import create_measui
 from ni_measurement_ui_creator.utils._helpers import (
     create_control_elements,
-    create_indicator_elements,
 )
 
 
@@ -22,47 +21,43 @@ from ni_measurement_ui_creator.utils._helpers import (
 # Any unique id will work.
 client_id = uuid.uuid4()
 
-array_input_elements = create_control_elements(
+pin_control_elements = create_control_elements(
     inputs=[
         DataElement(
             client_id=client_id,
-            name="Array In",
-            value_type=SupportedDataType.DOUBLE,
+            name="Pin1",
             left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
             top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
-            is_array=True,
+            value_type=SupportedDataType.PIN,
         ),
         DataElement(
             client_id=client_id,
-            name="Second Array In",
-            value_type=SupportedDataType.UINT32,
+            name="Pin2",
             left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
             top_alignment=(
                 MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
             ),
-            is_array=True,
+            value_type=SupportedDataType.PIN,
         ),
     ]
 )
 
-array_output_elements = create_indicator_elements(
-    outputs=[
+ioresource_arr_control_elements = create_control_elements(
+    inputs=[
         DataElement(
             client_id=client_id,
-            name="Array Out",
-            value_type=SupportedDataType.DOUBLE,
+            name="PinGroup1",
             left_alignment=(
                 MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
             ),
             top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
-            is_array=True,
+            value_type=SupportedDataType.IORESOURCE_ARR,
         ),
         DataElement(
             client_id=client_id,
-            name="Second Array Out",
-            value_type=SupportedDataType.UINT32,
+            name="PinGroup2",
             left_alignment=(
                 MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
@@ -71,16 +66,16 @@ array_output_elements = create_indicator_elements(
                 MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
             ),
-            is_array=True,
+            value_type=SupportedDataType.IORESOURCE_ARR,
         ),
     ]
 )
 
 # Create a .measui file.
 create_measui(
-    filepath="numeric_arrays",
-    input_output_elements=array_input_elements + array_output_elements,
+    filepath="Pin_and_Ioresource_control_element",
+    input_output_elements=pin_control_elements + ioresource_arr_control_elements,
 )
 
-print(array_input_elements, array_output_elements, sep="\n\n---------------\n\n")
+print(pin_control_elements, ioresource_arr_control_elements, sep="\n\n---------------\n\n")
 print("\nMeasUI File created.")
