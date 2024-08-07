@@ -59,9 +59,8 @@ ni-measurement-plugin-converter --display-name <display name> --measurement-file
 
 ### Prerequisites
 
-The following are the prerequisites that the inputted user Python measurements should comply with
-
-- It should contain a measurement function which should
+The inputted Python measurement should
+- Contain a measurement function which should
   - Contain a return value.
   - Have properly type hinted inputs and outputs.
   - Use one of the supported drivers.
@@ -98,17 +97,17 @@ The CLI tool will skip the unsupported data types' inputs and outputs of the mea
 
 The following files will be created as part of the measurement plug-in directory.
 
-| File                         | Description                                                         |
-| ---------------------------- | ------------------------------------------------------------------- |
-| measurement.py               | Measurement file.                                                   |
-| _migrated.py                 | Copy of the user file with some changes.                            |
-| <display_name>.serviceconfig | Service configuration file.                                         |
-| _helpers.py                  | `TestStand` support file.                                           |
-| start.bat                    | Batch file with commands to run the measurement.py.                 |
-| log.txt                      | Log file which will contain the conversion process status messages. |
+| File                         | Description                                           |
+| ---------------------------- | ----------------------------------------------------- |
+| measurement.py               | Measurement file.                                     |
+| _migrated.py                 | Copy of the user file with some changes.              |
+| <display_name>.serviceconfig | Service configuration file.                           |
+| _helpers.py                  | `TestStand` support file.                             |
+| start.bat                    | Batch file with commands to run the measurement.py.   |
+| log.txt                      | Log file with the conversion process status messages. |
 
 
-The `measurement.py` file is the main file where the measure function will be defined with inputs and outputs in the measurement plug-in format. The reservation of the instrument driver's session will be done within the measurement function. The return value of the measure function will be the inputted measurement function. The reservation object will be one of the arguments to the user-defined measurement function.
+The `measurement.py` file is the main file where the measure function will be defined with the inputs and the outputs in the measurement plug-in format. The instrument driver's session will be reserved within the measurement function. The measure function will return the user-inputted measurement function. The session reservation object will be added as the argument to the user-inputted measurement function.
 
 The `_migrated.py` file is the copy of the user-inputted measurement file with the following changes.
 - An additional parameter `reservation` will be added to the user measurement function.
@@ -133,8 +132,8 @@ The log file will be created in the user-provided output directory.
 
 ## Open items
 
-- It will support integer, float, string, boolean, and their array counterpart data types only.
-- It will support NI-DCPower, NI-DMM, NI-Digital, NI-FGEN, NI-Switch, NI-Scope, and NI-DAQmx instrument drivers only.
-- The user measurements should contain a measurement function with properly type hinted return value.
-- Initialization of the instrument driver's session should be done inside the measurement function.
-- The measurement plug-in created by this tool will not include a measurement UI file.
+- Pin, Path, Enum, DoubleXYData and their array counterpart data types are yet to be supported.
+- NI-VISA instrument driver is yet to be supported.
+- Multiple instances of the session and multiple instruments in the same measurement are yet to be supported.
+- Initialization of the instrument driver's session in main function is yet to be supported.
+- Creation of the measurement UI file with the plug-in.

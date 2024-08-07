@@ -52,7 +52,7 @@ def run(
     function: str,
     output_dir: str,
 ) -> None:
-    """NI Measurement Plug In Converter is a Command Line tool to convert \
+    """NI Measurement Plug-In Converter is a Command Line tool to convert \
         Python measurements to measurement plug-ins."""
     try:
         log_directory = None
