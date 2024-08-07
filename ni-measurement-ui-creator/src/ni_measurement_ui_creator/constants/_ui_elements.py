@@ -55,6 +55,7 @@ class SupportedDataType:
     BOOL = "Boolean"
     STR = "String"
     PIN = "Pin"
+    IORESOURCE = "IOResource"
 
 
 class DataType(Enum):

@@ -19,7 +19,7 @@ def create_pin_control(element_parameter: DataElement) -> str:
     label_id = get_unique_id()
     shared_id = get_unique_id()
 
-    string_control = MeasUIElement.PIN_SELECTOR.format(
+    pin_control = MeasUIElement.PIN_SELECTOR.format(
         client_id=element_parameter.client_id,
         name=element_parameter.name,
         label_id=label_id,
@@ -38,7 +38,7 @@ def create_pin_control(element_parameter: DataElement) -> str:
         )
     )
 
-    return string_control + label
+    return pin_control + label
 
 
 def create_ioresource_control(element_parameter: DataElement) -> str:
@@ -53,7 +53,7 @@ def create_ioresource_control(element_parameter: DataElement) -> str:
     label_id = get_unique_id()
     shared_id = get_unique_id()
 
-    string_control = MeasUIElement.RESOURCE_IO.format(
+    ioresource_control = MeasUIElement.RESOURCE_IO.format(
         client_id=element_parameter.client_id,
         name=element_parameter.name,
         label_id=label_id,
@@ -72,4 +72,4 @@ def create_ioresource_control(element_parameter: DataElement) -> str:
         )
     )
 
-    return string_control + label
+    return ioresource_control + label

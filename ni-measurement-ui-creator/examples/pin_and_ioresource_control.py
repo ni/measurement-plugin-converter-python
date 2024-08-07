@@ -1,4 +1,4 @@
-"""Example to create Pin control element.
+"""Example to create Pin control  and IOResource element.
 
 Note: CLIENT_ID should be same throughout a measui file.
 """
@@ -44,11 +44,38 @@ pin_control_elements = create_control_elements(
     ]
 )
 
+ioresource_control_elements = create_control_elements(
+    inputs=[
+        DataElement(
+            client_id=client_id,
+            name="PinGroup1",
+            left_alignment=(
+                MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
+                + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
+            ),
+            top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
+            value_type=SupportedDataType.IORESOURCE,  # Refer `SupportedDataType`
+        ),
+        DataElement(
+            client_id=client_id,
+            name="PinGroup2",
+            left_alignment=(
+                MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
+                + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
+            ),
+            top_alignment=(
+                MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
+                + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+            ),
+            value_type=SupportedDataType.IORESOURCE,  # Refer `SupportedDataType`
+        ),
+    ]
+)
 
 # Create a .measui file.
 create_measui(
-    filepath="Pin_control_element",
-    input_output_elements=pin_control_elements,
+    filepath="Pin_and_Ioresource_control_element",
+    input_output_elements=pin_control_elements + ioresource_control_elements,
 )
 
 print(pin_control_elements, sep="\n\n---------------\n\n")
