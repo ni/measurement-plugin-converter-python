@@ -145,6 +145,7 @@ def __replace_session(node: ast.With, driver: str) -> List[Tuple[str, str, str]]
                 )
 
                 call.keywords.clear()
+                call.args.clear()
 
             elif (
                 isinstance(call.func, ast.Attribute)
@@ -166,6 +167,7 @@ def __replace_session(node: ast.With, driver: str) -> List[Tuple[str, str, str]]
                 )
 
                 call.keywords.clear()
+                call.args.clear()
 
     return replacements
 

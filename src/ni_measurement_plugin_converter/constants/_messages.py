@@ -21,9 +21,7 @@ class UserMessage:
     EXTRACT_INPUT_INFO = "Extracting inputs information from measurement function..."
     EXTRACT_OUTPUT_INFO = "Extracting outputs information from measurement function..."
 
-    UNSUPPORTED_INPUTS = (
-        "The inputs {params} are skipped because their data types are unsupported."
-    )
+    UNSUPPORTED_INPUTS = "The inputs {params} are skipped because their data types are unsupported."
     UNSUPPORTED_OUTPUTS = (
         "The outputs {variables} are skipped because their data types are unsupported."
     )

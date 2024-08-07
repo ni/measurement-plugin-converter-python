@@ -52,14 +52,8 @@ def run(
     function: str,
     output_dir: str,
 ) -> None:
-    """Run the CLI tool.
-
-    Args:
-        display_name (str): Display name.
-        measurement_file_dir (str): Measurement file directory.
-        function (str): Measurement function name.
-        output_dir (str): Output directory.
-    """
+    """NI Measurement Plug-In Converter is a Command Line tool to convert \
+        Python measurements to measurement plug-ins."""
     try:
         log_directory = None
         logger = initialize_logger(name="console_logger", log_directory=log_directory)
