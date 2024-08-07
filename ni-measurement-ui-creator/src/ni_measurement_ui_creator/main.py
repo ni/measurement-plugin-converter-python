@@ -4,10 +4,10 @@ import os
 from pathlib import Path
 
 import click
-from ni_measurementlink_service._internal.stubs.ni.measurementlink.measurement.v2 import (
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
 )
-from ni_measurementlink_service.discovery import DiscoveryClient
+from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 
 from ni_measurement_ui_creator.constants import (
     CLI_CONTEXT_SETTINGS,
