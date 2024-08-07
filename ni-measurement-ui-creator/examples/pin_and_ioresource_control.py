@@ -77,5 +77,5 @@ create_measui(
     input_output_elements=pin_control_elements + ioresource_arr_control_elements,
 )
 
-print(pin_control_elements, sep="\n\n---------------\n\n")
+print(pin_control_elements, ioresource_arr_control_elements, sep="\n\n---------------\n\n")
 print("\nMeasUI File created.")
