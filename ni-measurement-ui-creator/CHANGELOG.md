@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Update the dependency whl file as per rebranding of measurement plugin.
+- Update the dependency whl file as per the rebranding of the MeasurementLink to the Measurement Plug-in.
 
 ## [1.0.0-dev3] - 2024-08-07
 
