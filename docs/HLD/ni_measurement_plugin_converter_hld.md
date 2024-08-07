@@ -1,6 +1,6 @@
-# NI Measurement Plug In Converter
+# NI Measurement Plug-In Converter
 
-- [NI Measurement Plug In Converter](#ni-measurement-plug-in-converter)
+- [NI Measurement Plug-In Converter](#ni-measurement-plug-in-converter)
   - [Who](#who)
   - [Related links](#related-links)
   - [Problem statement](#problem-statement)
@@ -10,7 +10,7 @@
   - [Design \& Implementation](#design--implementation)
     - [CLI Inputs](#cli-inputs)
     - [Prerequisites](#prerequisites)
-    - [Supported Data Types and Instrument Drivers.](#supported-data-types-and-instrument-drivers)
+    - [Supported Data Types and Instrument Drivers](#supported-data-types-and-instrument-drivers)
     - [Outputs](#outputs)
     - [Logger Implementation](#logger-implementation)
   - [Alternative implementations / Designs](#alternative-implementations--designs)
@@ -27,7 +27,7 @@ Team: ModernLab Success
 
 ## Problem statement
 
-- A test engineer who develops Python measurements needs to convert those Python measurements to measurement plugins. `NI Measurement Plug In Converter` solves the problem of manual conversion and helps in automating the conversion process.
+- A test engineer who develops Python measurements needs to convert those Python measurements to measurement plug-ins. `NI Measurement Plug-In Converter` aims to solve the problem of manual conversion and will help in automating the conversion process.
 
 ## Workflow
 
@@ -45,7 +45,7 @@ The solution is to create a Python package that helps in automating the conversi
 
 ### CLI Inputs
 
-- The display name is used in the service configuration file. The service configuration file is named `<display_name>.serviceconfig`.
+- The display name will be used in the service configuration file. The service configuration file will be named in the format `<display_name>.serviceconfig`.
 - The inputted file directory will be validated and raised error if there is no such file.
 - The measurement function will be validated and an error will be raised if the measurement function is not available in the measurement file.
 - The output directory will be created if it does not exist.
@@ -67,9 +67,9 @@ The following are the prerequisites that the inputted user Python measurements s
   - Use one of the supported drivers.
 - Initialize the instrument driver's session inside the measurement function.
 
-### Supported Data Types and Instrument Drivers.
+### Supported Data Types and Instrument Drivers
 
-The supported data types are
+Data types
 
 - Integer
 - Float
@@ -80,7 +80,7 @@ The supported data types are
 - List of strings
 - List of booleans
 
-The supported instrument drivers are
+Instrument drivers
 
 - NI-DCPower
 - NI-DMM
@@ -90,40 +90,42 @@ The supported instrument drivers are
 - NI-Scope
 - NI-DAQmx
 
-The CLI tool skips the unsupported data types' inputs and outputs of the measurement function and informs through corresponding messages in the command line interface and logs it in the log file. 
+The above-listed data types and instrument drivers should be supported in the first version/prerelease. Going forward the tool will try to support all possible data types and instrument drivers available.
+
+The CLI tool will skip the unsupported data types' inputs and outputs of the measurement function and will inform through corresponding messages in the command line interface and will log it in the log file. 
 
 ### Outputs
 
-The following files are created as part of the measurement plug-in directory.
+The following files will be created as part of the measurement plug-in directory.
 
-| File                         | Description                                                     |
-| ---------------------------- | --------------------------------------------------------------- |
-| measurement.py               | Measurement file.                                               |
-| _migrated.py                 | Copy of the user file with some changes.                        |
-| <display_name>.serviceconfig | Service configuration file.                                     |
-| _helpers.py                  | `TestStand` support file.                                       |
-| start.bat                    | Batch file with commands to run the measurement.py.             |
-| log.txt                      | Log file which contains the conversion process status messages. |
+| File                         | Description                                                         |
+| ---------------------------- | ------------------------------------------------------------------- |
+| measurement.py               | Measurement file.                                                   |
+| _migrated.py                 | Copy of the user file with some changes.                            |
+| <display_name>.serviceconfig | Service configuration file.                                         |
+| _helpers.py                  | `TestStand` support file.                                           |
+| start.bat                    | Batch file with commands to run the measurement.py.                 |
+| log.txt                      | Log file which will contain the conversion process status messages. |
 
 
-The `measurement.py` file is the main file where the measure function is defined with inputs and outputs in the measurement plug-in format. The reservation of the instrument driver's session is done within the measurement function. The user-defined measurement function is the return value of the measure function. The reservation object is sent as one of the arguments to the user-defined measurement function.
+The `measurement.py` file is the main file where the measure function will be defined with inputs and outputs in the measurement plug-in format. The reservation of the instrument driver's session will be done within the measurement function. The return value of the measure function will be the inputted measurement function. The reservation object will be one of the arguments to the user-defined measurement function.
 
 The `_migrated.py` file is the copy of the user-inputted measurement file with the following changes.
-- An additional parameter `reservation` is added in the user measurement function.
-- The initialization of the instrument driver's session is done with the reservation object.
-- The session object is replaced.
+- An additional parameter `reservation` will be added to the user measurement function.
+- The initialization of the instrument driver's session will be done with the reservation object.
+- The session object will be replaced.
 
 ### Logger Implementation
 
-Logger implementation plays a crucial role in this tool for displaying the status messages of the conversion process and as a debugger for debugging any unexpected behavior.
-Two types of loggers have been implemented in this tool, one is a `Console logger` and another is a `File logger`. Console logger is used for displaying messages in the console whereas the File logger is used for logging all types of messages in a separate file called `log.txt`. Both the logger logs the messages in different formats. The console logger logs the message as plain text whereas the file logger logs the messages along with the time stamp.
+The Logger will play a crucial role in this tool for displaying the status messages of the conversion process and as a debugger for debugging any unexpected behavior.
+Two types of loggers will be implemented in this tool, one will be a `Console logger` and another will be a `File logger`. Console logger will be used for displaying messages in the console whereas the File logger will be used for logging all types of messages in a separate file called `log.txt`. Both the logger will log the messages in different formats. The console logger will log the message as plain text whereas the file logger will log the messages along with the time stamp.
 
 For example,
 ![file_logger](file_logger.png)
 
-The console logger gets loaded and then the file logger. The file logger contains all messages, including console messages, as well as any exceptions that occurred during the execution.
+The console logger will get loaded followed by the file logger. The file logger will contain all messages, including console messages, as well as any exceptions that occur during the execution.
 
-The log file will be created at the user-provided output directory.
+The log file will be created in the user-provided output directory.
 
 ## Alternative implementations / Designs
 
@@ -131,8 +133,8 @@ The log file will be created at the user-provided output directory.
 
 ## Open items
 
-- It supports integer, float, string, boolean, and their array counterpart data types only.
-- It supports NI-DCPower, NI-DMM, NI-Digital, NI-FGEN, NI-Switch, NI-Scope, and NI-DAQmx instrument drivers only.
+- It will support integer, float, string, boolean, and their array counterpart data types only.
+- It will support NI-DCPower, NI-DMM, NI-Digital, NI-FGEN, NI-Switch, NI-Scope, and NI-DAQmx instrument drivers only.
 - The user measurements should contain a measurement function with properly type hinted return value.
 - Initialization of the instrument driver's session should be done inside the measurement function.
-- The measurement plug-in created by this tool doesn't include a measurement UI file.
+- The measurement plug-in created by this tool will not include a measurement UI file.
