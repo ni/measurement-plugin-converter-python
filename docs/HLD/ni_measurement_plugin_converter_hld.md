@@ -6,7 +6,7 @@
   - [Problem statement](#problem-statement)
   - [Workflow](#workflow)
     - [User workflow](#user-workflow)
-    - [Architecture workflow](#architecture-workflow)
+    - [Architecture](#architecture)
   - [Design \& Implementation](#design--implementation)
     - [CLI Inputs](#cli-inputs)
     - [Prerequisites](#prerequisites)
@@ -35,13 +35,13 @@ Team: ModernLab Success
 
 ![User Workflow](user_workflow.png)
 
-### Architecture workflow
+### Architecture
 
-![Architecture Workflow](architecture_flow.png)
+![Architecture](architecture_flow.png)
 
 ## Design & Implementation
 
-The solution is to create a Python package that helps in automating the conversion process. The Python package can be a CLI tool that prompts the user to provide the display name, the input file directory where the Python measurement is located, the name of the measurement function, and the output directory where the measurement plug-in will be created.
+The solution is to create a Python package that helps in automating the conversion process. The Python package can be a CLI tool that prompts the user to enter the display name, the input file directory where the Python measurement is located, the name of the measurement function, and the output directory where the measurement plug-in will be created.
 
 ### CLI Inputs
 
@@ -111,19 +111,19 @@ The `measurement.py` file is the main file where the measure function is defined
 The `_migrated.py` file is the copy of the user-inputted measurement file with the following changes.
 - An additional parameter `reservation` is added in the user measurement function.
 - The initialization of the instrument driver's session is done with the reservation object.
-- The session object is replaced
+- The session object is replaced.
 
 ### Logger Implementation
 
-Logger implementation plays a crucial role in this tool for displaying the status messages of the converted measurement and as a debugger for debugging any unexpected behavior.
+Logger implementation plays a crucial role in this tool for displaying the status messages of the conversion process and as a debugger for debugging any unexpected behavior.
 Two types of loggers have been implemented in this tool, one is a `Console logger` and another is a `File logger`. Console logger is used for displaying messages in the console whereas the File logger is used for logging all types of messages in a separate file called `log.txt`. Both the logger logs the messages in different formats. The console logger logs the message as plain text whereas the file logger logs the messages along with the time stamp.
 
 For example,
 ![file_logger](file_logger.png)
 
-The console logger gets loaded and then the file logger. The file logger contains all messages, including console messages, as well as any exceptions that occurred during the **execution**.
+The console logger gets loaded and then the file logger. The file logger contains all messages, including console messages, as well as any exceptions that occurred during the execution.
 
-The log file will be created at the user-provided output path.
+The log file will be created at the user-provided output directory.
 
 ## Alternative implementations / Designs
 
