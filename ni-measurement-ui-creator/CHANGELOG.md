@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## NI Measurement UI Creator
 
+## [1.0.0-dev4] - 2024-08-07
+
+### Changed
+
+- Update the dependency whl file as per rebranding of measurement plugin.
+
 ## [1.0.0-dev3] - 2024-08-07
 
 ### Added
