@@ -1,6 +1,6 @@
 """Helpers functions of Measurement UI creator."""
 
-from typing import Dict, List, Union
+from typing import List
 
 from ni_measurement_ui_creator.constants import (
     NUMERIC_DATA_TYPE_NAMES,
