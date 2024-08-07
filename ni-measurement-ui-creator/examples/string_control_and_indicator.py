@@ -18,7 +18,6 @@ from ni_measurement_ui_creator.utils._helpers import (
 
 
 # Refer `SupportedDataType` class for supported `value_type`.
-# Use corresponding key strings according to the needs.
 
 # Any unique id will work.
 client_id = uuid.uuid4()
@@ -30,7 +29,7 @@ string_control_elements = create_control_elements(
             name="String In",
             left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
             top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
-            value_type=SupportedDataType.STR,  # Refer `SupportedDataType`
+            value_type=SupportedDataType.STR,
         ),
         DataElement(
             client_id=client_id,
@@ -40,7 +39,7 @@ string_control_elements = create_control_elements(
                 MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
             ),
-            value_type=SupportedDataType.STR,  # Refer `SupportedDataType`
+            value_type=SupportedDataType.STR,
         ),
     ]
 )
@@ -55,7 +54,7 @@ string_indicator_elements = create_indicator_elements(
                 + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
             ),
             top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
-            value_type=SupportedDataType.STR,  # Refer `SupportedDataType`
+            value_type=SupportedDataType.STR,
         ),
         DataElement(
             client_id=client_id,
@@ -68,7 +67,7 @@ string_indicator_elements = create_indicator_elements(
                 MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
             ),
-            value_type=SupportedDataType.STR,  # Refer `SupportedDataType`
+            value_type=SupportedDataType.STR,
         ),
     ]
 )

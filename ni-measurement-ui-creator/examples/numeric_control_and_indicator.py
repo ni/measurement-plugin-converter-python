@@ -18,7 +18,6 @@ from ni_measurement_ui_creator.utils._helpers import (
 
 
 # Refer `SupportedDataType` class for supported `value_type`.
-# Use corresponding key strings according to the needs.
 
 # Any unique id will work.
 client_id = uuid.uuid4()
@@ -28,14 +27,14 @@ numeric_control_elements = create_control_elements(
         DataElement(
             client_id=client_id,
             name="Numeric input",
-            value_type=SupportedDataType.DOUBLE,  # Refer `SupportedDataType`.
+            value_type=SupportedDataType.DOUBLE,
             left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
             top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
         ),
         DataElement(
             client_id=client_id,
             name="Second Numeric input",
-            value_type=SupportedDataType.UINT64,  # Refer `SupportedDataType`.
+            value_type=SupportedDataType.UINT64,
             left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
             top_alignment=(
                 MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
@@ -51,7 +50,7 @@ numeric_indicator_elements = create_indicator_elements(
         DataElement(
             client_id=client_id,
             name="Numeric output",
-            value_type=SupportedDataType.DOUBLE,  # Refer `SupportedDataType`.
+            value_type=SupportedDataType.DOUBLE,
             left_alignment=(
                 MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
@@ -61,7 +60,7 @@ numeric_indicator_elements = create_indicator_elements(
         DataElement(
             client_id=client_id,
             name="Second Numeric output",
-            value_type=SupportedDataType.UINT64,  # Refer `SupportedDataType`.
+            value_type=SupportedDataType.UINT64,
             left_alignment=(
                 MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE

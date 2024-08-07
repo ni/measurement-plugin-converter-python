@@ -18,7 +18,6 @@ from ni_measurement_ui_creator.utils._helpers import (
 
 
 # Refer `SupportedDataType` class for supported `value_type`.
-# Use corresponding key strings according to the needs.
 
 # Any unique id will work.
 client_id = uuid.uuid4()
@@ -30,7 +29,7 @@ toggle_image_buttons = create_control_elements(
             name="Bool In",
             left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
             top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
-            value_type=SupportedDataType.BOOL,  # Refer `SupportedDataType`
+            value_type=SupportedDataType.BOOL,
         ),
         DataElement(
             client_id=client_id,
@@ -40,7 +39,7 @@ toggle_image_buttons = create_control_elements(
                 MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
             ),
-            value_type=SupportedDataType.BOOL,  # Refer `SupportedDataType`
+            value_type=SupportedDataType.BOOL,
         ),
     ]
 )
@@ -55,7 +54,7 @@ toggle_image_indicators = create_indicator_elements(
                 + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
             ),
             top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
-            value_type=SupportedDataType.BOOL,  # Refer `SupportedDataType`
+            value_type=SupportedDataType.BOOL,
         ),
         DataElement(
             client_id=client_id,
@@ -68,7 +67,7 @@ toggle_image_indicators = create_indicator_elements(
                 MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
             ),
-            value_type=SupportedDataType.BOOL,  # Refer `SupportedDataType`
+            value_type=SupportedDataType.BOOL,
         ),
     ]
 )
