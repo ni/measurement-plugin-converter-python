@@ -29,7 +29,7 @@ class MeasUIElement:
     STRING_INDICATOR = '<ChannelStringControl AcceptsReturn="[bool]False" BaseName="[string]String" Channel="[string]{client_id}/Output/{name}" Height="[float]24" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" Id="{shared_id}" IsReadOnly="[bool]True" Label="[UIModel]{label_id}" Left="[float]{left_value}" Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" Width="[float]72" />'
 
     PIN_SELECTOR = '<ChannelPinSelector AllowUndefinedValues="[bool]True" BaseName="[string]Pin" Channel="[string]{client_id}/Configuration/{name}" DataType="[Type]String" Enabled="[bool]True" Height="[float]24" Id="{shared_id}" IsLabelBoundToChannel="[bool]False" Label="[UIModel]{label_id}" Left="[float]{left_value}" SelectedResource="[NI_Core_DataValues_TagRefnum]Pin1" Top="[float]{top_value}" Width="[float]127" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument" />'
-    RESOURCE_IO = '<ChannelPinSelector AllowUndefinedValues="[bool]True" BaseName="[string]Pin" Channel="[string]{client_id}/Configuration/{name}" DataType="[Type]String" Enabled="[bool]True" Height="[float]24" Id="{shared_id}" IsLabelBoundToChannel="[bool]False" Label="[UIModel]{label_id}" Left="[float]{left_value}" MultipleSelectionMode="[MultipleSelectionModes]List" SelectedResource="[NI_Core_DataValues_TagRefnum]PinGroup1" Top="[float]{top_value}" Width="[float]244" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument" />'
+    IORESOURCE_ARRAY = '<ChannelPinSelector AllowUndefinedValues="[bool]True" BaseName="[string]Pin" Channel="[string]{client_id}/Configuration/{name}" DataType="[Type]String" Enabled="[bool]True" Height="[float]24" Id="{shared_id}" IsLabelBoundToChannel="[bool]False" Label="[UIModel]{label_id}" Left="[float]{left_value}" MultipleSelectionMode="[MultipleSelectionModes]List" SelectedResource="[NI_Core_DataValues_TagRefnum]PinGroup1" Top="[float]{top_value}" Width="[float]244" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument" />'
     LABEL = '<Label Height="[float]16" Id="{id}" LabelOwner="[UIModel]{shared_id}" Left="[float]{left_value}" Text="[string]{input_output_name}" Top="[float]{top_value}" Width="[float]100" xmlns="http://www.ni.com/PanelCommon" />'
 
 
@@ -55,7 +55,7 @@ class SupportedDataType:
     BOOL = "Boolean"
     STR = "String"
     PIN = "Pin"
-    IORESOURCE = "IOResource"
+    IORESOURCE_ARR = "IOResourceArray1D"
 
 
 class DataType(Enum):
@@ -76,6 +76,7 @@ class SpecializedDataType:
 
     PIN = "Pin"
     IORESOURCE = "IOResource"
+    IORESOURCE_ARR = "IOResourceArray1D"
 
 
 TYPE_SPECIFICATION = "ni/type_specialization"

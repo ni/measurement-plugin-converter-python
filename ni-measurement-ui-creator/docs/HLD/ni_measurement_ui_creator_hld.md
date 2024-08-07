@@ -45,6 +45,7 @@ It supports the following UI elements,
 - Toggle Image Indicator
 - String Control
 - String Indicator
+- Pin
 
 ### Generation of measui files while Measurement migration
 

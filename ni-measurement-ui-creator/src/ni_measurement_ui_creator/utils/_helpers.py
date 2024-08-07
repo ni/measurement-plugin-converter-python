@@ -15,7 +15,7 @@ from ni_measurement_ui_creator.utils._numeric_elements import (
     create_numeric_indicator,
 )
 from ni_measurement_ui_creator.utils._special_data_elements import (
-    create_ioresource_control,
+    create_ioresource_array_control,
     create_pin_control,
 )
 from ni_measurement_ui_creator.utils._string_elements import (
@@ -55,8 +55,8 @@ def create_control_elements(inputs: List[DataElement]) -> str:
         elif data_element.value_type == SpecializedDataType.PIN:
             input_elements += create_pin_control(data_element)
 
-        elif data_element.value_type == SpecializedDataType.IORESOURCE:
-            input_elements += create_ioresource_control(data_element)
+        elif data_element.value_type == SpecializedDataType.IORESOURCE_ARR:
+            input_elements += create_ioresource_array_control(data_element)
 
     return input_elements
 

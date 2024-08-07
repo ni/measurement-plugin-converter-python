@@ -44,7 +44,7 @@ pin_control_elements = create_control_elements(
     ]
 )
 
-ioresource_control_elements = create_control_elements(
+ioresource_arr_control_elements = create_control_elements(
     inputs=[
         DataElement(
             client_id=client_id,
@@ -54,7 +54,7 @@ ioresource_control_elements = create_control_elements(
                 + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
             ),
             top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
-            value_type=SupportedDataType.IORESOURCE,  # Refer `SupportedDataType`
+            value_type=SupportedDataType.IORESOURCE_ARR,  # Refer `SupportedDataType`
         ),
         DataElement(
             client_id=client_id,
@@ -67,7 +67,7 @@ ioresource_control_elements = create_control_elements(
                 MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
             ),
-            value_type=SupportedDataType.IORESOURCE,  # Refer `SupportedDataType`
+            value_type=SupportedDataType.IORESOURCE_ARR,  # Refer `SupportedDataType`
         ),
     ]
 )
@@ -75,7 +75,7 @@ ioresource_control_elements = create_control_elements(
 # Create a .measui file.
 create_measui(
     filepath="Pin_and_Ioresource_control_element",
-    input_output_elements=pin_control_elements + ioresource_control_elements,
+    input_output_elements=pin_control_elements + ioresource_arr_control_elements,
 )
 
 print(pin_control_elements, sep="\n\n---------------\n\n")
