@@ -5,6 +5,8 @@
   - [Related links](#related-links)
   - [Problem statement](#problem-statement)
   - [Workflow](#workflow)
+    - [User workflow](#user-workflow)
+    - [Architecture workflow](#architecture-workflow)
   - [Design \& Implementation](#design--implementation)
     - [CLI Inputs](#cli-inputs)
     - [Prerequisites](#prerequisites)
@@ -28,18 +30,24 @@ Team: ModernLab Success
 - A test engineer who develops Python measurements needs to convert those Python measurements to measurement plugins. `NI Measurement Plug In Converter` solves the problem of manual conversion and helps in automating the conversion process.
 
 ## Workflow
-<!--
-    Attach the workflow diagram
--->
+
+### User workflow
+
+![User Workflow](user_workflow.png)
+
+### Architecture workflow
+
+![Architecture Workflow](architecture_flow.png)
 
 ## Design & Implementation
 
 The solution is to create a Python package that helps in automating the conversion process. The Python package can be a CLI tool that prompts the user to provide the display name, the input file directory where the Python measurement is located, the name of the measurement function, and the output directory where the measurement plug-in will be created.
 
 ### CLI Inputs
-- The display name is used in service configuration file. The service configuration file is named as <display_name>.serviceconfig
+
+- The display name is used in the service configuration file. The service configuration file is named `<display_name>.serviceconfig`.
 - The inputted file directory will be validated and raised error if there is no such file.
-- The measurement function will be validated and raised error if it is not available in the measurement file.
+- The measurement function will be validated and an error will be raised if the measurement function is not available in the measurement file.
 - The output directory will be created if it does not exist.
 
 To run the CLI tool,
@@ -50,6 +58,7 @@ ni-measurement-plugin-converter --display-name <display name> --measurement-file
 ![cli](cli.png)
 
 ### Prerequisites
+
 The following are the prerequisites that the inputted user Python measurements should comply with
 
 - It should contain a measurement function which should
@@ -59,6 +68,7 @@ The following are the prerequisites that the inputted user Python measurements s
 - Initialize the instrument driver's session inside the measurement function.
 
 ### Supported Data Types and Instrument Drivers.
+
 The supported data types are
 
 - Integer
@@ -83,6 +93,7 @@ The supported instrument drivers are
 The CLI tool skips the unsupported data types' inputs and outputs of the measurement function and informs through corresponding messages in the command line interface and logs it in the log file. 
 
 ### Outputs
+
 The following files are created as part of the measurement plug-in directory.
 
 | File                         | Description                                                     |
@@ -110,13 +121,13 @@ Two types of loggers have been implemented in this tool, one is a `Console logge
 For example,
 ![file_logger](file_logger.png)
 
-The console logger gets loaded and then the file logger. The file logger contains all messages, including console messages, as well as any exceptions that occured during the execution.
+The console logger gets loaded and then the file logger. The file logger contains all messages, including console messages, as well as any exceptions that occurred during the **execution**.
 
 The log file will be created at the user-provided output path.
 
 ## Alternative implementations / Designs
 
-- No alternate implementations.
+- No alternative implementations.
 
 ## Open items
 
