@@ -102,6 +102,7 @@ The following files will be created as part of the measurement plug-in directory
 | measurement.py               | Measurement file.                                     |
 | _migrated.py                 | Copy of the user file with some changes.              |
 | <display_name>.serviceconfig | Service configuration file.                           |
+| <display_name>.measui        | Measurement UI file.                                  |
 | _helpers.py                  | `TestStand` support file.                             |
 | start.bat                    | Batch file with commands to run the measurement.py.   |
 | log.txt                      | Log file with the conversion process status messages. |
@@ -136,3 +137,4 @@ The log file will be created in the user-provided output directory.
 - NI-VISA instrument driver is yet to be supported.
 - Multiple instances of the session and multiple instruments in the same measurement are yet to be supported.
 - Initialization of the instrument driver's session in main function is yet to be supported.
+- Measurement UI file generated doesn't support  these data types `List of strings and List of Boolean`.
