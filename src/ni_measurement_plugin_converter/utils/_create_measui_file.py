@@ -68,7 +68,7 @@ def get_input_data_elements(inputs: List[InputInfo]) -> List[DataElement]:
                     client_id=CLIENT_ID,
                     left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
                     top_alignment=top_alignment,
-                    value_type=DataType.Single.name,
+                    value_type=DataType.String.name,
                     name=input.param_name,
                 )
             )
@@ -151,9 +151,9 @@ def get_output_data_elements(outputs: List[OutputInfo]) -> List[DataElement]:
             output_data_elements.append(
                 DataElement(
                     client_id=CLIENT_ID,
-                    left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
+                    left_alignment=left_alignment,
                     top_alignment=top_alignment,
-                    value_type=DataType.Single.name,
+                    value_type=DataType.String.name,
                     name=output.variable_name,
                 )
             )
@@ -163,7 +163,7 @@ def get_output_data_elements(outputs: List[OutputInfo]) -> List[DataElement]:
             output_data_elements.append(
                 DataElement(
                     client_id=CLIENT_ID,
-                    left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
+                    left_alignment=left_alignment,
                     top_alignment=top_alignment,
                     value_type=value_type,
                     name=output.variable_name,
@@ -175,9 +175,9 @@ def get_output_data_elements(outputs: List[OutputInfo]) -> List[DataElement]:
             output_data_elements.append(
                 DataElement(
                     client_id=CLIENT_ID,
-                    left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
+                    left_alignment=left_alignment,
                     top_alignment=top_alignment,
-                    value_type=value_type,
+                    value_type=DataType.Int64.name,
                     name=output.variable_name,
                     is_array=True,
                 )
@@ -188,7 +188,7 @@ def get_output_data_elements(outputs: List[OutputInfo]) -> List[DataElement]:
             output_data_elements.append(
                 DataElement(
                     client_id=CLIENT_ID,
-                    left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
+                    left_alignment=left_alignment,
                     top_alignment=top_alignment,
                     value_type=DataType.Single.name,
                     name=output.variable_name,

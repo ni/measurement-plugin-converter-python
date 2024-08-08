@@ -126,6 +126,8 @@ def run(
             file_path=output_dir,
             measurement_name=display_name,
         )
+        logger.debug(DebugMessage.MEASUI_FILE_CREATED)
+
         create_file(
             TemplateFile.SERVICE_CONFIG_TEMPLATE,
             os.path.join(
