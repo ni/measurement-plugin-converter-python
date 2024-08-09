@@ -146,7 +146,7 @@ def generate_input_params(inputs_info: List[InputInfo]) -> str:
     Returns:
         str: Input parameters names as a comma separated string.
     """
-    parameter_names = [info.param_name for info in inputs_info]
+    parameter_names = [f"{info.param_name}={info.param_name}" for info in inputs_info]
     return ", ".join(parameter_names)
 
 
