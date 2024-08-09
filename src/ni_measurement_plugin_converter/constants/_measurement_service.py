@@ -13,6 +13,7 @@ class DriverSession(Enum):
     niscope = "nims.session_management.INSTRUMENT_TYPE_NI_SCOPE"
     niswitch = "nims.session_management.INSTRUMENT_TYPE_NI_RELAY_DRIVER"
     nidaqmx = "nims.session_management.INSTRUMENT_TYPE_NI_DAQMX"
+    nivisa = "INSTRUMENT_TYPE_NI_VISA"
 
 
 # Python native data types and its corresponding `measurement_plugin_sdk_service` data types.

@@ -114,6 +114,14 @@ def replace_session_initialization(
                     ):
                         replacements.extend(__replace_session(child_node, driver.name))
 
+            if replacements and replacements[0][0] == "nivisa":
+                new_lines = [
+                    ast.parse("session_constructor = '' # Define your constructor."),
+                    ast.parse("INSTRUMENT_TYPE_NI_VISA = ''  # Define your instrument type."),
+                ]
+                add_lines_before_with(node, new_lines)
+
+
     modified_source = astor.to_source(code_tree)
 
     return modified_source, replacements
@@ -169,6 +177,36 @@ def __replace_session(node: ast.With, driver: str) -> List[Tuple[str, str, str]]
                 call.keywords.clear()
                 call.args.clear()
 
+            elif (
+                isinstance(call.func, ast.Attribute)
+                and isinstance(call.func.value, ast.Name)
+                and (
+                    call.func.attr == "open_resource"
+                    or call.func.attr == "get_instrument"
+                    or call.func.attr == "instrument"
+                )
+            ):
+                actual_session_name = item.optional_vars.id
+
+                item.optional_vars.id = _SESSION_INFO
+                call.func.attr = "initialize_session"
+                call.func.value.id = _RESERVATION
+
+                replacements.append(
+                    (
+                        "nivisa",
+                        actual_session_name,
+                    )
+                )
+
+                call.keywords.clear()
+                call.args.clear()
+
+                call.args = [
+                    ast.Name(id="session_constructor"),
+                    ast.Name(id=DriverSession["nivisa"].value),
+                ]
+
     return replacements
 
 
@@ -202,3 +240,9 @@ def insert_session_assignment(
                     modified_source = "\n".join(source_lines)
 
     return modified_source
+
+
+def add_lines_before_with(node: ast.FunctionDef, new_lines: list):
+    """Add new lines of code before the 'with' statement in the function."""
+    for line in reversed(new_lines):
+        node.body.insert(0, line)
