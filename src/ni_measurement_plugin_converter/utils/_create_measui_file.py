@@ -46,8 +46,8 @@ def get_input_data_elements(inputs: List[InputInfo]) -> List[DataElement]:
         + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
     )
 
-    for input in inputs:
-        value_type = input.nims_type.split(".")[2]
+    for input_data in inputs:
+        value_type = input_data.nims_type.split(".")[2]
         value_type = DataType.Single.name if value_type == nims.DataType.Float.name else value_type
 
         if (
@@ -61,7 +61,7 @@ def get_input_data_elements(inputs: List[InputInfo]) -> List[DataElement]:
                     left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
                     top_alignment=top_alignment,
                     value_type=value_type,
-                    name=input.param_name,
+                    name=input_data.param_name,
                 )
             )
             top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
@@ -73,7 +73,7 @@ def get_input_data_elements(inputs: List[InputInfo]) -> List[DataElement]:
                     left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
                     top_alignment=top_alignment,
                     value_type=DataType.Int64.name,
-                    name=input.param_name,
+                    name=input_data.param_name,
                     is_array=True,
                 )
             )
@@ -86,7 +86,7 @@ def get_input_data_elements(inputs: List[InputInfo]) -> List[DataElement]:
                     left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
                     top_alignment=top_alignment,
                     value_type=DataType.Single.name,
-                    name=input.param_name,
+                    name=input_data.param_name,
                     is_array=True,
                 )
             )
