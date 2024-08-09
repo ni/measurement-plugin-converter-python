@@ -6,7 +6,6 @@ from typing import List
 import ni_measurement_plugin_sdk_service as nims
 from ni_measurement_ui_creator.constants import (
     CLIENT_ID,
-    NUMERIC_DATA_TYPE_NAMES,
     DataType,
     MeasUIElementPosition,
     SpecializedDataType,
@@ -18,9 +17,8 @@ from ni_measurement_ui_creator.utils._helpers import (
     create_indicator_elements,
 )
 
+from ni_measurement_plugin_converter.constants import PIN_NAMES, SUPPORTED_NIMS_DATATYPES
 from ni_measurement_plugin_converter.models import InputInfo, OutputInfo
-
-PIN_NAMES = "pin_names"
 
 
 def get_input_data_elements(inputs: List[InputInfo]) -> List[DataElement]:
@@ -48,49 +46,33 @@ def get_input_data_elements(inputs: List[InputInfo]) -> List[DataElement]:
 
     for input_data in inputs:
         value_type = input_data.nims_type.split(".")[2]
-        value_type = DataType.Single.name if value_type == nims.DataType.Float.name else value_type
+        is_array = False
 
-        if (
-            value_type in NUMERIC_DATA_TYPE_NAMES
-            or value_type == nims.DataType.Boolean.name
-            or value_type == nims.DataType.String.name
-        ):
-            input_data_elements.append(
-                DataElement(
-                    client_id=CLIENT_ID,
-                    left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
-                    top_alignment=top_alignment,
-                    value_type=value_type,
-                    name=input_data.param_name,
-                )
-            )
-            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+        if value_type not in SUPPORTED_NIMS_DATATYPES:
+            continue
+
+        if value_type == nims.DataType.Float.name:
+            value_type = DataType.Single.name
 
         elif value_type == nims.DataType.Int64Array1D.name:
-            input_data_elements.append(
-                DataElement(
-                    client_id=CLIENT_ID,
-                    left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
-                    top_alignment=top_alignment,
-                    value_type=DataType.Int64.name,
-                    name=input_data.param_name,
-                    is_array=True,
-                )
-            )
-            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+            value_type = DataType.Int64.name
+            is_array=True
 
         elif value_type == nims.DataType.FloatArray1D.name:
-            input_data_elements.append(
-                DataElement(
-                    client_id=CLIENT_ID,
-                    left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
-                    top_alignment=top_alignment,
-                    value_type=DataType.Single.name,
-                    name=input_data.param_name,
-                    is_array=True,
-                )
+            value_type = DataType.Single.name
+            is_array=True
+
+        input_data_elements.append(
+            DataElement(
+                client_id=CLIENT_ID,
+                left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
+                top_alignment=top_alignment,
+                value_type=value_type,
+                name=input_data.param_name,
+                is_array=is_array,
             )
-            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+        )
+        top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
     return input_data_elements
 
@@ -113,49 +95,33 @@ def get_output_data_elements(outputs: List[OutputInfo]) -> List[DataElement]:
 
     for output in outputs:
         value_type = output.nims_type.split(".")[2]
-        value_type = DataType.Single.name if value_type == nims.DataType.Float.name else value_type
+        is_array = False
 
-        if (
-            value_type in NUMERIC_DATA_TYPE_NAMES
-            or value_type == nims.DataType.Boolean.name
-            or value_type == nims.DataType.String.name
-        ):
-            output_data_elements.append(
+        if value_type not in SUPPORTED_NIMS_DATATYPES:
+            continue
+
+        if value_type == nims.DataType.Float.name:
+            value_type = DataType.Single.name
+
+        elif value_type == nims.DataType.Int64Array1D.name:
+            value_type = DataType.Int64.name
+            is_array=True
+
+        elif value_type == nims.DataType.FloatArray1D.name:
+            value_type = DataType.Single.name
+            is_array=True
+
+        output_data_elements.append(
                 DataElement(
                     client_id=CLIENT_ID,
                     left_alignment=left_alignment,
                     top_alignment=top_alignment,
                     value_type=value_type,
                     name=output.variable_name,
+                    is_array=is_array,
                 )
             )
-            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
-
-        elif value_type == nims.DataType.Int64Array1D.name:
-            output_data_elements.append(
-                DataElement(
-                    client_id=CLIENT_ID,
-                    left_alignment=left_alignment,
-                    top_alignment=top_alignment,
-                    value_type=DataType.Int64.name,
-                    name=output.variable_name,
-                    is_array=True,
-                )
-            )
-            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
-
-        elif value_type == nims.DataType.FloatArray1D.name:
-            output_data_elements.append(
-                DataElement(
-                    client_id=CLIENT_ID,
-                    left_alignment=left_alignment,
-                    top_alignment=top_alignment,
-                    value_type=DataType.Single.name,
-                    name=output.variable_name,
-                    is_array=True,
-                )
-            )
-            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+        top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
     return output_data_elements
 
