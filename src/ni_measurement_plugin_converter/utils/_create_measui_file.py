@@ -30,7 +30,7 @@ def get_input_data_elements(inputs: List[InputInfo]) -> List[DataElement]:
         inputs (List[InputInfo]): List of inputs from measurement.
 
     Returns:
-        List[DataElement]: List of data element for input UI compenents.
+        List[DataElement]: List of data element for input UI components.
     """
     input_data_elements = [
         DataElement(
@@ -122,7 +122,7 @@ def get_output_data_elements(outputs: List[OutputInfo]) -> List[DataElement]:
         outputs (List[OutputInfo]): List of outputs from measurement.
 
     Returns:
-        List[DataElement]: List of data element for output UI compenents.
+        List[DataElement]: List of data element for output UI components.
     """
     output_data_elements = []
     top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
