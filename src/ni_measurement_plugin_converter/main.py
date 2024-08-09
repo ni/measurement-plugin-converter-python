@@ -156,7 +156,7 @@ def run(
         logger.error(error)
 
     except Exception as error:
-        logger.debug(error)
+        logger.debug(error, exc_info=True)
         logger.error(UserMessage.ERROR_OCCURRED)
 
     finally:

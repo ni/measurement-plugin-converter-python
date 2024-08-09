@@ -53,10 +53,19 @@ def manage_session(migrated_file_dir: str, function: str) -> str:
         session_name = session_name
 
     logger.info(UserMessage.ASSIGN_SESSION_INFO)
+
+    session_info = ast.Assign(
+        targets=[ast.Name(id=f"{session_name}", ctx=ast.Store())],
+        value=ast.Attribute(
+            value=ast.Name(id="session_info", ctx=ast.Load()),
+            attr="session",
+            ctx=ast.Load(),
+        ),
+    )
     session_inserted_source_code = insert_session_assignment(
         source_code=session_replaced_source_code,
         function=function,
-        session_info=f"{session_name} = {_SESSION_INFO}.session",
+        session_info=session_info,
     )
 
     with open(migrated_file_dir, "w", encoding=ENCODING) as file:
@@ -114,13 +123,20 @@ def replace_session_initialization(
                     ):
                         replacements.extend(__replace_session(child_node, driver.name))
 
-            if replacements and replacements[0][0] == "nivisa":
-                new_lines = [
-                    ast.parse("session_constructor = '' # Define your constructor."),
-                    ast.parse("INSTRUMENT_TYPE_NI_VISA = ''  # Define your instrument type."),
-                ]
-                add_lines_before_with(node, new_lines)
+            if replacements and replacements[0][0] == DriverSession.nivisa.name:
+                # Define the new code to add
+                session = ast.Assign(
+                    targets=[ast.Name(id="session_constructor", ctx=ast.Store())],
+                    value=ast.Constant(value="<Update session_constructor for the instrument>"),
+                )
+                modified_source = add_line_of_code(code_tree, session, function)
 
+                instrument = ast.Assign(
+                    targets=[ast.Name(id=f"{DriverSession.nivisa.value}", ctx=ast.Store())],
+                    value=ast.Constant(value="<Update instrument type>"),
+                )
+
+                modified_source = add_line_of_code(code_tree, instrument, function)
 
     modified_source = astor.to_source(code_tree)
 
@@ -203,8 +219,8 @@ def __replace_session(node: ast.With, driver: str) -> List[Tuple[str, str, str]]
                 call.args.clear()
 
                 call.args = [
-                    ast.Name(id="session_constructor"),
-                    ast.Name(id=DriverSession["nivisa"].value),
+                    ast.Name(id="session_constructor", ctx=ast.Load()),
+                    ast.Name(id=DriverSession.nivisa.value, ctx=ast.Load()),
                 ]
 
     return replacements
@@ -213,36 +229,31 @@ def __replace_session(node: ast.With, driver: str) -> List[Tuple[str, str, str]]
 def insert_session_assignment(
     source_code: str,
     function: str,
-    session_info: str,
+    session_info: ast.Assign,
 ) -> None:
     """Insert session assignment into migrated measurement file source code.
 
     Args:
         source_code (str): Migrated measurement source code.
         function (str): Measurement function name.
-        session_info (str): Session information.
+        session_info (ast.Assign): Session information assignment object.
     """
     code_tree = ast.parse(source_code)
 
     for node in ast.walk(code_tree):
         if isinstance(node, ast.FunctionDef) and node.name == function:
-            for _, child_node in enumerate(node.body):
+            for child_node in node.body:
                 if isinstance(child_node, ast.With):
-                    # Get the start position of the `with` statement.
-                    indent = " " * (child_node.col_offset + 4)
+                    child_node.body.insert(0, session_info)
 
-                    # Construct the text to insert with proper indentation.
-                    text_line = f"{indent}{session_info}\n"
-
-                    # Insert the text immediately after the with block.
-                    source_lines = source_code.split("\n")
-                    source_lines.insert(child_node.lineno, text_line)
-                    modified_source = "\n".join(source_lines)
-
-    return modified_source
+    return astor.to_source(code_tree)
 
 
-def add_lines_before_with(node: ast.FunctionDef, new_lines: list):
-    """Add new lines of code before the 'with' statement in the function."""
-    for line in reversed(new_lines):
-        node.body.insert(0, line)
+def add_line_of_code(code_tree: str, code, function):
+    """Add new lines of code after function."""
+
+    for node in ast.walk(code_tree):
+        if isinstance(node, ast.FunctionDef) and node.name == function:
+            node.body.insert(0, code)
+
+    return astor.to_source(code_tree)
