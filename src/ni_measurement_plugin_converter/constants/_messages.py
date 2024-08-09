@@ -46,6 +46,7 @@ class DebugMessage:
     GET_FUNCTION = "Getting function node tree..."
     MIGRATED_FILE_MODIFIED = "Migrated file is modified."
 
+    MEASUI_FILE_CREATED = "Measurement UI file is created."
     MEASUREMENT_FILE_CREATED = "Measurement file is created."
     FILE_MIGRATED = "Migrated file is created."
     BATCH_FILE_CREATED = "Batch file is created."

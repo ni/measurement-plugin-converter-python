@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## NI Measurement Plug-In Converter
 
+## [1.0.0-dev4] - 2024-08-09
+
+### Added
+
+- Integrate MeasUI Creator with `NI Measurement Plug-In Converter` tool for generating `.measui` file.
+
 ## [1.0.0-dev3] - 2024-08-05
 
 ### Added
