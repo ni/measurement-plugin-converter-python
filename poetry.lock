@@ -569,6 +569,18 @@ files = [
 ]
 
 [[package]]
+name = "ni_measurement_plugin_sdk_service"
+version = "2.1.0.dev4"
+description = "Measurement Plugin Support for Python"
+optional = false
+python-versions = "*"
+files = []
+
+[package.source]
+type = "file"
+url = "dependencies/ni_measurement_plugin_sdk_service-2.1.0.dev4-py3-none-any.whl"
+
+[[package]]
 name = "ni_measurement_ui_creator"
 version = "1.0.0.dev4"
 description = "NI Measurement UI Creator"
@@ -1296,4 +1308,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "e84e377cb7c1238aa52561ce071553b756543aaf4f12dea2c7536390565a0e8a"
+content-hash = "3241529abeb720d8e4a1a769d81e57ec134110ff358acb7a43c20a22fe18f392"
