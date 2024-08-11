@@ -11,6 +11,7 @@ from mako.exceptions import CompileException, TemplateLookupException
 
 from ni_measurement_plugin_converter import __version__
 from ni_measurement_plugin_converter.constants import (
+    CONSOLE_LOGGER,
     CONTEXT_SETTINGS,
     DEBUG_LOGGER,
     MEASUREMENT_VERSION,
@@ -32,6 +33,7 @@ from ni_measurement_plugin_converter.utils import (
     get_nims_instrument,
     initialize_logger,
     manage_session,
+    print_logger_location,
     remove_handlers,
 )
 
@@ -56,7 +58,7 @@ def run(
         Python measurements to measurement plug-ins."""
     try:
         log_directory = None
-        logger = initialize_logger(name="console_logger", log_directory=log_directory)
+        logger = initialize_logger(name=CONSOLE_LOGGER, log_directory=log_directory)
         logger.info(UserMessage.STARTING_EXECUTION)
 
         CliInputs(
@@ -67,7 +69,9 @@ def run(
         )
 
         remove_handlers(logger)
-        logger = initialize_logger(name=DEBUG_LOGGER, log_directory=output_dir)
+
+        log_directory = output_dir
+        logger = initialize_logger(name=DEBUG_LOGGER, log_directory=log_directory)
         logger.debug(DebugMessage.VERSION.format(version=__version__))
 
         logger.info(UserMessage.VALIDATE_CLI_ARGS)
@@ -154,10 +158,12 @@ def run(
         CompileException,
     ) as error:
         logger.error(error)
+        print_logger_location(log_directory)
 
     except Exception as error:
         logger.debug(error, exc_info=True)
         logger.error(UserMessage.ERROR_OCCURRED)
+        print_logger_location(log_directory)
 
     finally:
         logger.info(UserMessage.PROCESS_COMPLETED)

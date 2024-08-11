@@ -35,6 +35,7 @@ class UserMessage:
     ERROR_OCCURRED = (
         "Error occurred. Please verify that the provided measurement is in the expected format."
     )
+    LOG_FILE = "Please find the log file at {log_file_path}"
     PROCESS_COMPLETED = "Process completed."
 
 

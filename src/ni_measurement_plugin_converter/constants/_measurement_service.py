@@ -19,11 +19,11 @@ class DriverSession(Enum):
 # Python native data types and its corresponding `measurement_plugin_sdk_service` data types.
 NIMS_TYPE = {
     "int": "nims.DataType.Int64",
-    "float": "nims.DataType.Float",
+    "float": "nims.DataType.Double",
     "str": "nims.DataType.String",
     "bool": "nims.DataType.Boolean",
     "List[int]": "nims.DataType.Int64Array1D",
-    "List[float]": "nims.DataType.FloatArray1D",
+    "List[float]": "nims.DataType.DoubleArray1D",
     "List[str]": "nims.DataType.StringArray1D",
     "List[bool]": "nims.DataType.BooleanArray1D",
 }
