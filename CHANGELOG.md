@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## NI Measurement Plug-In Converter
 
+## [1.0.0-dev5] - 2024-08-12
+
+### Added
+
+- Support NI-VISA instrument driver.
+
+### Fixed
+
+- Error due to skipped arguments.
+
+### Changed
+
+- Error handling - print logger file location in case of exceptions.
+
 ## [1.0.0-dev4] - 2024-08-09
 
 ### Added
