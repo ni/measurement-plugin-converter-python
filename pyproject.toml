@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ni_measurement_plugin_converter"
-version = "1.0.0-dev3"
+version = "1.0.0-dev4"
 description = "Measurement Plug-In Converter for Python"
 authors = ["NI <opensource@ni.com>"]
 readme = "README.md"
@@ -23,7 +23,7 @@ Mako = "^1.2.1"
 click = "^8.1.3"
 astor = "^0.8.1"
 pydantic = "^2.8.2"
-ni-measurement-plugin-sdk-service = "^2.0.0"
+ni_measurement_ui_creator = "^1.0.0.dev4"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"

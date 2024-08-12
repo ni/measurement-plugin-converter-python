@@ -23,6 +23,7 @@ from ni_measurement_plugin_converter.constants import (
 from ni_measurement_plugin_converter.models import CliInputs, InvalidCliArgsError
 from ni_measurement_plugin_converter.utils import (
     create_file,
+    create_measui_file,
     extract_inputs,
     extract_outputs,
     generate_input_params,
@@ -121,6 +122,14 @@ def run(
             iterable_outputs=iterable_outputs,
         )
         logger.debug(DebugMessage.MEASUREMENT_FILE_CREATED)
+
+        create_measui_file(
+            inputs=inputs_info,
+            outputs=outputs_info,
+            file_path=output_dir,
+            measurement_name=display_name,
+        )
+        logger.debug(DebugMessage.MEASUI_FILE_CREATED)
 
         create_file(
             TemplateFile.SERVICE_CONFIG_TEMPLATE,

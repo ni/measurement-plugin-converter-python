@@ -15,6 +15,7 @@
 - Run `cd python-code-migration-utility`
 - Run `poetry env use <Python exe path>`
 - Run `poetry shell` to activate virtual environment.
+- Run `pip install dependencies\<whl files>`.
 - Run `poetry install` to install dependency files.
 
 ### Example usage
