@@ -56,11 +56,11 @@ def get_input_data_elements(inputs: List[InputInfo]) -> List[DataElement]:
 
         elif value_type == nims.DataType.Int64Array1D.name:
             value_type = DataType.Int64.name
-            is_array=True
+            is_array = True
 
         elif value_type == nims.DataType.DoubleArray1D.name:
             value_type = DataType.Double.name
-            is_array=True
+            is_array = True
 
         input_data_elements.append(
             DataElement(
@@ -105,22 +105,22 @@ def get_output_data_elements(outputs: List[OutputInfo]) -> List[DataElement]:
 
         elif value_type == nims.DataType.Int64Array1D.name:
             value_type = DataType.Int64.name
-            is_array=True
+            is_array = True
 
         elif value_type == nims.DataType.DoubleArray1D.name:
             value_type = DataType.Double.name
-            is_array=True
+            is_array = True
 
         output_data_elements.append(
-                DataElement(
-                    client_id=CLIENT_ID,
-                    left_alignment=left_alignment,
-                    top_alignment=top_alignment,
-                    value_type=value_type,
-                    name=output.variable_name,
-                    is_array=is_array,
-                )
+            DataElement(
+                client_id=CLIENT_ID,
+                left_alignment=left_alignment,
+                top_alignment=top_alignment,
+                value_type=value_type,
+                name=output.variable_name,
+                is_array=is_array,
             )
+        )
         top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
     return output_data_elements
