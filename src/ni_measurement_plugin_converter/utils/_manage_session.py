@@ -16,6 +16,8 @@ from ni_measurement_plugin_converter.constants import (
 
 _RESERVATION = "reservation"
 _SESSION_INFO = "session_info"
+_SESSION_CONSTRUCTOR = "session_constructor"
+_INSTRUMENT_TYPE = "instrument_type"
 
 
 def manage_session(migrated_file_dir: str, function: str) -> str:
@@ -40,11 +42,15 @@ def manage_session(migrated_file_dir: str, function: str) -> str:
     code_tree = ast.parse(source_code)
 
     logger.info(UserMessage.ADD_RESERVE_SESSION)
-    reservation_added_source_code = add_reservation_param(code_tree, function)
+    reservation_added_code_tree = add_param(
+        code_tree=code_tree,
+        function=function,
+        param=_RESERVATION,
+    )
 
     logger.info(UserMessage.REPLACE_SESSION_INITIALIZATION)
-    session_replaced_source_code, session_details = replace_session_initialization(
-        source_code=reservation_added_source_code,
+    session_replaced_code_tree, session_details = replace_session_initialization(
+        code_tree=reservation_added_code_tree,
         function=function,
     )
 
@@ -54,63 +60,37 @@ def manage_session(migrated_file_dir: str, function: str) -> str:
 
     logger.info(UserMessage.ASSIGN_SESSION_INFO)
 
-    session_info = ast.Assign(
-        targets=[ast.Name(id=f"{session_name}", ctx=ast.Store())],
-        value=ast.Attribute(
-            value=ast.Name(id="session_info", ctx=ast.Load()),
-            attr="session",
-            ctx=ast.Load(),
-        ),
-    )
-    session_inserted_source_code = insert_session_assignment(
-        source_code=session_replaced_source_code,
+    session_inserted_code_tree = insert_session_assignment(
+        code_tree=session_replaced_code_tree,
         function=function,
-        session_info=session_info,
+        session_name=session_name,
     )
 
+    code_tree = astor.to_source(session_inserted_code_tree)
+
     with open(migrated_file_dir, "w", encoding=ENCODING) as file:
-        file.write(session_inserted_source_code)
+        file.write(code_tree)
 
     logger.debug(DebugMessage.MIGRATED_FILE_MODIFIED)
 
     return instrument_type
 
 
-def add_reservation_param(code_tree: ast.Module, function: str) -> str:
-    """Add reservation parameter to source code.
+def replace_session_initialization(
+    code_tree: ast.Module,
+    function: str,
+) -> Tuple[str, List[Tuple[str, str, str]]]:
+    """Replace session initialization in the migrated file.
 
     Args:
         code_tree (ast.Module): Migrated measurement source code tree.
         function (str): Measurement function name.
 
     Returns:
-        str: Updated source code with reservation parameter.
-    """
-    for node in code_tree.body:
-        if isinstance(node, ast.FunctionDef) and node.name == function:
-            node.args.args.insert(0, _RESERVATION)
-
-    added_source = astor.to_source(code_tree)
-
-    return added_source
-
-
-def replace_session_initialization(
-    source_code: str,
-    function: str,
-) -> Tuple[str, List[Tuple[str, str, str]]]:
-    """Replace session initialization in the migrated file.
-
-    Args:
-        source_code (str): Migrated measurement source code.
-        function (str): Measurement function name.
-
-    Returns:
-        Tuple[str, List[Tuple[str, str]]]: Updated source code and List of tuple of \
+        Tuple[str, List[Tuple[str, str]]]: Updated source code tree and List of tuple of \
             replaced drivers, sessions.
     """
     replacements = []
-    code_tree = ast.parse(source_code)
 
     for node in ast.walk(code_tree):
         if isinstance(node, ast.FunctionDef) and node.name == function:
@@ -124,23 +104,37 @@ def replace_session_initialization(
                         replacements.extend(__replace_session(child_node, driver.name))
 
             if replacements and replacements[0][0] == DriverSession.nivisa.name:
-                # Define the new code to add
-                session = ast.Assign(
-                    targets=[ast.Name(id="session_constructor", ctx=ast.Store())],
-                    value=ast.Constant(value="<Update session_constructor for the instrument>"),
-                )
-                modified_source = add_line_of_code(code_tree, session, function)
-
-                instrument = ast.Assign(
-                    targets=[ast.Name(id=f"{DriverSession.nivisa.value}", ctx=ast.Store())],
-                    value=ast.Constant(value="<Update instrument type>"),
+                instrument_type_added_code_tree = add_param(
+                    code_tree=code_tree,
+                    function=function,
+                    param=_INSTRUMENT_TYPE,
                 )
 
-                modified_source = add_line_of_code(code_tree, instrument, function)
+                code_tree = add_param(
+                    code_tree=instrument_type_added_code_tree,
+                    function=function,
+                    param=_SESSION_CONSTRUCTOR,
+                )
 
-    modified_source = astor.to_source(code_tree)
+    return code_tree, replacements
 
-    return modified_source, replacements
+
+def add_param(code_tree: ast.Module, function: str, param: str) -> ast.Module:
+    """Add a parameter to user measurement function in code tree.
+
+    Args:
+        code_tree (ast.Module): Migrated measurement source code tree.
+        function (str): Measurement function name.
+        param (str): Parameter to be added.
+
+    Returns:
+        ast.Module: Updated measurement function with parameter.
+    """
+    for node in code_tree.body:
+        if isinstance(node, ast.FunctionDef) and node.name == function:
+            node.args.args.insert(0, param)
+
+    return code_tree
 
 
 def __replace_session(node: ast.With, driver: str) -> List[Tuple[str, str, str]]:
@@ -210,7 +204,7 @@ def __replace_session(node: ast.With, driver: str) -> List[Tuple[str, str, str]]
 
                 replacements.append(
                     (
-                        "nivisa",
+                        DriverSession.nivisa.name,
                         actual_session_name,
                     )
                 )
@@ -219,26 +213,36 @@ def __replace_session(node: ast.With, driver: str) -> List[Tuple[str, str, str]]
                 call.args.clear()
 
                 call.args = [
-                    ast.Name(id="session_constructor", ctx=ast.Load()),
-                    ast.Name(id=DriverSession.nivisa.value, ctx=ast.Load()),
+                    ast.Name(id=_SESSION_CONSTRUCTOR, ctx=ast.Load()),
+                    ast.Name(id=_INSTRUMENT_TYPE, ctx=ast.Load()),
                 ]
 
     return replacements
 
 
 def insert_session_assignment(
-    source_code: str,
+    code_tree: ast.Module,
     function: str,
-    session_info: ast.Assign,
-) -> None:
+    session_name: str,
+) -> ast.Module:
     """Insert session assignment into migrated measurement file source code.
 
     Args:
-        source_code (str): Migrated measurement source code.
+        source_code (ast.Module): Migrated measurement source code tree.
         function (str): Measurement function name.
-        session_info (ast.Assign): Session information assignment object.
+        session_name (str): Session name from user measurement.
+
+    Returns:
+        ast.Module: Session assignment inserted source code tree.
     """
-    code_tree = ast.parse(source_code)
+    session_info = ast.Assign(
+        targets=[ast.Name(id=session_name, ctx=ast.Store())],
+        value=ast.Attribute(
+            value=ast.Name(id=_SESSION_INFO, ctx=ast.Load()),
+            attr="session",
+            ctx=ast.Load(),
+        ),
+    )
 
     for node in ast.walk(code_tree):
         if isinstance(node, ast.FunctionDef) and node.name == function:
@@ -246,14 +250,4 @@ def insert_session_assignment(
                 if isinstance(child_node, ast.With):
                     child_node.body.insert(0, session_info)
 
-    return astor.to_source(code_tree)
-
-
-def add_line_of_code(code_tree: str, code, function):
-    """Add new lines of code after function."""
-
-    for node in ast.walk(code_tree):
-        if isinstance(node, ast.FunctionDef) and node.name == function:
-            node.body.insert(0, code)
-
-    return astor.to_source(code_tree)
+    return code_tree
