@@ -6,7 +6,6 @@ import sys
 from logging import Logger, StreamHandler, handlers
 
 from ni_measurement_plugin_converter.constants import (
-    CONSOLE_LOGGER,
     DEBUG_LOGGER,
     LOG_DATE_FORMAT,
     LOG_FILE_COUNT_LIMIT,
@@ -92,17 +91,18 @@ def remove_handlers(logger: Logger) -> None:
         logger.removeHandler(handler)
 
 
-def print_logger_location(log_directory: str) -> None:
-    """Print logger file location if log file is available.
+def print_log_file_location(log_directory: str) -> None:
+    """Print log file location if log file is available.
 
     Args:
-        log_directory (str): Output directory.
+        log_directory (str): Log file directory.
     """
-    logger = logging.getLogger(DEBUG_LOGGER) or logging.getLogger(CONSOLE_LOGGER)
     try:
+        logger = logging.getLogger(DEBUG_LOGGER)
         log_file_path = os.path.join(log_directory, LOG_FILE_NAME)
 
         if os.path.isfile(log_file_path):
             logger.info(UserMessage.LOG_FILE.format(log_file_path=log_file_path))
+
     except TypeError:
         pass

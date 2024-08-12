@@ -7,4 +7,3 @@ LOG_FILE_MSG_FORMAT = "%(asctime)s [%(name)s] [%(levelname)s] %(message)s"
 LOG_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 DEBUG_LOGGER = "debug_logger"
-CONSOLE_LOGGER = "console_logger"
