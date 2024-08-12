@@ -51,15 +51,15 @@ def get_input_data_elements(inputs: List[InputInfo]) -> List[DataElement]:
         if value_type not in SUPPORTED_NIMS_DATATYPES:
             continue
 
-        if value_type == nims.DataType.Float.name:
-            value_type = DataType.Single.name
+        if value_type == nims.DataType.Double.name:
+            value_type = DataType.Double.name
 
         elif value_type == nims.DataType.Int64Array1D.name:
             value_type = DataType.Int64.name
             is_array=True
 
-        elif value_type == nims.DataType.FloatArray1D.name:
-            value_type = DataType.Single.name
+        elif value_type == nims.DataType.DoubleArray1D.name:
+            value_type = DataType.Double.name
             is_array=True
 
         input_data_elements.append(
@@ -100,15 +100,15 @@ def get_output_data_elements(outputs: List[OutputInfo]) -> List[DataElement]:
         if value_type not in SUPPORTED_NIMS_DATATYPES:
             continue
 
-        if value_type == nims.DataType.Float.name:
-            value_type = DataType.Single.name
+        if value_type == nims.DataType.Double.name:
+            value_type = DataType.Double.name
 
         elif value_type == nims.DataType.Int64Array1D.name:
             value_type = DataType.Int64.name
             is_array=True
 
-        elif value_type == nims.DataType.FloatArray1D.name:
-            value_type = DataType.Single.name
+        elif value_type == nims.DataType.DoubleArray1D.name:
+            value_type = DataType.Double.name
             is_array=True
 
         output_data_elements.append(
