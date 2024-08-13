@@ -143,12 +143,7 @@ def __replace_session(node: ast.With, driver: str) -> List[Tuple[str, str, str]]
     for item in node.items:
         if isinstance(item.context_expr, ast.Call):
             call = item.context_expr
-            if (
-                isinstance(call.func, ast.Attribute)
-                and isinstance(call.func.value, ast.Name)
-                and call.func.value.id == driver
-                and call.func.attr == "Session"
-            ):
+            if __instrument_is_supported_ni_drivers(call, driver):
                 actual_session_name = item.optional_vars.id
 
                 item.optional_vars.id = _SESSION_INFO
@@ -165,12 +160,7 @@ def __replace_session(node: ast.With, driver: str) -> List[Tuple[str, str, str]]
                 call.keywords.clear()
                 call.args.clear()
 
-            elif (
-                isinstance(call.func, ast.Attribute)
-                and isinstance(call.func.value, ast.Name)
-                and call.func.value.id == driver
-                and call.func.attr == "Task"
-            ):
+            elif __instrument_is_ni_daqmx(call, driver):
                 actual_session_name = item.optional_vars.id
 
                 item.optional_vars.id = _SESSION_INFO
@@ -187,15 +177,7 @@ def __replace_session(node: ast.With, driver: str) -> List[Tuple[str, str, str]]
                 call.keywords.clear()
                 call.args.clear()
 
-            elif (
-                isinstance(call.func, ast.Attribute)
-                and isinstance(call.func.value, ast.Name)
-                and (
-                    call.func.attr == "open_resource"
-                    or call.func.attr == "get_instrument"
-                    or call.func.attr == "instrument"
-                )
-            ):
+            elif __instrument_is_visa_type(call):
                 actual_session_name = item.optional_vars.id
 
                 item.optional_vars.id = _SESSION_INFO
@@ -218,6 +200,45 @@ def __replace_session(node: ast.With, driver: str) -> List[Tuple[str, str, str]]
                 ]
 
     return replacements
+
+
+def __instrument_is_supported_ni_drivers(call: ast.Call, driver: str) -> bool:
+    if (
+        isinstance(call.func, ast.Attribute)
+        and isinstance(call.func.value, ast.Name)
+        and call.func.value.id == driver
+        and call.func.attr == "Session"
+    ):
+        return True
+
+    return False
+
+
+def __instrument_is_ni_daqmx(call: ast.Call, driver: str) -> bool:
+    if (
+        isinstance(call.func, ast.Attribute)
+        and isinstance(call.func.value, ast.Name)
+        and call.func.value.id == driver
+        and call.func.attr == "Task"
+    ):
+        return True
+
+    return False
+
+
+def __instrument_is_visa_type(call: ast.Call) -> bool:
+    if (
+        isinstance(call.func, ast.Attribute)
+        and isinstance(call.func.value, ast.Name)
+        and (
+            call.func.attr == "open_resource"
+            or call.func.attr == "get_instrument"
+            or call.func.attr == "instrument"
+        )
+    ):
+        return True
+
+    return False
 
 
 def insert_session_assignment(
