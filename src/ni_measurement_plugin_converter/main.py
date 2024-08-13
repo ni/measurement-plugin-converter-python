@@ -166,12 +166,12 @@ def run(
         CompileException,
     ) as error:
         logger.error(error)
-        print_log_file_location(log_directory)
+        print_log_file_location()
 
     except Exception as error:
         logger.debug(error, exc_info=True)
         logger.error(UserMessage.ERROR_OCCURRED)
-        print_log_file_location(log_directory)
+        print_log_file_location()
 
     finally:
         logger.info(UserMessage.PROCESS_COMPLETED)

@@ -91,18 +91,10 @@ def remove_handlers(logger: Logger) -> None:
         logger.removeHandler(handler)
 
 
-def print_log_file_location(log_directory: str) -> None:
-    """Print log file location if log file is available.
+def print_log_file_location() -> None:
+    """Print log file location if log file is available."""
+    logger = logging.getLogger(DEBUG_LOGGER)
 
-    Args:
-        log_directory (str): Log file directory.
-    """
-    try:
-        logger = logging.getLogger(DEBUG_LOGGER)
-        log_file_path = os.path.join(log_directory, LOG_FILE_NAME)
-
-        if os.path.isfile(log_file_path):
-            logger.info(UserMessage.LOG_FILE.format(log_file_path=log_file_path))
-
-    except TypeError:
-        pass
+    for handler in logger.handlers:
+        if isinstance(handler, handlers.RotatingFileHandler):
+            logger.info(UserMessage.LOG_FILE.format(log_file_path=handler.baseFilename))
