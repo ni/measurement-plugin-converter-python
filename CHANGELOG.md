@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## NI Measurement Plug-In Converter
 
+## [1.0.0-dev5] - 2024-08-12
+
+### Added
+
+- Support for NI-VISA instrument driver.
+
+### Fixed
+
+- Error due to skipped input arguments in user measurement function.
+
+### Changed
+
+- Error handling - print the logger file location in case of exceptions.
+- `Float` and `FloatArray1D` to `Double` and `DoubleArray1D` to leverage their higher bitness and precision.
+
 ## [1.0.0-dev4] - 2024-08-09
 
 ### Added

@@ -16,10 +16,7 @@ from ni_measurement_plugin_converter.constants._logger import (
     LOG_FILE_NAME,
     LOG_FILE_SIZE_LIMIT_IN_BYTES,
 )
-from ni_measurement_plugin_converter.constants._measui import (
-    PIN_NAMES,
-    SUPPORTED_NIMS_DATATYPES,
-)
+from ni_measurement_plugin_converter.constants._measui import PIN_NAMES, SUPPORTED_NIMS_DATATYPES
 from ni_measurement_plugin_converter.constants._measurement_service import (
     NIMS_TYPE,
     TYPE_DEFAULT_VALUES,

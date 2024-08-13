@@ -33,6 +33,7 @@ from ni_measurement_plugin_converter.utils import (
     get_nims_instrument,
     initialize_logger,
     manage_session,
+    print_log_file_location,
     remove_handlers,
 )
 
@@ -68,7 +69,9 @@ def run(
         )
 
         remove_handlers(logger)
-        logger = initialize_logger(name=DEBUG_LOGGER, log_directory=output_dir)
+
+        log_directory = output_dir
+        logger = initialize_logger(name=DEBUG_LOGGER, log_directory=log_directory)
         logger.debug(DebugMessage.VERSION.format(version=__version__))
 
         logger.info(UserMessage.VALIDATE_CLI_ARGS)
@@ -163,10 +166,12 @@ def run(
         CompileException,
     ) as error:
         logger.error(error)
+        print_log_file_location()
 
     except Exception as error:
-        logger.debug(error)
+        logger.debug(error, exc_info=True)
         logger.error(UserMessage.ERROR_OCCURRED)
+        print_log_file_location()
 
     finally:
         logger.info(UserMessage.PROCESS_COMPLETED)

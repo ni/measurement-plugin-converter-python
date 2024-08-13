@@ -15,6 +15,7 @@ from ni_measurement_plugin_converter.utils._logger import (
     add_file_handler,
     add_stream_handler,
     initialize_logger,
+    print_log_file_location,
     remove_handlers,
 )
 from ni_measurement_plugin_converter.utils._manage_session import manage_session

@@ -6,11 +6,13 @@ import sys
 from logging import Logger, StreamHandler, handlers
 
 from ni_measurement_plugin_converter.constants import (
+    DEBUG_LOGGER,
     LOG_DATE_FORMAT,
     LOG_FILE_COUNT_LIMIT,
     LOG_FILE_MSG_FORMAT,
     LOG_FILE_NAME,
     LOG_FILE_SIZE_LIMIT_IN_BYTES,
+    UserMessage,
 )
 
 
@@ -87,3 +89,12 @@ def remove_handlers(logger: Logger) -> None:
     """
     for handler in logger.handlers:
         logger.removeHandler(handler)
+
+
+def print_log_file_location() -> None:
+    """Print log file location if log file is available."""
+    logger = logging.getLogger(DEBUG_LOGGER)
+
+    for handler in logger.handlers:
+        if isinstance(handler, handlers.RotatingFileHandler):
+            logger.info(UserMessage.LOG_FILE.format(log_file_path=handler.baseFilename))
