@@ -24,11 +24,8 @@
 ```
 Usage: ni-measurement-plugin-converter [OPTIONS]
 
-  Run the CLI tool.
-
-  Args:     display_name (str): Display name.     measurement_file_dir (str):
-  Measurement file directory.     function (str): Measurement function name.
-  output_dir (str): Output directory.
+  NI Measurement Plug-In Converter is a Command Line tool to convert     
+  Python measurements to measurement plug-ins.
 
 Options:
   -d, --display-name TEXT         Display name.  [required]

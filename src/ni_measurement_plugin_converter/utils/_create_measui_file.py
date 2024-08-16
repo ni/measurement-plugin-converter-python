@@ -33,8 +33,6 @@ def get_input_data_elements(inputs: List[InputInfo]) -> List[DataElement]:
     Returns:
         List[DataElement]: List of data element for input UI components.
     """
-    input_data_elements = []
-
     input_data_elements = [
         DataElement(
             client_id=CLIENT_ID,
@@ -63,9 +61,11 @@ def get_input_data_elements(inputs: List[InputInfo]) -> List[DataElement]:
 
         if value_type == nims.DataType.Double.name:
             value_type = DataType.Double.name
+
         elif value_type == nims.DataType.Int64Array1D.name:
             value_type = DataType.Int64.name
             is_array = True
+
         elif value_type == nims.DataType.DoubleArray1D.name:
             value_type = DataType.Double.name
             is_array = True
