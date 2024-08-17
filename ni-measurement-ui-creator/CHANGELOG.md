@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## NI Measurement UI Creator
 
+## [1.0.0-dev5] - 2024-08-17
+
+### Added
+
+- Options to adjust Height, Weight of the UI elements.
+
 ## [1.0.0-dev4] - 2024-08-07
 
 ### Changed

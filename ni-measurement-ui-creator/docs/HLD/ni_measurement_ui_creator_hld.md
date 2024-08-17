@@ -3,8 +3,8 @@
   - [Who](#who)
   - [Problem statement](#problem-statement)
   - [Links to relevant work items](#links-to-relevant-work-items)
-  - [Implementation and Design](#implemenation-and-design)
-    - [Workflow](#work-flow)
+  - [Implementation and Design](#implementation-and-design)
+    - [Workflow](#workflow)
     - [Generation of measui files while Measurement migration](#generation-of-measui-files-while-measurement-migration)
     - [Generation of measui files after Measurement migration](#generation-of-measui-files-after-measurement-migration)
     - [Creating measui files](#creating-measui-files)
@@ -91,7 +91,7 @@ No alternative implementations.
 
 ## Open issues
 
-- It supports for only limited UI elements.
+- It supports only limited UI elements.
 
 ## Future Plans
 
