@@ -31,6 +31,8 @@ def create_label(element_parameter: LabelElement) -> str:
         input_output_name=element_parameter.name,
         left_value=element_parameter.left_alignment,
         top_value=element_parameter.top_alignment,
+        height=element_parameter.height,
+        width=element_parameter.width,
     )
 
     return label

@@ -13,6 +13,9 @@ class DataElement(BaseModel):
     name: str
     left_alignment: Optional[Union[int, float]] = Field(default=100)
     top_alignment: Optional[Union[int, float]] = Field(default=100)
+    height: Optional[Union[int, float]] = Field(default=25)
+    width: Optional[Union[int, float]] = Field(default=120)
+    rows: Optional[Union[int]] = Field(default=3)
     value_type: Optional[str] = Field(default=None)
     is_array: Optional[bool] = Field(default=None)
 
@@ -25,3 +28,5 @@ class LabelElement(BaseModel):
     name: str
     left_alignment: Optional[Union[int, float]] = Field(default=100)
     top_alignment: Optional[Union[int, float]] = Field(default=100)
+    height: Optional[Union[int, float]] = Field(default=25)
+    width: Optional[Union[int, float]] = Field(default=120)
