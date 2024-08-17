@@ -42,6 +42,8 @@ def create_input_elements_from_client(inputs) -> str:
                         name=input.name,
                         left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
                         top_alignment=input_top_alignment,
+                        height=MeasUIElementPosition.ARRAY_HEIGHT,
+                        width=MeasUIElementPosition.ARRAY_WIDTH,
                         value_type=input_datatype.name,
                         is_array=True,
                     )
@@ -169,6 +171,8 @@ def create_output_elements_from_client(outputs) -> str:
                         left_alignment=output_left_alignment,
                         top_alignment=output_top_alignment,
                         value_type=output_datatype.name,
+                        height=MeasUIElementPosition.ARRAY_HEIGHT,
+                        width=MeasUIElementPosition.ARRAY_WIDTH,
                         is_array=True,
                     )
                 )

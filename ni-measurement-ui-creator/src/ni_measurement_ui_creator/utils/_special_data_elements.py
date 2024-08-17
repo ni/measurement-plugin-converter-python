@@ -71,8 +71,6 @@ def create_ioresource_array_control(element_parameter: DataElement) -> str:
             name=element_parameter.name,
             left_alignment=element_parameter.left_alignment,
             top_alignment=element_parameter.top_alignment,
-            height=element_parameter.height,
-            width=element_parameter.width,
         )
     )
 

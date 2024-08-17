@@ -28,5 +28,3 @@ class LabelElement(BaseModel):
     name: str
     left_alignment: Optional[Union[int, float]] = Field(default=100)
     top_alignment: Optional[Union[int, float]] = Field(default=100)
-    height: Optional[Union[int, float]] = Field(default=25)
-    width: Optional[Union[int, float]] = Field(default=120)
