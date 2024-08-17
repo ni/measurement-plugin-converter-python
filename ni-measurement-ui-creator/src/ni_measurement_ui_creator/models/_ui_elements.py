@@ -5,17 +5,25 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
+from ni_measurement_ui_creator.constants import MeasUIElementPosition
+
 
 class DataElement(BaseModel):
     """Data Element Model."""
 
     client_id: UUID
     name: str
-    left_alignment: Optional[Union[int, float]] = Field(default=100)
-    top_alignment: Optional[Union[int, float]] = Field(default=100)
-    height: Optional[Union[int, float]] = Field(default=25)
-    width: Optional[Union[int, float]] = Field(default=120)
-    rows: Optional[Union[int]] = Field(default=3)
+    left_alignment: Optional[Union[int, float]] = Field(
+        default=MeasUIElementPosition.DEFAULT_LEFT_ALIGNMENT
+    )
+    top_alignment: Optional[Union[int, float]] = Field(
+        default=MeasUIElementPosition.DEFAULT_TOP_ALIGNMENT
+    )
+
+    height: Optional[Union[int, float]] = Field(default=MeasUIElementPosition.DEFAULT_HEIGHT)
+    width: Optional[Union[int, float]] = Field(default=MeasUIElementPosition.DEFAULT_WIDTH)
+    rows: Optional[Union[int]] = Field(default=MeasUIElementPosition.DEFAULT_ARRAY_ROWS)
+
     value_type: Optional[str] = Field(default=None)
     is_array: Optional[bool] = Field(default=None)
 
@@ -26,5 +34,9 @@ class LabelElement(BaseModel):
     id: str
     shared_id: str
     name: str
-    left_alignment: Optional[Union[int, float]] = Field(default=100)
-    top_alignment: Optional[Union[int, float]] = Field(default=100)
+    left_alignment: Optional[Union[int, float]] = Field(
+        default=MeasUIElementPosition.DEFAULT_LEFT_ALIGNMENT
+    )
+    top_alignment: Optional[Union[int, float]] = Field(
+        default=MeasUIElementPosition.DEFAULT_TOP_ALIGNMENT
+    )

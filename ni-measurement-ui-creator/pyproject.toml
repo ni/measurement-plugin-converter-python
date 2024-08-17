@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ni_measurement_ui_creator"
-version = "1.0.0-dev4"
+version = "1.0.0-dev5"
 description = "NI Measurement UI Creator"
 authors = ["NI <opensource@ni.com>"]
 repository = "https://github.com/ni/"

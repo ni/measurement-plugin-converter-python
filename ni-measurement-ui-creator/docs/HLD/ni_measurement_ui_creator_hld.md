@@ -71,7 +71,7 @@ For creating measui files, the input and output configured in the measurement ar
 
 ### Logger implementation
 
-Logger implementation plays a crucial role in this tool for displaying the status messages of the built measurement and as a debugger for debugging any unexpected behavior.
+Logger implementation plays a crucial role in this tool for displaying the status messages of the built UI file and as a debugger for debugging any unexpected behavior.
 Two types of loggers have been implemented in this tool, one is a `Console logger` and another is a `File logger`. Console logger is used for displaying messages in the console whereas the File logger is used for logging all types of messages in a separate file called `log.txt`. Both the logger logs the messages in different formats. The console logger logs the message as plain text whereas the file logger logs the messages along with the time stamp.
 
 For example,
