@@ -46,3 +46,4 @@ The user measurement should
   - Have properly type hinted inputs and outputs.
   - Use one of the supported drivers.
 - Initialize the instrument driver's session inside the measurement function.
+- Initialize the instrument driver's session using the context manager `with`.
