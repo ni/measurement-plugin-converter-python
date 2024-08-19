@@ -3,8 +3,8 @@
   - [Who](#who)
   - [Problem statement](#problem-statement)
   - [Links to relevant work items](#links-to-relevant-work-items)
-  - [Implementation and Design](#implemenation-and-design)
-    - [Workflow](#work-flow)
+  - [Implementation and Design](#implementation-and-design)
+    - [Workflow](#workflow)
     - [Generation of measui files while Measurement migration](#generation-of-measui-files-while-measurement-migration)
     - [Generation of measui files after Measurement migration](#generation-of-measui-files-after-measurement-migration)
     - [Creating measui files](#creating-measui-files)
@@ -71,7 +71,7 @@ For creating measui files, the input and output configured in the measurement ar
 
 ### Logger implementation
 
-Logger implementation plays a crucial role in this tool for displaying the status messages of the built measurement and as a debugger for debugging any unexpected behavior.
+Logger implementation plays a crucial role in this tool for displaying the status messages of the built UI file and as a debugger for debugging any unexpected behavior.
 Two types of loggers have been implemented in this tool, one is a `Console logger` and another is a `File logger`. Console logger is used for displaying messages in the console whereas the File logger is used for logging all types of messages in a separate file called `log.txt`. Both the logger logs the messages in different formats. The console logger logs the message as plain text whereas the file logger logs the messages along with the time stamp.
 
 For example,
@@ -91,7 +91,7 @@ No alternative implementations.
 
 ## Open issues
 
-- It supports for only limited UI elements.
+- It supports only limited UI elements.
 
 ## Future Plans
 

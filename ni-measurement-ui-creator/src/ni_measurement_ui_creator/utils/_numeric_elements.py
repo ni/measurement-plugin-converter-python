@@ -29,6 +29,8 @@ def create_numeric_control(element_parameter: DataElement) -> str:
         name=element_parameter.name,
         left_value=element_parameter.left_alignment,
         top_value=element_parameter.top_alignment,
+        height=element_parameter.height,
+        width=element_parameter.width,
         value_type=element_parameter.value_type,
     )
 
@@ -64,6 +66,8 @@ def create_numeric_indicator(element_parameter: DataElement) -> str:
         name=element_parameter.name,
         left_value=element_parameter.left_alignment,
         top_value=element_parameter.top_alignment,
+        height=element_parameter.height,
+        width=element_parameter.width,
         value_type=element_parameter.value_type,
     )
 
@@ -102,6 +106,9 @@ def create_numeric_array_control(element_parameter: DataElement) -> str:
         left_value=element_parameter.left_alignment,
         value_type=element_parameter.value_type,
         top_value=element_parameter.top_alignment,
+        height=element_parameter.height,
+        width=element_parameter.width,
+        rows=element_parameter.rows,
     )
 
     label = create_label(
@@ -139,6 +146,9 @@ def create_numeric_array_indicator(element_parameter: DataElement) -> str:
         left_value=element_parameter.left_alignment,
         value_type=element_parameter.value_type,
         top_value=element_parameter.top_alignment,
+        height=element_parameter.height,
+        width=element_parameter.width,
+        rows=element_parameter.rows,
     )
 
     label = create_label(

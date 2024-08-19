@@ -42,11 +42,16 @@ def create_input_elements_from_client(inputs) -> str:
                         name=input.name,
                         left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
                         top_alignment=input_top_alignment,
+                        height=MeasUIElementPosition.ARRAY_HEIGHT,
+                        width=MeasUIElementPosition.ARRAY_WIDTH,
                         value_type=input_datatype.name,
                         is_array=True,
                     )
                 )
-                input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+                input_top_alignment += (
+                    MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+                    + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+                )
 
             elif input.type == DataType.Boolean.value and not (
                 hasattr(input, "repeated") and input.repeated
@@ -57,10 +62,15 @@ def create_input_elements_from_client(inputs) -> str:
                         name=input.name,
                         left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
                         top_alignment=input_top_alignment,
+                        height=MeasUIElementPosition.BOOLEAN_HEIGHT,
+                        width=MeasUIElementPosition.BOOLEAN_HEIGHT,
                         value_type=input_datatype.name,
                     )
                 )
-                input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+                input_top_alignment += (
+                    MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+                    + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+                )
 
             elif (
                 input.type == DataType.String.value
@@ -161,10 +171,15 @@ def create_output_elements_from_client(outputs) -> str:
                         left_alignment=output_left_alignment,
                         top_alignment=output_top_alignment,
                         value_type=output_datatype.name,
+                        height=MeasUIElementPosition.ARRAY_HEIGHT,
+                        width=MeasUIElementPosition.ARRAY_WIDTH,
                         is_array=True,
                     )
                 )
-                output_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+                output_top_alignment += (
+                    MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+                    + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+                )
 
             elif output.type == DataType.Boolean.value and not (
                 hasattr(output, "repeated") and output.repeated
@@ -176,9 +191,14 @@ def create_output_elements_from_client(outputs) -> str:
                         left_alignment=output_left_alignment,
                         top_alignment=output_top_alignment,
                         value_type=output_datatype.name,
+                        height=MeasUIElementPosition.BOOLEAN_HEIGHT,
+                        width=MeasUIElementPosition.BOOLEAN_WIDTH,
                     )
                 )
-                output_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+                output_top_alignment += (
+                    MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+                    + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+                )
 
             elif output.type == DataType.String.value and not (
                 hasattr(output, "repeated") and output.repeated
