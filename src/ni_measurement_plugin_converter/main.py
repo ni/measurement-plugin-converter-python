@@ -17,10 +17,15 @@ from ni_measurement_plugin_converter.constants import (
     MIGRATED_MEASUREMENT_FILENAME,
     ArgsDescription,
     DebugMessage,
+    DriverSession,
     TemplateFile,
     UserMessage,
 )
-from ni_measurement_plugin_converter.models import CliInputs, InvalidCliArgsError
+from ni_measurement_plugin_converter.models import (
+    CliInputs,
+    InvalidCliArgsError,
+    UnsupportedDriverError,
+)
 from ni_measurement_plugin_converter.utils import (
     create_file,
     create_measui_file,
@@ -95,9 +100,15 @@ def run(
         output_signature = generate_output_signature(outputs_info)
 
         # Manage session.
-        instrument_type = manage_session(migrated_file_dir, function)
+        sessions = manage_session(migrated_file_dir, function)
 
-        nims_instrument = get_nims_instrument(instrument_type)
+        for driver in sessions.keys():
+            if driver == DriverSession.nivisa.name:
+                nims_instrument = DriverSession.nivisa.value
+                break
+            else:
+                nims_instrument = get_nims_instrument(driver)
+
         service_class = f"{display_name}_Python"
         display_name_for_filenames = re.sub(r"\s+", "", display_name)
 
@@ -109,7 +120,6 @@ def run(
             serviceconfig_file=(
                 f"{display_name_for_filenames}{TemplateFile.SERVICE_CONFIG_FILE_EXTENSION}"
             ),
-            instrument_type=instrument_type,
             nims_instrument=nims_instrument,
             inputs_info=inputs_info,
             outputs_info=outputs_info,
@@ -157,13 +167,16 @@ def run(
         )
         logger.debug(DebugMessage.HELPER_FILE_CREATED)
 
-        logger.info(UserMessage.MEASUREMENT_PLUGIN_CREATED.format(plugin_dir=output_dir))
+        logger.info(
+            UserMessage.MEASUREMENT_PLUGIN_CREATED.format(plugin_dir=os.path.abspath(output_dir))
+        )
 
     except (
         InvalidCliArgsError,
         ClickException,
         TemplateLookupException,
         CompileException,
+        UnsupportedDriverError,
     ) as error:
         logger.error(error)
         print_log_file_location()
