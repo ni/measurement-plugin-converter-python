@@ -157,7 +157,9 @@ def run(
         )
         logger.debug(DebugMessage.HELPER_FILE_CREATED)
 
-        logger.info(UserMessage.MEASUREMENT_PLUGIN_CREATED.format(plugin_dir=output_dir))
+        logger.info(
+            UserMessage.MEASUREMENT_PLUGIN_CREATED.format(plugin_dir=os.path.abspath(output_dir))
+        )
 
     except (
         InvalidCliArgsError,

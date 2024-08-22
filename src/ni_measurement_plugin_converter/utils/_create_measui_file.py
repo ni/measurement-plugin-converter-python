@@ -55,12 +55,14 @@ def get_input_data_elements(inputs: List[InputInfo]) -> List[DataElement]:
         if value_type not in SUPPORTED_NIMS_DATATYPES:
             continue
 
+        if index > 0 and inputs[index - 1].nims_type == "nims.DataType.Boolean":
+            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+
         if index > 0 and inputs[index - 1].nims_type in [
-            "nims.DataType.Boolean",
             "nims.DataType.Int64Array1D",
             "nims.DataType.DoubleArray1D",
         ]:
-            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 3.5
 
         if value_type == nims.DataType.Double.name:
             value_type = DataType.Double.name
@@ -129,12 +131,14 @@ def get_output_data_elements(outputs: List[OutputInfo]) -> List[DataElement]:
         if value_type not in SUPPORTED_NIMS_DATATYPES:
             continue
 
+        if index > 0 and outputs[index - 1].nims_type == "nims.DataType.Boolean":
+            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+
         if index > 0 and outputs[index - 1].nims_type in [
-            "nims.DataType.Boolean",
             "nims.DataType.Int64Array1D",
             "nims.DataType.DoubleArray1D",
         ]:
-            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 3.5
 
         if value_type == nims.DataType.Double.name:
             value_type = DataType.Double.name
