@@ -11,11 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Dependency in pyproject.toml
+- Dependency in `pyproject.toml`.
 
 ### Changed
 
-- Vertical spacing option for Array, Boolean elements.
+- Vertical spacing for array and boolean elements.
 
 ## [1.0.0-dev5] - 2024-08-19
 
