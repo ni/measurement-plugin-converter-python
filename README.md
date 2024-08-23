@@ -2,7 +2,7 @@
 
 ### Description
 
-- NI Measurement Plug-In Converter for Python is a CLI tool used to convert python measurements to NI measurement plug-ins.
+- NI Measurement Plug-In Converter for Python is a CLI tool used to convert Python measurements to NI measurement plug-ins.
 
 ### Code Setup
 
@@ -35,7 +35,7 @@ Options:
   -o, --output-dir TEXT           Output directory.  [required]
   -h, --help                      Show this message and exit.
 ```
-- Run `ni-measurement-plugin-converter -d <display name> -m <measurement file directory> -f <measurement function name> -o <output directory>` to convert python measurement to measurement plug-in.
+- Run `ni-measurement-plugin-converter -d <display name> -m <measurement file directory> -f <measurement function name> -o <output directory>` to convert Python measurement to measurement plug-in.
 
 
 ### Note
