@@ -48,9 +48,8 @@ def create_input_elements_from_client(inputs) -> str:
                         is_array=True,
                     )
                 )
-                input_top_alignment += (
-                    MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
-                    + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+                input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE + (
+                    MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 3.5
                 )
 
             elif input.type == DataType.Boolean.value and not (
@@ -176,9 +175,8 @@ def create_output_elements_from_client(outputs) -> str:
                         is_array=True,
                     )
                 )
-                output_top_alignment += (
-                    MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
-                    + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+                output_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE + (
+                    MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 3.5
                 )
 
             elif output.type == DataType.Boolean.value and not (
