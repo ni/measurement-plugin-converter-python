@@ -11,7 +11,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 
 - Print absolute path for output directory.
-- Dependency whl files.
 - Updated spacing according to ni_measurement_ui_creator-1.0.0.dev6
 
 ## [1.0.0-dev5] - 2024-08-12
