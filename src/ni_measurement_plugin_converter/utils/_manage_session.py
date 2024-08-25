@@ -2,7 +2,7 @@
 
 import ast
 from logging import getLogger
-from typing import List, Tuple
+from typing import Dict, List
 
 import astor
 
@@ -11,18 +11,12 @@ from ni_measurement_plugin_converter.constants import (
     ENCODING,
     DebugMessage,
     DriverSession,
+    SessionManagement,
     UserMessage,
 )
 from ni_measurement_plugin_converter.models import UnsupportedDriverError
 
-from ._manage_session_helper import (
-    get_plugin_session_initializations,
-    get_sessions,
-    replace_session_initializations,
-)
-
-_RESERVATION = "reservation"
-_SESSION_INFO = "session_info"
+from ._manage_session_helper import get_plugin_session_initializations, get_sessions_details
 
 
 def manage_session(migrated_file_dir: str, function: str) -> str:
@@ -46,8 +40,8 @@ def manage_session(migrated_file_dir: str, function: str) -> str:
 
     code_tree = ast.parse(source_code)
 
-    sessions = get_sessions(code_tree, function)
-    if not sessions:
+    sessions_details = get_sessions_details(code_tree, function)
+    if not sessions_details:
         raise UnsupportedDriverError(
             UserMessage.INVALID_DRIVERS.format(
                 supported_drivers=[driver.name for driver in DriverSession]
@@ -58,20 +52,23 @@ def manage_session(migrated_file_dir: str, function: str) -> str:
     reservation_added_code_tree = add_param(
         code_tree=code_tree,
         function=function,
-        param=_RESERVATION,
+        param=SessionManagement._RESERVATION,
     )
+
     plugin_session_initializations = get_plugin_session_initializations(
-        reservation_added_code_tree, function, sessions
+        code_tree=reservation_added_code_tree,
+        function=function,
+        sessions_details=sessions_details,
     )
+
     logger.info(UserMessage.REPLACE_SESSION_INITIALIZATION)
     code_tree = replace_session_initializations(code_tree, function, plugin_session_initializations)
 
     logger.info(UserMessage.ASSIGN_SESSION_INFO)
-
     session_inserted_code_tree = insert_session_assignment(
         code_tree=code_tree,
         function=function,
-        sessions=sessions,
+        sessions_details=sessions_details,
     )
 
     code_tree = astor.to_source(session_inserted_code_tree)
@@ -81,7 +78,7 @@ def manage_session(migrated_file_dir: str, function: str) -> str:
 
     logger.debug(DebugMessage.MIGRATED_FILE_MODIFIED)
 
-    return sessions
+    return sessions_details
 
 
 def add_param(code_tree: ast.Module, function: str, param: str) -> ast.Module:
@@ -102,34 +99,67 @@ def add_param(code_tree: ast.Module, function: str, param: str) -> ast.Module:
     return code_tree
 
 
+def replace_session_initializations(
+    code_tree: ast.Module,
+    function: str,
+    session_initializations: Dict[str, List[ast.withitem]],
+) -> ast.Module:
+    """Replace session initializations with plug-in session initializations.
+
+    Args:
+        code_tree (ast.Module): Source code tree.
+        function (str): Measurement function name.
+        session_initializations (Dict[str, List[ast.withitem]]): Session initializations.
+
+    Returns:
+        ast.Module: Session replaced source code tree.
+    """
+    for node in ast.walk(code_tree):
+        if isinstance(node, ast.FunctionDef) and node.name == function:
+            for child_node in ast.walk(node):
+                if (
+                    isinstance(child_node, ast.With)
+                    and hasattr(child_node, "items")
+                    and child_node.items
+                ):
+                    child_node.items = [withitem for withitem in session_initializations.values()]
+                    break
+            break
+
+    return code_tree
+
+
 def insert_session_assignment(
     code_tree: ast.Module,
     function: str,
-    sessions: str,
+    sessions_details: Dict[str, List[str]],
 ) -> ast.Module:
     """Insert session assignment into migrated measurement file source code.
 
     Args:
         source_code (ast.Module): Migrated measurement source code tree.
         function (str): Measurement function name.
-        sessions (str): Session name from user measurement.
+        sessions_details (str): Sessions details.
 
     Returns:
         ast.Module: Session assignment inserted source code tree.
     """
     session_assignments = []
-    for driver, actual_session_names in sessions.items():
+    for driver, actual_session_names in sessions_details.items():
         if len(actual_session_names) == 1:
             session_assignments.append(
                 ast.Assign(
                     targets=[ast.Name(id=actual_session_names[0], ctx=ast.Store())],
                     value=ast.Attribute(
-                        value=ast.Name(id=f"{driver}_{_SESSION_INFO}", ctx=ast.Load()),
+                        value=ast.Name(
+                            id=f"{driver}_{SessionManagement._SESSION_INFO}", ctx=ast.Load()
+                        ),
                         attr="session",
                         ctx=ast.Load(),
                     ),
                 )
             )
+
         elif len(actual_session_names) > 1:
             for index in range(len(actual_session_names)):
                 session_assignments.append(
@@ -137,7 +167,8 @@ def insert_session_assignment(
                         targets=[ast.Name(id=actual_session_names[index], ctx=ast.Store())],
                         value=ast.Attribute(
                             value=ast.Name(
-                                id=f"{driver}_{_SESSION_INFO}s[{index}]", ctx=ast.Load()
+                                id=f"{driver}_{SessionManagement._SESSION_INFO}[{index}]",
+                                ctx=ast.Load(),
                             ),
                             attr="session",
                             ctx=ast.Load(),

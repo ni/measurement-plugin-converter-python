@@ -21,5 +21,6 @@ from ni_measurement_plugin_converter.constants._measurement_service import (
     NIMS_TYPE,
     TYPE_DEFAULT_VALUES,
     DriverSession,
+    SessionManagement,
 )
 from ni_measurement_plugin_converter.constants._messages import DebugMessage, UserMessage

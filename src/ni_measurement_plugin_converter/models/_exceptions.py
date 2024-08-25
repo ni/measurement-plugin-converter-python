@@ -17,7 +17,7 @@ class UnsupportedDriverError(Exception):
     """Unsupported driver error."""
 
     def __init__(self, message: str) -> None:
-        """Initialize the exception
+        """Initialize the exception.
 
         Args:
             message (str): Error message.

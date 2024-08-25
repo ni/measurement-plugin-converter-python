@@ -60,7 +60,7 @@ def get_input_data_elements(inputs: List[InputInfo]) -> List[DataElement]:
             "nims.DataType.Int64Array1D",
             "nims.DataType.DoubleArray1D",
         ]:
-            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 2
 
         if value_type == nims.DataType.Double.name:
             value_type = DataType.Double.name
@@ -134,7 +134,7 @@ def get_output_data_elements(outputs: List[OutputInfo]) -> List[DataElement]:
             "nims.DataType.Int64Array1D",
             "nims.DataType.DoubleArray1D",
         ]:
-            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 2
 
         if value_type == nims.DataType.Double.name:
             value_type = DataType.Double.name

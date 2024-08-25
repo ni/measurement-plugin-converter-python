@@ -39,3 +39,21 @@ TYPE_DEFAULT_VALUES = {
     "List[str]": [""],
     "List[bool]": [True],
 }
+
+
+class SessionManagement:
+    """Constants used in session management."""
+
+    _RESERVATION = "reservation"
+    _SESSION_INFO = "session_info"
+    _SESSION_CONSTRUCTOR = "session_constructor"
+    _INSTRUMENT_TYPE = "instrument_type"
+    NI_SESSION_DRIVERS = [
+        "nidcpower",
+        "nidmm",
+        "nidigital",
+        "niscope",
+        "nifgen",
+        "niswitch",
+        "nidaqmx",
+    ]

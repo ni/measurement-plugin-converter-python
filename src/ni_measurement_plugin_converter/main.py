@@ -171,6 +171,11 @@ def run(
             UserMessage.MEASUREMENT_PLUGIN_CREATED.format(plugin_dir=os.path.abspath(output_dir))
         )
 
+    except PermissionError as error:
+        logger.debug(error)
+        logger.error(UserMessage.ACCESS_DENIED)
+        print_log_file_location()
+
     except (
         InvalidCliArgsError,
         ClickException,
