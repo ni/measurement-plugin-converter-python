@@ -17,7 +17,11 @@ from ni_measurement_ui_creator.utils._helpers import (
     create_indicator_elements,
 )
 
-from ni_measurement_plugin_converter.constants import PIN_NAMES, SUPPORTED_NIMS_DATATYPES
+from ni_measurement_plugin_converter.constants import (
+    PIN_NAMES,
+    SUPPORTED_NIMS_DATATYPES,
+    DriverSession,
+)
 from ni_measurement_plugin_converter.models import InputInfo, OutputInfo
 
 
@@ -55,12 +59,14 @@ def get_input_data_elements(inputs: List[InputInfo]) -> List[DataElement]:
         if value_type not in SUPPORTED_NIMS_DATATYPES:
             continue
 
-        if index > 0 and inputs[index - 1].nims_type in [
-            "nims.DataType.Boolean",
-            "nims.DataType.Int64Array1D",
-            "nims.DataType.DoubleArray1D",
+        if index > 0 and inputs[index - 1].nims_type.split(".")[2] == nims.DataType.Boolean.name:
+            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+
+        if index > 0 and inputs[index - 1].nims_type.split(".")[2] in [
+            nims.DataType.Int64Array1D.name,
+            nims.DataType.DoubleArray1D.name,
         ]:
-            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 2
+            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 3.5
 
         if value_type == nims.DataType.Double.name:
             value_type = DataType.Double.name
@@ -129,12 +135,14 @@ def get_output_data_elements(outputs: List[OutputInfo]) -> List[DataElement]:
         if value_type not in SUPPORTED_NIMS_DATATYPES:
             continue
 
-        if index > 0 and outputs[index - 1].nims_type in [
-            "nims.DataType.Boolean",
-            "nims.DataType.Int64Array1D",
-            "nims.DataType.DoubleArray1D",
+        if index > 0 and outputs[index - 1].nims_type.split(".")[2] == nims.DataType.Boolean.name:
+            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+
+        if index > 0 and outputs[index - 1].nims_type.split(".")[2] in [
+            nims.DataType.Int64Array1D.name,
+            nims.DataType.DoubleArray1D.name,
         ]:
-            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 2
+            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 3.5
 
         if value_type == nims.DataType.Double.name:
             value_type = DataType.Double.name
