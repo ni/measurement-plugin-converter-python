@@ -20,7 +20,6 @@ from ni_measurement_ui_creator.utils._helpers import (
 from ni_measurement_plugin_converter.constants import (
     PIN_NAMES,
     SUPPORTED_NIMS_DATATYPES,
-    DriverSession,
 )
 from ni_measurement_plugin_converter.models import InputInfo, OutputInfo
 
