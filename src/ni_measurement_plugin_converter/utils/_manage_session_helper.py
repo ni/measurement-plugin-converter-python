@@ -52,7 +52,6 @@ def get_sessions_details(code_tree: ast.Module, function: str) -> Dict[str, List
 def get_plugin_session_initializations(
     code_tree: ast.Module,
     function: str,
-    sessions_details: Dict[str, List[str]],
 ) -> Dict[str, List[ast.withitem]]:
     """Get plugin session initialization.
 
@@ -62,7 +61,6 @@ def get_plugin_session_initializations(
     Args:
         code_tree (ast.Module): Source code tree.
         function (str): Measurement function name.
-        sessions_details (Dict[str, List[str]]): Drivers and their session object variables.
 
     Returns:
         Dict[str, List[ast.withitem]]: Drivers and their respective withitems.
@@ -85,10 +83,7 @@ def get_plugin_session_initializations(
                                 and call.func.value.id not in session_initializations
                             ):
                                 session_initializations[call.func.value.id] = (
-                                    get_ni_driver_session_initialization(
-                                        call.func.value.id,
-                                        sessions_details,
-                                    )
+                                    get_ni_driver_session_initialization(call.func.value.id)
                                 )
                             elif (
                                 instrument_is_visa_type(call)
@@ -96,10 +91,7 @@ def get_plugin_session_initializations(
                             ):
                                 resource_name = get_resource_name(call)
                                 session_initializations[resource_name] = (
-                                    get_visa_driver_plugin_session_initialization(
-                                        resource_name,
-                                        sessions_details,
-                                    )
+                                    get_visa_driver_plugin_session_initialization(resource_name)
                                 )
                     break
 
@@ -177,27 +169,17 @@ def get_resource_name(call: ast.Call) -> str:
     return resource_name
 
 
-def get_ni_driver_session_initialization(
-    driver: str,
-    sessions_details: Dict[str, List[str]],
-) -> ast.withitem:
+def get_ni_driver_session_initialization(driver: str) -> ast.withitem:
     """Get NI driver session initialization as a `withitem`.
 
     Args:
         driver (str): NI instrument driver name.
-        sessions_details (Dict[str, List[str]]): Sessions details.
 
     Returns:
         ast.withitem: NI driver plug-in session initialization as a `withitem`.
     """
-    if driver == "nidaqmx" and len(sessions_details[driver]) == 1:
-        attribute = "create_nidaqmx_task"
-
-    elif driver == "nidaqmx" and len(sessions_details[driver]) > 1:
+    if driver == "nidaqmx":
         attribute = "create_nidaqmx_tasks"
-
-    elif len(sessions_details[driver]) == 1:
-        attribute = f"initialize_{driver}_session"
 
     else:
         attribute = f"initialize_{driver}_sessions"
@@ -217,30 +199,20 @@ def get_ni_driver_session_initialization(
     return plugin_session
 
 
-def get_visa_driver_plugin_session_initialization(
-    driver: str,
-    sessions_details: Dict[str, List[str]],
-) -> ast.withitem:
+def get_visa_driver_plugin_session_initialization(driver: str) -> ast.withitem:
     """Get VISA session initialization.
 
     Args:
         driver (str): VISA instrument driver name.
-        sessions_details (Dict[str, List[str]]): Sessions details.
 
     Returns:
         ast.withitem: VISA driver plugin session initialization as a `withitem`.
     """
-    if len(sessions_details[driver]) == 1:
-        attribute = "initialize_session"
-
-    else:
-        attribute = "initialize_sessions"
-
     plugin_session = ast.withitem(
         context_expr=ast.Call(
             func=ast.Attribute(
                 value=ast.Name(id=SessionManagement.RESERVATION, ctx=ast.Load()),
-                attr=attribute,
+                attr="initialize_sessions",
                 ctx=ast.Load(),
             ),
             args=[

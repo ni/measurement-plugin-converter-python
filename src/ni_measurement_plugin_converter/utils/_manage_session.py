@@ -49,10 +49,13 @@ def manage_session(migrated_file_dir: str, function: str) -> str:
         )
 
     logger.info(UserMessage.ADD_RESERVE_SESSION)
+
+    params = get_params(sessions_details)
+
     reservation_added_code_tree = add_params(
         code_tree=code_tree,
         function=function,
-        sessions_details=sessions_details,
+        params=[SessionManagement.RESERVATION] + params,
     )
 
     plugin_session_initializations = get_plugin_session_initializations(
@@ -78,35 +81,47 @@ def manage_session(migrated_file_dir: str, function: str) -> str:
 
     logger.debug(DebugMessage.MIGRATED_FILE_MODIFIED)
 
-    return sessions_details
+    return params
 
 
-def add_params(
-    code_tree: ast.Module,
-    function: str,
-    sessions_details: Dict[str, List[str]],
-) -> ast.Module:
+def get_params(sessions_details: Dict[str, List[str]]) -> List[str]:
+    """Get session_constructor and instrument_type parameters for different VISA instruments.
+
+    Args:
+        sessions_details (Dict[str, List[str]]): Session details.
+
+    Returns:
+        List[str]: VISA instrument parameters.
+    """
+    visa_instruments_params = []
+
+    for driver in list(sessions_details.keys()):
+        if driver in SessionManagement.NI_DRIVERS:
+            continue
+
+        visa_instruments_params.extend(
+            [
+                f"{driver}_{SessionManagement.SESSION_CONSTRUCTOR}",
+                f"{driver}_{SessionManagement.INSTRUMENT_TYPE}",
+            ]
+        )
+
+    return visa_instruments_params
+
+
+def add_params(code_tree: ast.Module, function: str, params: List[str]) -> ast.Module:
     """Add parameters to user measurement function.
 
     Args:
         code_tree (ast.Module): Source code tree.
         function (str): Measurement function name.
-        sessions_details (Dict[str, List[str]]): Session details.
+        params: List[str]: Parameters to be added.
 
     Returns:
         ast.Module: Parameters added code tree.
     """
-    for driver in list(sessions_details.keys())[::-1]:
-        if driver in SessionManagement.NI_DRIVERS:
-            continue
-
-        code_tree = add_param(code_tree, function, f"{driver}_{SessionManagement.INSTRUMENT_TYPE}")
-
-        code_tree = add_param(
-            code_tree, function, f"{driver}_{SessionManagement.SESSION_CONSTRUCTOR}"
-        )
-
-    code_tree = add_param(code_tree, function, SessionManagement.RESERVATION)
+    for param in params[::-1]:
+        add_param(code_tree, function, param)
 
     return code_tree
 
@@ -175,36 +190,22 @@ def insert_session_assignment(
         ast.Module: Session assignment inserted source code tree.
     """
     session_assignments = []
+
     for driver, actual_session_names in sessions_details.items():
-        if len(actual_session_names) == 1:
+        for index in range(len(actual_session_names)):
             session_assignments.append(
                 ast.Assign(
-                    targets=[ast.Name(id=actual_session_names[0], ctx=ast.Store())],
+                    targets=[ast.Name(id=actual_session_names[index], ctx=ast.Store())],
                     value=ast.Attribute(
                         value=ast.Name(
-                            id=f"{driver}_{SessionManagement.SESSION_INFO}", ctx=ast.Load()
+                            id=f"{driver}_{SessionManagement.SESSION_INFO}[{index}]",
+                            ctx=ast.Load(),
                         ),
                         attr="session",
                         ctx=ast.Load(),
                     ),
                 )
             )
-
-        elif len(actual_session_names) > 1:
-            for index in range(len(actual_session_names)):
-                session_assignments.append(
-                    ast.Assign(
-                        targets=[ast.Name(id=actual_session_names[index], ctx=ast.Store())],
-                        value=ast.Attribute(
-                            value=ast.Name(
-                                id=f"{driver}_{SessionManagement.SESSION_INFO}[{index}]",
-                                ctx=ast.Load(),
-                            ),
-                            attr="session",
-                            ctx=ast.Load(),
-                        ),
-                    )
-                )
 
     for node in ast.walk(code_tree):
         if isinstance(node, ast.FunctionDef) and node.name == function:
@@ -214,3 +215,20 @@ def insert_session_assignment(
                         child_node.body.insert(0, session_assignment)
 
     return code_tree
+
+
+def get_visa_params(params: List[str]) -> str:
+    """Get the VISA instrument parameters string.
+
+    Args:
+        params (List[str]): List of VISA parameter string.
+
+    Returns:
+        str: VISA instrument parameter string.
+    """
+    visa_signature = ""
+
+    for param in params:
+        visa_signature += f"{param}={param}, "
+
+    return visa_signature

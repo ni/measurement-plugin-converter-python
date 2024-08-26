@@ -17,7 +17,6 @@ from ni_measurement_plugin_converter.constants import (
     MIGRATED_MEASUREMENT_FILENAME,
     ArgsDescription,
     DebugMessage,
-    DriverSession,
     TemplateFile,
     UserMessage,
 )
@@ -35,7 +34,7 @@ from ni_measurement_plugin_converter.utils import (
     generate_input_signature,
     generate_output_signature,
     get_measurement_function,
-    get_nims_instrument,
+    get_visa_params,
     initialize_logger,
     manage_session,
     print_log_file_location,
@@ -100,14 +99,8 @@ def run(
         output_signature = generate_output_signature(outputs_info)
 
         # Manage session.
-        sessions = manage_session(migrated_file_dir, function)
-
-        for driver in sessions.keys():
-            if driver == DriverSession.nivisa.name:
-                nims_instrument = DriverSession.nivisa.value
-                break
-            else:
-                nims_instrument = get_nims_instrument(driver)
+        params = manage_session(migrated_file_dir, function)
+        visa_params = get_visa_params(params)
 
         sanitized_display_name = re.sub(r"[^a-zA-Z0-9]", "_", display_name)
         service_class = f"{sanitized_display_name}_Python"
@@ -120,12 +113,12 @@ def run(
             serviceconfig_file=(
                 f"{sanitized_display_name}{TemplateFile.SERVICE_CONFIG_FILE_EXTENSION}"
             ),
-            nims_instrument=nims_instrument,
             inputs_info=inputs_info,
             outputs_info=outputs_info,
             input_signature=input_signature,
             input_param_names=input_param_names,
             output_signature=output_signature,
+            visa_params=visa_params,
             migrated_file=Path(MIGRATED_MEASUREMENT_FILENAME).stem,
             function_name=function,
             directory_out=output_dir,

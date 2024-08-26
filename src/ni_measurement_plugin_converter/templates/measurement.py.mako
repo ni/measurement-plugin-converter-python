@@ -1,4 +1,4 @@
-<%page args="display_name, version, serviceconfig_file, nims_instrument, inputs_info, outputs_info, input_signature, input_param_names, output_signature, migrated_file, function_name, iterable_outputs"/>\
+<%page args="display_name, version, serviceconfig_file, inputs_info, outputs_info, input_signature, input_param_names, output_signature, visa_params, migrated_file, function_name, iterable_outputs"/>\
 \
 
 import pathlib
@@ -33,24 +33,26 @@ measurement_service = nims.MeasurementService(
     %for output_info in outputs_info:
 @measurement_service.output("${output_info.variable_name}", ${output_info.nims_type})
     %endfor
-% if not iterable_outputs and nims_instrument == "INSTRUMENT_TYPE_NI_VISA":
-def measure(pin_names: Iterable[str], ${input_signature}) -> Iterable[Union[${output_signature}]]:
-    with measurement_service.context.reserve_sessions(pin_names) as reservation:
-        # Update session_constructor.
-        return (${function_name}(instrument_type=INSTRUMENT_TYPE_NI_VISA, session_constructor=session_constructor, reservation=reservation, ${input_param_names}),)
-% elif not iterable_outputs and nims_instrument != "INSTRUMENT_TYPE_NI_VISA":
+% if not iterable_outputs and not visa_params:
 def measure(pin_names: Iterable[str], ${input_signature}) -> Iterable[Union[${output_signature}]]:
     with measurement_service.context.reserve_sessions(pin_names) as reservation:
         return (${function_name}(reservation=reservation, ${input_param_names}),)
-% elif iterable_outputs and nims_instrument == "INSTRUMENT_TYPE_NI_VISA":
+
+% elif not iterable_outputs and visa_params:
 def measure(pin_names: Iterable[str], ${input_signature}) -> Iterable[Union[${output_signature}]]:
     with measurement_service.context.reserve_sessions(pin_names) as reservation:
-        # Update session_constructor.
-        return ${function_name}(instrument_type=INSTRUMENT_TYPE_NI_VISA, session_constructor=session_constructor, reservation=reservation, ${input_param_names})
-% else:
+        # Update session_constructor and instrument_types accordingly.
+        return (${function_name}(reservation=reservation, ${visa_params} ${input_param_names}),)
+% elif iterable_outputs and not visa_params:
 def measure(pin_names: Iterable[str], ${input_signature}) -> Iterable[Union[${output_signature}]]:
     with measurement_service.context.reserve_sessions(pin_names) as reservation:
         return ${function_name}(reservation=reservation, ${input_param_names})
+
+% elif iterable_outputs and visa_params:
+def measure(pin_names: Iterable[str], ${input_signature}) -> Iterable[Union[${output_signature}]]:
+    with measurement_service.context.reserve_sessions(pin_names) as reservation:
+        # Update session_constructor and instrument_types accordingly.
+        return ${function_name}(reservation=reservation, ${visa_params} ${input_param_names})
 %endif
 def main() -> None:
     with measurement_service.host_service():

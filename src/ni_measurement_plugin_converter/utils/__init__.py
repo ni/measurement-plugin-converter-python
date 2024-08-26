@@ -18,7 +18,7 @@ from ni_measurement_plugin_converter.utils._logger import (
     print_log_file_location,
     remove_handlers,
 )
-from ni_measurement_plugin_converter.utils._manage_session import manage_session
+from ni_measurement_plugin_converter.utils._manage_session import get_visa_params, manage_session
 from ni_measurement_plugin_converter.utils._measurement_service import (
     extract_type,
     get_nims_datatype,
