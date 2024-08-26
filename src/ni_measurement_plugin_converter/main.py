@@ -109,16 +109,16 @@ def run(
             else:
                 nims_instrument = get_nims_instrument(driver)
 
-        service_class = f"{display_name}_Python"
-        display_name_for_filenames = re.sub(r"\s+", "", display_name)
+        sanitized_display_name = re.sub(r"[^a-zA-Z0-9]", "_", display_name)
+        service_class = f"{sanitized_display_name}_Python"
 
         create_file(
             TemplateFile.MEASUREMENT_TEMPLATE,
             os.path.join(output_dir, TemplateFile.MEASUREMENT_FILENAME),
-            display_name=display_name,
+            display_name=sanitized_display_name,
             version=MEASUREMENT_VERSION,
             serviceconfig_file=(
-                f"{display_name_for_filenames}{TemplateFile.SERVICE_CONFIG_FILE_EXTENSION}"
+                f"{sanitized_display_name}{TemplateFile.SERVICE_CONFIG_FILE_EXTENSION}"
             ),
             nims_instrument=nims_instrument,
             inputs_info=inputs_info,
@@ -137,7 +137,7 @@ def run(
             inputs=inputs_info,
             outputs=outputs_info,
             file_path=output_dir,
-            measurement_name=display_name,
+            measurement_name=sanitized_display_name,
         )
         logger.debug(DebugMessage.MEASUI_FILE_CREATED)
 
@@ -145,9 +145,9 @@ def run(
             TemplateFile.SERVICE_CONFIG_TEMPLATE,
             os.path.join(
                 output_dir,
-                f"{display_name_for_filenames}{TemplateFile.SERVICE_CONFIG_FILE_EXTENSION}",
+                f"{sanitized_display_name}{TemplateFile.SERVICE_CONFIG_FILE_EXTENSION}",
             ),
-            display_name=display_name,
+            display_name=sanitized_display_name,
             service_class=service_class,
             directory_out=output_dir,
         )
