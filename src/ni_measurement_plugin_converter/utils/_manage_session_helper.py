@@ -8,7 +8,7 @@ from ni_measurement_plugin_converter.constants import SessionManagement
 
 
 def get_sessions_details(code_tree: ast.Module, function: str) -> Dict[str, List[str]]:
-    """Get Drivers used and its session variable.
+    """Get drivers used and its session variable.
 
     Args:
         code_tree (ast.Module): Source code tree.
@@ -30,6 +30,7 @@ def get_sessions_details(code_tree: ast.Module, function: str) -> Dict[str, List
                     for item in child_node.items:
                         if isinstance(item.context_expr, ast.Call):
                             call = item.context_expr
+
                             if instrument_is_supported_ni_drivers(call):
                                 if call.func.value.id not in drivers:
                                     drivers[call.func.value.id] = [item.optional_vars.id]
@@ -55,8 +56,8 @@ def get_plugin_session_initializations(
 ) -> Dict[str, List[ast.withitem]]:
     """Get plugin session initialization.
 
-    1. Create `withitems` for NI drivers.
-    2. Create `withitems` for VISA type.
+    1. Create session initialization `withitems` for NI drivers.
+    2. Create session initialization `withitems` for VISA type.
 
     Args:
         code_tree (ast.Module): Source code tree.
@@ -117,7 +118,7 @@ def instrument_is_supported_ni_drivers(call: ast.Call) -> bool:
     if (
         isinstance(call.func, ast.Attribute)
         and isinstance(call.func.value, ast.Name)
-        and call.func.value.id in SessionManagement.NI_SESSION_DRIVERS
+        and call.func.value.id in SessionManagement.NI_DRIVERS
         and (call.func.attr == "Session" or call.func.attr == "Task")
     ):
         return True
@@ -190,70 +191,29 @@ def get_ni_driver_session_initialization(
         ast.withitem: NI driver plug-in session initialization as a `withitem`.
     """
     if driver == "nidaqmx" and len(sessions_details[driver]) == 1:
-        plugin_session = ast.withitem(
-            context_expr=ast.Call(
-                func=ast.Attribute(
-                    value=ast.Name(id=SessionManagement._RESERVATION, ctx=ast.Load()),
-                    attr="create_nidaqmx_task",
-                    ctx=ast.Load(),
-                ),
-                args=[],
-                keywords=[],
-            ),
-            optional_vars=ast.Name(
-                id=f"nidaqmx_{SessionManagement._SESSION_INFO}",
-                ctx=ast.Store(),
-            ),
-        )
+        attribute = "create_nidaqmx_task"
 
     elif driver == "nidaqmx" and len(sessions_details[driver]) > 1:
-        plugin_session = ast.withitem(
-            context_expr=ast.Call(
-                func=ast.Attribute(
-                    value=ast.Name(id=SessionManagement._RESERVATION, ctx=ast.Load()),
-                    attr="create_nidaqmx_task",
-                    ctx=ast.Load(),
-                ),
-                args=[],
-                keywords=[],
-            ),
-            optional_vars=ast.Name(
-                id=f"nidaqmx_{SessionManagement._SESSION_INFO}", ctx=ast.Store()
-            ),
-        )
+        attribute = "create_nidaqmx_tasks"
 
     elif len(sessions_details[driver]) == 1:
-        plugin_session = ast.withitem(
-            context_expr=ast.Call(
-                func=ast.Attribute(
-                    value=ast.Name(id=SessionManagement._RESERVATION, ctx=ast.Load()),
-                    attr=f"initialize_{driver}_session",
-                    ctx=ast.Load(),
-                ),
-                args=[],
-                keywords=[],
-            ),
-            optional_vars=ast.Name(
-                id=f"{driver}_{SessionManagement._SESSION_INFO}", ctx=ast.Store()
-            ),
-        )
+        attribute = f"initialize_{driver}_session"
 
-    elif len(sessions_details[driver]) > 1:
-        plugin_session = ast.withitem(
-            context_expr=ast.Call(
-                func=ast.Attribute(
-                    value=ast.Name(id=SessionManagement._RESERVATION, ctx=ast.Load()),
-                    attr=f"initialize_{driver}_sessions",
-                    ctx=ast.Load(),
-                ),
-                args=[],
-                keywords=[],
-            ),
-            optional_vars=ast.Name(
-                id=f"{driver}_{SessionManagement._SESSION_INFO}", ctx=ast.Store()
-            ),
-        )
+    else:
+        attribute = f"initialize_{driver}_sessions"
 
+    plugin_session = ast.withitem(
+        context_expr=ast.Call(
+            func=ast.Attribute(
+                value=ast.Name(id=SessionManagement.RESERVATION, ctx=ast.Load()),
+                attr=attribute,
+                ctx=ast.Load(),
+            ),
+            args=[],
+            keywords=[],
+        ),
+        optional_vars=ast.Name(id=f"{driver}_{SessionManagement.SESSION_INFO}", ctx=ast.Store()),
+    )
     return plugin_session
 
 
@@ -271,43 +231,25 @@ def get_visa_driver_plugin_session_initialization(
         ast.withitem: VISA driver plugin session initialization as a `withitem`.
     """
     if len(sessions_details[driver]) == 1:
-        plugin_session = ast.withitem(
-            context_expr=ast.Call(
-                func=ast.Attribute(
-                    value=ast.Name(id=SessionManagement._RESERVATION, ctx=ast.Load()),
-                    attr="initialize_session",
-                    ctx=ast.Load(),
-                ),
-                args=[
-                    ast.Name(id=SessionManagement._SESSION_CONSTRUCTOR, ctx=ast.Load()),
-                    ast.Name(id=SessionManagement._INSTRUMENT_TYPE, ctx=ast.Load()),
-                ],
-                keywords=[],
-            ),
-            optional_vars=ast.Name(
-                id=f"{driver}_{SessionManagement._SESSION_INFO}", ctx=ast.Store()
-            ),
-        )
+        attribute = "initialize_session"
 
-    elif len(sessions_details[driver]) > 1:
-        plugin_session = ast.withitem(
-            context_expr=ast.Call(
-                func=ast.Attribute(
-                    value=ast.Name(id=SessionManagement._RESERVATION, ctx=ast.Load()),
-                    attr="initialize_sessions",
-                    ctx=ast.Load(),
-                ),
-                args=[
-                    ast.Name(
-                        id=f"{driver}_{SessionManagement._SESSION_CONSTRUCTOR}", ctx=ast.Load()
-                    ),
-                    ast.Name(id=f"{driver}_{SessionManagement._INSTRUMENT_TYPE}", ctx=ast.Load()),
-                ],
-                keywords=[],
+    else:
+        attribute = "initialize_sessions"
+
+    plugin_session = ast.withitem(
+        context_expr=ast.Call(
+            func=ast.Attribute(
+                value=ast.Name(id=SessionManagement.RESERVATION, ctx=ast.Load()),
+                attr=attribute,
+                ctx=ast.Load(),
             ),
-            optional_vars=ast.Name(
-                id=f"{driver}_{SessionManagement._SESSION_INFO}", ctx=ast.Store()
-            ),
-        )
+            args=[
+                ast.Name(id=f"{driver}_{SessionManagement.SESSION_CONSTRUCTOR}", ctx=ast.Load()),
+                ast.Name(id=f"{driver}_{SessionManagement.INSTRUMENT_TYPE}", ctx=ast.Load()),
+            ],
+            keywords=[],
+        ),
+        optional_vars=ast.Name(id=f"{driver}_{SessionManagement.SESSION_INFO}", ctx=ast.Store()),
+    )
 
     return plugin_session

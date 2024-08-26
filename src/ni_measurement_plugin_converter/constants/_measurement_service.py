@@ -44,11 +44,11 @@ TYPE_DEFAULT_VALUES = {
 class SessionManagement:
     """Constants used in session management."""
 
-    _RESERVATION = "reservation"
-    _SESSION_INFO = "session_info"
-    _SESSION_CONSTRUCTOR = "session_constructor"
-    _INSTRUMENT_TYPE = "instrument_type"
-    NI_SESSION_DRIVERS = [
+    RESERVATION = "reservation"
+    SESSION_INFO = "session_info"
+    SESSION_CONSTRUCTOR = "session_constructor"
+    INSTRUMENT_TYPE = "instrument_type"
+    NI_DRIVERS = [
         "nidcpower",
         "nidmm",
         "nidigital",

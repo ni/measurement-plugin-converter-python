@@ -49,10 +49,10 @@ def manage_session(migrated_file_dir: str, function: str) -> str:
         )
 
     logger.info(UserMessage.ADD_RESERVE_SESSION)
-    reservation_added_code_tree = add_param(
+    reservation_added_code_tree = add_params(
         code_tree=code_tree,
         function=function,
-        param=SessionManagement._RESERVATION,
+        sessions_details=sessions_details,
     )
 
     plugin_session_initializations = get_plugin_session_initializations(
@@ -79,6 +79,36 @@ def manage_session(migrated_file_dir: str, function: str) -> str:
     logger.debug(DebugMessage.MIGRATED_FILE_MODIFIED)
 
     return sessions_details
+
+
+def add_params(
+    code_tree: ast.Module,
+    function: str,
+    sessions_details: Dict[str, List[str]],
+) -> ast.Module:
+    """Add parameters to user measurement function.
+
+    Args:
+        code_tree (ast.Module): Source code tree.
+        function (str): Measurement function name.
+        sessions_details (Dict[str, List[str]]): Session details.
+
+    Returns:
+        ast.Module: Parameters added code tree.
+    """
+    for driver in list(sessions_details.keys())[::-1]:
+        if driver in SessionManagement.NI_DRIVERS:
+            continue
+
+        code_tree = add_param(code_tree, function, f"{driver}_{SessionManagement.INSTRUMENT_TYPE}")
+
+        code_tree = add_param(
+            code_tree, function, f"{driver}_{SessionManagement.SESSION_CONSTRUCTOR}"
+        )
+
+    code_tree = add_param(code_tree, function, SessionManagement.RESERVATION)
+
+    return code_tree
 
 
 def add_param(code_tree: ast.Module, function: str, param: str) -> ast.Module:
@@ -139,7 +169,7 @@ def insert_session_assignment(
     Args:
         source_code (ast.Module): Migrated measurement source code tree.
         function (str): Measurement function name.
-        sessions_details (str): Sessions details.
+        sessions_details (Dict[str, List[str]]): Sessions details.
 
     Returns:
         ast.Module: Session assignment inserted source code tree.
@@ -152,7 +182,7 @@ def insert_session_assignment(
                     targets=[ast.Name(id=actual_session_names[0], ctx=ast.Store())],
                     value=ast.Attribute(
                         value=ast.Name(
-                            id=f"{driver}_{SessionManagement._SESSION_INFO}", ctx=ast.Load()
+                            id=f"{driver}_{SessionManagement.SESSION_INFO}", ctx=ast.Load()
                         ),
                         attr="session",
                         ctx=ast.Load(),
@@ -167,7 +197,7 @@ def insert_session_assignment(
                         targets=[ast.Name(id=actual_session_names[index], ctx=ast.Store())],
                         value=ast.Attribute(
                             value=ast.Name(
-                                id=f"{driver}_{SessionManagement._SESSION_INFO}[{index}]",
+                                id=f"{driver}_{SessionManagement.SESSION_INFO}[{index}]",
                                 ctx=ast.Load(),
                             ),
                             attr="session",

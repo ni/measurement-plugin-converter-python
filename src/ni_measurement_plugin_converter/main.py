@@ -1,4 +1,4 @@
-"""Implementation of command line interface and measurement plugin conversion."""
+"""Implementation of command line interface and measurement plug-in conversion."""
 
 import os
 import re
