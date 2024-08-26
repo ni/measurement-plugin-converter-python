@@ -1,21 +1,5 @@
 """Constants utilized in measurement file."""
 
-from enum import Enum
-
-
-class DriverSession(Enum):
-    """Instrument drivers' session."""
-
-    nidcpower = "nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER"
-    nidmm = "nims.session_management.INSTRUMENT_TYPE_NI_DMM"
-    nidigital = "nims.session_management.INSTRUMENT_TYPE_NI_DIGITAL_PATTERN"
-    nifgen = "nims.session_management.INSTRUMENT_TYPE_NI_FGEN"
-    niscope = "nims.session_management.INSTRUMENT_TYPE_NI_SCOPE"
-    niswitch = "nims.session_management.INSTRUMENT_TYPE_NI_RELAY_DRIVER"
-    nidaqmx = "nims.session_management.INSTRUMENT_TYPE_NI_DAQMX"
-    nivisa = "INSTRUMENT_TYPE_NI_VISA"
-
-
 # Python native data types and its corresponding `measurement_plugin_sdk_service` data types.
 NIMS_TYPE = {
     "int": "nims.DataType.Int64",
@@ -46,8 +30,10 @@ class SessionManagement:
 
     RESERVATION = "reservation"
     SESSION_INFO = "session_info"
+
     SESSION_CONSTRUCTOR = "session_constructor"
     INSTRUMENT_TYPE = "instrument_type"
+
     NI_DRIVERS = [
         "nidcpower",
         "nidmm",

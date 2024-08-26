@@ -4,96 +4,93 @@ import ast
 import re
 from typing import Dict, List
 
-from ni_measurement_plugin_converter.constants import SessionManagement
+from ni_measurement_plugin_converter.constants import ALPHANUMERIC_PATTERN, SessionManagement
 
 
-def get_sessions_details(code_tree: ast.Module, function: str) -> Dict[str, List[str]]:
+def get_sessions_details(function_node: ast.FunctionDef) -> Dict[str, List[str]]:
     """Get drivers used and its session variable.
 
     Args:
-        code_tree (ast.Module): Source code tree.
-        function (str): Measurement function name.
+        function_node (ast.FunctionDef): Measurement function code tree.
 
     Returns:
-        Dict[str, List[str]]: Drivers as keys and list of session instance variables.
+        Dict[str, List[str]]: Drivers as keys and list of session instance variables as values.
     """
-    drivers = {}
+    sessions_details = {}
 
-    for node in ast.walk(code_tree):
-        if isinstance(node, ast.FunctionDef) and node.name == function:
-            for child_node in ast.walk(node):
-                if (
-                    isinstance(child_node, ast.With)
-                    and hasattr(child_node, "items")
-                    and child_node.items
-                ):
-                    for item in child_node.items:
-                        if isinstance(item.context_expr, ast.Call):
-                            call = item.context_expr
+    for child_node in ast.walk(function_node):
+        if isinstance(child_node, ast.With) and hasattr(child_node, "items") and child_node.items:
+            sessions_details = __get_session_details(child_node)
+            break
 
-                            if instrument_is_supported_ni_drivers(call):
-                                if call.func.value.id not in drivers:
-                                    drivers[call.func.value.id] = [item.optional_vars.id]
-                                else:
-                                    drivers[call.func.value.id].append(item.optional_vars.id)
-
-                            elif instrument_is_visa_type(call):
-                                resource_name = get_resource_name(call)
-                                if resource_name not in drivers:
-                                    drivers[resource_name] = [item.optional_vars.id]
-                                else:
-                                    drivers[resource_name].append(item.optional_vars.id)
-
-                    break
-
-    return drivers
+    return sessions_details
 
 
-def get_plugin_session_initializations(
-    code_tree: ast.Module,
-    function: str,
-) -> Dict[str, List[ast.withitem]]:
-    """Get plugin session initialization.
+def __get_session_details(child_node: ast.With) -> Dict[str, List[str]]:
+    sessions_details = {}
 
-    1. Create session initialization `withitems` for NI drivers.
-    2. Create session initialization `withitems` for VISA type.
+    for item in child_node.items:
+        if isinstance(item.context_expr, ast.Call):
+            call = item.context_expr
+
+            if instrument_is_supported_ni_drivers(call):
+                if call.func.value.id not in sessions_details:
+                    sessions_details[call.func.value.id] = [item.optional_vars.id]
+                else:
+                    sessions_details[call.func.value.id].append(item.optional_vars.id)
+
+            elif instrument_is_visa_type(call):
+                resource_name = get_resource_name(call)
+
+                if resource_name not in sessions_details:
+                    sessions_details[resource_name] = [item.optional_vars.id]
+                else:
+                    sessions_details[resource_name].append(item.optional_vars.id)
+
+    return sessions_details
+
+
+def get_plugin_session_initializations(function_node: ast.Module) -> Dict[str, List[ast.withitem]]:
+    """Get plugin session initializations.
+
+    1. Create session initialization `withitem` for NI drivers.
+    2. Create session initialization `withitem` for VISA type.
 
     Args:
-        code_tree (ast.Module): Source code tree.
-        function (str): Measurement function name.
+        function_node (ast.FunctionDef): Measurement function code tree.
 
     Returns:
-        Dict[str, List[ast.withitem]]: Drivers and their respective withitems.
+        Dict[str, List[ast.withitem]]: Drivers as keys and their respective `withitems` as values.
     """
     session_initializations = {}
 
-    for node in ast.walk(code_tree):
-        if isinstance(node, ast.FunctionDef) and node.name == function:
-            for child_node in ast.walk(node):
-                if (
-                    isinstance(child_node, ast.With)
-                    and hasattr(child_node, "items")
-                    and child_node.items
-                ):
-                    for item in child_node.items:
-                        if isinstance(item.context_expr, ast.Call):
-                            call = item.context_expr
-                            if (
-                                instrument_is_supported_ni_drivers(call)
-                                and call.func.value.id not in session_initializations
-                            ):
-                                session_initializations[call.func.value.id] = (
-                                    get_ni_driver_session_initialization(call.func.value.id)
-                                )
-                            elif (
-                                instrument_is_visa_type(call)
-                                and get_resource_name(call) not in session_initializations
-                            ):
-                                resource_name = get_resource_name(call)
-                                session_initializations[resource_name] = (
-                                    get_visa_driver_plugin_session_initialization(resource_name)
-                                )
-                    break
+    for child_node in ast.walk(function_node):
+        if isinstance(child_node, ast.With) and hasattr(child_node, "items") and child_node.items:
+            for item in child_node.items:
+                if isinstance(item.context_expr, ast.Call):
+                    session_initializations.update(
+                        __get_plugin_session_initializations(item.context_expr)
+                    )
+
+    return session_initializations
+
+
+def __get_plugin_session_initializations(call: ast.Call) -> Dict[str, List[ast.withitem]]:
+    session_initializations = {}
+
+    if (
+        instrument_is_supported_ni_drivers(call)
+        and call.func.value.id not in session_initializations
+    ):
+        session_initializations[call.func.value.id] = get_ni_driver_session_initialization(
+            call.func.value.id
+        )
+
+    elif instrument_is_visa_type(call) and get_resource_name(call) not in session_initializations:
+        resource_name = get_resource_name(call)
+        session_initializations[resource_name] = get_visa_driver_plugin_session_initialization(
+            resource_name
+        )
 
     return session_initializations
 
@@ -146,7 +143,7 @@ def get_resource_name(call: ast.Call) -> str:
 
     1. Get `resource_name` if it is a keyword argument.
     2. If it is an argument, use the first argument as `resource_name`.
-    3. Filter `resource_name` by having only alphanumeric characters.
+    3. Sanitize `resource_name` to have only alphanumeric characters.
 
     Args:
         call (ast.Call): Function call code tree.
@@ -164,7 +161,7 @@ def get_resource_name(call: ast.Call) -> str:
     if resource_name is None and call.args and len(call.args) > 0:
         resource_name = ast.literal_eval(call.args[0])
 
-    resource_name = re.sub(r"[^a-zA-Z0-9]", "_", resource_name)
+    resource_name = re.sub(ALPHANUMERIC_PATTERN, "_", resource_name)
 
     return resource_name
 

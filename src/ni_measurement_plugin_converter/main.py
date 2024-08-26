@@ -11,6 +11,7 @@ from mako.exceptions import CompileException, TemplateLookupException
 
 from ni_measurement_plugin_converter import __version__
 from ni_measurement_plugin_converter.constants import (
+    ALPHANUMERIC_PATTERN,
     CONTEXT_SETTINGS,
     DEBUG_LOGGER,
     MEASUREMENT_VERSION,
@@ -33,8 +34,8 @@ from ni_measurement_plugin_converter.utils import (
     generate_input_params,
     generate_input_signature,
     generate_output_signature,
-    get_measurement_function,
-    get_visa_params,
+    get_function_node,
+    get_param_str,
     initialize_logger,
     manage_session,
     print_log_file_location,
@@ -85,7 +86,7 @@ def run(
         logger.debug(DebugMessage.FILE_MIGRATED)
 
         logger.debug(DebugMessage.GET_FUNCTION)
-        function_node = get_measurement_function(measurement_file_dir, function)
+        function_node = get_function_node(file_dir=measurement_file_dir, function=function)
 
         logger.info(UserMessage.EXTRACT_INPUT_INFO)
 
@@ -100,9 +101,9 @@ def run(
 
         # Manage session.
         params = manage_session(migrated_file_dir, function)
-        visa_params = get_visa_params(params)
+        visa_params = get_param_str(params)
 
-        sanitized_display_name = re.sub(r"[^a-zA-Z0-9]", "_", display_name)
+        sanitized_display_name = re.sub(ALPHANUMERIC_PATTERN, "_", display_name)
         service_class = f"{sanitized_display_name}_Python"
 
         create_file(

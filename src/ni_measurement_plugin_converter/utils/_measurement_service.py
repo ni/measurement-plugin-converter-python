@@ -3,7 +3,7 @@
 import ast
 from typing import Union
 
-from ni_measurement_plugin_converter.constants import NIMS_TYPE, DriverSession
+from ni_measurement_plugin_converter.constants import NIMS_TYPE
 
 
 def get_nims_datatype(python_native_data_type: str) -> str:
@@ -17,21 +17,6 @@ def get_nims_datatype(python_native_data_type: str) -> str:
     """
     try:
         return NIMS_TYPE[python_native_data_type]
-    except (KeyError, TypeError):
-        pass
-
-
-def get_nims_instrument(instrument_type: str) -> str:
-    """Get `measurement_plugin_sdk_service` instruments.
-
-    Args:
-        instrument_type (str): Instrument type.
-
-    Returns:
-        str: Corresponding `measurement_plugin_sdk_service` instrument.
-    """
-    try:
-        return DriverSession[instrument_type].value
     except (KeyError, TypeError):
         pass
 
