@@ -29,6 +29,6 @@ class UserMessage:
 
     RENDER_TEMPLATE_ERROR = "Error occurred while rendering measui template."
 
-    ERROR_OCCURRED = "Error occurred. Please the log file at {log_file}"
+    ERROR_OCCURRED = "Error occurred. Please find the log file at {log_file}"
     ABORTED = "Aborted!"
     PROCESS_COMPLETED = "Process completed."

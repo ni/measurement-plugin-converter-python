@@ -64,7 +64,6 @@ def run(output_dir: Path) -> None:
                 input_output_elements=input_elements + output_elements,
             )
             logger.info(UserMessage.CREATED_UI.format(filepath=f"{measui_path}.measui"))
-            raise Exception
 
     except InvalidCliInputError as error:
         logger.error(error)
