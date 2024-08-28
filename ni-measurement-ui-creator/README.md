@@ -31,8 +31,8 @@
 - Numeric Control
 - Numeric Array Input
 - Numeric Array Output
-- Toggle Image Button
-- Toggle Image Indicator
+- Horizontal Slider
+- Round LED
 - String Control
 - String Indicator
 - Pin

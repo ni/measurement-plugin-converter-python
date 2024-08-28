@@ -22,7 +22,7 @@ from ni_measurement_ui_creator.utils._helpers import (
 # Any unique id will work.
 client_id = uuid.uuid4()
 
-toggle_image_buttons = create_control_elements(
+boolean_hortizontal_sliders = create_control_elements(
     inputs=[
         DataElement(
             client_id=client_id,
@@ -44,7 +44,7 @@ toggle_image_buttons = create_control_elements(
     ]
 )
 
-toggle_image_indicators = create_indicator_elements(
+boolean_leds = create_indicator_elements(
     outputs=[
         DataElement(
             client_id=client_id,
@@ -74,9 +74,9 @@ toggle_image_indicators = create_indicator_elements(
 
 # Create a .measui file.
 create_measui(
-    filepath="toggle_image_buttons_indicators",
-    input_output_elements=toggle_image_buttons + toggle_image_indicators,
+    filepath="boolean_elements",
+    input_output_elements=boolean_hortizontal_sliders + boolean_leds,
 )
 
-print(toggle_image_buttons, toggle_image_indicators, sep="\n\n---------------\n\n")
+print(boolean_hortizontal_sliders, boolean_leds, sep="\n\n---------------\n\n")
 print("\nMeasUI File Created")

@@ -20,14 +20,15 @@ class UserMessage:
     AVAILABLE_MEASUREMENTS = "Available services:"
 
     INVALID_MEASUREMENT_CHOICE = "Invalid measurement plug-in selected."
-    SELECT_MEASUREMENT = "Select a measurement service index ({start}-{end})\
- to generate measui file: "
+    SELECT_MEASUREMENT = (
+        "Select a measurement service index ({start}-{end}) to generate measui file: "
+    )
 
     CREATED_UI = "Measurement UI created successfully at {filepath}"
     CREATING_FILE = "Creating Measurement UI..."
 
     RENDER_TEMPLATE_ERROR = "Error occurred while rendering measui template."
 
-    ERROR_OCCURRED = "Error occurred. Please find more details in log file."
+    ERROR_OCCURRED = "Error occurred. Please the log file at {log_file}"
     ABORTED = "Aborted!"
     PROCESS_COMPLETED = "Process completed."

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## NI Measurement UI Creator
 
+## [1.0.0-dev7] - 2024-08-28
+
+### Changed
+
+- Boolean control and indicator UI components to Horizontal Slider and Round LED.
+
 ## [1.0.0-dev6] - 2024-08-23
 
 ### Changed

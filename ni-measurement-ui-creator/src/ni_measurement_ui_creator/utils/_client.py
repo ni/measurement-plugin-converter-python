@@ -89,7 +89,12 @@ def get_measurement_selection(total_measurements: int) -> int:
     """
     try:
         user_input = int(
-            input(UserMessage.SELECT_MEASUREMENT.format(start=1, end=total_measurements))
+            input(
+                UserMessage.SELECT_MEASUREMENT.format(
+                    start=1,
+                    end=total_measurements,
+                )
+            )
         )
 
         if user_input not in list(range(1, total_measurements + 1)):
@@ -135,7 +140,7 @@ def get_measurement_service_stub(
         logger (Logger): Logger object.
 
     Returns:
-        Union[v2_measurement_service_pb2_grpc.MeasurementServiceStub, v1_measurement_service_pb2_grpc.MeasurementServiceStub: Measurement services. # noqa: W505
+        Union[v2_measurement_service_pb2_grpc.MeasurementServiceStub, v1_measurement_service_pb2_grpc.MeasurementServiceStub]: Measurement services. # noqa: W505
     """
     available_services = get_active_measurement_services(discovery_client)
 
