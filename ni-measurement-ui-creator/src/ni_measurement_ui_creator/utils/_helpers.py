@@ -23,8 +23,8 @@ from ni_measurement_ui_creator.utils._string_elements import (
     create_string_indicator,
 )
 from ni_measurement_ui_creator.utils._toggle_elements import (
-    create_toggle_image_button,
-    create_toggle_image_indicator,
+    create_horizontal_slider,
+    create_boolean_led,
 )
 
 
@@ -44,7 +44,7 @@ def create_control_elements(inputs: List[DataElement]) -> str:
             input_elements += create_numeric_array_control(data_element)
 
         elif data_element.value_type == DataType.Boolean.name:
-            input_elements += create_toggle_image_button(data_element)
+            input_elements += create_horizontal_slider(data_element)
 
         elif data_element.value_type == DataType.String.name and not data_element.is_array:
             input_elements += create_string_control(data_element)
@@ -77,7 +77,7 @@ def create_indicator_elements(outputs: List[DataElement]) -> str:
             output_elements += create_numeric_array_indicator(output)
 
         elif output.value_type == DataType.Boolean.name:
-            output_elements += create_toggle_image_indicator(output)
+            output_elements += create_boolean_led(output)
 
         elif output.value_type == DataType.String.name and not output.is_array:
             output_elements += create_string_indicator(output)

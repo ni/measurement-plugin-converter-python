@@ -36,7 +36,7 @@ def create_numeric_control(element_parameter: DataElement) -> str:
 
     label = create_label(
         element_parameter=LabelElement(
-            id=shared_id,
+            id=element_id,
             shared_id=shared_id,
             name=element_parameter.name,
             left_alignment=element_parameter.left_alignment,
@@ -73,7 +73,7 @@ def create_numeric_indicator(element_parameter: DataElement) -> str:
 
     label = create_label(
         element_parameter=LabelElement(
-            id=shared_id,
+            id=element_id,
             shared_id=shared_id,
             name=element_parameter.name,
             left_alignment=element_parameter.left_alignment,

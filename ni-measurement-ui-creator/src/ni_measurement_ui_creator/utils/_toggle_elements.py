@@ -10,26 +10,21 @@ from ni_measurement_ui_creator.models import DataElement, LabelElement
 from ni_measurement_ui_creator.utils._common_elements import create_label, get_unique_id
 
 
-def create_toggle_image_button(element_parameter: DataElement) -> str:
-    """Create `Toggle Image Button` MeasUI Element.
+def create_horizontal_slider(element_parameter: DataElement) -> str:
+    """Create `Horizontal Slider` MeasUI Element.
 
     Args:
-        element_parameter (DataElement): Toggle Image Button Element Parameters.
+        element_parameter (DataElement): Horizontal Slider Element Parameters.
 
     Returns:
-        str: MeasUI Toggle Image Button Element.
+        str: MeasUI Horizontal Slider Element.
     """
-    true_image_id = get_unique_id()
-    false_image_id = get_unique_id()
-
     shared_id = get_unique_id()
     label_id = get_unique_id()
 
-    toggle_image_button = MeasUIElement.TOGGLE_IMAGE_BUTTON.format(
+    boolean_horizontal_slider = MeasUIElement.BOOLEAN_HORIZONTAL_SLIDER.format(
         client_id=element_parameter.client_id,
         name=element_parameter.name,
-        false_image_id=false_image_id,
-        true_image_id=true_image_id,
         label_id=label_id,
         shared_id=shared_id,
         left_value=element_parameter.left_alignment,
@@ -48,29 +43,24 @@ def create_toggle_image_button(element_parameter: DataElement) -> str:
         )
     )
 
-    return toggle_image_button + label
+    return boolean_horizontal_slider + label
 
 
-def create_toggle_image_indicator(element_parameter: DataElement) -> str:
-    """Create `Toggle Image Indicator` MeasUI Element.
+def create_boolean_led(element_parameter: DataElement) -> str:
+    """Create `Round LED` MeasUI Element.
 
     Args:
-        element_parameter (DataElement): Toggle Image Indicator Element Parameters.
+        element_parameter (DataElement): Round LED Element Parameters.
 
     Returns:
-        str: MeasUI Toggle Image Indicator Element.
+        str: MeasUI Round LED Element.
     """
-    true_image_id = get_unique_id()
-    false_image_id = get_unique_id()
-
     shared_id = get_unique_id()
     label_id = get_unique_id()
 
-    toggle_image_button = MeasUIElement.TOGGLE_IMAGE_INDICATOR.format(
+    boolean_led = MeasUIElement.BOOLEAN_LED.format(
         client_id=element_parameter.client_id,
         name=element_parameter.name,
-        false_image_id=false_image_id,
-        true_image_id=true_image_id,
         label_id=label_id,
         shared_id=shared_id,
         left_value=element_parameter.left_alignment,
@@ -89,42 +79,40 @@ def create_toggle_image_indicator(element_parameter: DataElement) -> str:
         )
     )
 
-    return toggle_image_button + label
+    return boolean_led + label
 
 
-def create_toggle_image_buttons(elements_parameter: List[DataElement]) -> str:
-    """Create Multiple `Toggle Image Button` MeasUI Elements.
+def create_horizontal_sliders(elements_parameter: List[DataElement]) -> str:
+    """Create Multiple `Hortizontal Slider` MeasUI Elements.
 
     Args:
-        elements_parameter (List[DataElement]): List of Toggle Image Button Element \
-            Parameters.
+        elements_parameter (List[DataElement]): List of Horizontal Slider Element Parameters.
 
     Returns:
-        str: MeasUI Toggle Image Button Elements.
+        str: MeasUI Horizontal Slider Elements.
     """
-    toggle_image_buttons = ""
+    boolean_horizontal_sliders = ""
     top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
 
     for element_parameter in elements_parameter:
         element_parameter.top_alignment = top_alignment
         top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
-        toggle_image_buttons += create_toggle_image_button(element_parameter=element_parameter)
+        boolean_horizontal_sliders += create_horizontal_slider(element_parameter=element_parameter)
 
-    return toggle_image_buttons
+    return boolean_horizontal_sliders
 
 
-def create_toggle_image_indicators(elements_parameter: List[DataElement]) -> str:
-    """Create Multiple `Toggle Image Indicator` MeasUI Elements.
+def create_boolean_leds(elements_parameter: List[DataElement]) -> str:
+    """Create Multiple `Round LED` MeasUI Elements.
 
     Args:
-        elements_parameter (List[DataElement]): List of Toggle Image Indicator Element \
-            Parameters.
+        elements_parameter (List[DataElement]): List of Round LED Element Parameters.
 
     Returns:
-        str: MeasUI Toggle Image Indicator Elements.
+        str: MeasUI Round LED Elements.
     """
-    toggle_image_indicators = ""
+    boolean_leds = ""
     top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
 
     for element_parameter in elements_parameter:
@@ -135,8 +123,6 @@ def create_toggle_image_indicators(elements_parameter: List[DataElement]) -> str
         element_parameter.top_alignment = top_alignment
         top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
-        toggle_image_indicators += create_toggle_image_indicator(
-            element_parameter=element_parameter
-        )
+        boolean_leds += create_boolean_led(element_parameter=element_parameter)
 
-    return toggle_image_indicators
+    return boolean_leds

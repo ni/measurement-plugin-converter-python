@@ -66,11 +66,11 @@ def run(output_dir: Path) -> None:
             logger.info(UserMessage.CREATED_UI.format(filepath=f"{measui_path}.measui"))
 
     except InvalidCliInputError as error:
-        logger.warning(error)
+        logger.error(error)
 
     except Exception as error:
         logger.debug(error, exc_info=True)
-        logger.warning(UserMessage.ERROR_OCCURRED)
+        logger.error(UserMessage.ERROR_OCCURRED.format(log_file=logger.handlers[0].baseFilename))
 
     finally:
         logger.info(UserMessage.PROCESS_COMPLETED)

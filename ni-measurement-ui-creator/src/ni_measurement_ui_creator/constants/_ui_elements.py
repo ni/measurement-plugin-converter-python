@@ -9,14 +9,14 @@ CLIENT_ID = uuid.uuid4()
 class MeasUIElement:
     """Measurement UI Elements."""
 
-    NUMERIC_CONTROL = '<ChannelNumericText AdaptsToType="[bool]True" Channel="[string]{client_id}/Configuration/{name}" Height="[float]{height}" Id="{element_id}" Label="[UIModel]{shared_id}" Left="[float]{left_value}" TabIndex="[int]0" Top="[float]{top_value}" Width="[float]{width}" ValueType="[Type]{value_type}"/>'
-    NUMERIC_INDICATOR = '<ChannelNumericText AdaptsToType="[bool]True" Channel="[string]{client_id}/Output/{name}" Height="[float]{height}" Id="{element_id}" IsReadOnly="[bool]True" Label="[UIModel]{shared_id}" Left="[float]{left_value}" TabIndex="[int]2" Top="[float]{top_value}" ValueType="[Type]{value_type}" Width="[float]{width}" />'
+    NUMERIC_CONTROL = '<ChannelNumericText AdaptsToType="[bool]True" Channel="[string]{client_id}/Configuration/{name}" Height="[float]{height}" Id="{shared_id}" Label="[UIModel]{element_id}" Left="[float]{left_value}" TabIndex="[int]0" Top="[float]{top_value}" Width="[float]{width}" ValueType="[Type]{value_type}"/>'
+    NUMERIC_INDICATOR = '<ChannelNumericText AdaptsToType="[bool]True" Channel="[string]{client_id}/Output/{name}" Height="[float]{height}" Id="{shared_id}" IsReadOnly="[bool]True" Label="[UIModel]{element_id}" Left="[float]{left_value}" TabIndex="[int]2" Top="[float]{top_value}" ValueType="[Type]{value_type}" Width="[float]{width}" />'
 
     NUMERIC_ARRAY_INPUT = '<ChannelArrayViewer AdaptsToType="[bool]True" ArrayElement="[UIModel]{array_element_id}" Channel="[string]{client_id}/Configuration/{name}" Columns="[int]1" Dimensions="[int]1" Height="[float]120" Id="{shared_id}" IndexVisibility="[Visibility]Collapsed" Label="[UIModel]{label_id}" Left="[float]{left_value}" Orientation="[SMOrientation]Vertical" Rows="[int]{rows}" TabIndex="[int]0" Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Visible" Width="[float]104"><p.DefaultElementValue>0</p.DefaultElementValue><ChannelArrayNumericText Height="[float]{height}" Id="{array_element_id}" ValueFormatter="[string]LV:G5" ValueType="[Type]{value_type}" Width="[float]{width}" /></ChannelArrayViewer>'
     NUMERIC_ARRAY_OUTPUT = '<ChannelArrayViewer AdaptsToType="[bool]True" ArrayElement="[UIModel]{array_element_id}" Channel="[string]{client_id}/Output/{name}" Columns="[int]1" Dimensions="[int]1" Height="[float]120" Id="{shared_id}" IndexVisibility="[Visibility]Collapsed" Label="[UIModel]{label_id}" Left="[float]{left_value}" Orientation="[SMOrientation]Vertical" Rows="[int]{rows}" TabIndex="[int]0" Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Visible" Width="[float]104"><p.DefaultElementValue>0</p.DefaultElementValue><ChannelArrayNumericText Height="[float]{height}" Id="{array_element_id}" IsReadOnly="[bool]True" ValueFormatter="[string]LV:G5" ValueType="[Type]{value_type}" Width="[float]{width}" /></ChannelArrayViewer>'
 
-    TOGGLE_IMAGE_BUTTON = '<ChannelImageButton BaseName="[string]Toggle Images Button" Channel="[string]{client_id}/Configuration/{name}" FalseImage="[UIModel]{false_image_id}" Height="[float]{height}" Id="{shared_id}" IncludeInCapture="[bool]False" IsMomentary="[bool]False" Label="[UIModel]{label_id}" Left="[float]{left_value}" Top="[float]{top_value}" TrueImage="[UIModel]{true_image_id}" Width="[float]{width}"> <Image BaseName="[string]Image" Id="{true_image_id}" Left="[float]0" Source="[string]pack://application:,,,/NationalInstruments.Hmi.Core;component/Resources/ImageButtonTrue_40x40.xml" Stretch="[SMStretch]Fill" Top="[float]0" xmlns="http://www.ni.com/PlatformFramework" /> <Image BaseName="[string]Image" Id="{false_image_id}" Left="[float]0" Source="[string]pack://application:,,,/NationalInstruments.Hmi.Core;component/Resources/ImageButtonFalse_40x40.xml" Stretch="[SMStretch]Fill" Top="[float]0" xmlns="http://www.ni.com/PlatformFramework"/></ChannelImageButton>'
-    TOGGLE_IMAGE_INDICATOR = '<ChannelImageButton BaseName="[string]Toggle Images Indicator" Channel="[string]{client_id}/Output/{name}" FalseImage="[UIModel]{false_image_id}" Height="[float]{height}" Id="{shared_id}" IncludeInCapture="[bool]False" IsMomentary="[bool]False" IsReadOnly="[bool]True" Label="[UIModel]{label_id}" Left="[float]{left_value}" Top="[float]{top_value}" TrueImage="[UIModel]{true_image_id}" Width="[float]{width}"><Image BaseName="[string]Image" Id="{true_image_id}" Left="[float]0" Source="[string]pack://application:,,,/NationalInstruments.Hmi.Core;component/Resources/ImageButtonTrue_40x40.xml" Stretch="[SMStretch]Fill" Top="[float]0" xmlns="http://www.ni.com/PlatformFramework" /><Image BaseName="[string]Image" Id="{false_image_id}" Left="[float]0" Source="[string]pack://application:,,,/NationalInstruments.Hmi.Core;component/Resources/ImageButtonFalse_40x40.xml" Stretch="[SMStretch]Fill" Top="[float]0" xmlns="http://www.ni.com/PlatformFramework"/></ChannelImageButton>'
+    BOOLEAN_HORIZONTAL_SLIDER = '<ChannelSwitch BaseName="[string]Switch" Channel="[string]{client_id}/Configuration/{name}" Enabled="[bool]True" FalseContent="[string]Off" Height="[float]{height}" Id="{shared_id}" IsReadOnly="[bool]False" Label="[UIModel]{label_id}" Left="[float]{left_value}" MinHeight="[float]5" MinWidth="[float]5" Orientation="[SMOrientation]Horizontal" Shape="[SwitchShape]Slider" Top="[float]{top_value}" TrueContent="[string]On" Width="[float]{width}" />'
+    BOOLEAN_LED = '<ChannelLED BaseName="[string]Round LED" Channel="[string]{client_id}/Output/{name}" ContentVisibility="[Visibility]Collapsed" FalseContent="[string]Off" Height="[float]{height}" Id="{shared_id}" IsReadOnly="[bool]True" Label="[UIModel]{label_id}" Left="[float]{left_value}" MinHeight="[float]5" MinWidth="[float]5" Shape="[LEDShape]Round" Top="[float]{top_value}" TrueContent="[string]On" Width="[float]{width}" />'
 
     STRING_CONTROL = '<ChannelStringControl AcceptsReturn="[bool]False" BaseName="[string]String" Channel="[string]{client_id}/Configuration/{name}" Enabled="[bool]True" Height="[float]{height}" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" Id="{shared_id}" Label="[UIModel]{label_id}" Left="[float]{left_value}" Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" Width="[float]{width}" />'
     STRING_INDICATOR = '<ChannelStringControl AcceptsReturn="[bool]False" BaseName="[string]String" Channel="[string]{client_id}/Output/{name}" Height="[float]{height}" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" Id="{shared_id}" IsReadOnly="[bool]True" Label="[UIModel]{label_id}" Left="[float]{left_value}" Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" Width="[float]{width}" />'
@@ -45,8 +45,11 @@ class MeasUIElementPosition:
 
     DEFAULT_ARRAY_ROWS = 3
 
-    BOOLEAN_HEIGHT = 45
-    BOOLEAN_WIDTH = 45
+    BOOLEAN_HORIZONTAL_SLIDER_HEIGHT = 35
+    BOOLEAN_HORIZONTAL_SLIDER_WIDTH = 70
+
+    BOOLEAN_LED_HEIGHT = 35
+    BOOLEAN_LED_WIDTH = 35
 
     ARRAY_HEIGHT = 25
     ARRAY_WIDTH = 90
@@ -96,8 +99,8 @@ SUPPORTED_UI_ELEMENTS = [
     "Numeric Control",
     "Numeric Array Input",
     "Numeric Array Output",
-    "Toggle Image Button",
-    "Toggle Image Indicator",
+    "Boolean Horizontal Slider",
+    "Boolean Round LED",
     "String Control",
     "String Indicator",
     "Pin",
