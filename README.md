@@ -40,10 +40,10 @@ Options:
 
 ### Note
 
-The user measurement should
+The Python measurement should
 - Contain a measurement function which should
-  - Contain a return value.
+  - Contain a return value. The return value should be a variable and not a direct function call or constant value.
   - Have properly type hinted inputs and outputs.
   - Use one of the supported drivers.
-- Initialize the instrument driver's session inside the measurement function.
-- Initialize the instrument driver's session using the context manager `with`.
+- Initialize the instrument driver's session inside the measurement function and within the next level of indentation.
+- All the driver’s session must be initialized at a single point using context manager `with` in Python.
