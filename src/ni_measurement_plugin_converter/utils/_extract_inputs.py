@@ -6,7 +6,6 @@ from typing import Dict, List, Union
 
 from ni_measurement_plugin_converter.constants import DEBUG_LOGGER, TYPE_DEFAULT_VALUES, UserMessage
 from ni_measurement_plugin_converter.models import InputInfo
-
 from ._measurement_service import extract_type, get_nims_datatype
 
 PYTHON_DATATYPE = "python datatype"

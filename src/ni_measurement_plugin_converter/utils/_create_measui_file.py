@@ -21,6 +21,10 @@ from ni_measurement_plugin_converter.constants import PIN_NAMES, SUPPORTED_NIMS_
 from ni_measurement_plugin_converter.models import InputInfo, OutputInfo
 
 
+_REDUCTION_IN_HEIGHT = 20
+_ADDITION_IN_HEIGHT_AFTER_PIN = 5
+
+
 def get_input_data_elements(inputs: List[InputInfo]) -> List[DataElement]:
     """Get input data elements for creating `measui` file.
 
@@ -43,9 +47,10 @@ def get_input_data_elements(inputs: List[InputInfo]) -> List[DataElement]:
     top_alignment = (
         MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
         + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+        + _ADDITION_IN_HEIGHT_AFTER_PIN
     )
 
-    for index, input_info in enumerate(inputs):
+    for input_info in inputs:
         value_type = input_info.nims_type.split(".")[2]
         is_array = False
 
@@ -55,21 +60,12 @@ def get_input_data_elements(inputs: List[InputInfo]) -> List[DataElement]:
         if value_type not in SUPPORTED_NIMS_DATATYPES:
             continue
 
-        if index > 0 and inputs[index - 1].nims_type.split(".")[2] == nims.DataType.Boolean.name:
-            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
-
-        if index > 0 and inputs[index - 1].nims_type.split(".")[2] in [
-            nims.DataType.Int64Array1D.name,
-            nims.DataType.DoubleArray1D.name,
-        ]:
-            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 3.5
-
         if value_type == nims.DataType.Double.name:
             value_type = DataType.Double.name
 
         elif value_type == nims.DataType.Boolean.name:
-            height = MeasUIElementPosition.BOOLEAN_HEIGHT
-            width = MeasUIElementPosition.BOOLEAN_WIDTH
+            height = MeasUIElementPosition.BOOLEAN_HORIZONTAL_SLIDER_HEIGHT
+            width = MeasUIElementPosition.BOOLEAN_HORIZONTAL_SLIDER_WIDTH
 
         elif value_type == nims.DataType.Int64Array1D.name:
             value_type = DataType.Int64.name
@@ -97,7 +93,20 @@ def get_input_data_elements(inputs: List[InputInfo]) -> List[DataElement]:
                 is_array=is_array,
             )
         )
-        top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+
+        top_alignment += (
+            MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+            + (
+                height * 3.5
+                if input_info.nims_type.split(".")[2]
+                in [
+                    nims.DataType.Int64Array1D.name,
+                    nims.DataType.DoubleArray1D.name,
+                ]
+                else height
+            )
+            - _REDUCTION_IN_HEIGHT
+        )
 
     return input_data_elements
 
@@ -115,13 +124,14 @@ def get_output_data_elements(outputs: List[OutputInfo]) -> List[DataElement]:
     top_alignment = (
         MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
         + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+        + _ADDITION_IN_HEIGHT_AFTER_PIN
     )
     left_alignment = (
         MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
         + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
     )
 
-    for index, output in enumerate(outputs):
+    for output in outputs:
         value_type = output.nims_type.split(".")[2]
         is_array = False
 
@@ -131,21 +141,12 @@ def get_output_data_elements(outputs: List[OutputInfo]) -> List[DataElement]:
         if value_type not in SUPPORTED_NIMS_DATATYPES:
             continue
 
-        if index > 0 and outputs[index - 1].nims_type.split(".")[2] == nims.DataType.Boolean.name:
-            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
-
-        if index > 0 and outputs[index - 1].nims_type.split(".")[2] in [
-            nims.DataType.Int64Array1D.name,
-            nims.DataType.DoubleArray1D.name,
-        ]:
-            top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 3.5
-
         if value_type == nims.DataType.Double.name:
             value_type = DataType.Double.name
 
         elif value_type == nims.DataType.Boolean.name:
-            height = MeasUIElementPosition.BOOLEAN_HEIGHT
-            width = MeasUIElementPosition.BOOLEAN_WIDTH
+            height = MeasUIElementPosition.BOOLEAN_LED_HEIGHT
+            width = MeasUIElementPosition.BOOLEAN_LED_WIDTH
 
         elif value_type == nims.DataType.Int64Array1D.name:
             value_type = DataType.Int64.name
@@ -173,7 +174,19 @@ def get_output_data_elements(outputs: List[OutputInfo]) -> List[DataElement]:
                 is_array=is_array,
             )
         )
-        top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+        top_alignment += (
+            MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+            + (
+                height * 3.5
+                if output.nims_type.split(".")[2]
+                in [
+                    nims.DataType.Int64Array1D.name,
+                    nims.DataType.DoubleArray1D.name,
+                ]
+                else height
+            )
+            - _REDUCTION_IN_HEIGHT
+        )
 
     return output_data_elements
 

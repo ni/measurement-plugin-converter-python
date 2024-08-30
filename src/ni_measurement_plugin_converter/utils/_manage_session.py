@@ -16,7 +16,6 @@ from ni_measurement_plugin_converter.constants import (
 )
 from ni_measurement_plugin_converter.models import UnsupportedDriverError
 from ni_measurement_plugin_converter.utils import get_function_node
-
 from ._manage_session_helper import get_plugin_session_initializations, get_sessions_details
 
 

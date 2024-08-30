@@ -7,7 +7,6 @@ from typing import Any, List, Tuple
 
 from ni_measurement_plugin_converter.constants import DEBUG_LOGGER, UserMessage
 from ni_measurement_plugin_converter.models import OutputInfo
-
 from ._measurement_service import extract_type, get_nims_datatype
 
 
