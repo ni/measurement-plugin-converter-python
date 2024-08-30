@@ -33,7 +33,7 @@ def __get_session_details(child_node: ast.With) -> Dict[str, List[str]]:
         if isinstance(item.context_expr, ast.Call):
             call = item.context_expr
 
-            if instrument_is_supported_ni_drivers(call):
+            if ni_drivers_supported_instrument(call):
                 if call.func.value.id not in sessions_details:
                     sessions_details[call.func.value.id] = [item.optional_vars.id]
                 else:
@@ -79,7 +79,7 @@ def __get_plugin_session_initializations(call: ast.Call) -> Dict[str, List[ast.w
     session_initializations = {}
 
     if (
-        instrument_is_supported_ni_drivers(call)
+        ni_drivers_supported_instrument(call)
         and call.func.value.id not in session_initializations
     ):
         session_initializations[call.func.value.id] = get_ni_driver_session_initialization(
@@ -95,7 +95,7 @@ def __get_plugin_session_initializations(call: ast.Call) -> Dict[str, List[ast.w
     return session_initializations
 
 
-def instrument_is_supported_ni_drivers(call: ast.Call) -> bool:
+def ni_drivers_supported_instrument(call: ast.Call) -> bool:
     """Check if the instrument used is one of the supported NI drivers.
 
     Args:

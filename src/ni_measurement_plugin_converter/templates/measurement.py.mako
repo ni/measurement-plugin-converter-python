@@ -36,23 +36,36 @@ measurement_service = nims.MeasurementService(
 % if not iterable_outputs and not visa_params:
 def measure(pin_names: Iterable[str], ${input_signature}) -> Iterable[Union[${output_signature}]]:
     with measurement_service.context.reserve_sessions(pin_names) as reservation:
-        return (${function_name}(reservation=reservation, ${input_param_names}),)
+        # update sessions_and_resources with session variables and its corresponding resource names.
+        # Example sessions_and_resources = {'dcpower_session': 'DCPower', 'dmm_session': 'DMM'}
+        sessions_and_resources = {}
+        return (${function_name}(reservation=reservation, sessions_and_resources=sessions_and_resources, ${input_param_names}),)
 
 % elif not iterable_outputs and visa_params:
 def measure(pin_names: Iterable[str], ${input_signature}) -> Iterable[Union[${output_signature}]]:
     with measurement_service.context.reserve_sessions(pin_names) as reservation:
+        # update sessions_and_resources with session variables and its corresponding resource names.
+        # Example sessions_and_resources = {'dcpower_session': 'DCPower', 'dmm_session': 'DMM'}
+        sessions_and_resources = {}
         # Update session_constructor and instrument_types accordingly.
-        return (${function_name}(reservation=reservation, ${visa_params} ${input_param_names}),)
+        return (${function_name}(reservation=reservation, sessions_and_resources=sessions_and_resources, ${visa_params} ${input_param_names}),)
+
 % elif iterable_outputs and not visa_params:
 def measure(pin_names: Iterable[str], ${input_signature}) -> Iterable[Union[${output_signature}]]:
     with measurement_service.context.reserve_sessions(pin_names) as reservation:
-        return ${function_name}(reservation=reservation, ${input_param_names})
+        # update sessions_and_resources with session variables and its corresponding resource names.
+        # Example sessions_and_resources = {'dcpower_session': 'DCPower', 'dmm_session': 'DMM'}
+        sessions_and_resources = {}
+        return ${function_name}(reservation=reservation, sessions_and_resources=sessions_and_resources, ${input_param_names})
 
 % elif iterable_outputs and visa_params:
 def measure(pin_names: Iterable[str], ${input_signature}) -> Iterable[Union[${output_signature}]]:
     with measurement_service.context.reserve_sessions(pin_names) as reservation:
+        # update sessions_and_resources with session variables and its corresponding resource names.
+        # Example sessions_and_resources = {'dcpower_session': 'DCPower', 'dmm_session': 'DMM'}
+        sessions_and_resources = {}
         # Update session_constructor and instrument_types accordingly.
-        return ${function_name}(reservation=reservation, ${visa_params} ${input_param_names})
+        return ${function_name}(reservation=reservation, sessions_and_resources=sessions_and_resources, ${visa_params} ${input_param_names})
 %endif
 def main() -> None:
     with measurement_service.host_service():
