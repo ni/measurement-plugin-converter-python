@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0-dev7] - 2024-08-28
 
+### Fixed
+
+- Overlapping labels for numeric control and indicator.
+
 ### Changed
 
 - Boolean control and indicator UI components to Horizontal Slider and Round LED.
