@@ -1,4 +1,4 @@
-"""Implementation of command line interface and measurement plugin conversion."""
+"""Implementation of command line interface and measurement plug-in conversion."""
 
 import os
 import re
@@ -11,6 +11,7 @@ from mako.exceptions import CompileException, TemplateLookupException
 
 from ni_measurement_plugin_converter import __version__
 from ni_measurement_plugin_converter.constants import (
+    ALPHANUMERIC_PATTERN,
     CONTEXT_SETTINGS,
     DEBUG_LOGGER,
     MEASUREMENT_VERSION,
@@ -20,7 +21,11 @@ from ni_measurement_plugin_converter.constants import (
     TemplateFile,
     UserMessage,
 )
-from ni_measurement_plugin_converter.models import CliInputs, InvalidCliArgsError
+from ni_measurement_plugin_converter.models import (
+    CliInputs,
+    InvalidCliArgsError,
+    UnsupportedDriverError,
+)
 from ni_measurement_plugin_converter.utils import (
     create_file,
     create_measui_file,
@@ -29,8 +34,8 @@ from ni_measurement_plugin_converter.utils import (
     generate_input_params,
     generate_input_signature,
     generate_output_signature,
-    get_measurement_function,
-    get_nims_instrument,
+    get_function_node,
+    get_param_str,
     initialize_logger,
     manage_session,
     print_log_file_location,
@@ -81,7 +86,7 @@ def run(
         logger.debug(DebugMessage.FILE_MIGRATED)
 
         logger.debug(DebugMessage.GET_FUNCTION)
-        function_node = get_measurement_function(measurement_file_dir, function)
+        function_node = get_function_node(file_dir=measurement_file_dir, function=function)
 
         logger.info(UserMessage.EXTRACT_INPUT_INFO)
 
@@ -95,27 +100,26 @@ def run(
         output_signature = generate_output_signature(outputs_info)
 
         # Manage session.
-        instrument_type = manage_session(migrated_file_dir, function)
+        params = manage_session(migrated_file_dir, function)
+        visa_params = get_param_str(params)
 
-        nims_instrument = get_nims_instrument(instrument_type)
-        service_class = f"{display_name}_Python"
-        display_name_for_filenames = re.sub(r"\s+", "", display_name)
+        sanitized_display_name = re.sub(ALPHANUMERIC_PATTERN, "_", display_name)
+        service_class = f"{sanitized_display_name}_Python"
 
         create_file(
             TemplateFile.MEASUREMENT_TEMPLATE,
             os.path.join(output_dir, TemplateFile.MEASUREMENT_FILENAME),
-            display_name=display_name,
+            display_name=sanitized_display_name,
             version=MEASUREMENT_VERSION,
             serviceconfig_file=(
-                f"{display_name_for_filenames}{TemplateFile.SERVICE_CONFIG_FILE_EXTENSION}"
+                f"{sanitized_display_name}{TemplateFile.SERVICE_CONFIG_FILE_EXTENSION}"
             ),
-            instrument_type=instrument_type,
-            nims_instrument=nims_instrument,
             inputs_info=inputs_info,
             outputs_info=outputs_info,
             input_signature=input_signature,
             input_param_names=input_param_names,
             output_signature=output_signature,
+            visa_params=visa_params,
             migrated_file=Path(MIGRATED_MEASUREMENT_FILENAME).stem,
             function_name=function,
             directory_out=output_dir,
@@ -127,7 +131,7 @@ def run(
             inputs=inputs_info,
             outputs=outputs_info,
             file_path=output_dir,
-            measurement_name=display_name,
+            measurement_name=sanitized_display_name,
         )
         logger.debug(DebugMessage.MEASUI_FILE_CREATED)
 
@@ -135,9 +139,9 @@ def run(
             TemplateFile.SERVICE_CONFIG_TEMPLATE,
             os.path.join(
                 output_dir,
-                f"{display_name_for_filenames}{TemplateFile.SERVICE_CONFIG_FILE_EXTENSION}",
+                f"{sanitized_display_name}{TemplateFile.SERVICE_CONFIG_FILE_EXTENSION}",
             ),
-            display_name=display_name,
+            display_name=sanitized_display_name,
             service_class=service_class,
             directory_out=output_dir,
         )
@@ -161,11 +165,17 @@ def run(
             UserMessage.MEASUREMENT_PLUGIN_CREATED.format(plugin_dir=os.path.abspath(output_dir))
         )
 
+    except PermissionError as error:
+        logger.debug(error)
+        logger.error(UserMessage.ACCESS_DENIED)
+        print_log_file_location()
+
     except (
         InvalidCliArgsError,
         ClickException,
         TemplateLookupException,
         CompileException,
+        UnsupportedDriverError,
     ) as error:
         logger.error(error)
         print_log_file_location()

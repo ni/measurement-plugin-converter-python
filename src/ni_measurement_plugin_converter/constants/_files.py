@@ -6,6 +6,8 @@ TEMPLATE_DIR = "templates"
 
 ENCODING = "utf-8"
 
+ALPHANUMERIC_PATTERN = r"[^a-zA-Z0-9]"
+
 
 class TemplateFile:
     """Template file."""

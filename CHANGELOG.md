@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## NI Measurement Plug-In Converter
 
+## [1.0.0-dev7] - 2024-08-27
+
+### Added
+
+- Support for M instances of single instrument driver.
+- Support for M instances of N instrument drivers.
+
 ## [1.0.0-dev6] - 2024-08-23
 
 ### Changed

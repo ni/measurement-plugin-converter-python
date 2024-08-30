@@ -16,10 +16,12 @@ class UserMessage:
     FUNCTION_NOT_FOUND = (
         "Measurement function {function} not found in the file {measurement_file_dir}"
     )
+    INVALID_DRIVERS = "Invalid/No driver used. Supported drivers: {supported_drivers}"
     VALIDATE_CLI_ARGS = "Inputs validated successfully."
 
     EXTRACT_INPUT_INFO = "Extracting inputs information from measurement function..."
     EXTRACT_OUTPUT_INFO = "Extracting outputs information from measurement function..."
+    EXTRACT_DRIVER_SESSIONS = "Extracting driver sessions from measurement function..."
 
     UNSUPPORTED_INPUTS = "The inputs {params} are skipped because their data types are unsupported."
     UNSUPPORTED_OUTPUTS = (

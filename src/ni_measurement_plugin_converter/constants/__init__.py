@@ -2,6 +2,7 @@
 
 from ni_measurement_plugin_converter.constants._cli import CONTEXT_SETTINGS, ArgsDescription
 from ni_measurement_plugin_converter.constants._files import (
+    ALPHANUMERIC_PATTERN,
     ENCODING,
     MEASUREMENT_VERSION,
     MIGRATED_MEASUREMENT_FILENAME,
@@ -20,6 +21,6 @@ from ni_measurement_plugin_converter.constants._measui import PIN_NAMES, SUPPORT
 from ni_measurement_plugin_converter.constants._measurement_service import (
     NIMS_TYPE,
     TYPE_DEFAULT_VALUES,
-    DriverSession,
+    SessionManagement,
 )
 from ni_measurement_plugin_converter.constants._messages import DebugMessage, UserMessage

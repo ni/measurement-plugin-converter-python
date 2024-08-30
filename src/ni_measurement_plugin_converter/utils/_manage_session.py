@@ -2,273 +2,247 @@
 
 import ast
 from logging import getLogger
-from typing import List, Tuple
+from typing import Dict, List
 
 import astor
+import black
 
 from ni_measurement_plugin_converter.constants import (
     DEBUG_LOGGER,
     ENCODING,
     DebugMessage,
-    DriverSession,
+    SessionManagement,
     UserMessage,
 )
+from ni_measurement_plugin_converter.models import UnsupportedDriverError
+from ni_measurement_plugin_converter.utils import get_function_node
+from ._manage_session_helper import get_plugin_session_initializations, get_sessions_details
+from ._session_assignment import (
+    get_combined_session_info,
+    get_session_mapping_assignment,
+    get_session_mapping_logic,
+)
 
-_RESERVATION = "reservation"
-_SESSION_INFO = "session_info"
-_SESSION_CONSTRUCTOR = "session_constructor"
-_INSTRUMENT_TYPE = "instrument_type"
 
-
-def manage_session(migrated_file_dir: str, function: str) -> str:
+def manage_session(migrated_file_dir: str, function: str) -> List[str]:
     """Manage session.
 
-    1. Add session reservation variable to migrated file.
-    2. Replace session initialization in migrated file.
-    3. Insert session assignment into migrated file.
+    1. Get sessions details.
+    2. Add session reservation variable to migrated file.
+    3. Replace session initialization in migrated file.
+    4. Insert session assignment into migrated file.
 
     Args:
         migrated_file_dir (str): Migrated measurement file directory.
         function (str): Measurement function name.
 
     Returns:
-        str: Instrument name.
+        List[str]: VISA instrument driver parameters.
     """
     logger = getLogger(DEBUG_LOGGER)
+
+    measurement_function_node = get_function_node(file_dir=migrated_file_dir, function=function)
+
+    logger.info(UserMessage.EXTRACT_DRIVER_SESSIONS)
+
+    sessions_details = get_sessions_details(function_node=measurement_function_node)
+    if not sessions_details:
+        raise UnsupportedDriverError(
+            UserMessage.INVALID_DRIVERS.format(
+                supported_drivers=SessionManagement.NI_DRIVERS + ["VISA"]
+            )
+        )
+
+    logger.info(UserMessage.ADD_RESERVE_SESSION)
+
+    visa_params = get_visa_params(sessions_details)
+    params_added_function = add_params(
+        function_node=measurement_function_node,
+        params=[SessionManagement.RESERVATION, SessionManagement.SESSIONS_AND_RESOURCES]
+        + visa_params,
+    )
+
+    logger.info(UserMessage.REPLACE_SESSION_INITIALIZATION)
+
+    plugin_session_initializations = get_plugin_session_initializations(
+        function_node=measurement_function_node
+    )
+    session_replaced_function = replace_session_initializations(
+        function_node=params_added_function,
+        session_initializations=plugin_session_initializations,
+    )
+
+    session_mapping = get_session_mapping(sessions_details)
+
+    logger.info(UserMessage.ASSIGN_SESSION_INFO)
+    session_assignment_inserted_function = insert_session_mapping(
+        function_node=session_replaced_function,
+        session_mapping=session_mapping,
+    )
 
     with open(migrated_file_dir, "r", encoding=ENCODING) as file:
         source_code = file.read()
 
-    code_tree = ast.parse(source_code)
+    source_code_tree = ast.parse(source_code)
 
-    logger.info(UserMessage.ADD_RESERVE_SESSION)
-    reservation_added_code_tree = add_param(
-        code_tree=code_tree,
-        function=function,
-        param=_RESERVATION,
-    )
+    for node in ast.walk(source_code_tree):
+        if isinstance(node, ast.FunctionDef) and node.name == function:
+            node.args = session_assignment_inserted_function.args
+            node.body = session_assignment_inserted_function.body
+            break
 
-    logger.info(UserMessage.REPLACE_SESSION_INITIALIZATION)
-    session_replaced_code_tree, session_details = replace_session_initialization(
-        code_tree=reservation_added_code_tree,
-        function=function,
-    )
-
-    for driver, session_name in session_details:
-        instrument_type = driver
-        session_name = session_name
-
-    logger.info(UserMessage.ASSIGN_SESSION_INFO)
-
-    session_inserted_code_tree = insert_session_assignment(
-        code_tree=session_replaced_code_tree,
-        function=function,
-        session_name=session_name,
-    )
-
-    code_tree = astor.to_source(session_inserted_code_tree)
+    source_code = astor.to_source(source_code_tree)
+    formatted_code = black.format_str(source_code, mode=black.FileMode())
 
     with open(migrated_file_dir, "w", encoding=ENCODING) as file:
-        file.write(code_tree)
+        file.write(formatted_code)
 
     logger.debug(DebugMessage.MIGRATED_FILE_MODIFIED)
 
-    return instrument_type
+    return visa_params
 
 
-def replace_session_initialization(
-    code_tree: ast.Module,
-    function: str,
-) -> Tuple[str, List[Tuple[str, str, str]]]:
-    """Replace session initialization in the migrated file.
+def get_visa_params(sessions_details: Dict[str, List[str]]) -> List[str]:
+    """Get session_constructor and instrument_type parameters for VISA instruments.
 
     Args:
-        code_tree (ast.Module): Migrated measurement source code tree.
-        function (str): Measurement function name.
+        sessions_details (Dict[str, List[str]]): Session details.
 
     Returns:
-        Tuple[str, List[Tuple[str, str]]]: Updated source code tree and List of tuple of \
-            replaced drivers, sessions.
+        List[str]: VISA instrument parameters.
     """
-    replacements = []
+    visa_instruments_params = []
 
-    for node in ast.walk(code_tree):
-        if isinstance(node, ast.FunctionDef) and node.name == function:
-            for driver in DriverSession:
-                for child_node in ast.walk(node):
-                    if (
-                        isinstance(child_node, ast.With)
-                        and hasattr(child_node, "items")
-                        and child_node.items
-                    ):
-                        replacements.extend(__replace_session(child_node, driver.name))
+    for driver in list(sessions_details.keys()):
+        if driver in SessionManagement.NI_DRIVERS:
+            continue
 
-            if replacements and replacements[0][0] == DriverSession.nivisa.name:
-                instrument_type_added_code_tree = add_param(
-                    code_tree=code_tree,
-                    function=function,
-                    param=_INSTRUMENT_TYPE,
-                )
-
-                code_tree = add_param(
-                    code_tree=instrument_type_added_code_tree,
-                    function=function,
-                    param=_SESSION_CONSTRUCTOR,
-                )
-
-    return code_tree, replacements
-
-
-def add_param(code_tree: ast.Module, function: str, param: str) -> ast.Module:
-    """Add a parameter to user measurement function in code tree.
-
-    Args:
-        code_tree (ast.Module): Migrated measurement source code tree.
-        function (str): Measurement function name.
-        param (str): Parameter to be added.
-
-    Returns:
-        ast.Module: Updated measurement function with parameter.
-    """
-    for node in code_tree.body:
-        if isinstance(node, ast.FunctionDef) and node.name == function:
-            node.args.args.insert(0, param)
-
-    return code_tree
-
-
-def __replace_session(node: ast.With, driver: str) -> List[Tuple[str, str, str]]:
-    replacements = []
-
-    for item in node.items:
-        if isinstance(item.context_expr, ast.Call):
-            call = item.context_expr
-            if __instrument_is_supported_ni_drivers(call, driver):
-                actual_session_name = item.optional_vars.id
-
-                item.optional_vars.id = _SESSION_INFO
-                call.func.attr = f"initialize_{driver}_session"
-                call.func.value.id = _RESERVATION
-
-                replacements.append(
-                    (
-                        driver,
-                        actual_session_name,
-                    )
-                )
-
-                call.keywords.clear()
-                call.args.clear()
-
-            elif __instrument_is_ni_daqmx(call, driver):
-                actual_session_name = item.optional_vars.id
-
-                item.optional_vars.id = _SESSION_INFO
-                call.func.attr = "create_nidaqmx_task"
-                call.func.value.id = _RESERVATION
-
-                replacements.append(
-                    (
-                        driver,
-                        actual_session_name,
-                    )
-                )
-
-                call.keywords.clear()
-                call.args.clear()
-
-            elif __instrument_is_visa_type(call):
-                actual_session_name = item.optional_vars.id
-
-                item.optional_vars.id = _SESSION_INFO
-                call.func.attr = "initialize_session"
-                call.func.value.id = _RESERVATION
-
-                replacements.append(
-                    (
-                        DriverSession.nivisa.name,
-                        actual_session_name,
-                    )
-                )
-
-                call.keywords.clear()
-                call.args.clear()
-
-                call.args = [
-                    ast.Name(id=_SESSION_CONSTRUCTOR, ctx=ast.Load()),
-                    ast.Name(id=_INSTRUMENT_TYPE, ctx=ast.Load()),
-                ]
-
-    return replacements
-
-
-def __instrument_is_supported_ni_drivers(call: ast.Call, driver: str) -> bool:
-    if (
-        isinstance(call.func, ast.Attribute)
-        and isinstance(call.func.value, ast.Name)
-        and call.func.value.id == driver
-        and call.func.attr == "Session"
-    ):
-        return True
-
-    return False
-
-
-def __instrument_is_ni_daqmx(call: ast.Call, driver: str) -> bool:
-    if (
-        isinstance(call.func, ast.Attribute)
-        and isinstance(call.func.value, ast.Name)
-        and call.func.value.id == driver
-        and call.func.attr == "Task"
-    ):
-        return True
-
-    return False
-
-
-def __instrument_is_visa_type(call: ast.Call) -> bool:
-    if (
-        isinstance(call.func, ast.Attribute)
-        and isinstance(call.func.value, ast.Name)
-        and (
-            call.func.attr == "open_resource"
-            or call.func.attr == "get_instrument"
-            or call.func.attr == "instrument"
+        visa_instruments_params.extend(
+            [
+                f"{driver}_{SessionManagement.SESSION_CONSTRUCTOR}",
+                f"{driver}_{SessionManagement.INSTRUMENT_TYPE}",
+            ]
         )
-    ):
-        return True
 
-    return False
+    return visa_instruments_params
 
 
-def insert_session_assignment(
-    code_tree: ast.Module,
-    function: str,
-    session_name: str,
-) -> ast.Module:
+def add_params(function_node: ast.FunctionDef, params: List[str]) -> ast.FunctionDef:
+    """Add parameters to user measurement function.
+
+    Args:
+        function_node (ast.FunctionDef): Measurement function code tree.
+        params (List[str]): Parameters to be added.
+
+    Returns:
+        ast.FunctionDef: Parameters added function code tree.
+    """
+    for param in params[::-1]:
+        function_node.args.args.insert(0, param)
+
+    return function_node
+
+
+def replace_session_initializations(
+    function_node: ast.FunctionDef,
+    session_initializations: Dict[str, List[ast.withitem]],
+) -> ast.FunctionDef:
+    """Replace session initializations with plug-in session initializations.
+
+    Args:
+        function_node (ast.FunctionDef): Measurement function code tree.
+        session_initializations (Dict[str, List[ast.withitem]]): Session initializations.
+
+    Returns:
+        ast.FunctionDef: Session replaced measurement function code tree.
+    """
+    for child_node in ast.walk(function_node):
+        if isinstance(child_node, ast.With) and hasattr(child_node, "items") and child_node.items:
+            child_node.items = [withitem for withitem in session_initializations.values()]
+            break
+
+    return function_node
+
+
+def get_session_assignments(sessions_details: Dict[str, List[str]]) -> List[ast.Assign]:
+    """Get `Assign` objects to the sessions initialized.
+
+    Args:
+        sessions_details (Dict[str, List[str]]): Session details.
+
+    Returns:
+        List[ast.Assign]: Session `Assign` objects.
+    """
+    session_assignments = []
+
+    for driver, actual_session_names in sessions_details.items():
+        for index in range(len(actual_session_names)):
+            session_assignments.append(
+                ast.Assign(
+                    targets=[ast.Name(id=actual_session_names[index], ctx=ast.Store())],
+                    value=ast.Attribute(
+                        value=ast.Name(
+                            id=f"{driver}_{SessionManagement.SESSION_INFO}[{index}]",
+                            ctx=ast.Load(),
+                        ),
+                        attr="session",
+                        ctx=ast.Load(),
+                    ),
+                )
+            )
+
+    return session_assignments
+
+
+def get_session_mapping(sessions_details: Dict[str, List[str]]) -> List[ast.Assign]:
+    """Get session mapping.
+
+    Args:
+        sessions_details (Dict[str, List[str]]): Session details.
+
+    Returns:
+        List[ast.Assign]: Session mapping logic as code tree.
+    """
+    all_sessions_assignment = get_combined_session_info(sessions_details)
+    session_mapping_logic = get_session_mapping_logic()
+    session_mapping_assignment = get_session_mapping_assignment(sessions_details)
+
+    return [all_sessions_assignment] + session_mapping_logic + session_mapping_assignment
+
+
+def insert_session_mapping(
+    function_node: ast.FunctionDef,
+    session_mapping: List[ast.Assign],
+) -> ast.FunctionDef:
     """Insert session assignment into migrated measurement file source code.
 
     Args:
-        source_code (ast.Module): Migrated measurement source code tree.
-        function (str): Measurement function name.
-        session_name (str): Session name from user measurement.
+        source_code (ast.FunctionDef): Measurement function code tree.
+        sessions_details (Dict[str, List[str]]): Sessions details.
 
     Returns:
-        ast.Module: Session assignment inserted source code tree.
+        ast.FunctionDef: Session assignment inserted function code tree.
     """
-    session_info = ast.Assign(
-        targets=[ast.Name(id=session_name, ctx=ast.Store())],
-        value=ast.Attribute(
-            value=ast.Name(id=_SESSION_INFO, ctx=ast.Load()),
-            attr="session",
-            ctx=ast.Load(),
-        ),
-    )
+    for child_node in function_node.body:
+        if isinstance(child_node, ast.With):
+            for session_assignment in session_mapping[::-1]:
+                child_node.body.insert(0, session_assignment)
 
-    for node in ast.walk(code_tree):
-        if isinstance(node, ast.FunctionDef) and node.name == function:
-            for child_node in node.body:
-                if isinstance(child_node, ast.With):
-                    child_node.body.insert(0, session_info)
+    return function_node
 
-    return code_tree
+
+def get_param_str(params: List[str]) -> str:
+    """Get the VISA instrument parameters string.
+
+    Args:
+        params (List[str]): List of VISA parameter string.
+
+    Returns:
+        str: VISA instrument parameter string.
+    """
+    param_str = ""
+
+    for param in params:
+        param_str += f"{param}={param}, "
+
+    return param_str
