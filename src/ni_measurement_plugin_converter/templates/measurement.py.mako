@@ -47,7 +47,7 @@ def measure(pin_names: Iterable[str], ${input_signature}) -> Iterable[Union[${ou
         # update sessions_and_resources with session variables and its corresponding resource names.
         # Example sessions_and_resources = {'dcpower_session': 'DCPower', 'dmm_session': 'DMM'}
         sessions_and_resources = {}
-        # Update session_constructor and instrument_types accordingly.
+        # Update session_constructor object and instrument_types accordingly.
         return (${function_name}(reservation=reservation, sessions_and_resources=sessions_and_resources, ${visa_params} ${input_param_names}),)
 
 % elif iterable_outputs and not visa_params:
@@ -64,7 +64,7 @@ def measure(pin_names: Iterable[str], ${input_signature}) -> Iterable[Union[${ou
         # update sessions_and_resources with session variables and its corresponding resource names.
         # Example sessions_and_resources = {'dcpower_session': 'DCPower', 'dmm_session': 'DMM'}
         sessions_and_resources = {}
-        # Update session_constructor and instrument_types accordingly.
+        # Update session_constructor object and instrument_types accordingly.
         return ${function_name}(reservation=reservation, sessions_and_resources=sessions_and_resources, ${visa_params} ${input_param_names})
 %endif
 def main() -> None:
