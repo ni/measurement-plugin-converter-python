@@ -17,6 +17,11 @@ from ni_measurement_plugin_converter.constants import (
 from ni_measurement_plugin_converter.models import UnsupportedDriverError
 from ni_measurement_plugin_converter.utils import get_function_node
 from ._manage_session_helper import get_plugin_session_initializations, get_sessions_details
+from ._session_assignment import (
+    get_combined_session_info,
+    get_session_mapping_assignment,
+    get_session_mapping_logic,
+)
 
 
 def manage_session(migrated_file_dir: str, function: str) -> List[str]:
@@ -53,7 +58,8 @@ def manage_session(migrated_file_dir: str, function: str) -> List[str]:
     visa_params = get_visa_params(sessions_details)
     params_added_function = add_params(
         function_node=measurement_function_node,
-        params=[SessionManagement.RESERVATION] + visa_params,
+        params=[SessionManagement.RESERVATION, SessionManagement.SESSIONS_AND_RESOURCES]
+        + visa_params,
     )
 
     logger.info(UserMessage.REPLACE_SESSION_INITIALIZATION)
@@ -66,11 +72,12 @@ def manage_session(migrated_file_dir: str, function: str) -> List[str]:
         session_initializations=plugin_session_initializations,
     )
 
+    session_mapping = get_session_mapping(sessions_details)
+
     logger.info(UserMessage.ASSIGN_SESSION_INFO)
-    sessions_assignments = get_session_assignments(sessions_details)
-    session_assignment_inserted_function = insert_session_assignment(
+    session_assignment_inserted_function = insert_session_mapping(
         function_node=session_replaced_function,
-        sessions_assignments=sessions_assignments,
+        session_mapping=session_mapping,
     )
 
     with open(migrated_file_dir, "r", encoding=ENCODING) as file:
@@ -187,9 +194,25 @@ def get_session_assignments(sessions_details: Dict[str, List[str]]) -> List[ast.
     return session_assignments
 
 
-def insert_session_assignment(
+def get_session_mapping(sessions_details: Dict[str, List[str]]) -> List[ast.Assign]:
+    """Get session mapping.
+
+    Args:
+        sessions_details (Dict[str, List[str]]): Session details.
+
+    Returns:
+        List[ast.Assign]: Session mapping logic as code tree.
+    """
+    all_sessions_assignment = get_combined_session_info(sessions_details)
+    session_mapping_logic = get_session_mapping_logic()
+    session_mapping_assignment = get_session_mapping_assignment(sessions_details)
+
+    return [all_sessions_assignment] + session_mapping_logic + session_mapping_assignment
+
+
+def insert_session_mapping(
     function_node: ast.FunctionDef,
-    sessions_assignments: List[ast.Assign],
+    session_mapping: List[ast.Assign],
 ) -> ast.FunctionDef:
     """Insert session assignment into migrated measurement file source code.
 
@@ -202,7 +225,7 @@ def insert_session_assignment(
     """
     for child_node in function_node.body:
         if isinstance(child_node, ast.With):
-            for session_assignment in sessions_assignments[::-1]:
+            for session_assignment in session_mapping[::-1]:
                 child_node.body.insert(0, session_assignment)
 
     return function_node

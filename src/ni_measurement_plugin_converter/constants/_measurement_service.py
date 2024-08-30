@@ -34,6 +34,11 @@ class SessionManagement:
     SESSION_CONSTRUCTOR = "session_constructor"
     INSTRUMENT_TYPE = "instrument_type"
 
+    SESSIONS_AND_RESOURCES = "sessions_and_resources"
+    ALL_SESSIONS_INFO = "all_sessions_info"
+    SESSION_VAR = "session_var"
+    SESSION_VALUES = "session_values"
+
     NI_DRIVERS = [
         "nidcpower",
         "nidmm",
