@@ -52,7 +52,10 @@ def create_control_elements(inputs: List[DataElement]) -> str:
         elif data_element.value_type in NUMERIC_DATA_TYPE_NAMES:
             input_elements += create_numeric_control(data_element)
 
-        elif data_element.value_type == SpecializedDataType.PIN:
+        elif (
+            data_element.value_type == SpecializedDataType.PIN
+            or data_element.value_type == SpecializedDataType.IORESOURCE
+        ):
             input_elements += create_pin_control(data_element)
 
         elif data_element.value_type == SpecializedDataType.IORESOURCE_ARR:

@@ -2,10 +2,15 @@
 
 All notable change to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## NI Measurement UI Creator
+
+## [1.0.0-dev8] - 2024-09-03
+
+### Added
+
+- Support for Pin Control.
 
 ## [1.0.0-dev7] - 2024-08-28
 
