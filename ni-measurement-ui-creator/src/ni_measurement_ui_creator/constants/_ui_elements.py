@@ -68,6 +68,7 @@ class SupportedDataType:
     BOOL = "Boolean"
     STR = "String"
     PIN = "Pin"
+    IORESOURCE = "IOResource"
     IORESOURCE_ARR = "IOResourceArray1D"
 
 
