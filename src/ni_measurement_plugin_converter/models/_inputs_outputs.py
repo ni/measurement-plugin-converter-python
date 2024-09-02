@@ -20,3 +20,18 @@ class OutputInfo(BaseModel):
     variable_name: str
     variable_type: str
     nims_type: str
+
+
+class PinInfo(BaseModel):
+    """Measurement function Pin's info."""
+
+    name: str
+    instrument_type: str
+    default_value: str
+
+
+class RelayInfo(BaseModel):
+    """Measurement function Relay's info."""
+
+    name: str
+    default_value: str

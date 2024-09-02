@@ -27,6 +27,7 @@ from ni_measurement_plugin_converter.models import (
     UnsupportedDriverError,
 )
 from ni_measurement_plugin_converter.utils import (
+    check_for_visa,
     create_file,
     create_measui_file,
     extract_inputs,
@@ -35,7 +36,12 @@ from ni_measurement_plugin_converter.utils import (
     generate_input_signature,
     generate_output_signature,
     get_function_node,
-    get_param_str,
+    get_pin_and_relay_names,
+    get_pin_and_relay_names_signature,
+    get_pins_and_relays_info,
+    get_plugin_session_initializations,
+    get_session_mapping,
+    get_sessions_signature,
     initialize_logger,
     manage_session,
     print_log_file_location,
@@ -100,8 +106,28 @@ def run(
         output_signature = generate_output_signature(outputs_info)
 
         # Manage session.
-        params = manage_session(migrated_file_dir, function)
-        visa_params = get_param_str(params)
+        sessions_details = manage_session(migrated_file_dir, function)
+
+        logger.info(UserMessage.DEFINE_PINS_RELAYS)
+
+        pins_info, relays_info = get_pins_and_relays_info(sessions_details)
+
+        pins_and_relays = pins_info[:]
+        pins_and_relays.extend(relays_info)
+
+        pin_and_relay_signature = get_pin_and_relay_names_signature(pins_and_relays)
+        pin_or_relay_names = get_pin_and_relay_names(pins_and_relays)
+
+        logger.info(UserMessage.ADD_SESSION_MAPPING)
+
+        session_mappings = get_session_mapping(sessions_details)
+        sessions = get_sessions_signature(session_mappings)
+
+        logger.info(UserMessage.ADD_SESSION_INITIALIZATION)
+
+        plugin_session_initializations = get_plugin_session_initializations(sessions_details)
+
+        is_visa = check_for_visa(sessions_details)
 
         sanitized_display_name = re.sub(ALPHANUMERIC_PATTERN, "_", display_name)
         service_class = f"{sanitized_display_name}_Python"
@@ -110,6 +136,13 @@ def run(
             TemplateFile.MEASUREMENT_TEMPLATE,
             os.path.join(output_dir, TemplateFile.MEASUREMENT_FILENAME),
             display_name=sanitized_display_name,
+            pins_info=pins_info,
+            relays_info=relays_info,
+            session_mappings=session_mappings,
+            session_initializations=plugin_session_initializations,
+            pin_and_relay_signature=pin_and_relay_signature,
+            pin_or_relay_names=pin_or_relay_names,
+            sessions=sessions,
             version=MEASUREMENT_VERSION,
             serviceconfig_file=(
                 f"{sanitized_display_name}{TemplateFile.SERVICE_CONFIG_FILE_EXTENSION}"
@@ -119,7 +152,7 @@ def run(
             input_signature=input_signature,
             input_param_names=input_param_names,
             output_signature=output_signature,
-            visa_params=visa_params,
+            is_visa=is_visa,
             migrated_file=Path(MIGRATED_MEASUREMENT_FILENAME).stem,
             function_name=function,
             directory_out=output_dir,
@@ -128,6 +161,8 @@ def run(
         logger.debug(DebugMessage.MEASUREMENT_FILE_CREATED)
 
         create_measui_file(
+            pins=pins_info,
+            relays=relays_info,
             inputs=inputs_info,
             outputs=outputs_info,
             file_path=output_dir,

@@ -1,8 +1,9 @@
 """Implementation of session management."""
 
 import ast
+import itertools
 from logging import getLogger
-from typing import Dict, List
+from typing import Any, Dict, List, Tuple, Union
 
 import astor
 import black
@@ -11,33 +12,36 @@ from ni_measurement_plugin_converter.constants import (
     DEBUG_LOGGER,
     ENCODING,
     DebugMessage,
+    DriverSession,
     SessionManagement,
     UserMessage,
 )
-from ni_measurement_plugin_converter.models import UnsupportedDriverError
+from ni_measurement_plugin_converter.models import (
+    PinInfo,
+    RelayInfo,
+    SessionMapping,
+    UnsupportedDriverError,
+)
 from ni_measurement_plugin_converter.utils import get_function_node
-from ._manage_session_helper import get_plugin_session_initializations, get_sessions_details
-from ._session_assignment import (
-    get_combined_session_info,
-    get_session_mapping_assignment,
-    get_session_mapping_logic,
+from ._manage_session_helper import (
+    get_sessions_details,
+    instrument_is_visa_type,
+    ni_drivers_supported_instrument,
 )
 
 
-def manage_session(migrated_file_dir: str, function: str) -> List[str]:
+def manage_session(migrated_file_dir: str, function: str) -> Dict[str, List[str]]:
     """Manage session.
 
     1. Get sessions details.
-    2. Add session reservation variable to migrated file.
-    3. Replace session initialization in migrated file.
-    4. Insert session assignment into migrated file.
+    2. Add session variables to migrated file.
 
     Args:
         migrated_file_dir (str): Migrated measurement file directory.
         function (str): Measurement function name.
 
     Returns:
-        List[str]: VISA instrument driver parameters.
+        Dict[str, List[str]]: Drivers as keys and list of session variables as values.
     """
     logger = getLogger(DEBUG_LOGGER)
 
@@ -53,31 +57,11 @@ def manage_session(migrated_file_dir: str, function: str) -> List[str]:
             )
         )
 
-    logger.info(UserMessage.ADD_RESERVE_SESSION)
+    logger.info(UserMessage.ADD_SESSION)
 
-    visa_params = get_visa_params(sessions_details)
     params_added_function = add_params(
         function_node=measurement_function_node,
-        params=[SessionManagement.RESERVATION, SessionManagement.SESSIONS_AND_RESOURCES]
-        + visa_params,
-    )
-
-    logger.info(UserMessage.REPLACE_SESSION_INITIALIZATION)
-
-    plugin_session_initializations = get_plugin_session_initializations(
-        function_node=measurement_function_node
-    )
-    session_replaced_function = replace_session_initializations(
-        function_node=params_added_function,
-        session_initializations=plugin_session_initializations,
-    )
-
-    session_mapping = get_session_mapping(sessions_details)
-
-    logger.info(UserMessage.ASSIGN_SESSION_INFO)
-    session_assignment_inserted_function = insert_session_mapping(
-        function_node=session_replaced_function,
-        session_mapping=session_mapping,
+        params=list(itertools.chain.from_iterable(list(sessions_details.values()))),
     )
 
     with open(migrated_file_dir, "r", encoding=ENCODING) as file:
@@ -87,8 +71,8 @@ def manage_session(migrated_file_dir: str, function: str) -> List[str]:
 
     for node in ast.walk(source_code_tree):
         if isinstance(node, ast.FunctionDef) and node.name == function:
-            node.args = session_assignment_inserted_function.args
-            node.body = session_assignment_inserted_function.body
+            node.args = params_added_function.args
+            node.body = get_with_removed_function(function_node=params_added_function)
             break
 
     source_code = astor.to_source(source_code_tree)
@@ -99,32 +83,7 @@ def manage_session(migrated_file_dir: str, function: str) -> List[str]:
 
     logger.debug(DebugMessage.MIGRATED_FILE_MODIFIED)
 
-    return visa_params
-
-
-def get_visa_params(sessions_details: Dict[str, List[str]]) -> List[str]:
-    """Get session_constructor and instrument_type parameters for VISA instruments.
-
-    Args:
-        sessions_details (Dict[str, List[str]]): Session details.
-
-    Returns:
-        List[str]: VISA instrument parameters.
-    """
-    visa_instruments_params = []
-
-    for driver in list(sessions_details.keys()):
-        if driver in SessionManagement.NI_DRIVERS:
-            continue
-
-        visa_instruments_params.extend(
-            [
-                f"{driver}_{SessionManagement.SESSION_CONSTRUCTOR}",
-                f"{driver}_{SessionManagement.INSTRUMENT_TYPE}",
-            ]
-        )
-
-    return visa_instruments_params
+    return sessions_details
 
 
 def add_params(function_node: ast.FunctionDef, params: List[str]) -> ast.FunctionDef:
@@ -143,106 +102,129 @@ def add_params(function_node: ast.FunctionDef, params: List[str]) -> ast.Functio
     return function_node
 
 
-def replace_session_initializations(
-    function_node: ast.FunctionDef,
-    session_initializations: Dict[str, List[ast.withitem]],
-) -> ast.FunctionDef:
-    """Replace session initializations with plug-in session initializations.
+def get_with_removed_function(function_node: ast.FunctionDef) -> List[Any]:
+    """Remove `with` statement and its withitems in the function_node.
 
     Args:
         function_node (ast.FunctionDef): Measurement function code tree.
-        session_initializations (Dict[str, List[ast.withitem]]): Session initializations.
 
     Returns:
-        ast.FunctionDef: Session replaced measurement function code tree.
+        List[Any]: List of child nodes except the with items.
     """
-    for child_node in ast.walk(function_node):
-        if isinstance(child_node, ast.With) and hasattr(child_node, "items") and child_node.items:
-            child_node.items = [withitem for withitem in session_initializations.values()]
-            break
+    body = []
 
-    return function_node
+    for child_node in function_node.body:
+        if (
+            isinstance(child_node, ast.With)
+            and hasattr(child_node, "items")
+            and child_node.items
+            and check_driver_session(child_node)
+        ):
+            body.extend(child_node.body)
+        else:
+            body.append(child_node)
+
+    return body
 
 
-def get_session_assignments(sessions_details: Dict[str, List[str]]) -> List[ast.Assign]:
-    """Get `Assign` objects to the sessions initialized.
+def check_driver_session(child_node: ast.With) -> bool:
+    """Check for instrument session initialization.
+
+    Args:
+        child_node (ast.With): Session initialization of Measurement function.
+
+    Returns:
+        bool: True if with statement is session initialization.
+    """
+    for item in child_node.items:
+        if isinstance(item.context_expr, ast.Call):
+            if ni_drivers_supported_instrument(item.context_expr) or instrument_is_visa_type(
+                item.context_expr
+            ):
+                return True
+
+    return False
+
+
+def get_pins_and_relays_info(
+    sessions_details: Dict[str, List[str]]
+) -> Tuple[List[PinInfo], List[RelayInfo]]:
+    """Get pins and relays info.
+
+    1. Get pins for sessions of instrument drivers other than niswitch driver.
+    2. Get relays for sessions of niswitch driver.
 
     Args:
         sessions_details (Dict[str, List[str]]): Session details.
 
     Returns:
-        List[ast.Assign]: Session `Assign` objects.
+        Tuple[List[PinInfo], List[RelayInfo]]: List of pins and List of relays.
     """
-    session_assignments = []
+    pins_info = []
+    relays_info = []
 
-    for driver, actual_session_names in sessions_details.items():
-        for index in range(len(actual_session_names)):
-            session_assignments.append(
-                ast.Assign(
-                    targets=[ast.Name(id=actual_session_names[index], ctx=ast.Store())],
-                    value=ast.Attribute(
-                        value=ast.Name(
-                            id=f"{driver}_{SessionManagement.SESSION_INFO}[{index}]",
-                            ctx=ast.Load(),
-                        ),
-                        attr="session",
-                        ctx=ast.Load(),
-                    ),
+    for driver, session_vars in sessions_details.items():
+        if driver == DriverSession.niswitch.name:
+            for session_var in session_vars:
+                relays_info.append(
+                    RelayInfo(
+                        name=f"{session_var}_pin",
+                        default_value=f"{driver}_pin",
+                    )
+                )
+            continue
+
+        if driver not in [driver.name for driver in DriverSession]:
+            instrument_type = f"{driver}_instrument_type"
+        else:
+            instrument_type = f"{DriverSession[driver].value}"
+
+        for session_var in session_vars:
+            pins_info.append(
+                PinInfo(
+                    name=f"{session_var}_pin",
+                    instrument_type=instrument_type,
+                    default_value=f"{driver}_pin",
                 )
             )
 
-    return session_assignments
+    return pins_info, relays_info
 
 
-def get_session_mapping(sessions_details: Dict[str, List[str]]) -> List[ast.Assign]:
+def get_session_mapping(sessions_details: Dict[str, List[str]]) -> List[SessionMapping]:
     """Get session mapping.
+
+    1. Get session mapping using `get_connection` as strings.
+    2. Create `SessionMapping` model.
 
     Args:
         sessions_details (Dict[str, List[str]]): Session details.
 
     Returns:
-        List[ast.Assign]: Session mapping logic as code tree.
+        List[SessionMapping]: Sessions and its mappings.
     """
-    all_sessions_assignment = get_combined_session_info(sessions_details)
-    session_mapping_logic = get_session_mapping_logic()
-    session_mapping_assignment = get_session_mapping_assignment(sessions_details)
+    sessions_connections = []
 
-    return [all_sessions_assignment] + session_mapping_logic + session_mapping_assignment
+    for driver, session_vars in sessions_details.items():
+        for session_var in session_vars:
+            if driver in SessionManagement.NI_DRIVERS:
+                connection = f"{SessionManagement.RESERVATION}.get_{driver}_connection({session_var}_pin).session"
+            else:
+                connection = f"{SessionManagement.RESERVATION}.get_connection({driver}.Session, {session_var}_pin).session"
+
+            sessions_connections.append(SessionMapping(name=session_var, mapping=connection))
+
+    return sessions_connections
 
 
-def insert_session_mapping(
-    function_node: ast.FunctionDef,
-    session_mapping: List[ast.Assign],
-) -> ast.FunctionDef:
-    """Insert session assignment into migrated measurement file source code.
+def get_pin_and_relay_names(pins_and_relays: List[Union[PinInfo, RelayInfo]]) -> str:
+    """Get pin and relay names.
 
     Args:
-        source_code (ast.FunctionDef): Measurement function code tree.
-        sessions_details (Dict[str, List[str]]): Sessions details.
+        pins_and_relays (List[Union[PinInfo, RelayInfo]]): Pin info and relay info.
 
     Returns:
-        ast.FunctionDef: Session assignment inserted function code tree.
+        str: pin and relay names.
     """
-    for child_node in function_node.body:
-        if isinstance(child_node, ast.With):
-            for session_assignment in session_mapping[::-1]:
-                child_node.body.insert(0, session_assignment)
-
-    return function_node
-
-
-def get_param_str(params: List[str]) -> str:
-    """Get the VISA instrument parameters string.
-
-    Args:
-        params (List[str]): List of VISA parameter string.
-
-    Returns:
-        str: VISA instrument parameter string.
-    """
-    param_str = ""
-
-    for param in params:
-        param_str += f"{param}={param}, "
-
-    return param_str
+    pin_and_relay_names = [f"{pin_and_relay.name}" for pin_and_relay in pins_and_relays]
+    return ", ".join(pin_and_relay_names)
