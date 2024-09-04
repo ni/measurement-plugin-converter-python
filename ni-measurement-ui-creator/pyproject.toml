@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "ni_measurement_ui_creator"
-version = "1.0.0-dev7"
+version = "1.0.0-dev8"
 description = "NI Measurement UI Creator"
 authors = ["NI <opensource@ni.com>"]
 repository = "https://github.com/ni/"
 license = "MIT"
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Operating System :: Microsoft :: Windows",
     # Poetry automatically adds classifiers for the license and the supported Python versions.

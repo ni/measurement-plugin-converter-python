@@ -23,6 +23,7 @@ class MeasUIElement:
 
     PIN_SELECTOR = '<ChannelPinSelector AllowUndefinedValues="[bool]True" BaseName="[string]Pin" Channel="[string]{client_id}/Configuration/{name}" DataType="[Type]String" Enabled="[bool]True" Height="[float]{height}" Id="{shared_id}" IsLabelBoundToChannel="[bool]False" Label="[UIModel]{label_id}" Left="[float]{left_value}" SelectedResource="[NI_Core_DataValues_TagRefnum]Pin1" Top="[float]{top_value}" Width="[float]{width}" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument" />'
     IORESOURCE_ARRAY = '<ChannelPinSelector AllowUndefinedValues="[bool]True" BaseName="[string]Pin" Channel="[string]{client_id}/Configuration/{name}" DataType="[Type]String" Enabled="[bool]True" Height="[float]{height}" Id="{shared_id}" IsLabelBoundToChannel="[bool]False" Label="[UIModel]{label_id}" Left="[float]{left_value}" MultipleSelectionMode="[MultipleSelectionModes]List" SelectedResource="[NI_Core_DataValues_TagRefnum]PinGroup1" Top="[float]{top_value}" Width="[float]{width}" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument" />'
+
     LABEL = '<Label Height="[float]16" Id="{id}" LabelOwner="[UIModel]{shared_id}" Left="[float]{left_value}" Text="[string]{input_output_name}" Top="[float]{top_value}" Width="[float]100" xmlns="http://www.ni.com/PanelCommon" />'
 
 
@@ -67,6 +68,7 @@ class SupportedDataType:
     BOOL = "Boolean"
     STR = "String"
     PIN = "Pin"
+    IORESOURCE = "IOResource"
     IORESOURCE_ARR = "IOResourceArray1D"
 
 

@@ -118,7 +118,11 @@ def create_input_elements_from_client(inputs) -> str:
 
             elif (
                 input.annotations
-                and input.annotations[TYPE_SPECIFICATION] == SpecializedDataType.PIN.lower()
+                and (
+                    input.annotations[TYPE_SPECIFICATION] == SpecializedDataType.PIN.lower()
+                    or input.annotations[TYPE_SPECIFICATION]
+                    == SpecializedDataType.IORESOURCE.lower()
+                )
                 and not (hasattr(input, "repeated") and input.repeated)
             ):
                 input_elements.append(

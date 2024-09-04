@@ -38,7 +38,7 @@ pin_control_elements = create_control_elements(
                 MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
             ),
-            value_type=SupportedDataType.PIN,
+            value_type=SupportedDataType.IORESOURCE,  # Both IOResource and Pin data type will create Pin Control only.
         ),
     ]
 )
@@ -73,7 +73,7 @@ ioresource_arr_control_elements = create_control_elements(
 
 # Create a .measui file.
 create_measui(
-    filepath="Pin_and_Ioresource_control_element",
+    filepath="Pin_and_IOResource_control_element",
     input_output_elements=pin_control_elements + ioresource_arr_control_elements,
 )
 
