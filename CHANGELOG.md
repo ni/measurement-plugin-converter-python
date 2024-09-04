@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
-- Bug due to creation of pin drop down for Measurements that use NI-Switch instrument driver by creating String controls for respective relays. Refer [bug in migrated measurement that uses NI-Switch](https://dev.azure.com/ni/DevCentral/_workitems/edit/2831225)
+- Bug due to creation of pin drop down for Measurements that use NI-Switch instrument driver by creating String controls for respective relays.
 
 ### Changed
 

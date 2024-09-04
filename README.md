@@ -20,9 +20,10 @@
 
 ### Installation
 
-- Run the `install.bat` file by double clicking it. Ensure all the dependencies files are placed parallel to `install.bat`
+- Ensure all the dependency files are placed parallel to `install.bat`
+- Run the `install.bat` file by double clicking it.
 
-### Example usage
+### Example Usage
 
 - Run `ni-measurement-plugin-converter --help` to know required CLI arguments.
 ```
@@ -39,71 +40,66 @@ Options:
   -o, --output-dir TEXT           Output directory.  [required]
   -h, --help                      Show this message and exit.
 ```
-- Run `ni-measurement-plugin-converter -d <display name> -m <measurement file directory> -f <measurement function name> -o <output directory>` to convert Python measurement to measurement plug-in.
-
+- Run `ni-measurement-plugin-converter -d <display name> -m <measurement file directory> -f <measurement function name> -o <output directory>` to convert Python measurements to measurement plug-ins.
 
 ### Prerequisites
 
 The Python measurement should
 - Contain a measurement function which should
+  - Use one of the supported drivers. Inputs and outputs of unsupported data types will be skipped.
   - Contain a return value. The return value should be a variable and not a direct function call or constant value.
-  ```
-  # Not supported
-  def measurement_function() -> List[float]:
-    # Measurement logic.
-    return measure_voltage()
+    ```
+    # Not supported
+    def measurement_function() -> List[float]:
+      # Measurement logic.
+      return measure_voltages()
 
-
-  # Supported
-  def measurement_function() -> List[float]:
-    # Measurement logic.
-    voltages = measure_voltage()
-    return voltages
-
-  ```
+    # Supported
+    def measurement_function() -> List[float]:
+      # Measurement logic.
+      voltages = measure_voltages()
+      return voltages
+    ```
   - Have properly type hinted inputs and outputs.
+    ```
+    # Not supported
+    def measurement_function(voltage, current):
+      # Measurement logic.
+      resistance = voltage / current
+      return resistance
+    
+    # Supported
+    def measurement_function(voltage: int, current: float) -> float:
+      # Measurement logic.
+      resistance = voltage / current
+      return resistance
+    ```
+- Have the instrument driver's session initialization inside the measurement function and within the next level of indentation.
   ```
   # Not supported
-  def measurement_function(voltage, current):
-    # Measurement logic.
-    voltages = measure_voltage()
-    return voltages
-  
-  # Supported
-  def measurement_function(voltage: int, current: float) -> List[float]:
-    # Measurement logic.
-    voltages = measure_voltage()
-    return voltages
+  def measurement_function(voltage: int, current: float) -> float:
+    if voltage:
+      with nidcpower.Session("DCPower1) as session:
+        # Measurement logic.
+        return current
 
-  ```
-  - Use one of the supported drivers.
-- Initialize the instrument driver's session inside the measurement function and within the next level of indentation.
-```
-# Not supported
-def measurement_function(voltage: int, current:float) -> float:
-  if voltage:
+  # Supported
+  def measurement_function(voltage: int, current: float) -> float:
     with nidcpower.Session("DCPower1) as session:
       # Measurement logic.
       return current
+  ```
+- Have all the instrument driver's session initialization at a single point using the context manager `with`
+  ```
+  # Not supported
+  def measurement_function(voltage: int, current: float) -> float:
+    with nidcpower.Session("DCPower1) as dcpower_session:
+      with nidmm.Session("DMM1) as dmm_session:
+        # Measurement logic.
+        return current
 
-# Supported
-def measurement_function(voltage: int, current:float) -> float:
-  with nidcpower.Session("DCPower1) as session:
-    # Measurement logic.
-    return current
-```
-- All the driver’s session must be initialized at a single point using context manager `with` in Python.
-
-```
-# Not supported
-def measurement_function(voltage: int, current:float) -> float:
-  with nidcpower.Session("DCPower1) as dcpower_session:
-    with nidmm.Session("DMM1) as dmm_session:
-      # Measurement logic.
+  # Supported
+  def measurement_function(voltage: int, current: float) -> float:
+    with nidcpower.Session("DCPower1") as dcpower_session, nidmm.Session("DMM1) as dmm_session:
       return current
-
-# Supported
-def measurement_function(voltage: int, current:float) -> float:
-  with nidcpower.Session("DCPower1") as dcpower_session, nidmm.Session("DMM1) as dmm_session:
-    return current
-```
+  ```
