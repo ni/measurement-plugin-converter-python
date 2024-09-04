@@ -1,6 +1,6 @@
 # NI Measurement Plug-In Converter for Python
 
-### Description
+### Overview
 
 - NI Measurement Plug-In Converter for Python is a CLI tool to convert Python measurements to NI measurement plug-ins.
 
@@ -23,30 +23,35 @@
 - Ensure all the dependency files are placed parallel to `install.bat`
 - Run the `install.bat` file by double clicking it.
 
+#### Note
+
+- Require internet access to install the external dependencies of NI Measurement Plug-In Converter.
+
 ### Example Usage
 
 - Run `ni-measurement-plugin-converter --help` to know required CLI arguments.
-```
-Usage: ni-measurement-plugin-converter [OPTIONS]
 
-  NI Measurement Plug-In Converter is a Command Line tool to convert     
-  Python measurements to measurement plug-ins.
+  ```
+  Usage: ni-measurement-plugin-converter [OPTIONS]
 
-Options:
-  -d, --display-name TEXT         Display name.  [required]
-  -m, --measurement-file-dir TEXT
-                                  Measurement file directory.  [required]
-  -f, --function TEXT             Measurement function name.  [required]
-  -o, --output-dir TEXT           Output directory.  [required]
-  -h, --help                      Show this message and exit.
-```
+    NI Measurement Plug-In Converter is a Command Line tool to convert     
+    Python measurements to measurement plug-ins.
+
+  Options:
+    -d, --display-name TEXT         Display name.  [required]
+    -m, --measurement-file-dir TEXT
+                                    Measurement file directory.  [required]
+    -f, --function TEXT             Measurement function name.  [required]
+    -o, --output-dir TEXT           Output directory.  [required]
+    -h, --help                      Show this message and exit.
+  ```
 - Run `ni-measurement-plugin-converter -d <display name> -m <measurement file directory> -f <measurement function name> -o <output directory>` to convert Python measurements to measurement plug-ins.
 
 ### Prerequisites
 
-The Python measurement should
-- Contain a measurement function which should
-  - Use one of the supported drivers. Inputs and outputs of unsupported data types will be skipped.
+The Python measurement should contain a measurement function which should
+
+  - Use one of the supported drivers and data types. Inputs and outputs of unsupported data types will be skipped.
   - Contain a return value. The return value should be a variable and not a direct function call or constant value.
     ```
     # Not supported
@@ -74,32 +79,32 @@ The Python measurement should
       resistance = voltage / current
       return resistance
     ```
-- Have the instrument driver's session initialization inside the measurement function and within the next level of indentation.
-  ```
-  # Not supported
-  def measurement_function(voltage: int, current: float) -> float:
-    if voltage:
+  - Have the instrument driver's session initialization inside the measurement function and within the next level of indentation.
+    ```
+    # Not supported
+    def measurement_function(voltage: int, current: float) -> float:
+      if voltage:
+        with nidcpower.Session("DCPower1) as session:
+          # Measurement logic.
+          return current
+
+    # Supported
+    def measurement_function(voltage: int, current: float) -> float:
       with nidcpower.Session("DCPower1) as session:
         # Measurement logic.
         return current
+    ```
+  - Have all the instrument driver's session initialization at a single point using the context manager `with`
+    ```
+    # Not supported
+    def measurement_function(voltage: int, current: float) -> float:
+      with nidcpower.Session("DCPower1) as dcpower_session:
+        with nidmm.Session("DMM1) as dmm_session:
+          # Measurement logic.
+          return current
 
-  # Supported
-  def measurement_function(voltage: int, current: float) -> float:
-    with nidcpower.Session("DCPower1) as session:
-      # Measurement logic.
-      return current
-  ```
-- Have all the instrument driver's session initialization at a single point using the context manager `with`
-  ```
-  # Not supported
-  def measurement_function(voltage: int, current: float) -> float:
-    with nidcpower.Session("DCPower1) as dcpower_session:
-      with nidmm.Session("DMM1) as dmm_session:
-        # Measurement logic.
+    # Supported
+    def measurement_function(voltage: int, current: float) -> float:
+      with nidcpower.Session("DCPower1") as dcpower_session, nidmm.Session("DMM1) as dmm_session:
         return current
-
-  # Supported
-  def measurement_function(voltage: int, current: float) -> float:
-    with nidcpower.Session("DCPower1") as dcpower_session, nidmm.Session("DMM1) as dmm_session:
-      return current
-  ```
+    ```
