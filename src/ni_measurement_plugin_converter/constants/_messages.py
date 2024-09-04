@@ -28,9 +28,10 @@ class UserMessage:
         "The outputs {variables} are skipped because their data types are unsupported."
     )
 
-    ADD_RESERVE_SESSION = "Adding session reservation..."
-    REPLACE_SESSION_INITIALIZATION = "Replacing session initialization..."
-    ASSIGN_SESSION_INFO = "Assigning session_info..."
+    ADD_SESSION = "Adding sessions params..."
+    DEFINE_PINS_RELAYS = "Defining pins and relays..."
+    ADD_SESSION_MAPPING = "Adding session mapping..."
+    ADD_SESSION_INITIALIZATION = "Adding session initialization..."
 
     MEASUREMENT_PLUGIN_CREATED = "Measurement plug-in is created at {plugin_dir}"
 

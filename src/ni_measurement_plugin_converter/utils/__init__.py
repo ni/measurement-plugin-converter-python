@@ -18,7 +18,18 @@ from ni_measurement_plugin_converter.utils._logger import (
     print_log_file_location,
     remove_handlers,
 )
-from ni_measurement_plugin_converter.utils._manage_session import get_param_str, manage_session
+from ni_measurement_plugin_converter.utils._manage_session import (
+    get_pin_and_relay_names,
+    get_pins_and_relays_info,
+    get_session_mapping,
+    manage_session,
+)
+from ni_measurement_plugin_converter.utils._manage_session_helper import (
+    check_for_visa,
+    get_pin_and_relay_names_signature,
+    get_plugin_session_initializations,
+    get_sessions_signature,
+)
 from ni_measurement_plugin_converter.utils._measurement_service import (
     extract_type,
     get_nims_datatype,

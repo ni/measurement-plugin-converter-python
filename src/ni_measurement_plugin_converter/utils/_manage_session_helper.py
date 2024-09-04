@@ -2,13 +2,14 @@
 
 import ast
 import re
-from typing import Dict, List
+from typing import Dict, List, Union
 
 from ni_measurement_plugin_converter.constants import ALPHANUMERIC_PATTERN, SessionManagement
+from ni_measurement_plugin_converter.models import PinInfo, RelayInfo, SessionMapping
 
 
 def get_sessions_details(function_node: ast.FunctionDef) -> Dict[str, List[str]]:
-    """Get drivers used and its session variable.
+    """Get drivers used and its corresponding session instance variable.
 
     Args:
         function_node (ast.FunctionDef): Measurement function code tree.
@@ -50,49 +51,30 @@ def __get_session_details(child_node: ast.With) -> Dict[str, List[str]]:
     return sessions_details
 
 
-def get_plugin_session_initializations(function_node: ast.Module) -> Dict[str, List[ast.withitem]]:
+def get_plugin_session_initializations(sessions_details: Dict[str, List[str]]) -> str:
     """Get plugin session initializations.
 
-    1. Create session initialization `withitem` for NI drivers.
-    2. Create session initialization `withitem` for VISA type.
+    1. Create plugin session initialization for NI-Drivers.
+    2. Create plugin session initialization for VISA.
 
     Args:
-        function_node (ast.FunctionDef): Measurement function code tree.
+        sessions_details (Dict[str, List[str]]): Session details.
 
     Returns:
-        Dict[str, List[ast.withitem]]: Drivers as keys and their respective `withitems` as values.
+        str: Plugin session initializations.
     """
-    session_initializations = {}
+    session_initialization_code = []
 
-    for child_node in ast.walk(function_node):
-        if isinstance(child_node, ast.With) and hasattr(child_node, "items") and child_node.items:
-            for item in child_node.items:
-                if isinstance(item.context_expr, ast.Call):
-                    session_initializations.update(
-                        __get_plugin_session_initializations(item.context_expr)
-                    )
+    for driver in list(sessions_details.keys()):
+        if driver in SessionManagement.NI_DRIVERS:
+            session_initialization_code.append(get_ni_driver_session_initialization(driver))
 
-    return session_initializations
+        else:
+            session_initialization_code.append(
+                get_visa_driver_plugin_session_initialization(driver)
+            )
 
-
-def __get_plugin_session_initializations(call: ast.Call) -> Dict[str, List[ast.withitem]]:
-    session_initializations = {}
-
-    if (
-        ni_drivers_supported_instrument(call)
-        and call.func.value.id not in session_initializations
-    ):
-        session_initializations[call.func.value.id] = get_ni_driver_session_initialization(
-            call.func.value.id
-        )
-
-    elif instrument_is_visa_type(call) and get_resource_name(call) not in session_initializations:
-        resource_name = get_resource_name(call)
-        session_initializations[resource_name] = get_visa_driver_plugin_session_initialization(
-            resource_name
-        )
-
-    return session_initializations
+    return ", ".join(session_initialization_code)
 
 
 def ni_drivers_supported_instrument(call: ast.Call) -> bool:
@@ -166,59 +148,73 @@ def get_resource_name(call: ast.Call) -> str:
     return resource_name
 
 
-def get_ni_driver_session_initialization(driver: str) -> ast.withitem:
-    """Get NI driver session initialization as a `withitem`.
+def get_ni_driver_session_initialization(driver: str) -> str:
+    """Get NI driver session initialization as a string.
 
     Args:
         driver (str): NI instrument driver name.
 
     Returns:
-        ast.withitem: NI driver plug-in session initialization as a `withitem`.
+        str: NI driver plug-in session initialization as a string.
     """
     if driver == "nidaqmx":
-        attribute = "create_nidaqmx_tasks"
+        return f"{SessionManagement.RESERVATION}.create_nidaqmx_tasks()"
 
-    else:
-        attribute = f"initialize_{driver}_sessions"
-
-    plugin_session = ast.withitem(
-        context_expr=ast.Call(
-            func=ast.Attribute(
-                value=ast.Name(id=SessionManagement.RESERVATION, ctx=ast.Load()),
-                attr=attribute,
-                ctx=ast.Load(),
-            ),
-            args=[],
-            keywords=[],
-        ),
-        optional_vars=ast.Name(id=f"{driver}_{SessionManagement.SESSION_INFO}", ctx=ast.Store()),
-    )
-    return plugin_session
+    return f"{SessionManagement.RESERVATION}.initialize_{driver}_sessions()"
 
 
-def get_visa_driver_plugin_session_initialization(driver: str) -> ast.withitem:
+def get_visa_driver_plugin_session_initialization(driver: str) -> str:
     """Get VISA session initialization.
 
     Args:
         driver (str): VISA instrument driver name.
 
     Returns:
-        ast.withitem: VISA driver plugin session initialization as a `withitem`.
+        str: VISA driver plugin session initialization as a string.
     """
-    plugin_session = ast.withitem(
-        context_expr=ast.Call(
-            func=ast.Attribute(
-                value=ast.Name(id=SessionManagement.RESERVATION, ctx=ast.Load()),
-                attr="initialize_sessions",
-                ctx=ast.Load(),
-            ),
-            args=[
-                ast.Name(id=f"{driver}_{SessionManagement.SESSION_CONSTRUCTOR}", ctx=ast.Load()),
-                ast.Name(id=f"{driver}_{SessionManagement.INSTRUMENT_TYPE}", ctx=ast.Load()),
-            ],
-            keywords=[],
-        ),
-        optional_vars=ast.Name(id=f"{driver}_{SessionManagement.SESSION_INFO}", ctx=ast.Store()),
-    )
+    return f"{SessionManagement.RESERVATION}.initialize_sessions({driver}_{SessionManagement.SESSION_CONSTRUCTOR}, {driver}_{SessionManagement.INSTRUMENT_TYPE})"
 
-    return plugin_session
+
+def check_for_visa(sessions_details: Dict[str, List[str]]) -> bool:
+    """Check for VISA instruments used.
+
+    Args:
+        sessions_details (Dict[str, List[str]]): Session details.
+
+    Returns:
+        bool: True if VISA driver is used.
+    """
+    for driver in list(sessions_details.keys()):
+        if driver not in SessionManagement.NI_DRIVERS:
+            return True
+
+    return False
+
+
+def get_pin_and_relay_names_signature(pins_and_relays: List[Union[PinInfo, RelayInfo]]) -> str:
+    """Get pin and relay names signature.
+
+    Args:
+        pins_and_relays (List[Union[PinInfo, RelayInfo]]): Pin info and relay info.
+
+    Returns:
+        str: Pin and relay names signature.
+    """
+    pin_or_relay_signature = [f"{pin_and_relay.name}: str" for pin_and_relay in pins_and_relays]
+    return ", ".join(pin_or_relay_signature)
+
+
+def get_sessions_signature(session_mappings: List[SessionMapping]) -> str:
+    """Get session signature.
+
+    Args:
+        session_mappings (List[SessionMapping]): Session mappings.
+
+    Returns:
+        str: Session mapping signature.
+    """
+    sessions = [
+        f"{session_mapping.name}={session_mapping.name}"
+        for session_mapping in session_mappings
+    ]
+    return ", ".join(sessions)
