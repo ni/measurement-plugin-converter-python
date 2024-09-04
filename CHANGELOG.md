@@ -8,10 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [1.0.0-dev8] - 2024-09-03
 
+### Fixed
+
+- Bug due to creation of pin drop down for Measurements that use NI-Switch instrument driver by creating String controls for respective relays. Refer [bug in migrated measurement that uses NI-Switch](https://dev.azure.com/ni/DevCentral/_workitems/edit/2831225)
+
 ### Changed
 
-- Session mapping from resource_name to pin based.
-- Code to overcome additional steps of NI-Switch.
+- To Pin based session mapping. The sessions are mapped in the previous version by `resource_name`. Sessions are mapped by `get_connection(pins)` in the current version.
 
 ## [1.0.0-dev7] - 2024-08-27
 

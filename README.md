@@ -49,16 +49,14 @@ The Python measurement should
   - Contain a return value. The return value should be a variable and not a direct function call or constant value.
   ```
   # Not supported
-  def function(voltage: int, current: float) -> List[float]:
-    # Measurement logic
-    voltage_and_current = [voltage, current]
-    return measure_voltages()
+  def measurement_function() -> List[float]:
+    # Measurement logic.
+    return measure_voltage()
 
 
   # Supported
-  def function(voltage: int, current: float) -> List[float]:
-    # Measurement logic
-    voltage_and_current = [voltage, current]
+  def measurement_function() -> List[float]:
+    # Measurement logic.
     voltages = measure_voltage()
     return voltages
 
@@ -66,45 +64,46 @@ The Python measurement should
   - Have properly type hinted inputs and outputs.
   ```
   # Not supported
-  def function(voltage, current):
-    # Measurement logic
-    voltage_and_current = [voltage, current]
-    return voltage_and_current
+  def measurement_function(voltage, current):
+    # Measurement logic.
+    voltages = measure_voltage()
+    return voltages
   
   # Supported
-  def function(voltage: int, current: float) -> List[float]:
-    # Measurement logic
-    voltage_and_current = [voltage, current]
-    return voltage_and_current
+  def measurement_function(voltage: int, current: float) -> List[float]:
+    # Measurement logic.
+    voltages = measure_voltage()
+    return voltages
 
   ```
   - Use one of the supported drivers.
 - Initialize the instrument driver's session inside the measurement function and within the next level of indentation.
 ```
 # Not supported
-def function(voltage: int, current:float) -> float:
-  for generate_voltage in range(len(voltage)):
-    with nidcpower.Session(resource_name) as session:
+def measurement_function(voltage: int, current:float) -> float:
+  if voltage:
+    with nidcpower.Session("DCPower1) as session:
+      # Measurement logic.
       return current
 
 # Supported
-def function(voltage: int, current:float) -> float:
-  with nidcpower.Session(resource_name) as session:
+def measurement_function(voltage: int, current:float) -> float:
+  with nidcpower.Session("DCPower1) as session:
+    # Measurement logic.
     return current
 ```
 - All the driver’s session must be initialized at a single point using context manager `with` in Python.
 
 ```
 # Not supported
-def function(voltage: int, current:float) -> float:
-  for generate_voltage in range(len(voltage)):
-    with nidcpower.Session(resource_name) as dcpower_session:
-      with nidmm.Session(resource_name) as dmm_session:
-        return current
+def measurement_function(voltage: int, current:float) -> float:
+  with nidcpower.Session("DCPower1) as dcpower_session:
+    with nidmm.Session("DMM1) as dmm_session:
+      # Measurement logic.
+      return current
 
 # Supported
-def function(voltage: int, current:float) -> float:
-  with nidcpower.Session(resource_name) as dcpower_session, nidmm.Session(resource_name) as dmm_session:
+def measurement_function(voltage: int, current:float) -> float:
+  with nidcpower.Session("DCPower1") as dcpower_session, nidmm.Session("DMM1) as dmm_session:
     return current
-
 ```
