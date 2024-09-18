@@ -1,4 +1,4 @@
-"""Error in user inputs."""
+"""Custom Exceptions."""
 
 
 class InvalidCliInputError(Exception):
@@ -12,3 +12,11 @@ class InvalidCliInputError(Exception):
         """
         self.message = message
         super().__init__(self.message)
+
+
+class InvalidMeasUIError(Exception):
+    """Invalid measurement UI file error."""
+
+    def __init__(self) -> None:
+        """Initialize the exception."""
+        super().__init__()

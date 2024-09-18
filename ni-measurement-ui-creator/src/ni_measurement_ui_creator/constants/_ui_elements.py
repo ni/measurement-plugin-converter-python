@@ -93,6 +93,7 @@ class SpecializedDataType:
     IORESOURCE_ARR = "IOResourceArray1D"
 
 
+LOGGER = "logger"
 TYPE_SPECIFICATION = "ni/type_specialization"
 MEASUREMENT_SERVICE_INTERFACE_V1 = "ni.measurementlink.measurement.v1.MeasurementService"
 MEASUREMENT_SERVICE_INTERFACE_V2 = "ni.measurementlink.measurement.v2.MeasurementService"
@@ -125,3 +126,10 @@ NUMERIC_DATA_TYPE_VALUES = [
 ]
 
 ENCODING = "utf-8"
+
+NAMESPACES = {
+    "pf": "http://www.ni.com/PlatformFramework",
+    "sf": "http://www.ni.com/InstrumentFramework/ScreenDocument",
+    "cf": "http://www.ni.com/ConfigurationBasedSoftware.Core",
+    "pc": "http://www.ni.com/PanelCommon",
+}

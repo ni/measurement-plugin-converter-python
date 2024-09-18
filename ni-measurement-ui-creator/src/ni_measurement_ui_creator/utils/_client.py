@@ -1,6 +1,6 @@
 """Measurement Plug-In Client."""
 
-from logging import Logger
+from logging import getLogger
 from typing import Optional, Sequence, Tuple, Union
 
 import grpc
@@ -15,6 +15,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient, ServiceLocation
 
 from ni_measurement_ui_creator.constants import (
+    LOGGER,
     MEASUREMENT_SERVICE_INTERFACE_V1,
     MEASUREMENT_SERVICE_INTERFACE_V2,
     UserMessage,
@@ -43,18 +44,17 @@ def get_active_measurement_services(
 def get_insecure_grpc_channel_for(
     discovery_client: DiscoveryClient,
     service_class: str,
-    logger: Logger,
 ) -> Tuple[Channel, str]:
     """Get insecure GRPC channel.
 
     Args:
         discovery_client (DiscoveryClient): Client for accessing NI Discovery service.
         service_class (str): Measurement Service Class name.
-        logger (Logger): Logger object.
 
     Returns:
         Tuple[Channel, str]: Channel to server and measurement service interface name.
     """
+    logger = getLogger(LOGGER)
     resolved_service = None
     measurement_service_interace = None
 
@@ -128,7 +128,6 @@ def get_measurement_service_class(
 
 def get_measurement_service_stub(
     discovery_client: DiscoveryClient,
-    logger: Logger,
 ) -> Union[
     v2_measurement_service_pb2_grpc.MeasurementServiceStub,
     v1_measurement_service_pb2_grpc.MeasurementServiceStub,
@@ -137,11 +136,11 @@ def get_measurement_service_stub(
 
     Args:
         discovery_client (DiscoveryClient): Client for accessing NI Discovery service.
-        logger (Logger): Logger object.
 
     Returns:
         Union[v2_measurement_service_pb2_grpc.MeasurementServiceStub, v1_measurement_service_pb2_grpc.MeasurementServiceStub]: Measurement services. # noqa: W505
     """
+    logger = getLogger(LOGGER)
     available_services = get_active_measurement_services(discovery_client)
 
     if not available_services:
@@ -163,7 +162,6 @@ def get_measurement_service_stub(
     channel, measurement_service_interface = get_insecure_grpc_channel_for(
         discovery_client,
         measurement_service_class,
-        logger=logger,
     )
 
     if measurement_service_interface == MEASUREMENT_SERVICE_INTERFACE_V2:

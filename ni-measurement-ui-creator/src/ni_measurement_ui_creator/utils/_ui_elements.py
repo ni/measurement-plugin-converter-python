@@ -15,7 +15,9 @@ from ni_measurement_ui_creator.utils._helpers import (
 )
 
 
-def create_input_elements_from_client(inputs) -> str:
+def create_input_elements_from_client(
+    inputs, input_top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
+) -> str:
     """Create Measui input elements.
 
     Args:
@@ -25,7 +27,6 @@ def create_input_elements_from_client(inputs) -> str:
         str: MeasUI input elements.
     """
     input_elements = []
-    input_top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
 
     for input in inputs:
         try:
@@ -142,7 +143,14 @@ def create_input_elements_from_client(inputs) -> str:
     return create_control_elements(input_elements)
 
 
-def create_output_elements_from_client(outputs) -> str:
+def create_output_elements_from_client(
+    outputs,
+    output_left_alignment=(
+        MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
+        + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
+    ),
+    output_top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
+) -> str:
     """Create Measui output elements.
 
     Args:
@@ -152,11 +160,6 @@ def create_output_elements_from_client(outputs) -> str:
         str: MeasUI output elements.
     """
     output_elements = []
-    output_left_alignment = (
-        MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
-        + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
-    )
-    output_top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
 
     for output in outputs:
         try:

@@ -17,11 +17,23 @@ class UserMessage:
 
     GET_ACTIVE_MEASUREMENTS = "Getting the active measurements..."
     NO_MEASUREMENTS_RUNNING = "No measurement services are running."
+
     AVAILABLE_MEASUREMENTS = "Available services:"
+    AVAILABLE_MEASUI_FILES = "Available Measurement UI Files:"
 
     INVALID_MEASUREMENT_CHOICE = "Invalid measurement plug-in selected."
+    INVALID_MEASUI_CHOICE = "Invalid measurement UI selected."
+
+    NO_MEASUI_FILE = "No measurement UI file available. Creating a new measui file for the selected measurement..."
+
     SELECT_MEASUREMENT = (
         "Select a measurement service index ({start}-{end}) to generate measui file: "
+    )
+
+    SELECT_MEASUI_FILE = "Select a measurement UI file index ({start}-{end}) to update: "
+
+    INVALID_MEASUI_FILE = (
+        "Invalid measurement UI file. Creating a new measui file for the selected measurement..."
     )
 
     CREATED_UI = "Measurement UI created successfully at {filepath}"

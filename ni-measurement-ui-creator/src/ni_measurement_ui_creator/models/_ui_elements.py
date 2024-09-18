@@ -1,6 +1,6 @@
 """UI Elements Base Model."""
 
-from typing import Optional, Union
+from typing import Optional, Union, Dict
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -40,3 +40,13 @@ class LabelElement(BaseModel):
     top_alignment: Optional[Union[int, float]] = Field(
         default=MeasUIElementPosition.DEFAULT_TOP_ALIGNMENT
     )
+
+
+class UpdateElement(BaseModel):
+    """Elements available in measui file to be updated."""
+
+    tag: str
+    bind: bool
+    name: Optional[str]
+    output: Optional[bool]
+    attrib: Dict[str, str]
