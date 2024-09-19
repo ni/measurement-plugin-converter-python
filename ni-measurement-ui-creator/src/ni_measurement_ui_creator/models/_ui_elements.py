@@ -42,11 +42,11 @@ class LabelElement(BaseModel):
     )
 
 
-class UpdateElement(BaseModel):
+class AvlbleElement(BaseModel):
     """Elements available in measui file to be updated."""
 
     tag: str
+    output: bool
+    attrib: Dict[str, str]
     bind: bool
     name: Optional[str]
-    output: Optional[bool]
-    attrib: Dict[str, str]

@@ -3,6 +3,7 @@
 import logging
 import os
 from logging import Logger
+
 from ni_measurement_ui_creator.constants import LOGGER
 
 
@@ -27,15 +28,6 @@ def get_logger(log_file_path: str) -> Logger:
     return logger
 
 
-def add_stream_handler() -> None:
-    """Add stream handler to logger object."""
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.INFO)
-
-    logger = logging.getLogger(LOGGER)
-    logger.addHandler(console_handler)
-
-
 def add_file_handler(log_file_path: str) -> None:
     """Add file handler to logger object.
 
@@ -50,3 +42,12 @@ def add_file_handler(log_file_path: str) -> None:
     file_handler.setFormatter(formatter)
 
     logger.addHandler(file_handler)
+
+
+def add_stream_handler() -> None:
+    """Add stream handler to logger object."""
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+
+    logger = logging.getLogger(LOGGER)
+    logger.addHandler(console_handler)

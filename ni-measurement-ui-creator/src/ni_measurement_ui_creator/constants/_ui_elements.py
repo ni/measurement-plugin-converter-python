@@ -133,3 +133,27 @@ NAMESPACES = {
     "cf": "http://www.ni.com/ConfigurationBasedSoftware.Core",
     "pc": "http://www.ni.com/PanelCommon",
 }
+
+READ_ONLY_BASED = [
+    "ChannelNumericText",
+    "ChannelButton",
+    "ChannelSwitch",
+    "ChannelStringControl",
+    "ChannelLED",
+    "ChannelImageButton",
+]
+INTERACTION_MODE_BASED = [
+    "ChannelSlider",
+    "ChannelKnob",
+    "ChannelButton",
+    "ChannelSwitch",
+    "ChannelGauge",
+    "ChannelMeter",
+    "ChannelTank",
+]
+ONLY_INDICATORS = ["ChannelLinearProgressBar", "ChannelRadialProgressBar", "ChannelCheckBox"]
+SPECIAL_ELEMENTS = ["ChannelPinSelector", "ChannelArrayViewer"]
+
+SUPPORTED_CONTROLS_AND_INDICATORS = (
+    READ_ONLY_BASED + INTERACTION_MODE_BASED + ONLY_INDICATORS + SPECIAL_ELEMENTS
+)
