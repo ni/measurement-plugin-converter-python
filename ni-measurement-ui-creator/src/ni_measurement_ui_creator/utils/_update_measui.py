@@ -2,21 +2,42 @@
 
 import os
 import shutil
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ETree
 from logging import getLogger
 from pathlib import Path
+from typing import Union
+
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
+    GetMetadataResponse as V1MetaData,
+)
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
+    GetMetadataResponse as V2MetaData,
+)
 
 from ni_measurement_ui_creator.constants import LOGGER, UserMessage
 from ni_measurement_ui_creator.utils._create_measui import create_measui
-from ni_measurement_ui_creator.utils._exceptions import InvalidCliInputError, InvalidMeasUIError
+from ni_measurement_ui_creator.utils._exceptions import InvalidMeasUIError
 from ni_measurement_ui_creator.utils._measui_file import (
-    get_controls_and_indicators,
+    get_avlble_elements,
     get_measui_files,
+    get_measui_selection,
     validate_measui,
 )
 
 
-def update_measui(metadata, output_dir):
+def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> None:
+    """Update measurment UI.
+
+    1. Get measurement files of the selected measurement plug-in.
+    2. Get the measurement UI to be updated.
+    3. Create a copy.
+    4. Bind elements.
+    5. Create elements.
+
+    Args:
+        metadata (Union[V1MetaData, V2MetaData]): Metadata of the measurement plug-in.
+        output_dir (Path): Output directory where updated measurement UI is outputted.
+    """
     logger = getLogger(LOGGER)
 
     measui_files = get_measui_files(metadata)
@@ -32,9 +53,10 @@ def update_measui(metadata, output_dir):
     selected_measui = measui_files[get_measui_selection(len(measui_files)) - 1][1:]
 
     try:
-        tree = ET.parse(selected_measui)
+        tree = ETree.parse(selected_measui)
         validate_measui(tree)
-    except (ET.ParseError, InvalidMeasUIError, FileNotFoundError, PermissionError):
+
+    except (ETree.ParseError, InvalidMeasUIError, FileNotFoundError, PermissionError):
         logger.warning(UserMessage.INVALID_MEASUI_FILE)
         create_measui(metadata, output_dir)
         return
@@ -46,39 +68,15 @@ def update_measui(metadata, output_dir):
             str(Path(Path(selected_measui).name).stem) + "_updated.measui",
         ),
     )
-    controls_and_indicators = get_controls_and_indicators(tree)
 
     inputs = metadata.measurement_signature.configuration_parameters
     outputs = metadata.measurement_signature.outputs
 
-    bound_inputs_outputs = [element.name for element in controls_and_indicators]
+    elements = get_avlble_elements(tree)
+    elements_names = [element.name for element in elements]
 
-    unbound_inputs, unbound_outputs = [], []
+    unbind_inputs = [input for input in inputs if input.name not in elements_names]
+    unbind_outputs = [output for output in outputs if output.name not in elements_names]
 
-    for input in inputs:
-        if input.name not in bound_inputs_outputs:
-            unbound_inputs.append(input)
-
-    for output in outputs:
-        if output.name not in bound_inputs_outputs:
-            unbound_outputs.append(output)
-
-
-def get_measui_selection(total_uis: int) -> int:
-    try:
-        user_input = int(
-            input(
-                UserMessage.SELECT_MEASUI_FILE.format(
-                    start=1,
-                    end=total_uis,
-                )
-            )
-        )
-
-        if user_input not in list(range(1, total_uis + 1)):
-            raise InvalidCliInputError(UserMessage.INVALID_MEASUI_CHOICE)
-
-        return user_input
-
-    except ValueError:
-        raise InvalidCliInputError(UserMessage.ABORTED)
+    # Call update elements.
+    # Call create elements.

@@ -6,11 +6,11 @@ from typing import Optional, Sequence, Tuple, Union
 import grpc
 from grpc import Channel
 from grpc._channel import _InactiveRpcError
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1 import (
-    measurement_service_pb2_grpc as v1_measurement_service_pb2_grpc,
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2_grpc import (
+    MeasurementServiceStub as V1MeasurementServiceStub,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
-    measurement_service_pb2_grpc as v2_measurement_service_pb2_grpc,
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2_grpc import (
+    MeasurementServiceStub as V2MeasurementServiceStub,
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient, ServiceLocation
 
@@ -129,8 +129,8 @@ def get_measurement_service_class(
 def get_measurement_service_stub(
     discovery_client: DiscoveryClient,
 ) -> Union[
-    v2_measurement_service_pb2_grpc.MeasurementServiceStub,
-    v1_measurement_service_pb2_grpc.MeasurementServiceStub,
+    V1MeasurementServiceStub,
+    V2MeasurementServiceStub,
 ]:
     """Get measurement services.
 
@@ -138,7 +138,7 @@ def get_measurement_service_stub(
         discovery_client (DiscoveryClient): Client for accessing NI Discovery service.
 
     Returns:
-        Union[v2_measurement_service_pb2_grpc.MeasurementServiceStub, v1_measurement_service_pb2_grpc.MeasurementServiceStub]: Measurement services. # noqa: W505
+        Union[V1MeasurementServiceStub, V2MeasurementServiceStub]: Measurement services.
     """
     logger = getLogger(LOGGER)
     available_services = get_active_measurement_services(discovery_client)
@@ -165,6 +165,6 @@ def get_measurement_service_stub(
     )
 
     if measurement_service_interface == MEASUREMENT_SERVICE_INTERFACE_V2:
-        return v2_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
+        return V2MeasurementServiceStub(channel)
 
-    return v1_measurement_service_pb2_grpc.MeasurementServiceStub(channel)
+    return V1MeasurementServiceStub(channel)

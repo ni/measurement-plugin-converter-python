@@ -88,9 +88,7 @@ def update(output_dir: Path) -> None:
 
     except Exception as error:
         logger.debug(error, exc_info=True)
-        logger.info(
-            UserMessage.ERROR_OCCURRED.format(log_file_path=logger.handlers[0].baseFilename)
-        )
+        logger.info(UserMessage.ERROR_OCCURRED.format(log_file=logger.handlers[0].baseFilename))
 
     finally:
         logger.info(UserMessage.PROCESS_COMPLETED)
