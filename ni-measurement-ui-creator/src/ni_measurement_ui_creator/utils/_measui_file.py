@@ -183,6 +183,7 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvlbleElement]:
                     bind=bind,
                     name=name,
                     attrib=element.attrib,
+                    element=element,
                 )
             )
 
@@ -196,6 +197,7 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvlbleElement]:
                     bind=bind,
                     name=name,
                     attrib=element.attrib,
+                    element=element,
                 )
             )
 
@@ -209,6 +211,7 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvlbleElement]:
                     bind=bind,
                     name=name,
                     attrib=element.attrib,
+                    element=element,
                 )
             )
 
@@ -223,6 +226,19 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvlbleElement]:
                     bind=bind,
                     name=name,
                     attrib=element.attrib,
+                    element=element,
+                )
+            )
+
+        else:
+            avlble_elements.append(
+                AvlbleElement(
+                    tag=tag,
+                    output=None,
+                    bind=None,
+                    name=None,
+                    attrib=element.attrib,
+                    element=element,
                 )
             )
 

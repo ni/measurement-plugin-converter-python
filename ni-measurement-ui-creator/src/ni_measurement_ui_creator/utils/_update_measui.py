@@ -5,7 +5,7 @@ import shutil
 import xml.etree.ElementTree as ETree
 from logging import getLogger
 from pathlib import Path
-from typing import Union
+from typing import List, Union
 
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
     GetMetadataResponse as V1MetaData,
@@ -14,7 +14,13 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
     GetMetadataResponse as V2MetaData,
 )
 
-from ni_measurement_ui_creator.constants import LOGGER, UserMessage
+from ni_measurement_ui_creator.constants import (
+    LOGGER,
+    NAMESPACES,
+    NUMERIC_DATA_TYPE_VALUES,
+    UserMessage,
+)
+from ni_measurement_ui_creator.models import AvlbleElement
 from ni_measurement_ui_creator.utils._create_measui import create_measui
 from ni_measurement_ui_creator.utils._exceptions import InvalidMeasUIError
 from ni_measurement_ui_creator.utils._measui_file import (
@@ -78,5 +84,31 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
     unbind_inputs = [input for input in inputs if input.name not in elements_names]
     unbind_outputs = [output for output in outputs if output.name not in elements_names]
 
-    # Call update elements.
+    # Call bind elements.
     # Call create elements.
+    # Call write_updated_measui
+
+    return
+
+
+accepted_datatypes = {}
+
+
+def bind_elements(elements: List[AvlbleElement], unbind_inputs, unbind_output):
+    for unbind_input in unbind_inputs:
+        if unbind_input.data in NUMERIC_DATA_TYPE_VALUES:
+            ...
+
+
+def bind_inputs(): ...
+
+
+def write_updated_measui(filepath, updated_ui):
+    tree = ETree.parse(filepath)
+    root = tree.getroot()
+    screen = root.find(f".//sf:Screen", NAMESPACES)
+    screen_surface = screen.find(f"cf:ScreenSurface", NAMESPACES)
+    screen.remove(screen_surface)
+    screen.append(updated_ui)
+
+    tree.write(filepath, encoding="utf-8", xml_declaration=True)

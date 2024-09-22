@@ -1,6 +1,7 @@
 """UI Elements Base Model."""
 
-from typing import Optional, Union, Dict
+import xml.etree.ElementTree as ETree
+from typing import Dict, Optional, Union
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -46,7 +47,13 @@ class AvlbleElement(BaseModel):
     """Elements available in measui file to be updated."""
 
     tag: str
-    output: bool
+    element: ETree.Element
     attrib: Dict[str, str]
-    bind: bool
+    output: Optional[bool]
+    bind: Optional[bool]
     name: Optional[str]
+
+    class Config:
+        """To allow non pydantic types."""
+
+        arbitrary_types_allowed = True
