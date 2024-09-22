@@ -9,15 +9,23 @@ from typing import List, Union
 
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
     GetMetadataResponse as V1MetaData,
+    ConfigurationParameter as V1ConfigParam,
+    Output as V1Output,
 )
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
     GetMetadataResponse as V2MetaData,
+    ConfigurationParameter as V2ConfigParam,
+    Output as V2Output,
 )
 
+
 from ni_measurement_ui_creator.constants import (
+    BOOLEAN_ELEMENTS,
     LOGGER,
     NAMESPACES,
     NUMERIC_DATA_TYPE_VALUES,
+    NUMERIC_ELEMENTS,
+    DataType,
     UserMessage,
 )
 from ni_measurement_ui_creator.models import AvlbleElement
@@ -84,31 +92,235 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
     unbind_inputs = [input for input in inputs if input.name not in elements_names]
     unbind_outputs = [output for output in outputs if output.name not in elements_names]
 
-    # Call bind elements.
+    root = tree.getroot()
+    screen = root.find(f".//sf:Screen", NAMESPACES)
+    client_id = screen.attrib["ClientId"]
+    updated_elements = bind_elements(client_id, elements, unbind_inputs, unbind_outputs)
+
+    write_updated_measui(
+        os.path.join(
+            output_dir,
+            str(Path(Path(selected_measui).name).stem) + "_updated.measui",
+        ),
+        updated_elements,
+    )
+
+    # Call bind elements - done.
+    # Call update labels - done.
     # Call create elements.
-    # Call write_updated_measui
+    # Call write_updated_measui.
 
     return
 
 
-accepted_datatypes = {}
+def bind_elements(
+    client_id: str,
+    elements: List[AvlbleElement],
+    unbind_inputs: List[Union[V1ConfigParam, V2ConfigParam]],
+    unbind_outputs: List[Union[V1Output, V2Output]],
+) -> List[AvlbleElement]:
+    """Bind elements to its possible input/output.
+
+    Args:
+        client_id (str):
+        elements (List[AvlbleElement]):
+        unbind_inputs (List[Union[V1ConfigParam, V2ConfigParam]]):
+        unbind_outputs (List[Union[V1Output, V2Output]]):
+
+    Returns:
+        List[AvlbleElement]:
+    """
+    updated_elements = bind_inputs(client_id, elements, unbind_inputs)
+    updated_elements = bind_outputs(client_id, updated_elements, unbind_outputs)
+    updated_elements = update_label(updated_elements)
+    return updated_elements
 
 
-def bind_elements(elements: List[AvlbleElement], unbind_inputs, unbind_output):
+def bind_inputs(
+    client_id: str,
+    elements: List[AvlbleElement],
+    unbind_inputs: List[Union[V1ConfigParam, V2ConfigParam]],
+) -> List[AvlbleElement]:
+    """_summary_
+
+    Args:
+        client_id (str): _description_
+        elements (List[AvlbleElement]): _description_
+        unbind_inputs (List[Union[V1ConfigParam, V2ConfigParam]]): _description_
+
+    Returns:
+        List[AvlbleElement]: _description_
+    """
     for unbind_input in unbind_inputs:
-        if unbind_input.data in NUMERIC_DATA_TYPE_VALUES:
-            ...
+        for element in elements:
+            if (
+                element.bind is False
+                and element.output is False
+                and check_feasibility(unbind_input, element)
+            ):
+                element = add_input_channel(client_id, element, unbind_input)
+                break
+
+    return elements
 
 
-def bind_inputs(): ...
+def bind_outputs(
+    client_id: str,
+    elements: List[AvlbleElement],
+    unbind_outputs: List[Union[V1Output, V2Output]],
+) -> List[AvlbleElement]:
+    """_summary_
+
+    Args:
+        client_id (str): _description_
+        elements (List[AvlbleElement]): _description_
+        unbind_outputs (List[Union[V1Output, V2Output]]): _description_
+
+    Returns:
+        List[AvlbleElement]: _description_
+    """
+    for unbind_output in unbind_outputs:
+        for element in elements:
+            if (
+                element.bind is False
+                and element.output is True
+                and check_feasibility(unbind_output, element)
+            ):
+                element = add_output_channel(client_id, element, unbind_output)
+                break
+
+    return elements
 
 
-def write_updated_measui(filepath, updated_ui):
+def check_feasibility(
+    unbind_input: Union[V1ConfigParam, V2ConfigParam],
+    element: AvlbleElement,
+) -> bool:
+    """_summary_
+
+    Args:
+        unbind_input (Union[V1ConfigParam, V2ConfigParam]): _description_
+        element (AvlbleElement): _description_
+
+    Returns:
+        bool: _description_
+    """
+    if (
+        unbind_input.type in NUMERIC_DATA_TYPE_VALUES
+        and not (hasattr(unbind_input, "repeated") and unbind_input.repeated)
+        and element.tag in NUMERIC_ELEMENTS
+    ):
+        return True
+
+    if (
+        unbind_input.type == DataType.Boolean.value
+        and not (hasattr(unbind_input, "repeated") and unbind_input.repeated)
+        and element.tag in BOOLEAN_ELEMENTS
+    ):
+        return True
+
+    if (
+        unbind_input.type == DataType.String.value
+        and not (
+            hasattr(unbind_input, "repeated") or unbind_input.repeated or unbind_input.annotations
+        )
+        and element.tag == "ChannelStringControl"
+    ):
+        return True
+
+    if (
+        unbind_input.type in NUMERIC_DATA_TYPE_VALUES
+        and hasattr(unbind_input, "repeated")
+        and unbind_input.repeated
+        and element.tag == "ChannelArrayViewer"
+    ):
+        return True
+
+    return False
+
+
+def add_input_channel(
+    client_id: str,
+    element: AvlbleElement,
+    unbind_input: Union[V1ConfigParam, V2ConfigParam],
+) -> AvlbleElement:
+    """_summary_
+
+    Args:
+        client_id (str): _description_
+        element (AvlbleElement): _description_
+        unbind_input (Union[V1ConfigParam, V2ConfigParam]): _description_
+
+    Returns:
+        AvlbleElement: _description_
+    """
+    channel = f"[string]{client_id}/Configuration/{unbind_input.name}"
+    element.element.attrib["Channel"] = channel
+    element.bind = True
+    return element
+
+
+def add_output_channel(
+    client_id: str,
+    element: AvlbleElement,
+    unbind_output: Union[V1Output, V2Output],
+) -> AvlbleElement:
+    """_summary_
+
+    Args:
+        client_id (str): _description_
+        element (AvlbleElement): _description_
+        unbind_output (Union[V1Output, V2Output]): _description_
+
+    Returns:
+        AvlbleElement: _description_
+    """
+    channel = f"[string]{client_id}/Output/{unbind_output.name}"
+    element.element.attrib["Channel"] = channel
+    element.bind = True
+    return element
+
+
+def update_label(elements: List[AvlbleElement]) -> List[AvlbleElement]:
+    """_summary_
+
+    Args:
+        elements (List[AvlbleElement]): _description_
+
+    Returns:
+        List[AvlbleElement]: _description_
+    """
+    for index in range(len(elements)):
+        if (
+            elements[index].tag == "Label"
+            and elements[index - 1].element.attrib["Id"] in elements[index].attrib["LabelOwner"]
+            and elements[index].attrib["Id"] in elements[index - 1].element.attrib["Label"]
+            and "Channel" in elements[index - 1].element.attrib.keys()
+        ):
+            elements[index].element.attrib[
+                "Text"
+            ] = f"[string]{elements[index-1].element.attrib['Channel'].split('/')[-1]}"
+
+    return elements
+
+
+def write_updated_measui(filepath: str, updated_ui: List[AvlbleElement]) -> None:
+    """_summary_
+
+    Args:
+        filepath (str): _description_
+        updated_ui (List[AvlbleElement]): _description_
+    """
     tree = ETree.parse(filepath)
     root = tree.getroot()
     screen = root.find(f".//sf:Screen", NAMESPACES)
     screen_surface = screen.find(f"cf:ScreenSurface", NAMESPACES)
+
     screen.remove(screen_surface)
-    screen.append(updated_ui)
+
+    # Apply unique id filtration here to avoid duplicates.
+
+    for element in updated_ui:
+        screen.append(element.element)
 
     tree.write(filepath, encoding="utf-8", xml_declaration=True)

@@ -160,6 +160,7 @@ def find_screen_surface(measui_tree: ETree.ElementTree) -> ETree.Element:
 
 def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvlbleElement]:
     avlble_elements = []
+
     for element in screen_surface.iter():
         tag = element.tag.split("}")[-1]
 
@@ -190,6 +191,7 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvlbleElement]:
         elif tag == "ChannelArrayViewer":
             output = get_output_info_of_array_element(element)
             bind, name = get_bind_info(element)
+
             avlble_elements.append(
                 AvlbleElement(
                     tag=tag,
@@ -204,6 +206,7 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvlbleElement]:
         elif tag == "ChannelPinSelector":
             output = False
             bind, name = get_bind_info(element)
+
             avlble_elements.append(
                 AvlbleElement(
                     tag=tag,
@@ -230,7 +233,7 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvlbleElement]:
                 )
             )
 
-        else:
+        elif element.tag not in ["p.DefaultElementValue", "RingSelectorInfo"]:
             avlble_elements.append(
                 AvlbleElement(
                     tag=tag,
@@ -256,20 +259,27 @@ def get_output_info_of_array_element(element: ETree.Element) -> bool:
     """
     for array_ele in element.iter():
         if (
-            ("ChannelArrayNumericText" in array_ele or "ChannelArrayStringControl" in array_ele)
-            and hasattr(array_ele, "IsReadOnly")
-            and array_ele["IsReadOnly"] == "[bool]True"
+            (
+                "ChannelArrayNumericText" in array_ele.tag
+                or "ChannelArrayStringControl" in array_ele.tag
+            )
+            and "IsReadOnly" in array_ele.attrib.keys()
+            and array_ele.attrib["IsReadOnly"] == "[bool]True"
         ):
             output = True
         elif (
-            ("ChannelArrayNumericText" in array_ele or "ChannelArrayStringControl" in array_ele)
-            and hasattr(array_ele, "IsReadOnly")
-            and array_ele["IsReadOnly"] == "[bool]False"
+            (
+                "ChannelArrayNumericText" in array_ele.tag
+                or "ChannelArrayStringControl" in array_ele.tag
+            )
+            and "IsReadOnly" in array_ele.attrib.keys()
+            and array_ele.attrib["IsReadOnly"] == "[bool]False"
         ):
             output = False
         elif (
-            "ChannelArrayNumericText" in array_ele or "ChannleArrayStringControl"
-        ) and not hasattr(array_ele, "IsReadOnly"):
+            "ChannelArrayNumericText" in array_ele.tag
+            or "ChannleArrayStringControl" in array_ele.tag
+        ) and "IsReadOnly" not in array_ele.attrib.keys():
             output = False
 
     return output
@@ -291,36 +301,36 @@ def get_output_info(element: ETree.Element) -> bool:
 
     elif (
         tag in READ_ONLY_BASED
-        and hasattr(element.attrib, "IsReadOnly")
+        and "IsReadOnly" in element.attrib.keys()
         and element.attrib["IsReadOnly"] == "[bool]True"
     ):
         output = True
 
     elif (
         tag in READ_ONLY_BASED
-        and hasattr(element.attrib, "IsReadOnly")
+        and "IsReadOnly" in element.attrib.keys()
         and element.attrib["IsReadOnly"] == "[bool]False"
     ):
         output = False
 
-    elif tag in READ_ONLY_BASED and not hasattr(element.attrib, "IsReadOnly"):
+    elif tag in READ_ONLY_BASED and "IsReadOnly" not in element.attrib.keys():
         output = False
 
     elif (
         tag in INTERACTION_MODE_BASED
-        and hasattr(element.attrib, "InteractionMode")
+        and "InteractionMode" in element.attrib.keys()
         and element.attrib["InteractionMode"] == "[NumericPointerInteractionModes]EditRange"
     ):
         output = True
 
     elif (
         tag in INTERACTION_MODE_BASED
-        and hasattr(element.attrib, "InteractionMode")
+        and "InteractionMode" in element.attrib.keys()
         and element.attrib["InteractionMode"] != "[NumericPointerInteractionModes]EditRange"
     ):
         output = False
 
-    elif tag in INTERACTION_MODE_BASED and not hasattr(element.attrib, "InteractionMode"):
+    elif tag in INTERACTION_MODE_BASED and "InteractionMode" not in element.attrib.keys():
         output = False
 
     return output

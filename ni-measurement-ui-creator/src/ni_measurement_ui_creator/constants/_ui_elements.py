@@ -157,3 +157,22 @@ SPECIAL_ELEMENTS = ["ChannelPinSelector", "ChannelArrayViewer"]
 SUPPORTED_CONTROLS_AND_INDICATORS = (
     READ_ONLY_BASED + INTERACTION_MODE_BASED + ONLY_INDICATORS + SPECIAL_ELEMENTS
 )
+
+NUMERIC_ELEMENTS = [
+    "ChannelNumericText",
+    "ChannelSlider",
+    "ChannelGauge",
+    "ChannelMeter",
+    "ChannelKnob",
+    "ChannelLinearProgressBar",
+    "ChannelRadialProgressBar",
+    "ChannelTank",
+]
+
+BOOLEAN_ELEMENTS = [
+    "ChannelLED",
+    "ChannelImageButton",
+    "ChannelButton",
+    "ChannelCheckBox",
+    "ChannelSwitch",
+]

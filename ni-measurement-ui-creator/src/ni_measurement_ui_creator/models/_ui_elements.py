@@ -49,9 +49,9 @@ class AvlbleElement(BaseModel):
     tag: str
     element: ETree.Element
     attrib: Dict[str, str]
-    output: Optional[bool]
-    bind: Optional[bool]
-    name: Optional[str]
+    output: Optional[bool] = None
+    bind: Optional[bool] = None
+    name: Optional[str] = None
 
     class Config:
         """To allow non pydantic types."""
