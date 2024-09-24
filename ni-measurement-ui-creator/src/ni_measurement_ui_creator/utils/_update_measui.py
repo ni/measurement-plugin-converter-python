@@ -37,6 +37,10 @@ from ni_measurement_ui_creator.utils._measui_file import (
     get_measui_selection,
     validate_measui,
 )
+from ni_measurement_ui_creator.utils._ui_elements import (
+    create_input_elements_from_client,
+    create_output_elements_from_client,
+)
 
 
 def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> None:
@@ -105,10 +109,26 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
         updated_elements,
     )
 
+    updated_element_names = [element.name for element in updated_elements]
+    unbind_inputs = [input for input in inputs if input.name not in updated_element_names]
+    unbind_outputs = [output for output in outputs if output.name not in updated_element_names]
+
+    elements = create_elements(client_id, unbind_inputs, unbind_outputs)
     # Call bind elements - done.
     # Call update labels - done.
-    # Call create elements.
-    # Call write_updated_measui.
+    # Call create elements - done.
+    # Call write_updated_measui - done.
+    # Handle graph.
+    # Update labels of array elements.
+    # Find max top, left values for element creation.
+    insert_multiple_elements_directly(
+        os.path.join(
+            output_dir,
+            str(Path(Path(selected_measui).name).stem) + "_updated.measui",
+        ),
+        "ScreenSurface",
+        elements,
+    )
 
     return
 
@@ -159,6 +179,7 @@ def bind_inputs(
                 and check_feasibility(unbind_input, element)
             ):
                 element = add_input_channel(client_id, element, unbind_input)
+                element.name = unbind_input.name
                 break
 
     return elements
@@ -187,6 +208,7 @@ def bind_outputs(
                 and check_feasibility(unbind_output, element)
             ):
                 element = add_output_channel(client_id, element, unbind_output)
+                element.name = unbind_output.name
                 break
 
     return elements
@@ -304,6 +326,47 @@ def update_label(elements: List[AvlbleElement]) -> List[AvlbleElement]:
     return elements
 
 
+def create_elements(client_id, unbind_inputs, unbind_outputs):
+    """_summary_
+
+    Args:
+        client_id (_type_): _description_
+        unbind_inputs (_type_): _description_
+        unbind_outputs (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    inputs = create_input_elements_from_client(
+        inputs=unbind_inputs,
+        input_top_alignment=350,
+        client_id=client_id,
+    )
+    outputs = create_output_elements_from_client(
+        outputs=unbind_outputs,
+        output_left_alignment=300,
+        client_id=client_id,
+    )
+    ui_elements = add_namespace(inputs + outputs)
+
+    return ui_elements
+
+
+def add_namespace(ui_elements: str):
+    """_summary_
+
+    Args:
+        ui_elements (str): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    ui_elements = ui_elements.replace("<Channel", "<ns2:Channel")
+    ui_elements = ui_elements.replace("<p", "<ns2:p")
+    ui_elements = ui_elements.replace("<Label", "<ns3:Label")
+    return ui_elements
+
+
 def write_updated_measui(filepath: str, updated_ui: List[AvlbleElement]) -> None:
     """_summary_
 
@@ -313,14 +376,40 @@ def write_updated_measui(filepath: str, updated_ui: List[AvlbleElement]) -> None
     """
     tree = ETree.parse(filepath)
     root = tree.getroot()
-    screen = root.find(f".//sf:Screen", NAMESPACES)
-    screen_surface = screen.find(f"cf:ScreenSurface", NAMESPACES)
+    screen = root.find("{http://www.ni.com/InstrumentFramework/ScreenDocument}Screen")
+    screen_surface = screen.find("{http://www.ni.com/ConfigurationBasedSoftware.Core}ScreenSurface")
 
     screen.remove(screen_surface)
-
-    # Apply unique id filtration here to avoid duplicates.
-
-    for element in updated_ui:
-        screen.append(element.element)
+    screen.append(updated_ui[0].element)
 
     tree.write(filepath, encoding="utf-8", xml_declaration=True)
+
+
+def insert_multiple_elements_directly(xml_file, parent_tag, elements_str):
+    """_summary_
+
+    Args:
+        xml_file (_type_): _description_
+        parent_tag (_type_): _description_
+        elements_str (_type_): _description_
+    """
+    # Read the existing XML content
+    with open(xml_file, "r", encoding="utf-8") as file:
+        xml_content = file.read()
+
+    # Find the position of the closing tag of the parent element
+    closing_tag = f"</ns2:{parent_tag}>"
+    insert_position = xml_content.find(closing_tag)
+
+    if insert_position == -1:
+        print(f"Tag '{parent_tag}' not found.")
+        return
+
+    # Insert the new elements before the closing tag
+    new_content = (
+        xml_content[:insert_position] + elements_str + "\n" + xml_content[insert_position:]
+    )
+
+    # Write the modified content back to the XML file
+    with open(xml_file, "w", encoding="utf-8") as file:
+        file.write(new_content)

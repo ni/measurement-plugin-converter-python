@@ -267,6 +267,8 @@ def get_output_info_of_array_element(element: ETree.Element) -> bool:
             and array_ele.attrib["IsReadOnly"] == "[bool]True"
         ):
             output = True
+            return output
+
         elif (
             (
                 "ChannelArrayNumericText" in array_ele.tag
@@ -276,13 +278,15 @@ def get_output_info_of_array_element(element: ETree.Element) -> bool:
             and array_ele.attrib["IsReadOnly"] == "[bool]False"
         ):
             output = False
+            return output
+
         elif (
             "ChannelArrayNumericText" in array_ele.tag
             or "ChannleArrayStringControl" in array_ele.tag
         ) and "IsReadOnly" not in array_ele.attrib.keys():
-            output = False
 
-    return output
+            output = False
+            return output
 
 
 def get_output_info(element: ETree.Element) -> bool:

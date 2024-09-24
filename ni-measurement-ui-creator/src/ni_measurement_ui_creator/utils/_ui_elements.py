@@ -16,7 +16,9 @@ from ni_measurement_ui_creator.utils._helpers import (
 
 
 def create_input_elements_from_client(
-    inputs, input_top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
+    inputs,
+    input_top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
+    client_id=CLIENT_ID
 ) -> str:
     """Create Measui input elements.
 
@@ -39,7 +41,7 @@ def create_input_elements_from_client(
             ):
                 input_elements.append(
                     DataElement(
-                        client_id=CLIENT_ID,
+                        client_id=client_id,
                         name=input.name,
                         left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
                         top_alignment=input_top_alignment,
@@ -58,7 +60,7 @@ def create_input_elements_from_client(
             ):
                 input_elements.append(
                     DataElement(
-                        client_id=CLIENT_ID,
+                        client_id=client_id,
                         name=input.name,
                         left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
                         top_alignment=input_top_alignment,
@@ -79,7 +81,7 @@ def create_input_elements_from_client(
             ):
                 input_elements.append(
                     DataElement(
-                        client_id=CLIENT_ID,
+                        client_id=client_id,
                         name=input.name,
                         left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
                         top_alignment=input_top_alignment,
@@ -91,7 +93,7 @@ def create_input_elements_from_client(
             elif input.type in NUMERIC_DATA_TYPE_VALUES:
                 input_elements.append(
                     DataElement(
-                        client_id=CLIENT_ID,
+                        client_id=client_id,
                         name=input.name,
                         left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
                         top_alignment=input_top_alignment,
@@ -108,7 +110,7 @@ def create_input_elements_from_client(
             ):
                 input_elements.append(
                     DataElement(
-                        client_id=CLIENT_ID,
+                        client_id=client_id,
                         name=input.name,
                         left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
                         top_alignment=input_top_alignment,
@@ -128,7 +130,7 @@ def create_input_elements_from_client(
             ):
                 input_elements.append(
                     DataElement(
-                        client_id=CLIENT_ID,
+                        client_id=client_id,
                         name=input.name,
                         left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
                         top_alignment=input_top_alignment,
@@ -150,6 +152,7 @@ def create_output_elements_from_client(
         + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
     ),
     output_top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
+    client_id=CLIENT_ID
 ) -> str:
     """Create Measui output elements.
 
@@ -172,7 +175,7 @@ def create_output_elements_from_client(
             ):
                 output_elements.append(
                     DataElement(
-                        client_id=CLIENT_ID,
+                        client_id=client_id,
                         name=output.name,
                         left_alignment=output_left_alignment,
                         top_alignment=output_top_alignment,
@@ -191,7 +194,7 @@ def create_output_elements_from_client(
             ):
                 output_elements.append(
                     DataElement(
-                        client_id=CLIENT_ID,
+                        client_id=client_id,
                         name=output.name,
                         left_alignment=output_left_alignment,
                         top_alignment=output_top_alignment,
@@ -210,7 +213,7 @@ def create_output_elements_from_client(
             ):
                 output_elements.append(
                     DataElement(
-                        client_id=CLIENT_ID,
+                        client_id=client_id,
                         name=output.name,
                         left_alignment=output_left_alignment,
                         top_alignment=output_top_alignment,
@@ -222,7 +225,7 @@ def create_output_elements_from_client(
             elif output.type in NUMERIC_DATA_TYPE_VALUES:
                 output_elements.append(
                     DataElement(
-                        client_id=CLIENT_ID,
+                        client_id=client_id,
                         name=output.name,
                         left_alignment=output_left_alignment,
                         top_alignment=output_top_alignment,
