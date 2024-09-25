@@ -43,7 +43,7 @@ For update command,
 - String Indicator
 - Pin
 
-### Binds the supported data types for update command.
+### Supported data types for update command
 
 - Int
 - Float
