@@ -93,6 +93,91 @@ class SpecializedDataType:
     IORESOURCE_ARR = "IOResourceArray1D"
 
 
+class UpdateUI:
+    """Update UI file."""
+
+    NAMESPACES = {
+        "pf": "http://www.ni.com/PlatformFramework",
+        "sf": "http://www.ni.com/InstrumentFramework/ScreenDocument",
+        "cf": "http://www.ni.com/ConfigurationBasedSoftware.Core",
+        "pc": "http://www.ni.com/PanelCommon",
+    }
+    SCREEN_TAG = ".//sf:Screen"
+    SCREEN_SURFACE_TAG = ".//cf:ScreenSurface"
+
+    NUMERIC_ELEMENTS = [
+        "ChannelNumericText",
+        "ChannelSlider",
+        "ChannelGauge",
+        "ChannelMeter",
+        "ChannelKnob",
+        "ChannelLinearProgressBar",
+        "ChannelRadialProgressBar",
+        "ChannelTank",
+    ]
+    BOOLEAN_ELEMENTS = [
+        "ChannelLED",
+        "ChannelImageButton",
+        "ChannelButton",
+        "ChannelCheckBox",
+        "ChannelSwitch",
+    ]
+    READ_ONLY_BASED = [
+        "ChannelNumericText",
+        "ChannelButton",
+        "ChannelSwitch",
+        "ChannelStringControl",
+        "ChannelLED",
+        "ChannelImageButton",
+    ]
+    INTERACTION_MODE_BASED = [
+        "ChannelSlider",
+        "ChannelKnob",
+        "ChannelButton",
+        "ChannelSwitch",
+        "ChannelGauge",
+        "ChannelMeter",
+        "ChannelTank",
+    ]
+    ONLY_INDICATORS = ["ChannelLinearProgressBar", "ChannelRadialProgressBar", "ChannelCheckBox"]
+    SPECIAL_ELEMENTS = ["ChannelPinSelector", "ChannelArrayViewer"]
+
+    SUPPORTED_CONTROLS_AND_INDICATORS = (
+        READ_ONLY_BASED + INTERACTION_MODE_BASED + ONLY_INDICATORS + SPECIAL_ELEMENTS
+    )
+
+    UNSUPPORTED_ELEMENTS = [
+        "ChannelRingSelector",
+        "ChannelEnumSelector",
+        "ChannelPathSelector",
+        "HmiGraphPlot",
+    ]
+    NUMERIC_AND_STRING_ARRAY = ["ChannelArrayNumericText", "ChannelArrayStringControl"]
+
+
+class ElementAttrib:
+    """Attributes in UI Elements."""
+
+    CLIENT_ID = "ClientId"
+    CHANNEL = "Channel"
+    LABEL = "Label"
+    LABEL_OWNER = "LabelOwner"
+    ID = "Id"
+    TOP = "Top"
+    LEFT = "Left"
+    HEIGHT = "Height"
+    MIN_HEIGHT = "MinHeight"
+    IS_READ_ONLY = "IsReadOnly"
+    INTERACTION_MODE = "InteractionMode"
+
+
+class MeasUIFile:
+    """Measurement UI file."""
+
+    ENCODING = "utf-8"
+    MEASUREMENT_UI_FILE_EXTENSION = ".measui"
+
+
 LOGGER = "logger"
 TYPE_SPECIFICATION = "ni/type_specialization"
 MEASUREMENT_SERVICE_INTERFACE_V1 = "ni.measurementlink.measurement.v1.MeasurementService"
@@ -123,56 +208,4 @@ NUMERIC_DATA_TYPE_VALUES = [
     DataType.UInt64.value,
     DataType.Single.value,
     DataType.Double.value,
-]
-
-ENCODING = "utf-8"
-
-NAMESPACES = {
-    "pf": "http://www.ni.com/PlatformFramework",
-    "sf": "http://www.ni.com/InstrumentFramework/ScreenDocument",
-    "cf": "http://www.ni.com/ConfigurationBasedSoftware.Core",
-    "pc": "http://www.ni.com/PanelCommon",
-}
-
-READ_ONLY_BASED = [
-    "ChannelNumericText",
-    "ChannelButton",
-    "ChannelSwitch",
-    "ChannelStringControl",
-    "ChannelLED",
-    "ChannelImageButton",
-]
-INTERACTION_MODE_BASED = [
-    "ChannelSlider",
-    "ChannelKnob",
-    "ChannelButton",
-    "ChannelSwitch",
-    "ChannelGauge",
-    "ChannelMeter",
-    "ChannelTank",
-]
-ONLY_INDICATORS = ["ChannelLinearProgressBar", "ChannelRadialProgressBar", "ChannelCheckBox"]
-SPECIAL_ELEMENTS = ["ChannelPinSelector", "ChannelArrayViewer"]
-
-SUPPORTED_CONTROLS_AND_INDICATORS = (
-    READ_ONLY_BASED + INTERACTION_MODE_BASED + ONLY_INDICATORS + SPECIAL_ELEMENTS
-)
-
-NUMERIC_ELEMENTS = [
-    "ChannelNumericText",
-    "ChannelSlider",
-    "ChannelGauge",
-    "ChannelMeter",
-    "ChannelKnob",
-    "ChannelLinearProgressBar",
-    "ChannelRadialProgressBar",
-    "ChannelTank",
-]
-
-BOOLEAN_ELEMENTS = [
-    "ChannelLED",
-    "ChannelImageButton",
-    "ChannelButton",
-    "ChannelCheckBox",
-    "ChannelSwitch",
 ]

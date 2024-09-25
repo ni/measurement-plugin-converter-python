@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## NI Measurement UI Creator
 
+## [1.0.0-dev9] - 2024-09-25
+
+### Added
+
+- Support for updating UI elements.
+
 ## [1.0.0-dev8] - 2024-09-03
 
 ### Added

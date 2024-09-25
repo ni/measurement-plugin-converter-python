@@ -1,5 +1,21 @@
 """Create Measurement UI Elements from client."""
 
+from typing import List, Union
+from uuid import UUID
+
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
+    ConfigurationParameter as V1ConfigParam,
+)
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
+    Output as V1Output,
+)
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
+    ConfigurationParameter as V2ConfigParam,
+)
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
+    Output as V2Output,
+)
+
 from ni_measurement_ui_creator.constants import (
     CLIENT_ID,
     NUMERIC_DATA_TYPE_VALUES,
@@ -16,17 +32,23 @@ from ni_measurement_ui_creator.utils._helpers import (
 
 
 def create_input_elements_from_client(
-    inputs,
-    input_top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
-    client_id=CLIENT_ID
+    inputs: List[Union[V1ConfigParam, V2ConfigParam]],
+    client_id: Union[str, UUID] = CLIENT_ID,
+    input_top_alignment: Union[int, float] = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
+    input_left_alignment: Union[int, float] = MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
 ) -> str:
-    """Create Measui input elements.
+    """Create input elements.
 
     Args:
-        inputs (): Input elements from metadata using client.
+        inputs (List[Union[V1ConfigParam, V2ConfigParam]]): Inputs from Metadata.
+        client_id (Union[str, UUID], optional): Client ID. Defaults to CLIENT_ID.
+        input_top_alignment (Union[int, float], optional): Input top alignment value. \
+        Defaults to MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE.
+        input_left_alignment (Union[int, float], optional): Input left alignment value. \
+        Defaults to MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE.
 
     Returns:
-        str: MeasUI input elements.
+        str: Control elements.
     """
     input_elements = []
 
@@ -43,7 +65,7 @@ def create_input_elements_from_client(
                     DataElement(
                         client_id=client_id,
                         name=input.name,
-                        left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
+                        left_alignment=input_left_alignment,
                         top_alignment=input_top_alignment,
                         height=MeasUIElementPosition.ARRAY_HEIGHT,
                         width=MeasUIElementPosition.ARRAY_WIDTH,
@@ -62,7 +84,7 @@ def create_input_elements_from_client(
                     DataElement(
                         client_id=client_id,
                         name=input.name,
-                        left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
+                        left_alignment=input_left_alignment,
                         top_alignment=input_top_alignment,
                         height=MeasUIElementPosition.BOOLEAN_HORIZONTAL_SLIDER_HEIGHT,
                         width=MeasUIElementPosition.BOOLEAN_HORIZONTAL_SLIDER_WIDTH,
@@ -83,7 +105,7 @@ def create_input_elements_from_client(
                     DataElement(
                         client_id=client_id,
                         name=input.name,
-                        left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
+                        left_alignment=input_left_alignment,
                         top_alignment=input_top_alignment,
                         value_type=input_datatype.name,
                     )
@@ -95,7 +117,7 @@ def create_input_elements_from_client(
                     DataElement(
                         client_id=client_id,
                         name=input.name,
-                        left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
+                        left_alignment=input_left_alignment,
                         top_alignment=input_top_alignment,
                         value_type=input_datatype.name,
                     )
@@ -112,7 +134,7 @@ def create_input_elements_from_client(
                     DataElement(
                         client_id=client_id,
                         name=input.name,
-                        left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
+                        left_alignment=input_left_alignment,
                         top_alignment=input_top_alignment,
                         value_type=SpecializedDataType.IORESOURCE_ARR,
                     )
@@ -132,7 +154,7 @@ def create_input_elements_from_client(
                     DataElement(
                         client_id=client_id,
                         name=input.name,
-                        left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
+                        left_alignment=input_left_alignment,
                         top_alignment=input_top_alignment,
                         value_type=SpecializedDataType.PIN,
                     )
@@ -142,25 +164,32 @@ def create_input_elements_from_client(
         except ValueError:
             pass
 
-    return create_control_elements(input_elements)
+    return create_control_elements(input_elements), input_top_alignment
 
 
 def create_output_elements_from_client(
-    outputs,
-    output_left_alignment=(
+    outputs: List[Union[V1Output, V2Output]],
+    client_id: Union[str, UUID] = CLIENT_ID,
+    output_top_alignment: Union[int, float] = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
+    output_left_alignment: Union[int, float] = (
         MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
         + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
     ),
-    output_top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
-    client_id=CLIENT_ID
 ) -> str:
-    """Create Measui output elements.
+    """Create output elements.
 
     Args:
-        outputs (): Output elements from metadata using client.
+        outputs (List[Union[V1Output, V2Output]]): Output elements from Metadata.
+        client_id (Union[str, UUID], optional): Client ID. Defaults to CLIENT_ID.
+        output_top_alignment (Union[int, float], optional): Output top alignment value. \
+        Defaults to MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE.
+        output_left_alignment (Union[int, float], optional): Output left alignment value.\
+        Defaults to \
+        (MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE + 
+        MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE).
 
     Returns:
-        str: MeasUI output elements.
+        str: Indicator elements.
     """
     output_elements = []
 
@@ -208,8 +237,10 @@ def create_output_elements_from_client(
                     + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 0.5
                 )
 
-            elif output.type == DataType.String.value and not (
-                hasattr(output, "repeated") and output.repeated
+            elif (
+                output.type == DataType.String.value
+                and not (hasattr(output, "repeated") and output.repeated)
+                and not output.annotations
             ):
                 output_elements.append(
                     DataElement(

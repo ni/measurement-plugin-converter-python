@@ -1,32 +1,43 @@
 """Implementation of update meas UI."""
 
 import os
+import re
 import shutil
 import xml.etree.ElementTree as ETree
 from logging import getLogger
 from pathlib import Path
-from typing import List, Union
+from typing import List, Union, Tuple
 
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
-    GetMetadataResponse as V1MetaData,
     ConfigurationParameter as V1ConfigParam,
+)
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
+    GetMetadataResponse as V1MetaData,
+)
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
     Output as V1Output,
 )
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
-    GetMetadataResponse as V2MetaData,
     ConfigurationParameter as V2ConfigParam,
+)
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
+    GetMetadataResponse as V2MetaData,
+)
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
     Output as V2Output,
 )
 
-
 from ni_measurement_ui_creator.constants import (
-    BOOLEAN_ELEMENTS,
     LOGGER,
-    NAMESPACES,
     NUMERIC_DATA_TYPE_VALUES,
-    NUMERIC_ELEMENTS,
+    TYPE_SPECIFICATION,
+    MeasUIElementPosition,
+    SpecializedDataType,
     DataType,
     UserMessage,
+    UpdateUI,
+    MeasUIFile,
+    ElementAttrib,
 )
 from ni_measurement_ui_creator.models import AvlbleElement
 from ni_measurement_ui_creator.utils._create_measui import create_measui
@@ -35,7 +46,9 @@ from ni_measurement_ui_creator.utils._measui_file import (
     get_avlble_elements,
     get_measui_files,
     get_measui_selection,
+    insert_created_elements,
     validate_measui,
+    write_updated_measui,
 )
 from ni_measurement_ui_creator.utils._ui_elements import (
     create_input_elements_from_client,
@@ -79,13 +92,12 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
         create_measui(metadata, output_dir)
         return
 
-    shutil.copy(
-        selected_measui,
-        os.path.join(
-            output_dir,
-            str(Path(Path(selected_measui).name).stem) + "_updated.measui",
-        ),
+    updated_measui_filepath = os.path.join(
+        output_dir,
+        str(Path(Path(selected_measui).name).stem)
+        + f"_updated{MeasUIFile.MEASUREMENT_UI_FILE_EXTENSION}",
     )
+    shutil.copy(selected_measui, updated_measui_filepath)
 
     inputs = metadata.measurement_signature.configuration_parameters
     outputs = metadata.measurement_signature.outputs
@@ -97,40 +109,33 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
     unbind_outputs = [output for output in outputs if output.name not in elements_names]
 
     root = tree.getroot()
-    screen = root.find(f".//sf:Screen", NAMESPACES)
-    client_id = screen.attrib["ClientId"]
+    screen = root.find(UpdateUI.SCREEN_TAG, UpdateUI.NAMESPACES)
+    client_id = screen.attrib[ElementAttrib.CLIENT_ID]
+
+    logger.info(UserMessage.BINDING_ELEMENTS)
     updated_elements = bind_elements(client_id, elements, unbind_inputs, unbind_outputs)
 
-    write_updated_measui(
-        os.path.join(
-            output_dir,
-            str(Path(Path(selected_measui).name).stem) + "_updated.measui",
-        ),
-        updated_elements,
-    )
+    write_updated_measui(updated_measui_filepath, updated_elements)
 
     updated_element_names = [element.name for element in updated_elements]
-    unbind_inputs = [input for input in inputs if input.name not in updated_element_names]
-    unbind_outputs = [output for output in outputs if output.name not in updated_element_names]
+    top_alignment, left_alignment = find_alignments(updated_elements)
 
-    elements = create_elements(client_id, unbind_inputs, unbind_outputs)
-    # Call bind elements - done.
-    # Call update labels - done.
-    # Call create elements - done.
-    # Call write_updated_measui - done.
-    # Handle graph.
-    # Update labels of array elements.
-    # Find max top, left values for element creation.
-    insert_multiple_elements_directly(
-        os.path.join(
-            output_dir,
-            str(Path(Path(selected_measui).name).stem) + "_updated.measui",
-        ),
-        "ScreenSurface",
-        elements,
+    unmatched_inputs = [input for input in inputs if input.name not in updated_element_names]
+    unmatched_outputs = [output for output in outputs if output.name not in updated_element_names]
+
+    logger.info(UserMessage.CREATING_ELEMENTS)
+    elements = create_elements(
+        client_id,
+        top_alignment,
+        left_alignment,
+        unmatched_inputs,
+        unmatched_outputs,
     )
 
-    return
+    insert_created_elements(updated_measui_filepath, elements)
+    logger.info(UserMessage.UPDATED_UI.format(filepath=os.path.abspath(updated_measui_filepath)))
+
+    return None
 
 
 def bind_elements(
@@ -152,7 +157,6 @@ def bind_elements(
     """
     updated_elements = bind_inputs(client_id, elements, unbind_inputs)
     updated_elements = bind_outputs(client_id, updated_elements, unbind_outputs)
-    updated_elements = update_label(updated_elements)
     return updated_elements
 
 
@@ -161,27 +165,32 @@ def bind_inputs(
     elements: List[AvlbleElement],
     unbind_inputs: List[Union[V1ConfigParam, V2ConfigParam]],
 ) -> List[AvlbleElement]:
-    """_summary_
+    """Bind inputs to controls if feasible.
 
     Args:
-        client_id (str): _description_
-        elements (List[AvlbleElement]): _description_
-        unbind_inputs (List[Union[V1ConfigParam, V2ConfigParam]]): _description_
+        client_id (str): Client ID.
+        elements (List[AvlbleElement]): List of available elements.
+        unbind_inputs (List[Union[V1ConfigParam, V2ConfigParam]]): Unbind inputs.
 
     Returns:
-        List[AvlbleElement]: _description_
+        List[AvlbleElement]: Updated elements that are being bound.
     """
+    logger = getLogger(LOGGER)
+
     for unbind_input in unbind_inputs:
-        for element in elements:
+        for index, element in enumerate(elements):
             if (
                 element.bind is False
                 and element.output is False
                 and check_feasibility(unbind_input, element)
             ):
-                element = add_input_channel(client_id, element, unbind_input)
+                element = add_channel(client_id, element, unbind_input)
                 element.name = unbind_input.name
+                element.bind = True
+                elements = update_label(index, elements)
                 break
 
+    logger.debug(UserMessage.INPUTS_BOUND)
     return elements
 
 
@@ -190,226 +199,232 @@ def bind_outputs(
     elements: List[AvlbleElement],
     unbind_outputs: List[Union[V1Output, V2Output]],
 ) -> List[AvlbleElement]:
-    """_summary_
+    """Bind outputs to indicators if feasible.
 
     Args:
-        client_id (str): _description_
-        elements (List[AvlbleElement]): _description_
-        unbind_outputs (List[Union[V1Output, V2Output]]): _description_
+        client_id (str): Client ID.
+        elements (List[AvlbleElement]): List of available elements.
+        unbind_outputs (List[Union[V1Output, V2Output]]): Unbind outputs.
 
     Returns:
-        List[AvlbleElement]: _description_
+        List[AvlbleElement]: Updated elements that are being bound.
     """
+    logger = getLogger(LOGGER)
     for unbind_output in unbind_outputs:
-        for element in elements:
+        for index, element in enumerate(elements):
             if (
                 element.bind is False
                 and element.output is True
                 and check_feasibility(unbind_output, element)
             ):
-                element = add_output_channel(client_id, element, unbind_output)
+                element = add_channel(client_id, element, unbind_output)
                 element.name = unbind_output.name
+                element.bind = True
+                elements = update_label(index, elements)
                 break
 
+    logger.debug(UserMessage.OUTPUTS_BOUND)
     return elements
 
 
 def check_feasibility(
-    unbind_input: Union[V1ConfigParam, V2ConfigParam],
+    unbind_param: Union[V1ConfigParam, V2ConfigParam, V1Output, V2Output],
     element: AvlbleElement,
 ) -> bool:
-    """_summary_
+    """Check if unbind input/output can be bound to the element.
 
     Args:
-        unbind_input (Union[V1ConfigParam, V2ConfigParam]): _description_
-        element (AvlbleElement): _description_
+        unbind_param (Union[V1ConfigParam, V2ConfigParam]): Unbind input/output.
+        element (AvlbleElement): Unbind element.
 
     Returns:
-        bool: _description_
+        bool: True if unbind input/output is possible to bound to the element.
     """
     if (
-        unbind_input.type in NUMERIC_DATA_TYPE_VALUES
-        and not (hasattr(unbind_input, "repeated") and unbind_input.repeated)
-        and element.tag in NUMERIC_ELEMENTS
+        unbind_param.type in NUMERIC_DATA_TYPE_VALUES
+        and not unbind_param.repeated
+        and element.tag in UpdateUI.NUMERIC_ELEMENTS
     ):
         return True
 
     if (
-        unbind_input.type == DataType.Boolean.value
-        and not (hasattr(unbind_input, "repeated") and unbind_input.repeated)
-        and element.tag in BOOLEAN_ELEMENTS
+        unbind_param.type == DataType.Boolean.value
+        and not unbind_param.repeated
+        and element.tag in UpdateUI.BOOLEAN_ELEMENTS
     ):
         return True
 
     if (
-        unbind_input.type == DataType.String.value
-        and not (
-            hasattr(unbind_input, "repeated") or unbind_input.repeated or unbind_input.annotations
-        )
+        unbind_param.type == DataType.String.value
+        and not unbind_param.repeated
+        and not unbind_param.annotations
         and element.tag == "ChannelStringControl"
     ):
         return True
 
     if (
-        unbind_input.type in NUMERIC_DATA_TYPE_VALUES
-        and hasattr(unbind_input, "repeated")
-        and unbind_input.repeated
+        unbind_param.type in NUMERIC_DATA_TYPE_VALUES
+        and unbind_param.repeated
         and element.tag == "ChannelArrayViewer"
+    ):
+        return True
+
+    if (
+        unbind_param.annotations
+        and (
+            unbind_param.annotations[TYPE_SPECIFICATION] == SpecializedDataType.PIN.lower()
+            or unbind_param.annotations[TYPE_SPECIFICATION]
+            == SpecializedDataType.IORESOURCE.lower()
+        )
+        and element.tag == "ChannelPinSelector"
     ):
         return True
 
     return False
 
 
-def add_input_channel(
+def add_channel(
     client_id: str,
     element: AvlbleElement,
-    unbind_input: Union[V1ConfigParam, V2ConfigParam],
+    unbind_param: Union[V1ConfigParam, V2ConfigParam, V1Output, V2Output],
 ) -> AvlbleElement:
-    """_summary_
+    """Add channel attribute to bind the lement.
 
     Args:
-        client_id (str): _description_
-        element (AvlbleElement): _description_
-        unbind_input (Union[V1ConfigParam, V2ConfigParam]): _description_
+        client_id (str): Client ID.
+        element (AvlbleElement): Unbind element.
+        unbind_input (Union[V1ConfigParam, V2ConfigParam, V1Output, V2Output]): Unbind input/output.
 
     Returns:
-        AvlbleElement: _description_
+        AvlbleElement: Bound element.
     """
-    channel = f"[string]{client_id}/Configuration/{unbind_input.name}"
-    element.element.attrib["Channel"] = channel
-    element.bind = True
+    if isinstance(unbind_param, V1ConfigParam) or isinstance(unbind_param, V2ConfigParam):
+        channel = f"[string]{client_id}/Configuration/{unbind_param.name}"
+    else:
+        channel = f"[string]{client_id}/Output/{unbind_param.name}"
+
+    element.element.attrib[ElementAttrib.CHANNEL] = channel
     return element
 
 
-def add_output_channel(
-    client_id: str,
-    element: AvlbleElement,
-    unbind_output: Union[V1Output, V2Output],
-) -> AvlbleElement:
-    """_summary_
+def update_label(index: int, elements: List[AvlbleElement]) -> List[AvlbleElement]:
+    """Update label element.
+
+    1. Find the bound label element of the element.
+    2. Update the label element with the name.
 
     Args:
-        client_id (str): _description_
-        element (AvlbleElement): _description_
-        unbind_output (Union[V1Output, V2Output]): _description_
+        index (int): Index of bound element.
+        elements (List[AvlbleElement]): Available elements.
 
     Returns:
-        AvlbleElement: _description_
+        List[AvlbleElement]: Elements with updated label.
     """
-    channel = f"[string]{client_id}/Output/{unbind_output.name}"
-    element.element.attrib["Channel"] = channel
-    element.bind = True
-    return element
-
-
-def update_label(elements: List[AvlbleElement]) -> List[AvlbleElement]:
-    """_summary_
-
-    Args:
-        elements (List[AvlbleElement]): _description_
-
-    Returns:
-        List[AvlbleElement]: _description_
-    """
-    for index in range(len(elements)):
+    for label_index in range(index + 1, len(elements)):
         if (
-            elements[index].tag == "Label"
-            and elements[index - 1].element.attrib["Id"] in elements[index].attrib["LabelOwner"]
-            and elements[index].attrib["Id"] in elements[index - 1].element.attrib["Label"]
-            and "Channel" in elements[index - 1].element.attrib.keys()
+            elements[label_index].tag == ElementAttrib.LABEL
+            and elements[index].element.attrib[ElementAttrib.ID]
+            in elements[label_index].attrib[ElementAttrib.LABEL_OWNER]
+            and elements[label_index].attrib[ElementAttrib.ID]
+            in elements[index].element.attrib[ElementAttrib.LABEL]
+            and ElementAttrib.CHANNEL in elements[index].element.attrib.keys()
         ):
-            elements[index].element.attrib[
+            elements[label_index].element.attrib[
                 "Text"
-            ] = f"[string]{elements[index-1].element.attrib['Channel'].split('/')[-1]}"
+            ] = f"[string]{elements[index].element.attrib[ElementAttrib.CHANNEL].split('/')[-1]}"
+            break
 
     return elements
 
 
-def create_elements(client_id, unbind_inputs, unbind_outputs):
-    """_summary_
+def find_alignments(updated_elements: List[AvlbleElement]) -> Tuple[float, float]:
+    """Find bottom most element to get the top and left values.
 
     Args:
-        client_id (_type_): _description_
-        unbind_inputs (_type_): _description_
-        unbind_outputs (_type_): _description_
+        updated_elements (List[AvlbleElement]): Updated UI elements.
 
     Returns:
-        _type_: _description_
+        Tuple[float, float]: Top and left values.
     """
-    inputs = create_input_elements_from_client(
-        inputs=unbind_inputs,
-        input_top_alignment=350,
+
+    def extract_top_value(element: AvlbleElement):
+        try:
+            return float(element.element.attrib[ElementAttrib.TOP].split("]")[-1])
+        except (AttributeError, ValueError, KeyError):
+            return -1.0
+
+    try:
+        elements = updated_elements[1:]
+        lowest_element = max(elements, key=extract_top_value, default=None)
+        top_start_value = (
+            float(lowest_element.attrib[ElementAttrib.TOP].split("]")[-1])
+            + (
+                float(lowest_element.attrib[ElementAttrib.HEIGHT].split("]")[-1])
+                if ElementAttrib.HEIGHT in lowest_element.attrib
+                else float(lowest_element.attrib[ElementAttrib.MIN_HEIGHT].split("]")[-1])
+            )
+            + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+        )
+
+        left_start_value = float(lowest_element.attrib[ElementAttrib.LEFT].split("]")[-1])
+        return top_start_value, left_start_value
+
+    except AttributeError:
+        return 50.0, 50.0
+
+
+def create_elements(
+    client_id: str,
+    top_alignment: float,
+    left_alignment: float,
+    unmatched_inputs: Union[V1ConfigParam, V2ConfigParam],
+    unmatched_outputs: Union[V1Output, V2Output],
+) -> str:
+    """Create controls and indicators for the unmatched inputs and outputs.
+
+    Args:
+        client_id (str): Client ID of the file.
+        top_alignment (float): Top alignment value.
+        left_alignment (float): Left alignment value.
+        unmatched_inputs (Union[V1ConfigParam, V2ConfigParam]): Inputs that \
+        doesn't have a corresponding element.
+        unmatched_outputs (Union[V1Output, V2Output]): Outputs that \
+        doesn't have a corresponding element.
+
+    Returns:
+        str: UI elements for supported unmatched inputs and unmatched outputs.
+    """
+    inputs, top_alignment = create_input_elements_from_client(
+        inputs=unmatched_inputs,
         client_id=client_id,
+        input_top_alignment=top_alignment,
+        input_left_alignment=left_alignment,
     )
     outputs = create_output_elements_from_client(
-        outputs=unbind_outputs,
-        output_left_alignment=300,
+        outputs=unmatched_outputs,
         client_id=client_id,
+        output_top_alignment=top_alignment,
+        output_left_alignment=left_alignment,
     )
     ui_elements = add_namespace(inputs + outputs)
 
     return ui_elements
 
 
-def add_namespace(ui_elements: str):
-    """_summary_
+def add_namespace(ui_elements: str) -> str:
+    """Add namespace to UI elements created.
 
     Args:
-        ui_elements (str): _description_
+        ui_elements (str): UI elements.
 
     Returns:
-        _type_: _description_
+        str: Namespaces added UI elements.
     """
-    ui_elements = ui_elements.replace("<Channel", "<ns2:Channel")
-    ui_elements = ui_elements.replace("<p", "<ns2:p")
-    ui_elements = ui_elements.replace("<Label", "<ns3:Label")
+    ui_elements = re.sub(r"<ChannelPinSelector", "<ns1:ChannelPinSelector", ui_elements)
+    ui_elements = re.sub(r"<ChannelArrayViewer", "<ns2:ChannelArrayViewer", ui_elements)
+    ui_elements = re.sub(r"</ChannelArrayViewer", "</ns2:ChannelArrayViewer", ui_elements)
+    ui_elements = re.sub(r"<Channel(?!PinSelector|ArrayViewer)", "<ns2:Channel", ui_elements)
+    ui_elements = re.sub(r"<p", "<ns2:p", ui_elements)
+    ui_elements = re.sub(r"</p", "</ns2:p", ui_elements)
+    ui_elements = re.sub(r"<Label", "<ns3:Label", ui_elements)
     return ui_elements
-
-
-def write_updated_measui(filepath: str, updated_ui: List[AvlbleElement]) -> None:
-    """_summary_
-
-    Args:
-        filepath (str): _description_
-        updated_ui (List[AvlbleElement]): _description_
-    """
-    tree = ETree.parse(filepath)
-    root = tree.getroot()
-    screen = root.find("{http://www.ni.com/InstrumentFramework/ScreenDocument}Screen")
-    screen_surface = screen.find("{http://www.ni.com/ConfigurationBasedSoftware.Core}ScreenSurface")
-
-    screen.remove(screen_surface)
-    screen.append(updated_ui[0].element)
-
-    tree.write(filepath, encoding="utf-8", xml_declaration=True)
-
-
-def insert_multiple_elements_directly(xml_file, parent_tag, elements_str):
-    """_summary_
-
-    Args:
-        xml_file (_type_): _description_
-        parent_tag (_type_): _description_
-        elements_str (_type_): _description_
-    """
-    # Read the existing XML content
-    with open(xml_file, "r", encoding="utf-8") as file:
-        xml_content = file.read()
-
-    # Find the position of the closing tag of the parent element
-    closing_tag = f"</ns2:{parent_tag}>"
-    insert_position = xml_content.find(closing_tag)
-
-    if insert_position == -1:
-        print(f"Tag '{parent_tag}' not found.")
-        return
-
-    # Insert the new elements before the closing tag
-    new_content = (
-        xml_content[:insert_position] + elements_str + "\n" + xml_content[insert_position:]
-    )
-
-    # Write the modified content back to the XML file
-    with open(xml_file, "w", encoding="utf-8") as file:
-        file.write(new_content)

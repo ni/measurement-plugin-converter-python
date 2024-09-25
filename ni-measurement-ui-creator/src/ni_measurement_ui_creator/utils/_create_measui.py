@@ -12,7 +12,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
     GetMetadataResponse as V2MetaData,
 )
 
-from ni_measurement_ui_creator.constants import CLIENT_ID, ENCODING, LOGGER, UserMessage
+from ni_measurement_ui_creator.constants import CLIENT_ID, LOGGER, UserMessage, MeasUIFile
 from ni_measurement_ui_creator.utils._ui_elements import (
     create_input_elements_from_client,
     create_output_elements_from_client,
@@ -32,7 +32,7 @@ def create_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: str) -> N
     """
     logger = getLogger(LOGGER)
     inputs = metadata.measurement_signature.configuration_parameters
-    input_elements = create_input_elements_from_client(inputs=inputs)
+    input_elements, _ = create_input_elements_from_client(inputs=inputs)
 
     outputs = metadata.measurement_signature.outputs
     output_elements = create_output_elements_from_client(outputs=outputs)
@@ -43,7 +43,8 @@ def create_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: str) -> N
         filepath=measui_path,
         input_output_elements=input_elements + output_elements,
     )
-    logger.info(UserMessage.CREATED_UI.format(filepath=f"{measui_path}.measui"))
+    filepath = os.path.abspath(f"{measui_path}{MeasUIFile.MEASUREMENT_UI_FILE_EXTENSION}")
+    logger.info(UserMessage.CREATED_UI.format(filepath=os.path.abspath(filepath)))
 
 
 def __create_measui(filepath: str, input_output_elements: str) -> None:
@@ -55,7 +56,9 @@ def __create_measui(filepath: str, input_output_elements: str) -> None:
     """
     current_dir = os.path.dirname(os.path.abspath(__file__))
     template_file_path = os.path.join(
-        os.path.dirname(current_dir), "templates", "measurement.measui.mako"
+        os.path.dirname(current_dir),
+        "templates",
+        "measurement.measui.mako",
     )
 
     file_content = __render_template(
@@ -65,7 +68,7 @@ def __create_measui(filepath: str, input_output_elements: str) -> None:
         input_output_elements=input_output_elements,
     )
 
-    with open(f"{filepath}.measui", "wb") as f:
+    with open(f"{filepath}{MeasUIFile.MEASUREMENT_UI_FILE_EXTENSION}", "wb") as f:
         f.write(file_content)
 
 
@@ -86,7 +89,11 @@ def __render_template(
     Returns:
         bytes: MeasUI file content.
     """
-    template = Template(filename=template_name, input_encoding=ENCODING, output_encoding=ENCODING)
+    template = Template(
+        filename=template_name,
+        input_encoding=MeasUIFile.ENCODING,
+        output_encoding=MeasUIFile.ENCODING,
+    )
 
     return template.render(
         client_id=client_id,
