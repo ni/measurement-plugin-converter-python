@@ -1,6 +1,6 @@
 # flake8: noqa
 
-from ._cli import CLI_CONTEXT_SETTINGS, CliHelpMessage, UserMessage
+from ._cli import CLI_CONTEXT_SETTINGS, UserMessage
 from ._ui_elements import (
     BOOLEAN_ELEMENTS,
     CLIENT_ID,

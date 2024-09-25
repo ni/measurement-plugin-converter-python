@@ -1,11 +1,14 @@
 """Command-line tool to create measui for measurements."""
 
 import os
-from pathlib import Path
 
 import click
 
-from ni_measurement_ui_creator.constants import SUPPORTED_UI_ELEMENTS, CliHelpMessage, UserMessage
+from ni_measurement_ui_creator.constants import (
+    CLI_CONTEXT_SETTINGS,
+    SUPPORTED_UI_ELEMENTS,
+    UserMessage,
+)
 from ni_measurement_ui_creator.utils._create_measui import create_measui
 from ni_measurement_ui_creator.utils._exceptions import InvalidCliInputError
 from ni_measurement_ui_creator.utils._logger import get_logger
@@ -14,27 +17,17 @@ from ni_measurement_ui_creator.utils._update_measui import update_measui
 
 
 @click.command(name="create")
-@click.option(
-    "-o",
-    "--output-dir",
-    type=click.Path(),
-    required=True,
-    help=CliHelpMessage.OUTPUT_FOLDER,
-)
-def create(output_dir: Path) -> None:
-    """Create a new measurement UI file.
-
-    Args:
-        output_dir (Path): Output directory where new measurement UI is created.
-    """
+def create() -> None:
+    """Create a new measurement UI file."""
     try:
+        output_dir = os.getcwd()
         log_file_path = os.path.join(output_dir, "Logs")
         logger = get_logger(log_file_path=log_file_path)
 
         logger.info(UserMessage.CLI_STARTING)
         logger.info(UserMessage.SUPPORTED_ELEMENTS.format(elements=SUPPORTED_UI_ELEMENTS))
-        logger.info(UserMessage.GET_ACTIVE_MEASUREMENTS)
 
+        logger.info(UserMessage.GET_ACTIVE_MEASUREMENTS)
         metadata = get_metadata()
 
         if not metadata:
@@ -47,37 +40,26 @@ def create(output_dir: Path) -> None:
 
     except Exception as error:
         logger.debug(error, exc_info=True)
-        logger.info(
-            UserMessage.ERROR_OCCURRED.format(log_file_path=logger.handlers[0].baseFilename)
-        )
+        logger.info(UserMessage.ERROR_OCCURRED.format(log_file=logger.handlers[0].baseFilename))
 
     finally:
         logger.info(UserMessage.PROCESS_COMPLETED)
 
 
 @click.command(name="update")
-@click.option(
-    "-o",
-    "--output-dir",
-    type=click.Path(),
-    required=True,
-    help=CliHelpMessage.OUTPUT_FOLDER,
-)
-def update(output_dir: Path) -> None:
-    """Update the measurement UI file.
-
-    Args:
-        output_dir (Path): Output directory where updated measurement UI is created.
-    """
+def update() -> None:
+    """Update the measurement UI file."""
     try:
+        output_dir = os.getcwd()
         log_file_path = os.path.join(output_dir, "Logs")
         logger = get_logger(log_file_path=log_file_path)
 
         logger.info(UserMessage.CLI_STARTING)
         logger.info(UserMessage.SUPPORTED_ELEMENTS.format(elements=SUPPORTED_UI_ELEMENTS))
-        logger.info(UserMessage.GET_ACTIVE_MEASUREMENTS)
 
+        logger.info(UserMessage.GET_ACTIVE_MEASUREMENTS)
         metadata = get_metadata()
+
         if not metadata:
             return
 
@@ -94,9 +76,9 @@ def update(output_dir: Path) -> None:
         logger.info(UserMessage.PROCESS_COMPLETED)
 
 
-@click.group()
+@click.group(context_settings=CLI_CONTEXT_SETTINGS)
 def run() -> None:
-    """NI Measurement UI Creator is a Command Line tool for creating measui files."""
+    """NI Measurement UI Creator is a Command Line tool for creating/updating measui files."""
     pass
 
 
