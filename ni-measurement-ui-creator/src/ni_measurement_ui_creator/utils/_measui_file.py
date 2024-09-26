@@ -3,6 +3,7 @@
 import os
 import urllib.parse
 import xml.etree.ElementTree as ETree
+from logging import getLogger
 from typing import List, Optional, Tuple, Union
 
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
@@ -16,7 +17,13 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 
-from ni_measurement_ui_creator.constants import ElementAttrib, MeasUIFile, UpdateUI, UserMessage
+from ni_measurement_ui_creator.constants import (
+    LOGGER,
+    ElementAttrib,
+    MeasUIFile,
+    UpdateUI,
+    UserMessage,
+)
 from ni_measurement_ui_creator.models import AvailableElement
 from ni_measurement_ui_creator.utils._client import get_measurement_service_stub
 from ni_measurement_ui_creator.utils._exceptions import InvalidCliInputError, InvalidMeasUIError
@@ -54,6 +61,7 @@ def get_measui_selection(total_uis: int) -> int:
     Returns:
         int: Selected measurement UI index.
     """
+    logger = getLogger(LOGGER)
     try:
         user_input = int(
             input(
@@ -63,7 +71,7 @@ def get_measui_selection(total_uis: int) -> int:
                 )
             )
         )
-
+        logger.info("")
         if user_input not in list(range(1, total_uis + 1)):
             raise InvalidCliInputError(UserMessage.INVALID_MEASUI_CHOICE)
 

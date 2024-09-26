@@ -95,7 +95,7 @@ def create_input_elements_from_client(
                 input_top_alignment += (
                     MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
                     + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
-                    * MeasUIElementPosition.INCREASE_FACTOR
+                    * MeasUIElementPosition.REDUCE_FACTOR
                 )
 
             elif (
@@ -168,7 +168,7 @@ def create_input_elements_from_client(
                     DataElement(
                         client_id=client_id,
                         name=input.name,
-                        left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
+                        left_alignment=input_left_alignment,
                         top_alignment=input_top_alignment,
                         height=MeasUIElementPosition.ARRAY_HEIGHT,
                         width=MeasUIElementPosition.ARRAY_WIDTH,

@@ -87,6 +87,7 @@ def get_measurement_selection(total_measurements: int) -> int:
     Returns:
         int: Selected measurement.
     """
+    logger = getLogger(LOGGER)
     try:
         user_input = int(
             input(
@@ -96,6 +97,8 @@ def get_measurement_selection(total_measurements: int) -> int:
                 )
             )
         )
+
+        logger.info("")
 
         if user_input not in list(range(1, total_measurements + 1)):
             raise InvalidCliInputError(UserMessage.INVALID_MEASUREMENT_CHOICE)

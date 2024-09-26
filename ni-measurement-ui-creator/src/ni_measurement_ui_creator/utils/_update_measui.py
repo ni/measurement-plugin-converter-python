@@ -77,7 +77,6 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
         _create_measui(metadata, output_dir)
         return
 
-    logger.info("")
     logger.info(UserMessage.AVAILABLE_MEASUI_FILES)
     for serial_num, measui_file_path in enumerate(measui_files):
         logger.info(f"{serial_num + 1}. {measui_file_path[1:]}")
