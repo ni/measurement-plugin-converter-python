@@ -41,6 +41,8 @@ For update command,
 - Round LED
 - String Control
 - String Indicator
+- String Array Input
+- String Array Output
 - Pin
 
 ### Supported data types for update command

@@ -26,7 +26,7 @@ array_input_elements = create_control_elements(
         DataElement(
             client_id=client_id,
             name="Array In",
-            value_type=SupportedDataType.DOUBLE,
+            value_type=SupportedDataType.STR,
             left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
             top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
             is_array=True,
@@ -34,7 +34,7 @@ array_input_elements = create_control_elements(
         DataElement(
             client_id=client_id,
             name="Second Array In",
-            value_type=SupportedDataType.UINT32,
+            value_type=SupportedDataType.STR,
             left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
             top_alignment=(
                 MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
@@ -51,7 +51,7 @@ array_output_elements = create_indicator_elements(
         DataElement(
             client_id=client_id,
             name="Array Out",
-            value_type=SupportedDataType.DOUBLE,
+            value_type=SupportedDataType.STR,
             left_alignment=(
                 MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
@@ -62,7 +62,7 @@ array_output_elements = create_indicator_elements(
         DataElement(
             client_id=client_id,
             name="Second Array Out",
-            value_type=SupportedDataType.UINT32,
+            value_type=SupportedDataType.STR,
             left_alignment=(
                 MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
@@ -79,7 +79,7 @@ array_output_elements = create_indicator_elements(
 
 # Create a .measui file.
 create_measui(
-    filepath="numeric_arrays",
+    filepath="string_arrays",
     input_output_elements=array_input_elements + array_output_elements,
 )
 

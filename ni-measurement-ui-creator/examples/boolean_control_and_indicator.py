@@ -30,6 +30,8 @@ boolean_hortizontal_sliders = create_control_elements(
             left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
             top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
             value_type=SupportedDataType.BOOL,
+            height=MeasUIElementPosition.BOOLEAN_HORIZONTAL_SLIDER_HEIGHT,
+            width=MeasUIElementPosition.BOOLEAN_HORIZONTAL_SLIDER_WIDTH,
         ),
         DataElement(
             client_id=client_id,
@@ -38,8 +40,11 @@ boolean_hortizontal_sliders = create_control_elements(
             top_alignment=(
                 MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+                + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 0.5
             ),
             value_type=SupportedDataType.BOOL,
+            height=MeasUIElementPosition.BOOLEAN_HORIZONTAL_SLIDER_HEIGHT,
+            width=MeasUIElementPosition.BOOLEAN_HORIZONTAL_SLIDER_WIDTH,
         ),
     ]
 )
@@ -55,6 +60,8 @@ boolean_leds = create_indicator_elements(
             ),
             top_alignment=MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
             value_type=SupportedDataType.BOOL,
+            height=MeasUIElementPosition.BOOLEAN_LED_HEIGHT,
+            width=MeasUIElementPosition.BOOLEAN_LED_WIDTH,
         ),
         DataElement(
             client_id=client_id,
@@ -66,8 +73,11 @@ boolean_leds = create_indicator_elements(
             top_alignment=(
                 MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+                + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 0.5
             ),
             value_type=SupportedDataType.BOOL,
+            height=MeasUIElementPosition.BOOLEAN_LED_HEIGHT,
+            width=MeasUIElementPosition.BOOLEAN_LED_WIDTH,
         ),
     ]
 )

@@ -9,7 +9,7 @@ from ni_measurement_ui_creator.constants import (
     SUPPORTED_UI_ELEMENTS,
     UserMessage,
 )
-from ni_measurement_ui_creator.utils._create_measui import create_measui
+from ni_measurement_ui_creator.utils._create_measui import _create_measui
 from ni_measurement_ui_creator.utils._exceptions import InvalidCliInputError
 from ni_measurement_ui_creator.utils._logger import get_logger
 from ni_measurement_ui_creator.utils._measui_file import get_metadata
@@ -33,7 +33,7 @@ def create() -> None:
         if not metadata:
             return
 
-        create_measui(metadata, output_dir)
+        _create_measui(metadata, output_dir)
 
     except InvalidCliInputError as error:
         logger.error(error)

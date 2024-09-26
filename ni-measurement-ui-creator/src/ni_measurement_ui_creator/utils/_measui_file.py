@@ -174,7 +174,7 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvailableElemen
             )
 
         elif tag == "ChannelArrayViewer":
-            output = get_output_info_of_array_element(element)
+            output, is_str_array = get_output_info_of_array_element(element)
             bind, name = get_bind_info(element)
 
             avlble_elements.append(
@@ -183,6 +183,7 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvailableElemen
                     output=output,
                     bind=bind,
                     name=name,
+                    is_str_array=is_str_array,
                     attrib=element.attrib,
                     element=element,
                 )
@@ -244,32 +245,18 @@ def get_output_info_of_array_element(element: ETree.Element) -> bool:
     """
     for array_ele in element.iter():
         tag = array_ele.tag.split("}")[-1]
-        if (
-            tag in UpdateUI.NUMERIC_AND_STRING_ARRAY
-            and ElementAttrib.IS_READ_ONLY in array_ele.attrib.keys()
-            and array_ele.attrib[ElementAttrib.IS_READ_ONLY] == "[bool]True"
-        ):
-            return True
+        if tag == "ChannelArrayStringControl":
+            return __get_output_info_for_read_only_based(array_ele), True
 
-        elif (
-            tag in UpdateUI.NUMERIC_AND_STRING_ARRAY
-            and ElementAttrib.IS_READ_ONLY in array_ele.attrib.keys()
-            and array_ele.attrib[ElementAttrib.IS_READ_ONLY] == "[bool]False"
-        ):
-            return False
-
-        elif (
-            tag in UpdateUI.NUMERIC_AND_STRING_ARRAY
-            and ElementAttrib.IS_READ_ONLY not in array_ele.attrib.keys()
-        ):
-            return False
+        if tag == "ChannelArrayNumericText":
+            return __get_output_info_for_read_only_based(array_ele), False
 
 
 def get_output_info(element: ETree.Element) -> bool:
     """Get output info.
 
     Args:
-        element (ETree.Element): Element available/already.
+        element (ETree.Element): Element available already.
 
     Returns:
         bool: True if the element is an output.

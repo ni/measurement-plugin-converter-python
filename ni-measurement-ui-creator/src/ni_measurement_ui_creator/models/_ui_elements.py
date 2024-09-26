@@ -52,6 +52,7 @@ class AvailableElement(BaseModel):
     output: Optional[bool] = None
     bind: Optional[bool] = None
     name: Optional[str] = None
+    is_str_array: Optional[bool] = None
 
     class Config:
         """To allow non pydantic types."""

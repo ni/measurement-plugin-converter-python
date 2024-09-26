@@ -155,7 +155,6 @@ class UpdateUI:
         "ChannelPathSelector",
         "HmiGraphPlot",
     ]
-    NUMERIC_AND_STRING_ARRAY = ["ChannelArrayNumericText", "ChannelArrayStringControl"]
 
 
 class ElementAttrib:

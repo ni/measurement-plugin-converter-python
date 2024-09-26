@@ -40,7 +40,7 @@ from ni_measurement_ui_creator.constants import (
     ElementAttrib,
 )
 from ni_measurement_ui_creator.models import AvailableElement
-from ni_measurement_ui_creator.utils._create_measui import create_measui
+from ni_measurement_ui_creator.utils._create_measui import _create_measui
 from ni_measurement_ui_creator.utils._exceptions import InvalidMeasUIError
 from ni_measurement_ui_creator.utils._measui_file import (
     get_avlble_elements,
@@ -74,7 +74,7 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
     measui_files = get_measui_files(metadata)
     if not measui_files:
         logger.warning(UserMessage.NO_MEASUI_FILE)
-        create_measui(metadata, output_dir)
+        _create_measui(metadata, output_dir)
         return
 
     logger.info(UserMessage.AVAILABLE_MEASUI_FILES)
@@ -89,7 +89,7 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
 
     except (ETree.ParseError, InvalidMeasUIError, FileNotFoundError, PermissionError):
         logger.warning(UserMessage.INVALID_MEASUI_FILE)
-        create_measui(metadata, output_dir)
+        _create_measui(metadata, output_dir)
         return
 
     updated_measui_filepath = os.path.join(
@@ -266,6 +266,7 @@ def check_feasibility(
         unbind_param.type in NUMERIC_DATA_TYPE_VALUES
         and unbind_param.repeated
         and element.tag == "ChannelArrayViewer"
+        and element.is_str_array is False
     ):
         return True
 
@@ -277,6 +278,14 @@ def check_feasibility(
             == SpecializedDataType.IORESOURCE.lower()
         )
         and element.tag == "ChannelPinSelector"
+    ):
+        return True
+
+    if (
+        unbind_param.type == DataType.String.value
+        and unbind_param.repeated
+        and element.tag == "ChannelArrayViewer"
+        and element.is_str_array
     ):
         return True
 

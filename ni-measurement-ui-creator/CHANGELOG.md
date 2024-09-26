@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - Support for updating UI elements.
+- Support for String Array Input and String Array Output.
 
 ## [1.0.0-dev8] - 2024-09-03
 

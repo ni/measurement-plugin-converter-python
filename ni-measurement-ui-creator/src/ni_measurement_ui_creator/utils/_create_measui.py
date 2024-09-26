@@ -19,7 +19,7 @@ from ni_measurement_ui_creator.utils._ui_elements import (
 )
 
 
-def create_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: str) -> None:
+def _create_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: str) -> None:
     """Create measurement UI file.
 
     1. Get inputs and outputs from the metadata.
@@ -39,7 +39,7 @@ def create_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: str) -> N
 
     measui_path = os.path.join(output_dir, metadata.measurement_details.display_name)
 
-    __create_measui(
+    create_measui(
         filepath=measui_path,
         input_output_elements=input_elements + output_elements,
     )
@@ -47,7 +47,7 @@ def create_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: str) -> N
     logger.info(UserMessage.CREATED_UI.format(filepath=os.path.abspath(filepath)))
 
 
-def __create_measui(filepath: str, input_output_elements: str) -> None:
+def create_measui(filepath: str, input_output_elements: str) -> None:
     """Create `measui` file.
 
     Args:
