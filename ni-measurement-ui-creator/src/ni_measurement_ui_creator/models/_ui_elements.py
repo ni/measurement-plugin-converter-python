@@ -1,6 +1,7 @@
 """UI Elements Base Model."""
 
-from typing import Optional, Union
+import xml.etree.ElementTree as ETree
+from typing import Dict, Optional, Union
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -40,3 +41,19 @@ class LabelElement(BaseModel):
     top_alignment: Optional[Union[int, float]] = Field(
         default=MeasUIElementPosition.DEFAULT_TOP_ALIGNMENT
     )
+
+
+class AvailableElement(BaseModel):
+    """Elements available in measui file to be updated."""
+
+    tag: str
+    element: ETree.Element
+    attrib: Dict[str, str]
+    output: Optional[bool] = None
+    bind: Optional[bool] = None
+    name: Optional[str] = None
+
+    class Config:
+        """To allow non pydantic types."""
+
+        arbitrary_types_allowed = True

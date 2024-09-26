@@ -4,6 +4,12 @@
 
 - NI Measurement UI Creator is a command-line tool for generating `measui` files for active measurements.
 
+### Prerequisite
+
+For update command,
+- Meas UI file has to be created from Measurement Plug-In UI Editor.
+- Atleast one control/indicator should be present.
+
 ### Code Setup
 
 - Clone the repository using `git clone <respository link>`.
@@ -36,3 +42,21 @@
 - String Control
 - String Indicator
 - Pin
+
+### Supported data types for update command
+
+- Int
+- Float
+- String
+- Numeric Array
+
+### Unsupported elements for update command
+
+- Path Control
+- Enum Control
+- Enum Indicator
+- Ring Control
+- Ring Indicator
+- Graph Array Output
+- Progress Bar
+- RadialProgressBar
