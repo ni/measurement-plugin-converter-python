@@ -23,9 +23,12 @@ class UserMessage:
     INVALID_MEASUREMENT_CHOICE = "Invalid measurement plug-in selected."
     INVALID_MEASUI_CHOICE = "Invalid measurement UI selected."
 
-    NO_MEASUI_FILE = "No measurement UI file available. Creating a new measui file for the selected measurement..."
+    NO_MEASUI_FILE = (
+        "No Measurement UI file available. "
+        "Creating a new measui file for the selected measurement..."
+    )
     INVALID_MEASUI_FILE = (
-        "Invalid measurement UI file. Creating a new measui file for the selected measurement..."
+        "Invalid Measurement UI file. Creating a new measui file for the selected measurement..."
     )
 
     BINDING_ELEMENTS = "Binding UI controls and indicators..."

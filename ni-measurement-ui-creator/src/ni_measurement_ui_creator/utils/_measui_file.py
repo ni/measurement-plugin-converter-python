@@ -277,50 +277,34 @@ def get_output_info(element: ETree.Element) -> bool:
     tag = element.tag.split("}")[-1]
 
     if tag in UpdateUI.ONLY_INDICATORS:
-        output = True
+        return True
 
-    elif (
-        tag in UpdateUI.READ_ONLY_BASED
-        and ElementAttrib.IS_READ_ONLY in element.attrib.keys()
+    if tag in UpdateUI.READ_ONLY_BASED:
+        return __get_output_info_for_read_only_based(element)
+
+    if tag in UpdateUI.INTERACTION_MODE_BASED:
+        return __get_output_info_for_interaction_mode_based(element)
+
+
+def __get_output_info_for_read_only_based(element: AvailableElement) -> bool:
+    if (
+        ElementAttrib.IS_READ_ONLY in element.attrib.keys()
         and element.attrib[ElementAttrib.IS_READ_ONLY] == "[bool]True"
     ):
-        output = True
+        return True
 
-    elif (
-        tag in UpdateUI.READ_ONLY_BASED
-        and ElementAttrib.IS_READ_ONLY in element.attrib.keys()
-        and element.attrib[ElementAttrib.IS_READ_ONLY] == "[bool]False"
-    ):
-        output = False
+    return False
 
-    elif (
-        tag in UpdateUI.READ_ONLY_BASED and ElementAttrib.IS_READ_ONLY not in element.attrib.keys()
-    ):
-        output = False
 
-    elif (
-        tag in UpdateUI.INTERACTION_MODE_BASED
-        and ElementAttrib.INTERACTION_MODE in element.attrib.keys()
+def __get_output_info_for_interaction_mode_based(element: AvailableElement) -> bool:
+    if (
+        ElementAttrib.INTERACTION_MODE in element.attrib.keys()
         and element.attrib[ElementAttrib.INTERACTION_MODE]
         == "[NumericPointerInteractionModes]EditRange"
     ):
-        output = True
+        return True
 
-    elif (
-        tag in UpdateUI.INTERACTION_MODE_BASED
-        and ElementAttrib.INTERACTION_MODE in element.attrib.keys()
-        and element.attrib[ElementAttrib.INTERACTION_MODE]
-        != "[NumericPointerInteractionModes]EditRange"
-    ):
-        output = False
-
-    elif (
-        tag in UpdateUI.INTERACTION_MODE_BASED
-        and ElementAttrib.INTERACTION_MODE not in element.attrib.keys()
-    ):
-        output = False
-
-    return output
+    return False
 
 
 def get_bind_info(element: ETree.Element) -> Tuple[bool, Optional[str]]:
