@@ -1,4 +1,4 @@
-"""Example to create numeric array input and numeric array output measui elements.
+"""Example to create string array input and string array output measui elements.
 
 Note: CLIENT ID should be same throughout a measui file.
 """

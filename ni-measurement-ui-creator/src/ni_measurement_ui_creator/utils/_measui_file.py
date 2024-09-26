@@ -234,17 +234,18 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvailableElemen
     return avlble_elements
 
 
-def get_output_info_of_array_element(element: ETree.Element) -> bool:
-    """Check whether array element is input or output.
+def get_output_info_of_array_element(element: ETree.Element) -> Tuple[bool, bool]:
+    """Check whether array element is input or output as well as string array or numeric array.
 
     Args:
         element (ETree.Element): Element available/already created.
 
     Returns:
-        bool: True if the element is an output.
+        Tuple[bool, bool]: True if the element is an output, True if the element is string array.
     """
     for array_ele in element.iter():
         tag = array_ele.tag.split("}")[-1]
+
         if tag == "ChannelArrayStringControl":
             return __get_output_info_for_read_only_based(array_ele), True
 
