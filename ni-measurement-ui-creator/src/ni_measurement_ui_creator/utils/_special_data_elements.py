@@ -1,8 +1,6 @@
 """Create special elements for building UI."""
 
-from ni_measurement_ui_creator.constants import (
-    MeasUIElement,
-)
+from ni_measurement_ui_creator.constants import MeasUIElement
 from ni_measurement_ui_creator.models import DataElement, LabelElement
 from ni_measurement_ui_creator.utils._common_elements import create_label, get_unique_id
 

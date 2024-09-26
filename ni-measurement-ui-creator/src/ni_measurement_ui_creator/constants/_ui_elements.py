@@ -58,6 +58,9 @@ class MeasUIElementPosition:
     ARRAY_HEIGHT = 25
     ARRAY_WIDTH = 90
 
+    INCREASE_FACTOR = 3.5
+    REDUCE_FACTOR = 0.5
+
 
 class SupportedDataType:
     """Supported data types in UI creator."""
@@ -107,6 +110,12 @@ class UpdateUI:
     }
     SCREEN_TAG = ".//sf:Screen"
     SCREEN_SURFACE_TAG = ".//cf:ScreenSurface"
+
+    ARRAY_ELEMENT = "ChannelArrayViewer"
+    PIN_ELEMENT = "ChannelPinSelector"
+    RING_AND_DEFAULT_ELEMENT = ["p.DefaultElementValue", "RingSelectorInfo"]
+    STRING_ARRAY = "ChannelArrayStringControl"
+    NUMERIC_ARRAY = "ChannelArrayNumericText"
 
     NUMERIC_ELEMENTS = [
         "ChannelNumericText",

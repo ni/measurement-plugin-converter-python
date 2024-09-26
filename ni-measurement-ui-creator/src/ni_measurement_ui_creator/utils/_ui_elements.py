@@ -74,7 +74,8 @@ def create_input_elements_from_client(
                     )
                 )
                 input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE + (
-                    MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 3.5
+                    MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+                    * MeasUIElementPosition.INCREASE_FACTOR
                 )
 
             elif input.type == DataType.Boolean.value and not (
@@ -93,7 +94,8 @@ def create_input_elements_from_client(
                 )
                 input_top_alignment += (
                     MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
-                    + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 0.5
+                    + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+                    * MeasUIElementPosition.INCREASE_FACTOR
                 )
 
             elif (
@@ -164,7 +166,7 @@ def create_input_elements_from_client(
             elif input.type == DataType.String.value and input.repeated and not input.annotations:
                 input_elements.append(
                     DataElement(
-                        client_id=CLIENT_ID,
+                        client_id=client_id,
                         name=input.name,
                         left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
                         top_alignment=input_top_alignment,
@@ -175,7 +177,8 @@ def create_input_elements_from_client(
                     )
                 )
                 input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE + (
-                    MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 3.5
+                    MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+                    * MeasUIElementPosition.INCREASE_FACTOR
                 )
 
         except ValueError:
@@ -232,7 +235,8 @@ def create_output_elements_from_client(
                     )
                 )
                 output_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE + (
-                    MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 3.5
+                    MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+                    * MeasUIElementPosition.INCREASE_FACTOR
                 )
 
             elif output.type == DataType.Boolean.value and not (
@@ -251,7 +255,8 @@ def create_output_elements_from_client(
                 )
                 output_top_alignment += (
                     MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
-                    + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 0.5
+                    + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+                    * MeasUIElementPosition.REDUCE_FACTOR
                 )
 
             elif (
@@ -287,7 +292,7 @@ def create_output_elements_from_client(
             ):
                 output_elements.append(
                     DataElement(
-                        client_id=CLIENT_ID,
+                        client_id=client_id,
                         name=output.name,
                         left_alignment=output_left_alignment,
                         top_alignment=output_top_alignment,
@@ -298,7 +303,8 @@ def create_output_elements_from_client(
                     )
                 )
                 output_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE + (
-                    MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 3.5
+                    MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+                    * MeasUIElementPosition.INCREASE_FACTOR
                 )
 
         except ValueError:

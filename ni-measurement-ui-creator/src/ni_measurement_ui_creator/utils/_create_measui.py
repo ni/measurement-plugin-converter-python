@@ -12,7 +12,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
     GetMetadataResponse as V2MetaData,
 )
 
-from ni_measurement_ui_creator.constants import CLIENT_ID, LOGGER, UserMessage, MeasUIFile
+from ni_measurement_ui_creator.constants import CLIENT_ID, LOGGER, MeasUIFile, UserMessage
 from ni_measurement_ui_creator.utils._ui_elements import (
     create_input_elements_from_client,
     create_output_elements_from_client,

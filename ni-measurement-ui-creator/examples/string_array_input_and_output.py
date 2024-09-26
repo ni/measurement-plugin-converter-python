@@ -39,7 +39,8 @@ array_input_elements = create_control_elements(
             top_alignment=(
                 MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
-                + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 3.5
+                + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+                * MeasUIElementPosition.INCREASE_FACTOR
             ),
             is_array=True,
         ),
@@ -70,7 +71,8 @@ array_output_elements = create_indicator_elements(
             top_alignment=(
                 MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
-                + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 3.5
+                + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+                * MeasUIElementPosition.INCREASE_FACTOR
             ),
             is_array=True,
         ),

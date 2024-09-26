@@ -6,7 +6,7 @@ import shutil
 import xml.etree.ElementTree as ETree
 from logging import getLogger
 from pathlib import Path
-from typing import List, Union, Tuple
+from typing import List, Tuple, Union
 
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
     ConfigurationParameter as V1ConfigParam,
@@ -31,19 +31,19 @@ from ni_measurement_ui_creator.constants import (
     LOGGER,
     NUMERIC_DATA_TYPE_VALUES,
     TYPE_SPECIFICATION,
-    MeasUIElementPosition,
-    SpecializedDataType,
     DataType,
-    UserMessage,
-    UpdateUI,
-    MeasUIFile,
     ElementAttrib,
+    MeasUIElementPosition,
+    MeasUIFile,
+    SpecializedDataType,
+    UpdateUI,
+    UserMessage,
 )
 from ni_measurement_ui_creator.models import AvailableElement
 from ni_measurement_ui_creator.utils._create_measui import _create_measui
 from ni_measurement_ui_creator.utils._exceptions import InvalidMeasUIError
 from ni_measurement_ui_creator.utils._measui_file import (
-    get_avlble_elements,
+    get_available_elements,
     get_measui_files,
     get_measui_selection,
     insert_created_elements,
@@ -77,10 +77,12 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
         _create_measui(metadata, output_dir)
         return
 
+    logger.info("")
     logger.info(UserMessage.AVAILABLE_MEASUI_FILES)
     for serial_num, measui_file_path in enumerate(measui_files):
         logger.info(f"{serial_num + 1}. {measui_file_path[1:]}")
 
+    logger.info("")
     selected_measui = measui_files[get_measui_selection(len(measui_files)) - 1][1:]
 
     try:
@@ -102,7 +104,7 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
     inputs = metadata.measurement_signature.configuration_parameters
     outputs = metadata.measurement_signature.outputs
 
-    elements = get_avlble_elements(tree)
+    elements = get_available_elements(tree)
     elements_names = [element.name for element in elements]
 
     unbind_inputs = [input for input in inputs if input.name not in elements_names]
@@ -265,7 +267,7 @@ def check_feasibility(
     if (
         unbind_param.type in NUMERIC_DATA_TYPE_VALUES
         and unbind_param.repeated
-        and element.tag == "ChannelArrayViewer"
+        and element.tag == UpdateUI.ARRAY_ELEMENT
         and element.is_str_array is False
     ):
         return True
@@ -277,14 +279,14 @@ def check_feasibility(
             or unbind_param.annotations[TYPE_SPECIFICATION]
             == SpecializedDataType.IORESOURCE.lower()
         )
-        and element.tag == "ChannelPinSelector"
+        and element.tag == UpdateUI.PIN_ELEMENT
     ):
         return True
 
     if (
         unbind_param.type == DataType.String.value
         and unbind_param.repeated
-        and element.tag == "ChannelArrayViewer"
+        and element.tag == UpdateUI.ARRAY_ELEMENT
         and element.is_str_array
     ):
         return True

@@ -16,7 +16,6 @@ from ni_measurement_ui_creator.utils._helpers import (
     create_indicator_elements,
 )
 
-
 # Refer `SupportedDataType` class for supported `value_type`.
 
 # Any unique id will work.
@@ -40,7 +39,8 @@ boolean_hortizontal_sliders = create_control_elements(
             top_alignment=(
                 MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
-                + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 0.5
+                + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+                * MeasUIElementPosition.REDUCE_FACTOR
             ),
             value_type=SupportedDataType.BOOL,
             height=MeasUIElementPosition.BOOLEAN_HORIZONTAL_SLIDER_HEIGHT,
@@ -73,7 +73,8 @@ boolean_leds = create_indicator_elements(
             top_alignment=(
                 MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
                 + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
-                + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 0.5
+                + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE
+                * MeasUIElementPosition.REDUCE_FACTOR
             ),
             value_type=SupportedDataType.BOOL,
             height=MeasUIElementPosition.BOOLEAN_LED_HEIGHT,

@@ -116,7 +116,7 @@ def validate_measui(root: ETree.ElementTree) -> None:
         raise InvalidMeasUIError
 
 
-def get_avlble_elements(measui_tree: ETree.ElementTree) -> List[AvailableElement]:
+def get_available_elements(measui_tree: ETree.ElementTree) -> List[AvailableElement]:
     """Get available elements from the measurement UI.
 
     Args:
@@ -126,7 +126,7 @@ def get_avlble_elements(measui_tree: ETree.ElementTree) -> List[AvailableElement
         List[AvailableElement]: Info of already available elements.
     """
     screen_surface = find_screen_surface(measui_tree)
-    avlble_elements = __get_avlble_elements(screen_surface)
+    avlble_elements = __get_available_elements(screen_surface)
     return avlble_elements
 
 
@@ -147,7 +147,7 @@ def find_screen_surface(measui_tree: ETree.ElementTree) -> ETree.Element:
     return screen_surface[0]
 
 
-def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvailableElement]:
+def __get_available_elements(screen_surface: ETree.Element) -> List[AvailableElement]:
     avlble_elements = []
 
     for element in screen_surface.iter():
@@ -173,7 +173,7 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvailableElemen
                 )
             )
 
-        elif tag == "ChannelArrayViewer":
+        elif tag == UpdateUI.ARRAY_ELEMENT:
             output, is_str_array = get_output_info_of_array_element(element)
             bind, name = get_bind_info(element)
 
@@ -189,7 +189,7 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvailableElemen
                 )
             )
 
-        elif tag == "ChannelPinSelector":
+        elif tag == UpdateUI.PIN_ELEMENT:
             output = False
             bind, name = get_bind_info(element)
 
@@ -219,7 +219,7 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvailableElemen
                 )
             )
 
-        elif element.tag not in ["p.DefaultElementValue", "RingSelectorInfo"]:
+        elif element.tag not in UpdateUI.RING_AND_DEFAULT_ELEMENT:
             avlble_elements.append(
                 AvailableElement(
                     tag=tag,
@@ -235,26 +235,32 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvailableElemen
 
 
 def get_output_info_of_array_element(element: ETree.Element) -> Tuple[bool, bool]:
-    """Check whether array element is input or output as well as string array or numeric array.
+    """Get output info of an array element.
+
+    1. Check if the array element is control or indicator.
+    2. Check type of array element i.e., String array or numeric array.
 
     Args:
-        element (ETree.Element): Element available/already created.
+        element (ETree.Element): Element available already created.
 
     Returns:
-        Tuple[bool, bool]: True if the element is an output, True if the element is string array.
+        Tuple[bool, bool]: True if the element is an output, False if not and \
+        True if the element is string array, False if it is a numeric array.
     """
-    for array_ele in element.iter():
-        tag = array_ele.tag.split("}")[-1]
+    for array_element in element.iter():
+        tag = array_element.tag.split("}")[-1]
 
-        if tag == "ChannelArrayStringControl":
-            return __get_output_info_for_read_only_based(array_ele), True
+        if tag == UpdateUI.STRING_ARRAY:
+            return __get_output_info_for_read_only_based(array_element), True
 
-        if tag == "ChannelArrayNumericText":
-            return __get_output_info_for_read_only_based(array_ele), False
+        if tag == UpdateUI.NUMERIC_ARRAY:
+            return __get_output_info_for_read_only_based(array_element), False
 
 
 def get_output_info(element: ETree.Element) -> bool:
     """Get output info.
+
+    Check if the element is control or indicator.
 
     Args:
         element (ETree.Element): Element available already.

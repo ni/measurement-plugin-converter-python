@@ -11,10 +11,7 @@ from ni_measurement_ui_creator.constants._ui_elements import (
 )
 from ni_measurement_ui_creator.models import DataElement
 from ni_measurement_ui_creator.utils._create_measui import create_measui
-from ni_measurement_ui_creator.utils._helpers import (
-    create_control_elements,
-)
-
+from ni_measurement_ui_creator.utils._helpers import create_control_elements
 
 # Refer `SupportedDataType` class for supported `value_type`.
 
