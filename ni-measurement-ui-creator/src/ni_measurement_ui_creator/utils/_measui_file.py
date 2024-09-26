@@ -3,6 +3,7 @@
 import os
 import urllib.parse
 import xml.etree.ElementTree as ETree
+from logging import getLogger
 from typing import List, Optional, Tuple, Union
 
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
@@ -16,7 +17,13 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 
-from ni_measurement_ui_creator.constants import ElementAttrib, MeasUIFile, UpdateUI, UserMessage
+from ni_measurement_ui_creator.constants import (
+    LOGGER,
+    ElementAttrib,
+    MeasUIFile,
+    UpdateUI,
+    UserMessage,
+)
 from ni_measurement_ui_creator.models import AvailableElement
 from ni_measurement_ui_creator.utils._client import get_measurement_service_stub
 from ni_measurement_ui_creator.utils._exceptions import InvalidCliInputError, InvalidMeasUIError
@@ -54,6 +61,7 @@ def get_measui_selection(total_uis: int) -> int:
     Returns:
         int: Selected measurement UI index.
     """
+    logger = getLogger(LOGGER)
     try:
         user_input = int(
             input(
@@ -63,7 +71,7 @@ def get_measui_selection(total_uis: int) -> int:
                 )
             )
         )
-
+        logger.info("")
         if user_input not in list(range(1, total_uis + 1)):
             raise InvalidCliInputError(UserMessage.INVALID_MEASUI_CHOICE)
 
@@ -116,7 +124,7 @@ def validate_measui(root: ETree.ElementTree) -> None:
         raise InvalidMeasUIError
 
 
-def get_avlble_elements(measui_tree: ETree.ElementTree) -> List[AvailableElement]:
+def get_available_elements(measui_tree: ETree.ElementTree) -> List[AvailableElement]:
     """Get available elements from the measurement UI.
 
     Args:
@@ -126,7 +134,7 @@ def get_avlble_elements(measui_tree: ETree.ElementTree) -> List[AvailableElement
         List[AvailableElement]: Info of already available elements.
     """
     screen_surface = find_screen_surface(measui_tree)
-    avlble_elements = __get_avlble_elements(screen_surface)
+    avlble_elements = __get_available_elements(screen_surface)
     return avlble_elements
 
 
@@ -147,7 +155,7 @@ def find_screen_surface(measui_tree: ETree.ElementTree) -> ETree.Element:
     return screen_surface[0]
 
 
-def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvailableElement]:
+def __get_available_elements(screen_surface: ETree.Element) -> List[AvailableElement]:
     avlble_elements = []
 
     for element in screen_surface.iter():
@@ -173,8 +181,8 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvailableElemen
                 )
             )
 
-        elif tag == "ChannelArrayViewer":
-            output = get_output_info_of_array_element(element)
+        elif tag == UpdateUI.ARRAY_ELEMENT:
+            output, is_str_array = get_output_info_of_array_element(element)
             bind, name = get_bind_info(element)
 
             avlble_elements.append(
@@ -183,12 +191,13 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvailableElemen
                     output=output,
                     bind=bind,
                     name=name,
+                    is_str_array=is_str_array,
                     attrib=element.attrib,
                     element=element,
                 )
             )
 
-        elif tag == "ChannelPinSelector":
+        elif tag == UpdateUI.PIN_ELEMENT:
             output = False
             bind, name = get_bind_info(element)
 
@@ -218,7 +227,7 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvailableElemen
                 )
             )
 
-        elif element.tag not in ["p.DefaultElementValue", "RingSelectorInfo"]:
+        elif element.tag not in UpdateUI.RING_AND_DEFAULT_ELEMENT:
             avlble_elements.append(
                 AvailableElement(
                     tag=tag,
@@ -233,43 +242,36 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvailableElemen
     return avlble_elements
 
 
-def get_output_info_of_array_element(element: ETree.Element) -> bool:
-    """Check whether array element is input or output.
+def get_output_info_of_array_element(element: ETree.Element) -> Tuple[bool, bool]:
+    """Get output info of an array element.
+
+    1. Check if the array element is control or indicator.
+    2. Check type of array element i.e., String array or numeric array.
 
     Args:
-        element (ETree.Element): Element available/already created.
+        element (ETree.Element): Element available already created.
 
     Returns:
-        bool: True if the element is an output.
+        Tuple[bool, bool]: True if the element is an output, False if not and \
+        True if the element is string array, False if it is a numeric array.
     """
-    for array_ele in element.iter():
-        tag = array_ele.tag.split("}")[-1]
-        if (
-            tag in UpdateUI.NUMERIC_AND_STRING_ARRAY
-            and ElementAttrib.IS_READ_ONLY in array_ele.attrib.keys()
-            and array_ele.attrib[ElementAttrib.IS_READ_ONLY] == "[bool]True"
-        ):
-            return True
+    for array_element in element.iter():
+        tag = array_element.tag.split("}")[-1]
 
-        elif (
-            tag in UpdateUI.NUMERIC_AND_STRING_ARRAY
-            and ElementAttrib.IS_READ_ONLY in array_ele.attrib.keys()
-            and array_ele.attrib[ElementAttrib.IS_READ_ONLY] == "[bool]False"
-        ):
-            return False
+        if tag == UpdateUI.STRING_ARRAY:
+            return __get_output_info_for_read_only_based(array_element), True
 
-        elif (
-            tag in UpdateUI.NUMERIC_AND_STRING_ARRAY
-            and ElementAttrib.IS_READ_ONLY not in array_ele.attrib.keys()
-        ):
-            return False
+        if tag == UpdateUI.NUMERIC_ARRAY:
+            return __get_output_info_for_read_only_based(array_element), False
 
 
 def get_output_info(element: ETree.Element) -> bool:
     """Get output info.
 
+    Check if the element is control or indicator.
+
     Args:
-        element (ETree.Element): Element available/already.
+        element (ETree.Element): Element available already.
 
     Returns:
         bool: True if the element is an output.

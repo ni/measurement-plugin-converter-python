@@ -2,10 +2,7 @@
 
 from typing import List
 
-from ni_measurement_ui_creator.constants import (
-    MeasUIElementPosition,
-    MeasUIElement,
-)
+from ni_measurement_ui_creator.constants import MeasUIElement, MeasUIElementPosition
 from ni_measurement_ui_creator.models import DataElement, LabelElement
 from ni_measurement_ui_creator.utils._common_elements import create_label, get_unique_id
 
