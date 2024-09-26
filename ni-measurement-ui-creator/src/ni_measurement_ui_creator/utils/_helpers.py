@@ -19,12 +19,14 @@ from ni_measurement_ui_creator.utils._special_data_elements import (
     create_pin_control,
 )
 from ni_measurement_ui_creator.utils._string_elements import (
+    create_string_array_control,
+    create_string_array_indicator,
     create_string_control,
     create_string_indicator,
 )
 from ni_measurement_ui_creator.utils._toggle_elements import (
-    create_horizontal_slider,
     create_boolean_led,
+    create_horizontal_slider,
 )
 
 
@@ -61,6 +63,9 @@ def create_control_elements(inputs: List[DataElement]) -> str:
         elif data_element.value_type == SpecializedDataType.IORESOURCE_ARR:
             input_elements += create_ioresource_array_control(data_element)
 
+        elif data_element.value_type == DataType.String.name and data_element.is_array:
+            input_elements += create_string_array_control(data_element)
+
     return input_elements
 
 
@@ -87,5 +92,8 @@ def create_indicator_elements(outputs: List[DataElement]) -> str:
 
         elif output.value_type in NUMERIC_DATA_TYPE_NAMES:
             output_elements += create_numeric_indicator(output)
+
+        elif output.value_type == DataType.String.name and output.is_array:
+            output_elements += create_string_array_indicator(output)
 
     return output_elements

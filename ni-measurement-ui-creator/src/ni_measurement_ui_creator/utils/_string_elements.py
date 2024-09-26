@@ -126,3 +126,83 @@ def create_string_indicators(elements_parameter: List[DataElement]) -> str:
         string_indicators += create_string_indicator(element_parameter=element_parameter)
 
     return string_indicators
+
+
+def create_string_array_control(element_parameter: DataElement) -> str:
+    """Create `String Array Input` MeasUI Element.
+
+    Args:
+        element_parameter (DataElement): String Array Input Element Parameters.
+
+    Returns:
+        str: MeasUI String Array Input Element.
+    """
+    array_element_id = get_unique_id()
+    shared_id = get_unique_id()
+    label_id = get_unique_id()
+
+    string_array = MeasUIElement.STRING_ARRAY_INPUT.format(
+        client_id=element_parameter.client_id,
+        array_element_id=array_element_id,
+        shared_id=shared_id,
+        label_id=label_id,
+        name=element_parameter.name,
+        left_value=element_parameter.left_alignment,
+        value_type=element_parameter.value_type,
+        top_value=element_parameter.top_alignment,
+        height=element_parameter.height,
+        width=element_parameter.width,
+        rows=element_parameter.rows,
+    )
+
+    label = create_label(
+        element_parameter=LabelElement(
+            id=label_id,
+            shared_id=shared_id,
+            name=element_parameter.name,
+            left_alignment=element_parameter.left_alignment,
+            top_alignment=element_parameter.top_alignment,
+        )
+    )
+
+    return string_array + label
+
+
+def create_string_array_indicator(element_parameter: DataElement) -> str:
+    """Create `String Array Output` MeasUI Element.
+
+    Args:
+        element_parameter (DataElement): String Array Output Element Parameters.
+
+    Returns:
+        str: MeasUI Sting Array Output Element.
+    """
+    array_element_id = get_unique_id()
+    shared_id = get_unique_id()
+    label_id = get_unique_id()
+
+    string_array = MeasUIElement.STRING_ARRAY_OUTPUT.format(
+        client_id=element_parameter.client_id,
+        array_element_id=array_element_id,
+        shared_id=shared_id,
+        label_id=label_id,
+        name=element_parameter.name,
+        left_value=element_parameter.left_alignment,
+        value_type=element_parameter.value_type,
+        top_value=element_parameter.top_alignment,
+        height=element_parameter.height,
+        width=element_parameter.width,
+        rows=element_parameter.rows,
+    )
+
+    label = create_label(
+        element_parameter=LabelElement(
+            id=label_id,
+            shared_id=shared_id,
+            name=element_parameter.name,
+            left_alignment=element_parameter.left_alignment,
+            top_alignment=element_parameter.top_alignment,
+        )
+    )
+
+    return string_array + label

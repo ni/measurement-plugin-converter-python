@@ -136,6 +136,23 @@ def create_input_elements_from_client(inputs) -> str:
                 )
                 input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
 
+            elif input.type == DataType.String.value and input.repeated and not input.annotations:
+                input_elements.append(
+                    DataElement(
+                        client_id=CLIENT_ID,
+                        name=input.name,
+                        left_alignment=MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
+                        top_alignment=input_top_alignment,
+                        height=MeasUIElementPosition.ARRAY_HEIGHT,
+                        width=MeasUIElementPosition.ARRAY_WIDTH,
+                        value_type=input_datatype.name,
+                        is_array=True,
+                    )
+                )
+                input_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE + (
+                    MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 3.5
+                )
+
         except ValueError:
             pass
 
@@ -202,8 +219,10 @@ def create_output_elements_from_client(outputs) -> str:
                     + MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 0.5
                 )
 
-            elif output.type == DataType.String.value and not (
-                hasattr(output, "repeated") and output.repeated
+            elif (
+                output.type == DataType.String.value
+                and not (hasattr(output, "repeated") and output.repeated)
+                and not output.annotations
             ):
                 output_elements.append(
                     DataElement(
@@ -227,6 +246,25 @@ def create_output_elements_from_client(outputs) -> str:
                     )
                 )
                 output_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+
+            elif (
+                output.type == DataType.String.value and output.repeated and not output.annotations
+            ):
+                output_elements.append(
+                    DataElement(
+                        client_id=CLIENT_ID,
+                        name=output.name,
+                        left_alignment=output_left_alignment,
+                        top_alignment=output_top_alignment,
+                        value_type=output_datatype.name,
+                        height=MeasUIElementPosition.ARRAY_HEIGHT,
+                        width=MeasUIElementPosition.ARRAY_WIDTH,
+                        is_array=True,
+                    )
+                )
+                output_top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE + (
+                    MeasUIElementPosition.TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE * 3.5
+                )
 
         except ValueError:
             pass
