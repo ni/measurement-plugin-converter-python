@@ -17,7 +17,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 
 from ni_measurement_ui_creator.constants import ElementAttrib, MeasUIFile, UpdateUI, UserMessage
-from ni_measurement_ui_creator.models import AvlbleElement
+from ni_measurement_ui_creator.models import AvailableElement
 from ni_measurement_ui_creator.utils._client import get_measurement_service_stub
 from ni_measurement_ui_creator.utils._exceptions import InvalidCliInputError, InvalidMeasUIError
 
@@ -116,14 +116,14 @@ def validate_measui(root: ETree.ElementTree) -> None:
         raise InvalidMeasUIError
 
 
-def get_avlble_elements(measui_tree: ETree.ElementTree) -> List[AvlbleElement]:
+def get_avlble_elements(measui_tree: ETree.ElementTree) -> List[AvailableElement]:
     """Get available elements from the measurement UI.
 
     Args:
         measui_tree (ETree.ElementTree): Measurement UI file tree.
 
     Returns:
-        List[AvlbleElement]: Info of already available elements.
+        List[AvailableElement]: Info of already available elements.
     """
     screen_surface = find_screen_surface(measui_tree)
     avlble_elements = __get_avlble_elements(screen_surface)
@@ -147,7 +147,7 @@ def find_screen_surface(measui_tree: ETree.ElementTree) -> ETree.Element:
     return screen_surface[0]
 
 
-def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvlbleElement]:
+def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvailableElement]:
     avlble_elements = []
 
     for element in screen_surface.iter():
@@ -163,7 +163,7 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvlbleElement]:
                 output = False
 
             avlble_elements.append(
-                AvlbleElement(
+                AvailableElement(
                     tag=tag,
                     output=output,
                     bind=bind,
@@ -178,7 +178,7 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvlbleElement]:
             bind, name = get_bind_info(element)
 
             avlble_elements.append(
-                AvlbleElement(
+                AvailableElement(
                     tag=tag,
                     output=output,
                     bind=bind,
@@ -193,7 +193,7 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvlbleElement]:
             bind, name = get_bind_info(element)
 
             avlble_elements.append(
-                AvlbleElement(
+                AvailableElement(
                     tag=tag,
                     output=output,
                     bind=bind,
@@ -208,7 +208,7 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvlbleElement]:
             bind, name = get_bind_info(element)
 
             avlble_elements.append(
-                AvlbleElement(
+                AvailableElement(
                     tag=tag,
                     output=output,
                     bind=bind,
@@ -220,7 +220,7 @@ def __get_avlble_elements(screen_surface: ETree.Element) -> List[AvlbleElement]:
 
         elif element.tag not in ["p.DefaultElementValue", "RingSelectorInfo"]:
             avlble_elements.append(
-                AvlbleElement(
+                AvailableElement(
                     tag=tag,
                     output=None,
                     bind=None,
@@ -342,7 +342,7 @@ def get_bind_info(element: ETree.Element) -> Tuple[bool, Optional[str]]:
     return bind, name
 
 
-def write_updated_measui(filepath: str, updated_ui: List[AvlbleElement]) -> None:
+def write_updated_measui(filepath: str, updated_ui: List[AvailableElement]) -> None:
     """Write updated meas UI elements.
 
     1. Find the Screen tag.
@@ -350,7 +350,7 @@ def write_updated_measui(filepath: str, updated_ui: List[AvlbleElement]) -> None
 
     Args:
         filepath (str): Filepath of the updated meas UI.
-        updated_ui (List[AvlbleElement]): Updated UI elements.
+        updated_ui (List[AvailableElement]): Updated UI elements.
     """
     tree = ETree.parse(filepath)
     root = tree.getroot()

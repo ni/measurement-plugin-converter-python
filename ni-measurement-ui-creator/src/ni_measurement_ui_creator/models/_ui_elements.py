@@ -43,7 +43,7 @@ class LabelElement(BaseModel):
     )
 
 
-class AvlbleElement(BaseModel):
+class AvailableElement(BaseModel):
     """Elements available in measui file to be updated."""
 
     tag: str

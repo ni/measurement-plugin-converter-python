@@ -39,7 +39,7 @@ from ni_measurement_ui_creator.constants import (
     MeasUIFile,
     ElementAttrib,
 )
-from ni_measurement_ui_creator.models import AvlbleElement
+from ni_measurement_ui_creator.models import AvailableElement
 from ni_measurement_ui_creator.utils._create_measui import create_measui
 from ni_measurement_ui_creator.utils._exceptions import InvalidMeasUIError
 from ni_measurement_ui_creator.utils._measui_file import (
@@ -140,20 +140,20 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
 
 def bind_elements(
     client_id: str,
-    elements: List[AvlbleElement],
+    elements: List[AvailableElement],
     unbind_inputs: List[Union[V1ConfigParam, V2ConfigParam]],
     unbind_outputs: List[Union[V1Output, V2Output]],
-) -> List[AvlbleElement]:
+) -> List[AvailableElement]:
     """Bind elements to its possible input/output.
 
     Args:
-        client_id (str):
-        elements (List[AvlbleElement]):
-        unbind_inputs (List[Union[V1ConfigParam, V2ConfigParam]]):
-        unbind_outputs (List[Union[V1Output, V2Output]]):
+        client_id (str): Client ID.
+        elements (List[AvailableElement]): Available elements.
+        unbind_inputs (List[Union[V1ConfigParam, V2ConfigParam]]): Unbind inputs.
+        unbind_outputs (List[Union[V1Output, V2Output]]): Unbind outputs
 
     Returns:
-        List[AvlbleElement]:
+        List[AvailableElement]: Updated elements.
     """
     updated_elements = bind_inputs(client_id, elements, unbind_inputs)
     updated_elements = bind_outputs(client_id, updated_elements, unbind_outputs)
@@ -162,18 +162,18 @@ def bind_elements(
 
 def bind_inputs(
     client_id: str,
-    elements: List[AvlbleElement],
+    elements: List[AvailableElement],
     unbind_inputs: List[Union[V1ConfigParam, V2ConfigParam]],
-) -> List[AvlbleElement]:
+) -> List[AvailableElement]:
     """Bind inputs to controls if feasible.
 
     Args:
         client_id (str): Client ID.
-        elements (List[AvlbleElement]): List of available elements.
+        elements (List[AvailableElement]): List of available elements.
         unbind_inputs (List[Union[V1ConfigParam, V2ConfigParam]]): Unbind inputs.
 
     Returns:
-        List[AvlbleElement]: Updated elements that are being bound.
+        List[AvailableElement]: Updated elements that are being bound.
     """
     logger = getLogger(LOGGER)
 
@@ -196,18 +196,18 @@ def bind_inputs(
 
 def bind_outputs(
     client_id: str,
-    elements: List[AvlbleElement],
+    elements: List[AvailableElement],
     unbind_outputs: List[Union[V1Output, V2Output]],
-) -> List[AvlbleElement]:
+) -> List[AvailableElement]:
     """Bind outputs to indicators if feasible.
 
     Args:
         client_id (str): Client ID.
-        elements (List[AvlbleElement]): List of available elements.
+        elements (List[AvailableElement]): List of available elements.
         unbind_outputs (List[Union[V1Output, V2Output]]): Unbind outputs.
 
     Returns:
-        List[AvlbleElement]: Updated elements that are being bound.
+        List[AvailableElement]: Updated elements that are being bound.
     """
     logger = getLogger(LOGGER)
     for unbind_output in unbind_outputs:
@@ -229,13 +229,13 @@ def bind_outputs(
 
 def check_feasibility(
     unbind_param: Union[V1ConfigParam, V2ConfigParam, V1Output, V2Output],
-    element: AvlbleElement,
+    element: AvailableElement,
 ) -> bool:
     """Check if unbind input/output can be bound to the element.
 
     Args:
         unbind_param (Union[V1ConfigParam, V2ConfigParam]): Unbind input/output.
-        element (AvlbleElement): Unbind element.
+        element (AvailableElement): Unbind element.
 
     Returns:
         bool: True if unbind input/output is possible to bound to the element.
@@ -285,18 +285,18 @@ def check_feasibility(
 
 def add_channel(
     client_id: str,
-    element: AvlbleElement,
+    element: AvailableElement,
     unbind_param: Union[V1ConfigParam, V2ConfigParam, V1Output, V2Output],
-) -> AvlbleElement:
+) -> AvailableElement:
     """Add channel attribute to bind the lement.
 
     Args:
         client_id (str): Client ID.
-        element (AvlbleElement): Unbind element.
+        element (AvailableElement): Unbind element.
         unbind_input (Union[V1ConfigParam, V2ConfigParam, V1Output, V2Output]): Unbind input/output.
 
     Returns:
-        AvlbleElement: Bound element.
+        AvailableElement: Bound element.
     """
     if isinstance(unbind_param, V1ConfigParam) or isinstance(unbind_param, V2ConfigParam):
         channel = f"[string]{client_id}/Configuration/{unbind_param.name}"
@@ -307,7 +307,7 @@ def add_channel(
     return element
 
 
-def update_label(index: int, elements: List[AvlbleElement]) -> List[AvlbleElement]:
+def update_label(index: int, elements: List[AvailableElement]) -> List[AvailableElement]:
     """Update label element.
 
     1. Find the bound label element of the element.
@@ -315,10 +315,10 @@ def update_label(index: int, elements: List[AvlbleElement]) -> List[AvlbleElemen
 
     Args:
         index (int): Index of bound element.
-        elements (List[AvlbleElement]): Available elements.
+        elements (List[AvailableElement]): Available elements.
 
     Returns:
-        List[AvlbleElement]: Elements with updated label.
+        List[AvailableElement]: Elements with updated label.
     """
     for label_index in range(index + 1, len(elements)):
         if (
@@ -337,17 +337,17 @@ def update_label(index: int, elements: List[AvlbleElement]) -> List[AvlbleElemen
     return elements
 
 
-def find_alignments(updated_elements: List[AvlbleElement]) -> Tuple[float, float]:
+def find_alignments(updated_elements: List[AvailableElement]) -> Tuple[float, float]:
     """Find bottom most element to get the top and left values.
 
     Args:
-        updated_elements (List[AvlbleElement]): Updated UI elements.
+        updated_elements (List[AvailableElement]): Updated UI elements.
 
     Returns:
         Tuple[float, float]: Top and left values.
     """
 
-    def extract_top_value(element: AvlbleElement):
+    def extract_top_value(element: AvailableElement):
         try:
             return float(element.element.attrib[ElementAttrib.TOP].split("]")[-1])
         except (AttributeError, ValueError, KeyError):
