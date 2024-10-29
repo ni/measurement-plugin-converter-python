@@ -1,9 +1,9 @@
-# Contributing to *ni-measurement-plugin-converter* 
+# Contributing to *ni-measurement-plugin-converter*
 
 Contributions to *ni-measurement-plugin-converter* are welcome from all!
 
 *ni-measurement-plugin-converter* is managed via [git](https://git-scm.com), with the canonical upstream
-repository hosted on [GitHub](https://github.com/ni/ni-measurement-plugin-converter).     
+repository hosted on [GitHub](https://github.com/ni/measurement-plugin-converter-python).
 
 *ni-measurement-plugin-converter* follows a pull-request model for development.  If
 you wish to contribute, you will need to create a GitHub account, clone this
@@ -56,5 +56,5 @@ To contribute to this project, it is recommended that you follow these steps:
 
 (taken from [developercertificate.org](https://developercertificate.org/))
 
-See [LICENSE](https://github.com/ni/ni-measurement-plugin-converter/blob/main/LICENSE)
+See [LICENSE](https://github.com/ni/measurement-plugin-converter-python/blob/main/LICENSE)
 for details about how *ni-measurement-plugin-converter* is licensed.
