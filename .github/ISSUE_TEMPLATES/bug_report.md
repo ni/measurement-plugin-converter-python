@@ -44,4 +44,4 @@ Search open/closed issues before submitting. Someone may have reported the same 
 <!--- Include as many relevant details as possible about the environment you experienced the bug in -->
 
 * OS & Device: [e.g. macOS, Windows, Linux] on [Mac, PC]
-* NI Measurement Plug-In Converter Python version [e.g. 1.0.0]
+* NI Measurement Plug-In Converter version [e.g. 1.0.0]
