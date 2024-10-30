@@ -1,5 +1,5 @@
 <!-- TODO: Mark the following with an 'x' as applicable -->
-- [ ] This contribution adheres to [CONTRIBUTING.md](https://github.com/ni/ni-measurement-plugin-converter/blob/main/CONTRIBUTING.md). _(Required)_
+- [ ] This contribution adheres to [CONTRIBUTING.md](https://github.com/ni/measurement-plugin-converter-python/blob/main/CONTRIBUTING.md). _(Required)_
 
 ### What does this Pull Request accomplish?
 
@@ -14,6 +14,7 @@ TODO: Justify why this contribution should be part of the project.
 TODO: Detail what testing has been done to ensure this submission meets requirements.
 
 ### Checklist
+
 - [ ] Code follows coding standards
 - [ ] No console logs or debug statements
 - [ ] Manual tests conducted

@@ -45,3 +45,4 @@ Search open/closed issues before submitting. Someone may have reported the same 
 
 * OS & Device: [e.g. macOS, Windows, Linux] on [Mac, PC]
 * NI Measurement Plug-In Converter version [e.g. 1.0.0]
+* Python version [e.g. 3.8.5]
