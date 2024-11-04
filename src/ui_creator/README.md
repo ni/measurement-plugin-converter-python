@@ -164,7 +164,7 @@ For update command,
 ### Limitations
 
 - Though [unsupported data elements for update command](#unsupported-data-elements-for-update-command) are already present in the inputted UI file but without being bound to some input or output, the elements will not be bind. New elements for the inputs/outputs will be created if the data type of the input/output is [supported](#supported-data-types).
-- Path, Enum, DoubleXYData and their array counterpart data types are yet to be supported.
+- Path, Enum, DoubleXYData and their array counterpart data types are not supported.
 
 ### Event logger
 
