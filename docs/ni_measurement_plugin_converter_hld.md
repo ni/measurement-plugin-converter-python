@@ -120,7 +120,7 @@ The `_migrated.py` file is the copy of the user-inputted measurement file with t
 
 ### Additional steps for VISA instruments
 
-For measurement that use VISA instruments, the `session_constructor`, session type and `instrument_types` must be updated with appropriate values.
+For measurement that use VISA instruments, the `session_constructor`, session type and `instrument_type` must be updated with appropriate values.
 
 ![VISA_updates](docs/images/VISA_updates.png)
 

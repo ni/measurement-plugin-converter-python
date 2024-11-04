@@ -30,7 +30,7 @@
 ## How to run?
 
 - Open Command Prompt.
-- Run the following command to know the required CLI arguments.
+- Run the following command to know the available commands.
 
   ```cmd
   ni-measurement-ui-creator --help
@@ -158,8 +158,8 @@
 
 For update command,
 
-- The Measurement UI file that is created in the File Explorer directly will be invalid and hence it has to be created from Measurement Plug-In UI Editor.
-- Atleast one control/indicator should be present.
+- The selected Measurement UI file should have been created using the Measurement Plug-in UI Editor.
+- Atleast one control/indicator should be present in it.
 
 ### Limitations
 

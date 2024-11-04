@@ -189,7 +189,7 @@ The Python measurement should contain a measurement function which should
 
 #### Additional steps for VISA instruments
 
-For measurements that use VISA instruments, the `session_constructor`, session type and `instrument_types` must be updated with appropriate values.
+For measurements that use VISA instruments, the `session_constructor`, session type and `instrument_type` must be updated with appropriate values.
 
 ![VISA_updates](docs/images/VISA_updates.png)
 
@@ -218,7 +218,7 @@ For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tr
 ### NI Measurement UI Creator
 
 - Open Command Prompt.
-- Run the following command to know the required CLI arguments.
+- Run the following command to know the available commands.
 
   ```cmd
   ni-measurement-ui-creator --help
@@ -346,8 +346,8 @@ For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tr
 
 For update command,
 
-- The Measurement UI file that is created in the File Explorer will be invalid and hence it has to be created from Measurement Plug-In UI Editor.
-- Atleast one control/indicator should be present.
+- The selected Measurement UI file should have been created using the Measurement Plug-In UI Editor.
+- Atleast one control/indicator should be present in it.
 
 #### Limitations
 

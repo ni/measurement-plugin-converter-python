@@ -157,7 +157,7 @@ The Python measurement should contain a measurement function which should
 
 ### Additional steps for VISA instruments
 
-For measurements that use VISA instruments, the `session_constructor`, the session type and the `instrument_types` must be updated with appropriate values.
+For measurements that use VISA instruments, the `session_constructor`, the session type and the `instrument_type` must be updated with appropriate values.
 
 ![VISA_updates](../../docs/images/VISA_updates.png)
 
