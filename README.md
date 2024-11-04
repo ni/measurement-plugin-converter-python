@@ -21,7 +21,7 @@
       - [Update Measurement UI file](#update-measurement-ui-file)
       - [Supported data elements](#supported-data-elements)
       - [Supported data types](#supported-data-types-1)
-      - [Unsupported elements for update command](#unsupported-elements-for-update-command)
+      - [Unsupported data elements for update command](#unsupported-data-elements-for-update-command)
         - [Note](#note)
       - [Prerequisites](#prerequisites-1)
       - [Event Logger](#event-logger-1)
@@ -197,7 +197,7 @@ Steps to be followed
 - Define the Session class for the instrument type.
 - Define the session constructor for the instrument type.
 
-![VISA_updated](docs/images/VISA_updated.png)
+  ![VISA_updated](docs/images/VISA_updated.png)
 
 - For `session_constructor`, create SessionConstructor object of the instrument driver used.
 - For instrument_type, use the pin map instrument type id.
@@ -211,7 +211,7 @@ For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tr
 
 - The tool will generate a log once the conversion process is started, documenting all the actions performed by the tool throughout the conversion process.
 - Log file can be found in the output directory.
-- The log includes the details about any errors encountered during the conversion process.
+- The log includes the details about any errors encountered during the process.
 
 ### NI Measurement UI Creator
 
@@ -291,7 +291,7 @@ For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tr
   Available Measurement UI Files:
   1. First measui file path
   2. Second measui file path
-  Select a measurement UI file index (1-1) to update: 1
+  Select a measurement UI file index (1-1) to update:
   ```
 
 - Select the measurement UI file which has to be updated by entering the number.
@@ -330,7 +330,7 @@ For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tr
 - List of string
 - Pin
 
-#### Unsupported elements for update command
+#### Unsupported data elements for update command
 
 - Path Control
 - Enum Control
@@ -342,7 +342,7 @@ For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tr
 
 ##### Note
 
-- Unsupported elements will not be bound though they are already present in the inputted UI file.
+- Unsupported data elements will not be bound though they are already present in the inputted UI file.
 
 #### Prerequisites
 
