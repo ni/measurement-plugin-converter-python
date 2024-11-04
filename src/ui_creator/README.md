@@ -24,12 +24,12 @@
 
 ## How to install?
 
-- Place the Plug-In Converter wheel file parallel to the [install.bat](../../batch_files/install.bat)
+- Place the Plug-In Converter wheel file parallel to the [install.bat](../../batch_files/install.bat).
 - Run the `install.bat` file by double clicking it.
 
 ## How to run?
 
-- Open Command Prompt
+- Open Command Prompt.
 - Run the following command to know the required CLI arguments.
 
   ```cmd
@@ -67,7 +67,7 @@
   1. First Measurement (Py)
   2. Second Measurement (Py)
 
-  Select a measurement service index (1-1) to update/generate measui file:
+  Select a measurement service index (1-2) to update/generate measui file:
   ```
 
 - Select the measurement by entering the number for which the UI file has to be created.
@@ -96,10 +96,10 @@
   1. First Measurement (Py)
   2. Second Measurement (Py)
 
-  Select a measurement service index (1-1) to update/generate measui file:
+  Select a measurement service index (1-2) to update/generate measui file:
   ```
 
-- Selecting the measurement by entering the number which will list the configured `measui` file paths.
+- Select the measurement by entering the number which will list the configured `measui` file paths.
 
   ```cmd
   Available Measurement UI Files:
@@ -111,10 +111,10 @@
 - Select the measurement UI file which has to be updated by entering the number.
 
   ```cmd
-    Binding UI controls and indicators...
-    Creating new controls and indicators...
-    Measurement UI updated successfully. Please find at <Measurement UI file path>
-    Process completed.
+  Binding UI controls and indicators...
+  Creating new controls and indicators...
+  Measurement UI updated successfully. Please find at <Measurement UI file path>
+  Process completed.
   ```
 
 - The updated file will be suffixed with `_updated`.
@@ -162,7 +162,7 @@
 
 For update command,
 
-- The Measurement UI file that is created in the file explorer will be invalid and hence it has to be created from Measurement Plug-In UI Editor.
+- The Measurement UI file that is created in the File Explorer directly will be invalid and hence it has to be created from Measurement Plug-In UI Editor.
 - Atleast one control/indicator should be present.
 
 ### Event logger

@@ -118,16 +118,16 @@ The Python measurement should contain a measurement function which should
 - Contain a return value. The return value should be a variable and not a direct function call or constant value.
 
   ```py
-    # Not supported
-    def measurement_function() -> List[float]:
-      # Measurement logic.
-      return measure_voltages()
+  # Not supported
+  def measurement_function() -> List[float]:
+    # Measurement logic.
+    return measure_voltages()
 
-    # Supported
-    def measurement_function() -> List[float]:
-      # Measurement logic.
-      voltages = measure_voltages()
-      return voltages
+  # Supported
+  def measurement_function() -> List[float]:
+    # Measurement logic.
+    voltages = measure_voltages()
+    return voltages
   ```
 
 - Have properly type hinted inputs and outputs.
@@ -253,7 +253,7 @@ For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tr
   1. First Measurement (Py)
   2. Second Measurement (Py)
 
-  Select a measurement service index (1-1) to update/generate measui file:
+  Select a measurement service index (1-2) to update/generate measui file:
   ```
 
 - Select the measurement by entering the number for which the UI file has to be created.
@@ -282,7 +282,7 @@ For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tr
   1. First Measurement (Py)
   2. Second Measurement (Py)
 
-  Select a measurement service index (1-1) to update/generate measui file:
+  Select a measurement service index (1-2) to update/generate measui file:
   ```
 
 - Selecting the measurement by entering the number which will list the configured `measui` file paths.
@@ -348,7 +348,7 @@ For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tr
 
 For update command,
 
-- The Measurement UI file that is created in the file explorer will be invalid and hence it has to be created from Measurement Plug-In UI Editor.
+- The Measurement UI file that is created in the File Explorer will be invalid and hence it has to be created from Measurement Plug-In UI Editor.
 - Atleast one control/indicator should be present.
 
 #### Event logger

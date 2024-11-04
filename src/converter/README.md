@@ -23,12 +23,12 @@
 
 ## How to install?
 
-- Place the UI Creator and the Plug-In Converter wheel files parallel to the [install.bat](../../batch_files/install.bat)
+- Place the UI Creator and the Plug-In Converter wheel files parallel to the [install.bat](../../batch_files/install.bat).
 - Run the `install.bat` file by double clicking it.
 
 ## How to run?
 
-- Open Command Prompt
+- Open Command Prompt.
 - Run the following command to know the required CLI arguments.
 
   ```cmd
@@ -86,16 +86,16 @@ The Python measurement should contain a measurement function which should
 - Contain a return value. The return value should be a variable and not a direct function call or constant value.
 
   ```py
-    # Not supported
-    def measurement_function() -> List[float]:
-      # Measurement logic.
-      return measure_voltages()
+  # Not supported
+  def measurement_function() -> List[float]:
+    # Measurement logic.
+    return measure_voltages()
 
-    # Supported
-    def measurement_function() -> List[float]:
-      # Measurement logic.
-      voltages = measure_voltages()
-      return voltages
+  # Supported
+  def measurement_function() -> List[float]:
+    # Measurement logic.
+    voltages = measure_voltages()
+    return voltages
   ```
 
 - Have properly type hinted inputs and outputs.
