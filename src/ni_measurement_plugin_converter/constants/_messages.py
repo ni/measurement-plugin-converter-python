@@ -1,5 +1,6 @@
 """Constants utilitzed in User and Debug Messages."""
 
+"""I don't think it's a good OOPS practice to create classes that just hold a bunch of constants."""
 
 class UserMessage:
     """User facing messages logged in console and log file."""

@@ -27,6 +27,7 @@ def get_sessions_details(function_node: ast.FunctionDef) -> Dict[str, List[str]]
     return sessions_details
 
 
+# Why does it have a double underscore prefix?
 def __get_session_details(child_node: ast.With) -> Dict[str, List[str]]:
     sessions_details = {}
 

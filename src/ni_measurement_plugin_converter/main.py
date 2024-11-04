@@ -1,5 +1,8 @@
 """Implementation of command line interface and measurement plug-in conversion."""
 
+'''I don't know how good of an idea it is have both __main__.py and main.py.
+Probably, this file should be renamed or this logic could be moved to __init__.py'''
+
 import os
 import re
 import shutil
@@ -58,7 +61,7 @@ from ni_measurement_plugin_converter.utils import (
     required=True,
 )
 @click.option("-f", "--function", help=ArgsDescription.FUNCTION, required=True)
-@click.option("-o", "--output-dir", help=ArgsDescription.OUTPUT_DIR, required=True)
+@click.option("-o", "--output-dir", help=ArgsDescription.OUTPUT_DIR, required=True) # directory-out is more conventional
 def run(
     display_name: str,
     measurement_file_dir: str,
@@ -87,6 +90,7 @@ def run(
 
         logger.info(UserMessage.VALIDATE_CLI_ARGS)
 
+        # Use pathlib for Path operation.
         migrated_file_dir = os.path.join(output_dir, MIGRATED_MEASUREMENT_FILENAME)
         shutil.copy(measurement_file_dir, migrated_file_dir)
         logger.debug(DebugMessage.FILE_MIGRATED)
@@ -132,6 +136,7 @@ def run(
         sanitized_display_name = re.sub(ALPHANUMERIC_PATTERN, "_", display_name)
         service_class = f"{sanitized_display_name}_Python"
 
+        # Use pathlib for Path operation.
         create_file(
             TemplateFile.MEASUREMENT_TEMPLATE,
             os.path.join(output_dir, TemplateFile.MEASUREMENT_FILENAME),
@@ -172,7 +177,7 @@ def run(
 
         create_file(
             TemplateFile.SERVICE_CONFIG_TEMPLATE,
-            os.path.join(
+            os.path.join( # Use pathlib for Path operation.
                 output_dir,
                 f"{sanitized_display_name}{TemplateFile.SERVICE_CONFIG_FILE_EXTENSION}",
             ),
@@ -184,20 +189,20 @@ def run(
 
         create_file(
             TemplateFile.BATCH_TEMPLATE,
-            os.path.join(output_dir, TemplateFile.BATCH_FILENAME),
+            os.path.join(output_dir, TemplateFile.BATCH_FILENAME), # Use pathlib for Path operation.
             directory_out=output_dir,
         )
         logger.debug(DebugMessage.BATCH_FILE_CREATED)
 
         create_file(
             TemplateFile.HELPER_TEMPLATE,
-            os.path.join(output_dir, TemplateFile.HELPER_FILENAME),
+            os.path.join(output_dir, TemplateFile.HELPER_FILENAME), # Use pathlib for Path operation.
             directory_out=output_dir,
         )
         logger.debug(DebugMessage.HELPER_FILE_CREATED)
 
         logger.info(
-            UserMessage.MEASUREMENT_PLUGIN_CREATED.format(plugin_dir=os.path.abspath(output_dir))
+            UserMessage.MEASUREMENT_PLUGIN_CREATED.format(plugin_dir=os.path.abspath(output_dir)) # Use pathlib for Path operation.
         )
 
     except PermissionError as error:

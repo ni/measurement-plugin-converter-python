@@ -8,6 +8,7 @@ ENCODING = "utf-8"
 
 ALPHANUMERIC_PATTERN = r"[^a-zA-Z0-9]"
 
+"""I don't think it's a good OOPS practice to create classes that just hold a bunch of constants."""
 
 class TemplateFile:
     """Template file."""

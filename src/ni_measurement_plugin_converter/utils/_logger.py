@@ -48,6 +48,7 @@ def add_file_handler(logger: Logger, log_directory: str) -> None:
     logger.addHandler(handler)
 
 
+# Why does it have a double underscore prefix?
 def __create_file_handler(log_directory: str, file_name: str) -> handlers.RotatingFileHandler:
     log_file = os.path.join(log_directory, file_name)
 
@@ -74,6 +75,7 @@ def add_stream_handler(logger: Logger) -> None:
     logger.addHandler(stream_handler)
 
 
+# Why does it have a double underscore prefix?
 def __create_stream_handler() -> StreamHandler:
     handler = logging.StreamHandler(sys.stdout)
     handler.setLevel(logging.INFO)

@@ -1,5 +1,7 @@
 """Constants utilized in measurement file."""
 
+"""I don't think it's a good OOPS practice to create classes that just hold a bunch of constants."""
+
 from enum import Enum
 
 

@@ -2,4 +2,5 @@
 
 from ni_measurement_plugin_converter.main import run
 
+"""Method name could be better."""
 run()

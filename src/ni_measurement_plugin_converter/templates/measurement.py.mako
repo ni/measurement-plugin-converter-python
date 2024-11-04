@@ -10,7 +10,7 @@ script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "${serviceconfig_file}",
-    version="${version}",
+    version="${version}", # Specifying the version in measurement.py is deprecated.
     ui_file_paths=[service_directory / "${display_name}.measui"],
 )
 

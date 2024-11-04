@@ -25,7 +25,7 @@ class CliInputs(BaseModel):
         Returns:
             CliInputs: Validated CLI inputs.
         """
-        if not os.path.exists(self.measurement_file_dir):
+        if not os.path.exists(self.measurement_file_dir): # Use pathlib for Path operation.
             raise InvalidCliArgsError(UserMessage.INVALID_FILE_DIR)
 
         if not self.validate_function():
@@ -37,7 +37,7 @@ class CliInputs(BaseModel):
             )
 
         try:
-            os.makedirs(self.output_dir, exist_ok=True)
+            os.makedirs(self.output_dir, exist_ok=True) # Use pathlib for Path operation.
         except (PermissionError, OSError):
             raise InvalidCliArgsError(UserMessage.ACCESS_DENIED)
 

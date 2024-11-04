@@ -18,7 +18,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "3.8.5"
+python = "^3.9"
 Mako = "^1.2.1"
 click = "^8.1.3"
 astor = "^0.8.1"
@@ -26,6 +26,7 @@ pydantic = "^2.8.2"
 ni-measurement-ui-creator = "^1.0.0.dev8"
 black = "^24.8.0"
 
+# Are the instrument driver dependencies not required during runtime?
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"
 ni-python-styleguide = "^0.4.1"
@@ -40,7 +41,8 @@ pyvisa = "^1.14.1"
 pyvisa-sim = "^0.6.0"
 
 [tool.poetry.scripts]
-ni-measurement-plugin-converter = "ni_measurement_plugin_converter.main:run"
+# This will use the __main__.py to call the run()
+ni-measurement-plugin-converter = "ni_measurement_plugin_converter:run"
 
 [build-system]
 requires = ["poetry-core"]

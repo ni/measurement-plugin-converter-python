@@ -1,4 +1,6 @@
 # flake8: noqa
+'''Private methods should not be exported out. If you wish you make the directory private, 
+then prefix the directory with an underscore. And please expand the directory name.'''
 
 from ni_measurement_plugin_converter.utils._create_measui_file import create_measui_file
 from ni_measurement_plugin_converter.utils._extract_inputs import (
