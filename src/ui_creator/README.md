@@ -7,8 +7,8 @@
   - [How to run?](#how-to-run)
     - [Create measurement UI file](#create-measurement-ui-file)
     - [Update measurement UI file](#update-measurement-ui-file)
-    - [Supported data elements](#supported-data-elements)
     - [Supported data types](#supported-data-types)
+    - [Supported data elements](#supported-data-elements)
     - [Unsupported data elements for update command](#unsupported-data-elements-for-update-command)
       - [Note](#note)
     - [Prerequisites](#prerequisites)
@@ -119,6 +119,17 @@
 
 - The updated file will be suffixed with `_updated`.
 
+### Supported data types
+
+- Int
+- Float
+- String
+- Boolean
+- List of integers
+- List of floats
+- List of string
+- Pin
+
 ### Supported data elements
 
 - Numeric Indicator
@@ -131,17 +142,6 @@
 - String Indicator
 - String Array Input
 - String Array Output
-- Pin
-
-### Supported data types
-
-- Int
-- Float
-- String
-- Boolean
-- List of integers
-- List of floats
-- List of string
 - Pin
 
 ### Unsupported data elements for update command

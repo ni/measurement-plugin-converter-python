@@ -19,8 +19,8 @@
     - [NI Measurement UI Creator](#ni-measurement-ui-creator-2)
       - [Create measurement UI file](#create-measurement-ui-file)
       - [Update measurement UI file](#update-measurement-ui-file)
-      - [Supported data elements](#supported-data-elements)
       - [Supported data types](#supported-data-types-1)
+      - [Supported data elements](#supported-data-elements)
       - [Unsupported data elements for update command](#unsupported-data-elements-for-update-command)
         - [Note](#note)
       - [Prerequisites](#prerequisites-1)
@@ -48,19 +48,19 @@ Measurement Plug-In Converter Python has the following packages
 
 ### NI Measurement Plug-In Converter
 
-- Place the UI Creator and the Plug-In Converter wheel files parallel to the [install.bat](batch_files/install.bat)
+- Place the UI Creator and the Plug-In Converter wheel files parallel to the [install.bat](batch_files/install.bat).
 - Run the `install.bat` file by double clicking it.
 
 ### NI Measurement UI Creator
 
-- Place the Plug-In Converter wheel file parallel to the [install.bat](batch_files/install.bat)
+- Place the Plug-In Converter wheel file parallel to the [install.bat](batch_files/install.bat).
 - Run the `install.bat` file by double clicking it.
 
 ## How to run?
 
 ### NI Measurement Plug-In Converter
 
-- Open Command Prompt
+- Open Command Prompt.
 - Run the following command to know the required CLI arguments.
 
   ```cmd
@@ -163,7 +163,7 @@ The Python measurement should contain a measurement function which should
       return current
   ```
 
-- Have all the instrument driver's session initialization at a single point using the context manager `with`
+- Have all the instrument driver's session initialization at a single point using the context manager `with`.
 
   ```py
   # Not supported
@@ -203,7 +203,7 @@ Steps to be followed
 - For instrument_type, use the pin map instrument type id.
 - For session type, the type of session should be passed.
 
-For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tree/releases/2.0/examples/nivisa_dmm_measurement)
+For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tree/releases/2.0/examples/nivisa_dmm_measurement).
 
 ![VISA_examples](docs/images/VISA_examples.png)
 
@@ -215,7 +215,7 @@ For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tr
 
 ### NI Measurement UI Creator
 
-- Open Command Prompt
+- Open Command Prompt.
 - Run the following command to know the required CLI arguments.
 
   ```cmd
@@ -305,6 +305,17 @@ For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tr
 
 - The updated file will be suffixed with `_updated`.
 
+#### Supported data types
+
+- Int
+- Float
+- String
+- Boolean
+- List of integers
+- List of floats
+- List of string
+- Pin
+
 #### Supported data elements
 
 - Numeric Indicator
@@ -317,17 +328,6 @@ For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tr
 - String Indicator
 - String Array Input
 - String Array Output
-- Pin
-
-#### Supported data types
-
-- Int
-- Float
-- String
-- Boolean
-- List of integers
-- List of floats
-- List of string
 - Pin
 
 #### Unsupported data elements for update command
