@@ -130,7 +130,7 @@ poetry run ni-python-styleguide lint
 Use [Mypy](https://pypi.org/project/mypy/) to type check the code.
 
 ```cmd
-poetry run mypy <package>
+poetry run mypy <package folder>
 ```
 
 ## Bandit Security Checks
@@ -138,7 +138,7 @@ poetry run mypy <package>
 Use [Bandit](https://pypi.org/project/bandit/) to check for common security issues.
 
 ```cmd
-poetry run bandit -c pyproject.toml -r <package>
+poetry run bandit -c pyproject.toml -r <package folder>
 ```
 
 ## Build Distribution Packages
