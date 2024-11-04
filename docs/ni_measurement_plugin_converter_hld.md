@@ -127,13 +127,13 @@ For measurement that use VISA instruments, the `session_constructor`, session ty
 Steps to be followed
 
 - Define the grpc support.
-- Define the Session class for the instrument type.
+- Define the session class for the instrument type.
 - Define the session constructor for the instrument type.
 
   ![VISA_updated](docs/images/VISA_updated.png)
 
 - For `session_constructor`, create SessionConstructor object of the instrument driver used.
-- For instrument_type, use the pin map instrument type id.
+- For `instrument_type`, use the pin map instrument type id.
 - For session type, the type of session should be passed.
 
 For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tree/releases/2.0/examples/nivisa_dmm_measurement).

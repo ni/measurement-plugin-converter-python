@@ -102,6 +102,8 @@ Change directory using the following command to respective packages
 ```cmd
 cd <converter path>
 
+Or
+
 cd <ui_creator path>
 ```
 
