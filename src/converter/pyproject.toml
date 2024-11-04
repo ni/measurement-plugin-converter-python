@@ -4,7 +4,7 @@ version = "1.0.0-dev8"
 description = "Measurement Plug-In Converter for Python"
 authors = ["NI <opensource@ni.com>"]
 readme = "README.md"
-packages = [{ include = "ni_measurement_plugin_converter", from = "src" }]
+packages = [{ include = "ni_measurement_plugin_converter", from = "converter" }]
 repository = "https://github.com/ni/python-code-migration-utility"
 license = "MIT"
 classifiers = [
