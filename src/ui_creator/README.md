@@ -10,8 +10,8 @@
     - [Supported data types](#supported-data-types)
     - [Supported data elements](#supported-data-elements)
     - [Unsupported data elements for update command](#unsupported-data-elements-for-update-command)
-      - [Note](#note)
     - [Prerequisites](#prerequisites)
+    - [Limitations](#limitations)
     - [Event logger](#event-logger)
 
 ## Introduction
@@ -99,13 +99,13 @@
   Select a measurement service index (1-2) to update/generate measui file:
   ```
 
-- Select the measurement by entering the number which will list the configured `measui` file paths.
+- Select the measurement by entering the number.
 
   ```cmd
   Available Measurement UI Files:
   1. First measui file path
   2. Second measui file path
-  Select a measurement UI file index (1-1) to update:
+  Select a measurement UI file index (1-2) to update:
   ```
 
 - Select the measurement UI file which has to be updated by entering the number.
@@ -154,16 +154,17 @@
 - Graph Array Output
 - Progress Bar
 
-#### Note
-
-- Unsupported data elements will not be bound though they are already present in the inputted UI file.
-
 ### Prerequisites
 
 For update command,
 
 - The Measurement UI file that is created in the File Explorer directly will be invalid and hence it has to be created from Measurement Plug-In UI Editor.
 - Atleast one control/indicator should be present.
+
+### Limitations
+
+- Though [unsupported data elements for update command](#unsupported-data-elements-for-update-command) are already present in the inputted UI file but without being bound to some input or output, the elements will not be bind. Instead new elements for the data type will be created if the [data type](#supported-data-types) of the input/output is supported.
+- Path, Enum, DoubleXYData and their array counterpart data types are yet to be supported.
 
 ### Event logger
 
