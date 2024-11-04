@@ -49,9 +49,9 @@ git checkout main
 git pull
 ```
 
-## Set up Virtual Environment for NI Measurement Plug-In Converter
+## Set up the Virtual Environment for NI Measurement Plug-In Converter
 
-To setup virtual environment
+To setup the virtual environment
 
 ```cmd
 cd measurement-plugin-converter-python/src/converter
@@ -73,9 +73,9 @@ pip install <Measurement UI Creator wheel file path>
 poetry install
 ```
 
-## Set up Virtual Environment for NI Measurement UI Creator
+## Set up the Virtual Environment for NI Measurement UI Creator
 
-To setup virtual environment
+To setup the virtual environment
 
 ```cmd
 cd measurement-plugin-converter-python/src/ui_creator
