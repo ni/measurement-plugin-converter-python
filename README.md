@@ -5,14 +5,14 @@
   - [Dependencies](#dependencies)
   - [How to install?](#how-to-install)
   - [How to run?](#how-to-run)
-    - [NI Measurement Plug-In Converter for Python](#ni-measurement-plug-in-converter-for-python)
+    - [Measurement Plug-In Converter](#measurement-plug-in-converter)
       - [Supported data types](#supported-data-types)
       - [Supported instrument drivers](#supported-instrument-drivers)
       - [Prerequisites](#prerequisites)
       - [Limitations](#limitations)
       - [Additional steps for VISA instruments](#additional-steps-for-visa-instruments)
       - [Event logger](#event-logger)
-    - [NI Measurement Plug-In UI Creator](#ni-measurement-plug-in-ui-creator)
+    - [Measurement Plug-In UI Creator](#measurement-plug-in-ui-creator)
       - [Create measurement plug-in UI file](#create-measurement-plug-in-ui-file)
       - [Update measurement plug-in UI file](#update-measurement-plug-in-ui-file)
       - [Supported data types](#supported-data-types-1)
@@ -26,35 +26,35 @@
 
 Measurement Plug-In Converter for Python has the following packages
 
-- The Measurement Plug-In Converter for Python is a CLI tool to convert traditional Python measurements into measurement plug-ins.
+- The Measurement Plug-In Converter is a CLI tool to convert traditional Python measurements into measurement plug-ins.
 - The Measurement Plug-In UI Creator is a CLI tool to create or update `.measui` files for measurement plug-ins.
 
 ## Dependencies
 
-- NI Measurement Plug-In Converter for Python
+- Measurement Plug-In Converter
 
   - [Python = 3.8.5](https://www.python.org/downloads/release/python-385/)
   - [NI Measurement Plug-In UI Creator](dependencies/ni_measurement_ui_creator-1.0.0.dev8-py3-none-any.whl)
 
-- NI Measurement Plug-In UI Creator
+- Measurement Plug-In UI Creator
 
   - [Python = ^3.8](https://www.python.org/downloads/release/python-385/)
 
 ## How to install?
 
-- NI Measurement Plug-In Converter for Python
+- Measurement Plug-In Converter
 
   - Place the UI Creator and the Plug-In Converter wheel files parallel to the [install.bat](batch_files/install.bat).
   - Run the `install.bat` file by double clicking it.
 
-- NI Measurement Plug-In UI Creator
+- Measurement Plug-In UI Creator
 
   - Place the UI Creator wheel file parallel to the [install.bat](batch_files/install.bat).
   - Run the `install.bat` file by double clicking it.
 
 ## How to run?
 
-### NI Measurement Plug-In Converter for Python
+### Measurement Plug-In Converter
 
 - Open Command Prompt.
 - Run the following command to know the required CLI arguments.
@@ -66,7 +66,7 @@ Measurement Plug-In Converter for Python has the following packages
   ```cmd
   Usage: ni-measurement-plugin-converter [OPTIONS]
 
-    NI Measurement Plug-In Converter for Python is a Command Line tool to convert     
+    NI Measurement Plug-In Converter is a Command Line tool to convert     
     Python measurements to measurement plug-ins.
 
   Options:
@@ -106,8 +106,9 @@ Measurement Plug-In Converter for Python has the following packages
 #### Prerequisites
 
 - The Python measurement should have a measurement function.
-- The measurement function should use atleast one of the supported [instrument drivers](#supported-instrument-drivers) and [data types](#supported-data-types). The inputs and outputs of unsupported data types will be skipped.
-- The measurement function must return a value through a variable. Assign the return value to a variable first, and then return that variable
+- The measurement function should use at least one of the supported [instrument drivers](#supported-instrument-drivers) and [data types](#supported-data-types).
+  The inputs and outputs of unsupported data types will be skipped.
+- The measurement function must return a value through a variable. Assign the return value to a variable first, and then return that variable.
   Returning a function call or a constant value directly is not supported.
 
   ```py
@@ -221,7 +222,7 @@ For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tr
 - The log file is located in the output directory.
 - This log includes detailed information on any errors encountered during the process.
 
-### NI Measurement Plug-In UI Creator
+### Measurement Plug-In UI Creator
 
 - Open Command Prompt.
 - Run the following command to know the available commands.
@@ -320,7 +321,7 @@ For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tr
 - String
 - Boolean
 - Pin
-- 1D array of int, float, string and boolean
+- 1D array of int, float, string
 
 #### Supported data elements
 
