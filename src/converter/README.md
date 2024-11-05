@@ -14,12 +14,12 @@
 
 ## Introduction
 
-- NI Measurement Plug-In Converter for Python is a CLI tool to convert Python measurements to NI measurement plug-ins.
+- The Measurement Plug-In Converter is a CLI tool to convert traditional Python measurements into measurement plug-ins.
 
 ## Dependencies
 
 - [Python = 3.8.5](https://www.python.org/downloads/release/python-385/)
-- [NI Measurement UI Creator](../../dependencies/ni_measurement_ui_creator-1.0.0.dev8-py3-none-any.whl)
+- [NI Measurement Plug-In UI Creator](dependencies/ni_measurement_ui_creator-1.0.0.dev8-py3-none-any.whl)
 
 ## How to install?
 
@@ -53,7 +53,7 @@
 - Run the following command to convert Python measurements to measurement plug-ins.
 
   ```cmd
-  ni-measurement-plugin-converter -d "<display name>" -m "<measurement file path>" -f "<measurement function name>" -o "<output directory>"
+  ni-measurement-plugin-converter -d "<display_name>" -m "<measurement_file_path>" -f "<measurement_function_name>" -o "<output_directory>"
   ```
 
 ### Supported data types
@@ -62,87 +62,95 @@
 - Float
 - String
 - Boolean
-- List of integers
-- List of floats
-- List of strings
-- List of booleans
+- 1D array of the above types
 
 ### Supported instrument drivers
 
 - NI-DCPower
 - NI-DMM
-- NI-Digital
+- NI-Digital Pattern Driver
 - NI-FGEN
-- NI-Switch
-- NI-Scope
+- NI-SWITCH
+- NI-SCOPE
 - NI-DAQmx
 - NI-VISA
 
 ### Prerequisites
 
-The Python measurement should contain a measurement function which should
-
-- Use one of the supported [instrument drivers](#supported-instrument-drivers) and [data types](#supported-data-types). The inputs and outputs of unsupported data types will be skipped.
-- Contain a return value. The return value should be a variable and not a direct function call or constant value.
+- The Python measurement should have a measurement function.
+- The measurement function should use at least one of the supported [instrument drivers](#supported-instrument-drivers) and [data types](#supported-data-types). 
+  The inputs and outputs of unsupported data types will be skipped.
+- The measurement function must return a value through a variable. Assign the return value to a variable first, and then return that variable.
+  Returning a function call or a constant value directly is not supported.
 
   ```py
-  # Not supported
-  def measurement_function() -> List[float]:
+  # Unsupported format
+  def measurement() -> List[float]:
     # Measurement logic.
     return measure_voltages()
 
-  # Supported
-  def measurement_function() -> List[float]:
+  # Supported format
+  def measurement() -> List[float]:
     # Measurement logic.
     voltages = measure_voltages()
     return voltages
   ```
 
-- Have properly type hinted inputs and outputs.
+- The measurement function should have clear and accurate type hints for all input and output parameters.
 
   ```py
-  # Not supported
-  def measurement_function(voltage, current):
+  # Unsupported format
+  def measurement(voltage, current):
     # Measurement logic.
     resistance = voltage / current
     return resistance
   
-  # Supported
-  def measurement_function(voltage: int, current: float) -> float:
+  # Supported format
+  def measurement(voltage: int, current: float) -> float:
     # Measurement logic.
     resistance = voltage / current
     return resistance
   ```
 
-- Have the instrument driver's session initialization inside the measurement function and within the next level of indentation.
+- The measurement function should have the instrument driver’s session initialization within the measurement function, indented at the next level.
 
   ```py
-  # Not supported
-  def measurement_function(voltage: int, current: float) -> float:
+  # Unsupported format
+  def measurement(voltage: int, current: float) -> float:
     if voltage:
       with nidcpower.Session("DCPower1") as session:
         # Measurement logic.
         return current
 
-  # Supported
-  def measurement_function(voltage: int, current: float) -> float:
+  # Supported format
+  def measurement(voltage: int, current: float) -> float:
     with nidcpower.Session("DCPower1") as session:
       # Measurement logic.
       return current
   ```
 
-- Have all the instrument driver's session initialization at a single point using the context manager `with`
+- The measurement function should consolidate all instrument driver session initializations at a single point using the `with` context manager.
 
   ```py
-  # Not supported
-  def measurement_function(voltage: int, current: float) -> float:
+  # Unsupported format
+  def measurement(voltage: int, current: float) -> float:
     with nidcpower.Session("DCPower1") as dcpower_session:
       with nidmm.Session("DMM1") as dmm_session:
         # Measurement logic.
         return current
 
-  # Supported
-  def measurement_function(voltage: int, current: float) -> float:
+  # Unsupported format
+  def measurement(voltage: int, current: float) -> float:
+    with nidcpower.Session("DCPower1") as dcpower_session:
+        # Measurement logic.
+
+    with nidmm.Session("DCPower1") as dmm_session:
+        # Measurement logic.
+    
+    return current
+
+  # Supported format
+  def measurement(voltage: int, current: float) -> float:
     with nidcpower.Session("DCPower1") as dcpower_session, nidmm.Session("DMM1") as dmm_session:
       # Measurement logic.
       return current
@@ -150,35 +158,35 @@ The Python measurement should contain a measurement function which should
 
 ### Limitations
 
-- Conversion of class based measurements are not supported.
-- Path, Enum, DoubleXYData and their array counterpart data types are not supported.
-- Measurement UI generated by the tool will not include controls and indicators for list of booleans.
-- For measurements that use VISA instruments, [additional steps](#additional-steps-for-visa-instruments) must be followed post conversion.
+- Class-based measurements are not supported for conversion.
+- Data types such as `Path`, `Enum`, `DoubleXYData`, and their array variants are not supported.
+- The measurement plug-in UI generated by the tool will exclude controls and indicators for the boolean lists.
+- For measurements using VISA instruments, follow the [additional steps](#additional-steps-for-visa-instruments) after conversion.
 
 ### Additional steps for VISA instruments
 
-For measurements that use VISA instruments, the `session_constructor`, the session type and the `instrument_type` must be updated with appropriate values.
+For measurements that use VISA instruments, the `session_constructor`, session type and `instrument_type` must be updated with appropriate values.
 
 ![VISA_updates](../../docs/images/VISA_updates.png)
 
 Steps to be followed
 
-- Define the grpc support.
+- Define the gRPC device server support.
 - Define the session class for the instrument type.
 - Define the session constructor for the instrument type.
 
-![VISA_updated](../../docs/images/VISA_updated.png)
+  ![VISA_updated](../../docs/images/VISA_updated.png)
 
 - For `session_constructor`, create SessionConstructor object of the instrument driver used.
 - For `instrument_type`, use the pin map instrument type id.
 - For session type, the type of session should be passed.
 
-For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tree/releases/2.0/examples/nivisa_dmm_measurement)
+For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tree/releases/2.1/examples/nivisa_dmm_measurement).
 
 ![VISA_examples](../../docs/images/VISA_examples.png)
 
 ### Event logger
 
-- The tool will generate a log once the conversion process is started, documenting all the actions performed by the tool throughout the process.
-- Log file can be found in the output directory.
-- The log includes the details about any errors encountered during the process.
+- The tool generates a log at the start of the conversion process, recording all actions performed throughout.
+- The log file is located in the output directory.
+- This log includes detailed information on any errors encountered during the process.

@@ -171,14 +171,11 @@ Measurement Plug-In Converter for Python has the following packages
   def measurement(voltage: int, current: float) -> float:
     with nidcpower.Session("DCPower1") as dcpower_session:
         # Measurement logic.
-        return dcpower_session.source()
 
-  # Unsupported format
-  def measurement(voltage: int, current: float) -> float:
     with nidmm.Session("DCPower1") as dmm_session:
         # Measurement logic.
-        return dmm_session.measure()
-
+    
+    return current
 
   # Supported format
   def measurement(voltage: int, current: float) -> float:

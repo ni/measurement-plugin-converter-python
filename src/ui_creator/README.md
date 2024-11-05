@@ -5,8 +5,8 @@
   - [Dependencies](#dependencies)
   - [How to install?](#how-to-install)
   - [How to run?](#how-to-run)
-    - [Create measurement UI file](#create-measurement-ui-file)
-    - [Update measurement UI file](#update-measurement-ui-file)
+    - [Create measurement plug-in UI file](#create-measurement-plug-in-ui-file)
+    - [Update measurement plug-in UI file](#update-measurement-plug-in-ui-file)
     - [Supported data types](#supported-data-types)
     - [Supported data elements](#supported-data-elements)
     - [Unsupported data elements for update command](#unsupported-data-elements-for-update-command)
@@ -16,7 +16,7 @@
 
 ## Introduction
 
-- NI Measurement UI Creator is a CLI tool to create and update UI files for NI measurement plug-ins.
+- The Measurement Plug-In UI Creator is a CLI tool to create or update `.measui` files for measurement plug-ins.
 
 ## Dependencies
 
@@ -33,33 +33,33 @@
 - Run the following command to know the available commands.
 
   ```cmd
-  ni-measurement-ui-creator --help
+  ni-measurement-plugin-ui-creator --help
   ```
 
   ```cmd
-  Usage: ni-measurement-ui-creator [OPTIONS] COMMAND [ARGS]...
+  Usage: ni-measurement-plugin-ui-creator [OPTIONS] COMMAND [ARGS]...
 
-    NI Measurement UI Creator is a Command Line tool for creating/updating
+    NI Measurement Plug-In UI Creator is a Command Line tool for creating/updating
     measui files.
 
   Options:
     -h, --help  Show this message and exit.
 
   Commands:
-    create  Create a new measurement UI file.
-    update  Update the measurement UI file.
+    create  Create a new measurement plug-in UI file.
+    update  Update the measurement plug-in UI file.
   ```
 
-### Create measurement UI file
+### Create measurement plug-in UI file
 
-- Run the following command to create `.measui` files.
+- Run the following command to create new `.measui` file(s).
 
   ```cmd
-  ni-measurement-ui-creator create
+  ni-measurement-plugin-ui-creator create
   ```
 
   ```cmd
-  Starting the NI Measurement UI Creator...
+  Starting the NI Measurement Plug-In UI Creator...
   Supported UI Elements: ['Numeric Indicator', 'Numeric Control', 'Numeric Array Input', 'Numeric Array Output', 'Boolean Horizontal Slider', 'Boolean Round LED', 'String Control', 'String Indicator', 'String Array Input', 'String Array Output', 'Pin']
   Getting the active measurements...
 
@@ -73,22 +73,22 @@
 - Select the measurement by entering the number for which the UI file has to be created.
 
   ```cmd
-  Measurement UI created successfully at <Measurement UI file path>
+  Measurement Plug-In UI created successfully at <Measurement Plug-In UI file path>
   Process completed.
   ```
 
 - The UI File will be created in the current working directory.
 
-### Update measurement UI file
+### Update measurement plug-in UI file
 
 - Run the following command to update `.measui` files.
 
   ```cmd
-  ni-measurement-ui-creator update
+  ni-measurement-plugin-ui-creator update
   ```
 
   ```cmd
-  Starting the NI Measurement UI Creator...
+  Starting the NI Measurement Plug-In UI Creator...
   Supported UI Elements: ['Numeric Indicator', 'Numeric Control', 'Numeric Array Input', 'Numeric Array Output', 'Boolean Horizontal Slider', 'Boolean Round LED', 'String Control', 'String Indicator', 'String Array Input', 'String Array Output', 'Pin']
   Getting the active measurements...
 
@@ -102,19 +102,19 @@
 - Select the measurement by entering the number.
 
   ```cmd
-  Available Measurement UI Files:
+  Available Measurement Plug-In UI Files:
   1. First measui file path
   2. Second measui file path
-  Select a measurement UI file index (1-2) to update:
+  Select a measurement plug-in UI file index (1-2) to update:
   ```
 
-- Select the measurement UI file which has to be updated by entering the number.
+- Select the measurement plug-in UI file which has to be updated by entering the number.
 
   ```cmd
-  Binding UI controls and indicators...
-  Creating new controls and indicators...
-  Measurement UI updated successfully. Please find at <Measurement UI file path>
-  Process completed.
+    Binding UI controls and indicators...
+    Creating new controls and indicators...
+    Measurement plug-in UI updated successfully. Please find at <Measurement Plug-In UI file path>
+    Process completed.
   ```
 
 - The updated file will be suffixed with `_updated`.
@@ -125,10 +125,8 @@
 - Float
 - String
 - Boolean
-- List of integers
-- List of floats
-- List of string
 - Pin
+- 1D array of int, float, string
 
 ### Supported data elements
 
@@ -158,16 +156,16 @@
 
 For update command,
 
-- The selected Measurement UI file should have been created using the Measurement Plug-in UI Editor.
+- The selected measurement plug-in UI file should have been created using the Measurement Plug-In UI Editor.
 - Atleast one control/indicator should be present in it.
 
 ### Limitations
 
-- Though [unsupported data elements for update command](#unsupported-data-elements-for-update-command) are already present in the inputted UI file but without being bound to some input or output, the elements will not be bind. New elements for the inputs/outputs will be created if the data type of the input/output is [supported](#supported-data-types).
-- Path, Enum, DoubleXYData and their array counterpart data types are not supported.
+- Unsupported data elements for the update command, if present in the input UI file but not bound to any input or output, will remain unbound. New elements will be created for inputs and outputs if their data types are [supported](#supported-data-types).
+- Data types such as `Path`, `Enum`, `DoubleXYData`, and their 1D array variants are not supported.
 
 ### Event logger
 
-- The tool will generate a log once the creation/update process is started, documenting all the actions performed by the tool throughout the process.
-- Log file can be found in the output directory under Logs folder.
-- The log includes the details about any errors encountered during the process.
+- The tool generates a log at the start of the conversion process, recording all actions performed throughout.
+- The log file is located inside the "Logs" folder within the output directory.
+- This log includes detailed information on any errors encountered during the process.
