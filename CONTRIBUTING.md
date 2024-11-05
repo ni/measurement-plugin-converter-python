@@ -1,11 +1,11 @@
-# Contributing to Measurement Plug-In Converter Python
+# Contributing to Measurement Plug-In Converter for Python
 
-Contributions to Measurement Plug-In Converter Python are welcome from all!
+Contributions to Measurement Plug-In Converter for Python are welcome from all!
 
-Measurement Plug-In Converter Python is managed via [git](https://git-scm.com), with the canonical upstream
+Measurement Plug-In Converter for Python is managed via [git](https://git-scm.com), with the canonical upstream
 repository hosted on [GitHub](https://github.com/ni/measurement-plugin-converter-python).
 
-Measurement Plug-In Converter Python follows a pull-request model for development.  If
+Measurement Plug-In Converter for Python follows a pull-request model for development.  If
 you wish to contribute, you will need to create a GitHub account, clone this
 project, push a branch with your changes to your project, and then submit a
 pull request.
@@ -34,7 +34,7 @@ for more details.
 
 ## Clone or Update the Git Repository
 
-To download the Measurement Plug-In Converter Python source, clone its Git
+To download the Measurement Plug-In Converter for Python source, clone its Git
 repository to your local PC.
 
 ```cmd
@@ -49,14 +49,25 @@ git checkout main
 git pull
 ```
 
-## Set up the Virtual Environment for NI Measurement Plug-In Converter
+## Select a Package to Develop
+
+The Measurement Plug-In Converter for Python includes two packages:
+
+- [ni-measurement-plugin-converter](https://github.com/ni/measurement-plugin-converter-python/tree/users/amurali/update-documents/src/converter) - A CLI tool to convert traditional Python measurements into measurement plug-ins.
+- [ni-measurement-plugin-ui-creator](https://github.com/ni/measurement-plugin-converter-python/tree/users/amurali/update-documents/src/ui_creator) - A CLI tool to create or update `.measui` files for measurement plug-ins.
+
+Open a terminal window and `cd` to the package that you want to develop.
+
+```cmd
+cd src/package
+```
+
+## Set up the Virtual Environment
 
 To setup the virtual environment
 
 ```cmd
-cd measurement-plugin-converter-python/src/converter
-
-poetry env use <Python path>
+poetry env use <path_to_python>
 ```
 
 To run commands and scripts, spawn a shell within the virtual environment managed by Poetry:
@@ -67,29 +78,14 @@ poetry shell
 
 To install the dependencies,
 
-```cmd
-pip install <Measurement UI Creator wheel file path>
-
-poetry install
-```
-
-## Set up the Virtual Environment for NI Measurement UI Creator
-
-To setup the virtual environment
+For `ni-measurement-plugin-converter`, it is required to install the `ni-measurement-plugin-ui-creator` wheel file before installing other dependencies.
 
 ```cmd
-cd measurement-plugin-converter-python/src/ui_creator
-
-poetry env use <Python path>
+# For NI Measurement Plug-In Converter
+pip install <dependencies/wheel_file>
 ```
 
-To run commands and scripts, spawn a shell within the virtual environment managed by Poetry:
-
-```cmd
-poetry shell
-```
-
-To install the dependencies,
+Then, install other dependencies
 
 ```cmd
 poetry install
@@ -132,7 +128,7 @@ poetry run ni-python-styleguide lint
 Use [Mypy](https://pypi.org/project/mypy/) to type check the code.
 
 ```cmd
-poetry run mypy <package folder>
+poetry run mypy <package_folder>
 ```
 
 ## Bandit Security Checks
@@ -140,7 +136,7 @@ poetry run mypy <package folder>
 Use [Bandit](https://pypi.org/project/bandit/) to check for common security issues.
 
 ```cmd
-poetry run bandit -c pyproject.toml -r <package folder>
+poetry run bandit -c pyproject.toml -r <package_folder>
 ```
 
 ## Build Distribution Packages
@@ -191,4 +187,4 @@ unless the dependency uses semantic versioning.
 (taken from [developercertificate.org](https://developercertificate.org/))
 
 See [LICENSE](https://github.com/ni/measurement-plugin-converter-python/blob/main/LICENSE)
-for details about how Measurement Plug-In Converter is licensed.
+for details about how Measurement Plug-In Converter for Python is licensed.

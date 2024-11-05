@@ -96,10 +96,10 @@ Measurement Plug-In Converter for Python has the following packages
 
 - NI-DCPower
 - NI-DMM
-- NI-Digital
+- NI-Digital Pattern Driver
 - NI-FGEN
-- NI-Switch
-- NI-Scope
+- NI-SWITCH
+- NI-SCOPE
 - NI-DAQmx
 - NI-VISA
 
