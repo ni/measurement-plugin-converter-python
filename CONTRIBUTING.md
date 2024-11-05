@@ -59,10 +59,10 @@ The Measurement Plug-In Converter for Python includes two packages:
 Open a terminal window and `cd` to the package that you want to develop.
 
 ```cmd
-cd src/package
+cd src/<package_folder>
 ```
 
-## Set up the Virtual Environment
+### Set up the Virtual Environment
 
 To setup the virtual environment
 
@@ -81,11 +81,10 @@ To install the dependencies,
 For `ni-measurement-plugin-converter`, it is required to install the `ni-measurement-plugin-ui-creator` wheel file before installing other dependencies.
 
 ```cmd
-# For NI Measurement Plug-In Converter
 pip install <dependencies/wheel_file>
 ```
 
-Then, install other dependencies
+Then, install other dependencies using the following command.
 
 ```cmd
 poetry install
@@ -96,11 +95,7 @@ poetry install
 Change directory using the following command to respective packages
 
 ```cmd
-cd <converter path>
-
-Or
-
-cd <ui_creator path>
+cd src/<package_folder>
 ```
 
 ## Lint Code for Style and Formatting
