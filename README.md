@@ -1,24 +1,20 @@
-# Measurement Plug-In Converter Python
+# Measurement Plug-In Converter for Python
 
-- [Measurement Plug-In Converter Python](#measurement-plug-in-converter-python)
+- [Measurement Plug-In Converter for Python](#measurement-plug-in-converter-for-python)
   - [Introduction](#introduction)
   - [Dependencies](#dependencies)
-    - [NI Measurement Plug-In Converter](#ni-measurement-plug-in-converter)
-    - [NI Measurement UI Creator](#ni-measurement-ui-creator)
   - [How to install?](#how-to-install)
-    - [NI Measurement Plug-In Converter](#ni-measurement-plug-in-converter-1)
-    - [NI Measurement UI Creator](#ni-measurement-ui-creator-1)
   - [How to run?](#how-to-run)
-    - [NI Measurement Plug-In Converter](#ni-measurement-plug-in-converter-2)
+    - [NI Measurement Plug-In Converter for Python](#ni-measurement-plug-in-converter-for-python)
       - [Supported data types](#supported-data-types)
       - [Supported instrument drivers](#supported-instrument-drivers)
       - [Prerequisites](#prerequisites)
       - [Limitations](#limitations)
       - [Additional steps for VISA instruments](#additional-steps-for-visa-instruments)
       - [Event logger](#event-logger)
-    - [NI Measurement UI Creator](#ni-measurement-ui-creator-2)
-      - [Create measurement UI file](#create-measurement-ui-file)
-      - [Update measurement UI file](#update-measurement-ui-file)
+    - [NI Measurement Plug-In UI Creator](#ni-measurement-plug-in-ui-creator)
+      - [Create measurement plug-in UI file](#create-measurement-plug-in-ui-file)
+      - [Update measurement plug-in UI file](#update-measurement-plug-in-ui-file)
       - [Supported data types](#supported-data-types-1)
       - [Supported data elements](#supported-data-elements)
       - [Unsupported data elements for update command](#unsupported-data-elements-for-update-command)
@@ -28,37 +24,37 @@
 
 ## Introduction
 
-Measurement Plug-In Converter Python has the following packages
+Measurement Plug-In Converter for Python has the following packages
 
-- NI Measurement Plug-In Converter for Python - A CLI tool to convert Python measurements to NI measurement plug-ins.
-- NI Measurement UI Creator - A CLI tool to create and update UI files for NI measurement plug-ins.
+- The Measurement Plug-In Converter for Python is a CLI tool to convert traditional Python measurements into measurement plug-ins.
+- The Measurement Plug-In UI Creator is a CLI tool to create or update `.measui` files for measurement plug-ins.
 
 ## Dependencies
 
-### NI Measurement Plug-In Converter
+- NI Measurement Plug-In Converter for Python
 
-- [Python = 3.8.5](https://www.python.org/downloads/release/python-385/)
-- [NI Measurement UI Creator](dependencies/ni_measurement_ui_creator-1.0.0.dev8-py3-none-any.whl)
+  - [Python = 3.8.5](https://www.python.org/downloads/release/python-385/)
+  - [NI Measurement Plug-In UI Creator](dependencies/ni_measurement_ui_creator-1.0.0.dev8-py3-none-any.whl)
 
-### NI Measurement UI Creator
+- NI Measurement Plug-In UI Creator
 
-- [Python = ^3.8](https://www.python.org/downloads/release/python-385/)
+  - [Python = ^3.8](https://www.python.org/downloads/release/python-385/)
 
 ## How to install?
 
-### NI Measurement Plug-In Converter
+- NI Measurement Plug-In Converter for Python
 
-- Place the UI Creator and the Plug-In Converter wheel files parallel to the [install.bat](batch_files/install.bat).
-- Run the `install.bat` file by double clicking it.
+  - Place the UI Creator and the Plug-In Converter wheel files parallel to the [install.bat](batch_files/install.bat).
+  - Run the `install.bat` file by double clicking it.
 
-### NI Measurement UI Creator
+- NI Measurement Plug-In UI Creator
 
-- Place the UI Creator wheel file parallel to the [install.bat](batch_files/install.bat).
-- Run the `install.bat` file by double clicking it.
+  - Place the UI Creator wheel file parallel to the [install.bat](batch_files/install.bat).
+  - Run the `install.bat` file by double clicking it.
 
 ## How to run?
 
-### NI Measurement Plug-In Converter
+### NI Measurement Plug-In Converter for Python
 
 - Open Command Prompt.
 - Run the following command to know the required CLI arguments.
@@ -70,7 +66,7 @@ Measurement Plug-In Converter Python has the following packages
   ```cmd
   Usage: ni-measurement-plugin-converter [OPTIONS]
 
-    NI Measurement Plug-In Converter is a Command Line tool to convert     
+    NI Measurement Plug-In Converter for Python is a Command Line tool to convert     
     Python measurements to measurement plug-ins.
 
   Options:
@@ -85,7 +81,7 @@ Measurement Plug-In Converter Python has the following packages
 - Run the following command to convert Python measurements to measurement plug-ins.
 
   ```cmd
-  ni-measurement-plugin-converter -d "<display name>" -m "<measurement file path>" -f "<measurement function name>" -o "<output directory>"
+  ni-measurement-plugin-converter -d "<display_name>" -m "<measurement_file_path>" -f "<measurement_function_name>" -o "<output_directory>"
   ```
 
 #### Supported data types
@@ -94,10 +90,7 @@ Measurement Plug-In Converter Python has the following packages
 - Float
 - String
 - Boolean
-- List of integers
-- List of floats
-- List of strings
-- List of booleans
+- 1D array of the above types
 
 #### Supported instrument drivers
 
@@ -112,69 +105,82 @@ Measurement Plug-In Converter Python has the following packages
 
 #### Prerequisites
 
-The Python measurement should contain a measurement function which should
-
-- Use one of the supported [instrument drivers](#supported-instrument-drivers) and [data types](#supported-data-types). The inputs and outputs of unsupported data types will be skipped.
-- Contain a return value. The return value should be a variable and not a direct function call or constant value.
+- The Python measurement should have a measurement function.
+- The measurement function should use atleast one of the supported [instrument drivers](#supported-instrument-drivers) and [data types](#supported-data-types). The inputs and outputs of unsupported data types will be skipped.
+- The measurement function must return a value through a variable. Assign the return value to a variable first, and then return that variable
+  Returning a function call or a constant value directly is not supported.
 
   ```py
-  # Not supported
-  def measurement_function() -> List[float]:
+  # Unsupported format
+  def measurement() -> List[float]:
     # Measurement logic.
     return measure_voltages()
 
-  # Supported
-  def measurement_function() -> List[float]:
+  # Supported format
+  def measurement() -> List[float]:
     # Measurement logic.
     voltages = measure_voltages()
     return voltages
   ```
 
-- Have properly type hinted inputs and outputs.
+- The measurement function should have clear and accurate type hints for all input and output parameters.
 
   ```py
-  # Not supported
-  def measurement_function(voltage, current):
+  # Unsupported format
+  def measurement(voltage, current):
     # Measurement logic.
     resistance = voltage / current
     return resistance
   
-  # Supported
-  def measurement_function(voltage: int, current: float) -> float:
+  # Supported format
+  def measurement(voltage: int, current: float) -> float:
     # Measurement logic.
     resistance = voltage / current
     return resistance
   ```
 
-- Have the instrument driver's session initialization inside the measurement function and within the next level of indentation.
+- The measurement function should have the instrument driver’s session initialization within the measurement function, indented at the next level.
 
   ```py
-  # Not supported
-  def measurement_function(voltage: int, current: float) -> float:
+  # Unsupported format
+  def measurement(voltage: int, current: float) -> float:
     if voltage:
       with nidcpower.Session("DCPower1") as session:
         # Measurement logic.
         return current
 
-  # Supported
-  def measurement_function(voltage: int, current: float) -> float:
+  # Supported format
+  def measurement(voltage: int, current: float) -> float:
     with nidcpower.Session("DCPower1") as session:
       # Measurement logic.
       return current
   ```
 
-- Have all the instrument driver's session initialization at a single point using the context manager `with`.
+- The measurement function should consolidate all instrument driver session initializations at a single point using the `with` context manager.
 
   ```py
-  # Not supported
-  def measurement_function(voltage: int, current: float) -> float:
+  # Unsupported format
+  def measurement(voltage: int, current: float) -> float:
     with nidcpower.Session("DCPower1") as dcpower_session:
       with nidmm.Session("DMM1") as dmm_session:
         # Measurement logic.
         return current
 
-  # Supported
-  def measurement_function(voltage: int, current: float) -> float:
+  # Unsupported format
+  def measurement(voltage: int, current: float) -> float:
+    with nidcpower.Session("DCPower1") as dcpower_session:
+        # Measurement logic.
+        return dcpower_session.source()
+
+  # Unsupported format
+  def measurement(voltage: int, current: float) -> float:
+    with nidmm.Session("DCPower1") as dmm_session:
+        # Measurement logic.
+        return dmm_session.measure()
+
+
+  # Supported format
+  def measurement(voltage: int, current: float) -> float:
     with nidcpower.Session("DCPower1") as dcpower_session, nidmm.Session("DMM1") as dmm_session:
       # Measurement logic.
       return current
@@ -182,10 +188,10 @@ The Python measurement should contain a measurement function which should
 
 #### Limitations
 
-- Conversion of class based measurements are not supported.
-- Path, Enum, DoubleXYData and their array counterpart data types are not supported.
-- Measurement UI generated by the tool will not include controls and indicators for list of booleans.
-- For measurements that use VISA instruments, [additional steps](#additional-steps-for-visa-instruments) must be followed post conversion.
+- Class-based measurements are not supported for conversion.
+- Data types such as `Path`, `Enum`, `DoubleXYData`, and their array variants are not supported.
+- The measurement plug-in UI generated by the tool will exclude controls and indicators for the boolean lists.
+- For measurements using VISA instruments, follow the [additional steps](#additional-steps-for-visa-instruments) after conversion.
 
 #### Additional steps for VISA instruments
 
@@ -195,7 +201,7 @@ For measurements that use VISA instruments, the `session_constructor`, session t
 
 Steps to be followed
 
-- Define the grpc support.
+- Define the gRPC device server support.
 - Define the session class for the instrument type.
 - Define the session constructor for the instrument type.
 
@@ -205,49 +211,49 @@ Steps to be followed
 - For `instrument_type`, use the pin map instrument type id.
 - For session type, the type of session should be passed.
 
-For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tree/releases/2.0/examples/nivisa_dmm_measurement).
+For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tree/releases/2.1/examples/nivisa_dmm_measurement).
 
 ![VISA_examples](docs/images/VISA_examples.png)
 
 #### Event logger
 
-- The tool will generate a log once the conversion process is started, documenting all the actions performed by the tool throughout the process.
-- Log file can be found in the output directory.
-- The log includes the details about any errors encountered during the process.
+- The tool generates a log at the start of the conversion process, recording all actions performed throughout.
+- The log file is located in the output directory.
+- This log includes detailed information on any errors encountered during the process.
 
-### NI Measurement UI Creator
+### NI Measurement Plug-In UI Creator
 
 - Open Command Prompt.
 - Run the following command to know the available commands.
 
   ```cmd
-  ni-measurement-ui-creator --help
+  ni-measurement-plugin-ui-creator --help
   ```
 
   ```cmd
-  Usage: ni-measurement-ui-creator [OPTIONS] COMMAND [ARGS]...
+  Usage: ni-measurement-plugin-ui-creator [OPTIONS] COMMAND [ARGS]...
 
-    NI Measurement UI Creator is a Command Line tool for creating/updating
+    NI Measurement Plug-In UI Creator is a Command Line tool for creating/updating
     measui files.
 
   Options:
     -h, --help  Show this message and exit.
 
   Commands:
-    create  Create a new measurement UI file.
-    update  Update the measurement UI file.
+    create  Create a new measurement plug-in UI file.
+    update  Update the measurement plug-in UI file.
   ```
 
-#### Create measurement UI file
+#### Create measurement plug-in UI file
 
-- Run the following command to create `.measui` files.
+- Run the following command to create new `.measui` file(s).
 
   ```cmd
-  ni-measurement-ui-creator create
+  ni-measurement-plugin-ui-creator create
   ```
 
   ```cmd
-  Starting the NI Measurement UI Creator...
+  Starting the NI Measurement Plug-In UI Creator...
   Supported UI Elements: ['Numeric Indicator', 'Numeric Control', 'Numeric Array Input', 'Numeric Array Output', 'Boolean Horizontal Slider', 'Boolean Round LED', 'String Control', 'String Indicator', 'String Array Input', 'String Array Output', 'Pin']
   Getting the active measurements...
 
@@ -261,22 +267,22 @@ For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tr
 - Select the measurement by entering the number for which the UI file has to be created.
 
   ```cmd
-  Measurement UI created successfully at <Measurement UI file path>
+  Measurement Plug-In UI created successfully at <Measurement Plug-In UI file path>
   Process completed.
   ```
 
 - The UI File will be created in the current working directory.
 
-#### Update measurement UI file
+#### Update measurement plug-in UI file
 
 - Run the following command to update `.measui` files.
 
   ```cmd
-  ni-measurement-ui-creator update
+  ni-measurement-plugin-ui-creator update
   ```
 
   ```cmd
-  Starting the NI Measurement UI Creator...
+  Starting the NI Measurement Plug-In UI Creator...
   Supported UI Elements: ['Numeric Indicator', 'Numeric Control', 'Numeric Array Input', 'Numeric Array Output', 'Boolean Horizontal Slider', 'Boolean Round LED', 'String Control', 'String Indicator', 'String Array Input', 'String Array Output', 'Pin']
   Getting the active measurements...
 
@@ -290,18 +296,18 @@ For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tr
 - Select the measurement by entering the number.
 
   ```cmd
-  Available Measurement UI Files:
+  Available Measurement Plug-In UI Files:
   1. First measui file path
   2. Second measui file path
-  Select a measurement UI file index (1-2) to update:
+  Select a measurement plug-in UI file index (1-2) to update:
   ```
 
-- Select the measurement UI file which has to be updated by entering the number.
+- Select the measurement plug-in UI file which has to be updated by entering the number.
 
   ```cmd
     Binding UI controls and indicators...
     Creating new controls and indicators...
-    Measurement UI updated successfully. Please find at <Measurement UI file path>
+    Measurement plug-in UI updated successfully. Please find at <Measurement Plug-In UI file path>
     Process completed.
   ```
 
@@ -313,10 +319,8 @@ For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tr
 - Float
 - String
 - Boolean
-- List of integers
-- List of floats
-- List of string
 - Pin
+- 1D array of int, float, string and boolean
 
 #### Supported data elements
 
@@ -346,16 +350,16 @@ For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tr
 
 For update command,
 
-- The selected Measurement UI file should have been created using the Measurement Plug-In UI Editor.
+- The selected measurement plug-in UI file should have been created using the Measurement Plug-In UI Editor.
 - Atleast one control/indicator should be present in it.
 
 #### Limitations
 
-- Though [unsupported data elements for update command](#unsupported-data-elements-for-update-command) are already present in the inputted UI file but without being bound to some input or output, the elements will not be bind. New elements for the inputs/outputs will be created if the data type of the input/output is [supported](#supported-data-types).
-- Path, Enum, DoubleXYData and their array counterpart data types are not supported.
+- Unsupported data elements for the update command, if present in the input UI file but not bound to any input or output, will remain unbound. New elements will be created for inputs and outputs if their data types are [supported](#supported-data-types).
+- Data types such as `Path`, `Enum`, `DoubleXYData`, and their 1D array variants are not supported.
 
 #### Event logger
 
-- The tool will generate a log once the creation/update process is started, documenting all the actions performed by the tool throughout the process.
-- Log file can be found in the output directory under Logs folder.
-- The log includes the details about any errors encountered during the process.
+- The tool generates a log at the start of the conversion process, recording all actions performed throughout.
+- The log file is located inside the "Logs" folder within the output directory.
+- This log includes detailed information on any errors encountered during the process.
