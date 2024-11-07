@@ -7,12 +7,12 @@
   - [How to run?](#how-to-run)
     - [Create measurement plug-in UI file](#create-measurement-plug-in-ui-file)
     - [Update measurement plug-in UI file](#update-measurement-plug-in-ui-file)
+    - [Prerequisites](#prerequisites)
     - [Supported data types](#supported-data-types)
     - [Supported data elements](#supported-data-elements)
     - [Unsupported data elements for update command](#unsupported-data-elements-for-update-command)
-    - [Prerequisites](#prerequisites)
-    - [Limitations](#limitations)
     - [Event logger](#event-logger)
+    - [Limitations](#limitations)
 
 ## Introduction
 
@@ -52,6 +52,8 @@
 
 ### Create measurement plug-in UI file
 
+The create command will create a new UI file for the selected active measurement.
+
 - Run the following command to create new `.measui` file(s).
 
   ```cmd
@@ -63,7 +65,7 @@
   Supported UI Elements: ['Numeric Indicator', 'Numeric Control', 'Numeric Array Input', 'Numeric Array Output', 'Boolean Horizontal Slider', 'Boolean Round LED', 'String Control', 'String Indicator', 'String Array Input', 'String Array Output', 'Pin']
   Getting the active measurements...
 
-  Available services:
+  Registered/Available measurements:
   1. First Measurement (Py)
   2. Second Measurement (Py)
 
@@ -77,9 +79,14 @@
   Process completed.
   ```
 
-- The UI File will be created in the current working directory.
+- The UI file will be created in the current working directory.
 
 ### Update measurement plug-in UI file
+
+The update command will update the UI file by
+
+- Linking controls and indicators to its respective inputs and outputs if there are any controls and indicators unlinked
+- Creating new controls and indicators and linking it to the inputs and outputs.
 
 - Run the following command to update `.measui` files.
 
@@ -92,7 +99,7 @@
   Supported UI Elements: ['Numeric Indicator', 'Numeric Control', 'Numeric Array Input', 'Numeric Array Output', 'Boolean Horizontal Slider', 'Boolean Round LED', 'String Control', 'String Indicator', 'String Array Input', 'String Array Output', 'Pin']
   Getting the active measurements...
 
-  Available services:
+  Registered/Available measurements:
   1. First Measurement (Py)
   2. Second Measurement (Py)
 
@@ -118,6 +125,13 @@
   ```
 
 - The updated file will be suffixed with `_updated`.
+
+### Prerequisites
+
+For update command,
+
+- The selected measurement plug-in UI file should have been created using the Measurement Plug-In UI Editor.
+- Atleast one control/indicator should be present in the measurement plug-in UI file.
 
 ### Supported data types
 
@@ -152,20 +166,13 @@
 - Graph Array Output
 - Progress Bar
 
-### Prerequisites
-
-For update command,
-
-- The selected measurement plug-in UI file should have been created using the Measurement Plug-In UI Editor.
-- Atleast one control/indicator should be present in it.
-
-### Limitations
-
-- Unsupported data elements for the update command, if present in the input UI file but not bound to any input or output, will remain unbound. New elements will be created for inputs and outputs if their data types are [supported](#supported-data-types).
-- Data types such as `Path`, `Enum`, `DoubleXYData`, and their 1D array variants are not supported.
-
 ### Event logger
 
 - The tool generates a log at the start of the conversion process, recording all actions performed throughout.
 - The log file is located inside the "Logs" folder within the output directory.
 - This log includes detailed information on any errors encountered during the process.
+
+### Limitations
+
+- For the update command, if an unsupported data element exists in the input UI file and is not linked to any input or output, it will remain unbound and will not be updated. New elements will be created for inputs and outputs if their data types are [supported](#supported-data-types).
+- Data types such as `Path`, `Enum`, `DoubleXYData`, and their 1D array variants are not supported.

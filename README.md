@@ -244,7 +244,7 @@ For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tr
 
 #### Create measurement plug-in UI file
 
-The create command will create a new UI file for active measurements.
+The create command will create a new UI file for the selected active measurement.
 
 - Run the following command to create new `.measui` file(s).
 
@@ -275,7 +275,10 @@ The create command will create a new UI file for active measurements.
 
 #### Update measurement plug-in UI file
 
-The update command will update UI file by linking controls and indicators to its respective data type if there are any controls and indicators unlinked and by creating new controls and indicators and linking it to the inputs and outputs.
+The update command will update the UI file by
+
+- Linking controls and indicators to its respective inputs and outputs if there are any controls and indicators unlinked
+- Creating new controls and indicators and linking it to the inputs and outputs.
 
 - Run the following command to update `.measui` files.
 
