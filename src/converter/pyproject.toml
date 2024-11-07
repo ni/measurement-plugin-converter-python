@@ -4,8 +4,8 @@ version = "1.0.0-dev8"
 description = "Measurement Plug-In Converter for Python"
 authors = ["NI <opensource@ni.com>"]
 readme = "README.md"
-packages = [{ include = "ni_measurement_plugin_converter", from = "src" }]
 repository = "https://github.com/ni/measurement-plugin-converter-python"
+packages = [{ include = "ni_measurement_plugin_converter"}]
 license = "MIT"
 classifiers = [
     "Development Status :: 4 - Beta",
