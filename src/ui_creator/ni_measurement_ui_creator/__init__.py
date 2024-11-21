@@ -3,7 +3,6 @@
 import os
 
 import click
-
 from ni_measurement_ui_creator.constants import (
     CLI_CONTEXT_SETTINGS,
     SUPPORTED_UI_ELEMENTS,
@@ -77,10 +76,11 @@ def update() -> None:
 
 
 @click.group(context_settings=CLI_CONTEXT_SETTINGS)
-def run() -> None:
+def run_cli() -> None:
     """NI Measurement UI Creator is a Command Line tool for creating/updating measui files."""
     pass
 
 
-run.add_command(create)
-run.add_command(update)
+if __name__ == "__main__":
+    run_cli.add_command(create)
+    run_cli.add_command(update)

@@ -13,17 +13,16 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: CPython",
     "Topic :: Scientific/Engineering",
 ]
-packages = [{ include = "ni_measurement_ui_creator", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.8"
 pydantic = "^2.7.1"
 click = "^8.1.7"
 mako = "^1.3.5"
-ni-measurement-plugin-sdk-service = "^2.1.0.dev4"
+ni-measurement-plugin-sdk-service = "^2.1.0"
 
 [tool.poetry.scripts]
-ni-measurement-ui-creator = "ni_measurement_ui_creator.main:run"
+ni-measurement-ui-creator = "ni_measurement_ui_creator:run"
 
 [tool.poetry.group.dev.dependencies]
 ni-python-styleguide = "^0.4.6"
