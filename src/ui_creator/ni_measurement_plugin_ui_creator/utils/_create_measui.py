@@ -3,7 +3,8 @@
 import os
 from logging import getLogger
 from typing import Union
-
+from uuid import UUID
+from pathlib import Path
 from mako.template import Template
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
     GetMetadataResponse as V1MetaData,
@@ -12,14 +13,17 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
     GetMetadataResponse as V2MetaData,
 )
 
-from ni_measurement_ui_creator.constants import CLIENT_ID, LOGGER, MeasUIFile, UserMessage
-from ni_measurement_ui_creator.utils._ui_elements import (
+from ni_measurement_plugin_ui_creator.constants import CLIENT_ID, LOGGER, MeasUIFile
+from ni_measurement_plugin_ui_creator.utils._ui_elements import (
     create_input_elements_from_client,
     create_output_elements_from_client,
 )
 
+CREATING_FILE = "Creating Measurement UI..."
+CREATED_UI = "Measurement UI created successfully at {filepath}"
 
-def _create_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: str) -> None:
+
+def _create_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> None:
     """Create measurement UI file.
 
     1. Get inputs and outputs from the metadata.
@@ -31,6 +35,8 @@ def _create_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: str) -> 
         output_dir (str): Output directory.
     """
     logger = getLogger(LOGGER)
+    logger.debug(CREATING_FILE)
+
     inputs = metadata.measurement_signature.configuration_parameters
     input_elements, _ = create_input_elements_from_client(inputs=inputs)
 
@@ -44,7 +50,7 @@ def _create_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: str) -> 
         input_output_elements=input_elements + output_elements,
     )
     filepath = os.path.abspath(f"{measui_path}{MeasUIFile.MEASUREMENT_UI_FILE_EXTENSION}")
-    logger.info(UserMessage.CREATED_UI.format(filepath=os.path.abspath(filepath)))
+    logger.info(CREATED_UI.format(filepath=os.path.abspath(filepath)))
 
 
 def create_measui(filepath: str, input_output_elements: str) -> None:
@@ -74,7 +80,7 @@ def create_measui(filepath: str, input_output_elements: str) -> None:
 
 def __render_template(
     template_name: str,
-    client_id: str,
+    client_id: Union[str, UUID],
     display_name: str,
     input_output_elements: str,
 ) -> bytes:
@@ -82,7 +88,7 @@ def __render_template(
 
     Args:
         template_name (str): Name of mako file.
-        client_id (str): Client ID to be assigned in the template.
+        client_id (Union[str, UUUID]): Client ID to be assigned in the template.
         display_name (str): Display name to be assigned in the template.
         input_output_elements (str): Inputs and Output elements of MeasUI file.
 

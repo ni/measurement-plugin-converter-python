@@ -2,8 +2,10 @@
 
 import uuid
 
-from ni_measurement_ui_creator.constants._ui_elements import MeasUIElement
-from ni_measurement_ui_creator.models._ui_elements import LabelElement
+from ni_measurement_plugin_ui_creator.models import LabelElement
+
+
+LABEL = '<Label Height="[float]16" Id="{id}" LabelOwner="[UIModel]{shared_id}" Left="[float]{left_value}" Text="[string]{input_output_name}" Top="[float]{top_value}" Width="[float]100" xmlns="http://www.ni.com/PanelCommon" />'
 
 
 def get_unique_id() -> str:
@@ -25,7 +27,7 @@ def create_label(element_parameter: LabelElement) -> str:
     Returns:
         str: MeasUI Label Element.
     """
-    label = MeasUIElement.LABEL.format(
+    label = LABEL.format(
         id=element_parameter.id,
         shared_id=element_parameter.shared_id,
         input_output_name=element_parameter.name,

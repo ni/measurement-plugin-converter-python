@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ni_measurement_ui_creator"
+name = "ni_measurement_plugin_ui_creator"
 version = "1.0.0-dev9"
 description = "NI Measurement UI Creator"
 authors = ["NI <opensource@ni.com>"]
@@ -20,9 +20,12 @@ pydantic = "^2.7.1"
 click = "^8.1.7"
 mako = "^1.3.5"
 ni-measurement-plugin-sdk-service = "^2.1.0"
+mypy = "^1.13.0"
+ni-python-styleguide = "^0.4.6"
+bandit = "^1.7.10"
 
 [tool.poetry.scripts]
-ni-measurement-ui-creator = "ni_measurement_ui_creator:run"
+ni-measurement-plugin-ui-creator = "ni_measurement_plugin_ui_creator:execute_cli"
 
 [tool.poetry.group.dev.dependencies]
 ni-python-styleguide = "^0.4.6"
@@ -30,3 +33,9 @@ ni-python-styleguide = "^0.4.6"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.bandit]
+exclude = [".venv/*"]
+
+[tool.mypy]
+ignore_missing_imports = true

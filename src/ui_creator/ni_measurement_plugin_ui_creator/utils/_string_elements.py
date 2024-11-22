@@ -2,9 +2,18 @@
 
 from typing import List
 
-from ni_measurement_ui_creator.constants import MeasUIElement, MeasUIElementPosition
-from ni_measurement_ui_creator.models import DataElement, LabelElement
-from ni_measurement_ui_creator.utils._common_elements import create_label, get_unique_id
+from ni_measurement_plugin_ui_creator.constants import MeasUIElementPosition
+from ni_measurement_plugin_ui_creator.models import DataElement, LabelElement
+from ni_measurement_plugin_ui_creator.utils._common_elements import (
+    create_label,
+    get_unique_id,
+)
+
+STRING_CONTROL = '<ChannelStringControl AcceptsReturn="[bool]False" BaseName="[string]String" Channel="[string]{client_id}/Configuration/{name}" Enabled="[bool]True" Height="[float]{height}" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" Id="{shared_id}" Label="[UIModel]{label_id}" Left="[float]{left_value}" Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" Width="[float]{width}" />'
+STRING_INDICATOR = '<ChannelStringControl AcceptsReturn="[bool]False" BaseName="[string]String" Channel="[string]{client_id}/Output/{name}" Height="[float]{height}" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" Id="{shared_id}" IsReadOnly="[bool]True" Label="[UIModel]{label_id}" Left="[float]{left_value}" Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" Width="[float]{width}" />'
+
+STRING_ARRAY_INPUT = '<ChannelArrayViewer ArrayElement="[UIModel]{array_element_id}" BaseName="[string]String Array Input" Channel="[string]{client_id}/Configuration/{name}" Columns="[int]1" Dimensions="[int]1" Height="[float]{height}" Id="{shared_id}" IndexVisibility="[Visibility]Collapsed" IsFixedSize="[bool]False" Label="[UIModel]{label_id}" Left="[float]{left_value}" Orientation="[SMOrientation]Vertical" Rows="[int]{rows}" Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Visible" Width="[float]105"><p.DefaultElementValue>""</p.DefaultElementValue><ChannelArrayStringControl AcceptsReturn="[bool]False" BaseName="[string]String" Height="[float]{height}" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" Id="{array_element_id}" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" Width="[float]{width}" /></ChannelArrayViewer>'
+STRING_ARRAY_OUTPUT = '<ChannelArrayViewer ArrayElement="[UIModel]{array_element_id}" BaseName="[string]String Array Output" Channel="[string]{client_id}/Output/{name}" Columns="[int]1" Dimensions="[int]1" Height="[float]{height}" Id="{shared_id}" IndexVisibility="[Visibility]Collapsed" IsFixedSize="[bool]False" Label="[UIModel]{label_id}" Left="[float]{left_value}" Orientation="[SMOrientation]Vertical" Rows="[int]{rows}" Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Visible" Width="[float]105"><p.DefaultElementValue>""</p.DefaultElementValue><ChannelArrayStringControl AcceptsReturn="[bool]False" BaseName="[string]String" Height="[float]{height}" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" Id="{array_element_id}" IsReadOnly="[bool]True" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" Width="[float]{width}" /></ChannelArrayViewer>'
 
 
 def create_string_control(element_parameter: DataElement) -> str:
@@ -19,7 +28,7 @@ def create_string_control(element_parameter: DataElement) -> str:
     label_id = get_unique_id()
     shared_id = get_unique_id()
 
-    string_control = MeasUIElement.STRING_CONTROL.format(
+    string_control = STRING_CONTROL.format(
         client_id=element_parameter.client_id,
         name=element_parameter.name,
         label_id=label_id,
@@ -55,7 +64,7 @@ def create_string_indicator(element_parameter: DataElement) -> str:
     label_id = get_unique_id()
     shared_id = get_unique_id()
 
-    string_indicator = MeasUIElement.STRING_INDICATOR.format(
+    string_indicator = STRING_INDICATOR.format(
         client_id=element_parameter.client_id,
         name=element_parameter.name,
         label_id=label_id,
@@ -138,7 +147,7 @@ def create_string_array_control(element_parameter: DataElement) -> str:
     shared_id = get_unique_id()
     label_id = get_unique_id()
 
-    string_array = MeasUIElement.STRING_ARRAY_INPUT.format(
+    string_array = STRING_ARRAY_INPUT.format(
         client_id=element_parameter.client_id,
         array_element_id=array_element_id,
         shared_id=shared_id,
@@ -178,7 +187,7 @@ def create_string_array_indicator(element_parameter: DataElement) -> str:
     shared_id = get_unique_id()
     label_id = get_unique_id()
 
-    string_array = MeasUIElement.STRING_ARRAY_OUTPUT.format(
+    string_array = STRING_ARRAY_OUTPUT.format(
         client_id=element_parameter.client_id,
         array_element_id=array_element_id,
         shared_id=shared_id,

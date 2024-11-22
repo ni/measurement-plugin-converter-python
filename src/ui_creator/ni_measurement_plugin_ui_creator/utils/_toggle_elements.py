@@ -2,9 +2,12 @@
 
 from typing import List
 
-from ni_measurement_ui_creator.constants import MeasUIElement, MeasUIElementPosition
-from ni_measurement_ui_creator.models import DataElement, LabelElement
-from ni_measurement_ui_creator.utils._common_elements import create_label, get_unique_id
+from ni_measurement_plugin_ui_creator.constants import MeasUIElementPosition
+from ni_measurement_plugin_ui_creator.models import DataElement, LabelElement
+from ni_measurement_plugin_ui_creator.utils._common_elements import create_label, get_unique_id
+
+BOOLEAN_HORIZONTAL_SLIDER = '<ChannelSwitch BaseName="[string]Switch" Channel="[string]{client_id}/Configuration/{name}" Enabled="[bool]True" FalseContent="[string]Off" Height="[float]{height}" Id="{shared_id}" IsReadOnly="[bool]False" Label="[UIModel]{label_id}" Left="[float]{left_value}" MinHeight="[float]5" MinWidth="[float]5" Orientation="[SMOrientation]Horizontal" Shape="[SwitchShape]Slider" Top="[float]{top_value}" TrueContent="[string]On" Width="[float]{width}" />'
+BOOLEAN_LED = '<ChannelLED BaseName="[string]Round LED" Channel="[string]{client_id}/Output/{name}" ContentVisibility="[Visibility]Collapsed" FalseContent="[string]Off" Height="[float]{height}" Id="{shared_id}" IsReadOnly="[bool]True" Label="[UIModel]{label_id}" Left="[float]{left_value}" MinHeight="[float]5" MinWidth="[float]5" Shape="[LEDShape]Round" Top="[float]{top_value}" TrueContent="[string]On" Width="[float]{width}" />'
 
 
 def create_horizontal_slider(element_parameter: DataElement) -> str:
@@ -19,7 +22,7 @@ def create_horizontal_slider(element_parameter: DataElement) -> str:
     shared_id = get_unique_id()
     label_id = get_unique_id()
 
-    boolean_horizontal_slider = MeasUIElement.BOOLEAN_HORIZONTAL_SLIDER.format(
+    boolean_horizontal_slider = BOOLEAN_HORIZONTAL_SLIDER.format(
         client_id=element_parameter.client_id,
         name=element_parameter.name,
         label_id=label_id,
@@ -55,7 +58,7 @@ def create_boolean_led(element_parameter: DataElement) -> str:
     shared_id = get_unique_id()
     label_id = get_unique_id()
 
-    boolean_led = MeasUIElement.BOOLEAN_LED.format(
+    boolean_led = BOOLEAN_LED.format(
         client_id=element_parameter.client_id,
         name=element_parameter.name,
         label_id=label_id,

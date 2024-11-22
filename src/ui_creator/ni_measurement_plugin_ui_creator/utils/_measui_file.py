@@ -17,16 +17,22 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 
-from ni_measurement_ui_creator.constants import (
+from ni_measurement_plugin_ui_creator.constants import (
     LOGGER,
     ElementAttrib,
     MeasUIFile,
     UpdateUI,
-    UserMessage,
 )
-from ni_measurement_ui_creator.models import AvailableElement
-from ni_measurement_ui_creator.utils._client import get_measurement_service_stub
-from ni_measurement_ui_creator.utils._exceptions import InvalidCliInputError, InvalidMeasUIError
+from ni_measurement_plugin_ui_creator.models import AvailableElement
+from ni_measurement_plugin_ui_creator.utils._client import get_measurement_service_stub
+from ni_measurement_plugin_ui_creator.utils._exceptions import (
+    InvalidCliInputError,
+    InvalidMeasUIError,
+)
+
+
+SELECT_MEASUI_FILE = "Select a measurement UI file index ({start}-{end}) to update: "
+INVALID_MEASUI_CHOICE = "Invalid measurement UI selected."
 
 
 def get_metadata() -> Union[V1MetaData, V2MetaData, None]:
@@ -43,7 +49,7 @@ def get_metadata() -> Union[V1MetaData, V2MetaData, None]:
     measurement_service_stub = get_measurement_service_stub(discovery_client)
 
     if not measurement_service_stub:
-        return
+        return None
 
     metadata = measurement_service_stub.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
     return metadata
@@ -65,7 +71,7 @@ def get_measui_selection(total_uis: int) -> int:
     try:
         user_input = int(
             input(
-                UserMessage.SELECT_MEASUI_FILE.format(
+                SELECT_MEASUI_FILE.format(
                     start=1,
                     end=total_uis,
                 )
@@ -73,12 +79,12 @@ def get_measui_selection(total_uis: int) -> int:
         )
         logger.info("")
         if user_input not in list(range(1, total_uis + 1)):
-            raise InvalidCliInputError(UserMessage.INVALID_MEASUI_CHOICE)
+            raise InvalidCliInputError(INVALID_MEASUI_CHOICE)
 
         return user_input
 
     except ValueError:
-        raise InvalidCliInputError(UserMessage.INVALID_MEASUI_CHOICE)
+        raise InvalidCliInputError(INVALID_MEASUI_CHOICE)
 
 
 def get_measui_files(metadata: Union[V1MetaData, V2MetaData]) -> List[str]:
@@ -162,11 +168,11 @@ def __get_available_elements(screen_surface: ETree.Element) -> List[AvailableEle
         tag = element.tag.split("}")[-1]
 
         if tag in UpdateUI.UNSUPPORTED_ELEMENTS and ElementAttrib.CHANNEL in element.attrib.keys():
-            bind = True
-            name = element.attrib[ElementAttrib.CHANNEL].split("/")[-1]
+            bind: bool = True
+            name: Optional[str] = element.attrib[ElementAttrib.CHANNEL].split("/")[-1]
 
             if element.attrib[ElementAttrib.CHANNEL].split("/")[-2] == "output":
-                output = True
+                output: Optional[bool] = True
             elif element.attrib[ElementAttrib.CHANNEL].split("/")[-2] == "configuration":
                 output = False
 
@@ -182,7 +188,11 @@ def __get_available_elements(screen_surface: ETree.Element) -> List[AvailableEle
             )
 
         elif tag == UpdateUI.ARRAY_ELEMENT:
-            output, is_str_array = get_output_info_of_array_element(element)
+            output_info = get_output_info_of_array_element(element)
+
+            if output_info:
+                output, is_str_array = output_info[0], output_info[1]
+
             bind, name = get_bind_info(element)
 
             avlble_elements.append(
@@ -242,7 +252,7 @@ def __get_available_elements(screen_surface: ETree.Element) -> List[AvailableEle
     return avlble_elements
 
 
-def get_output_info_of_array_element(element: ETree.Element) -> Tuple[bool, bool]:
+def get_output_info_of_array_element(element: ETree.Element) -> Optional[Tuple[bool, bool]]:
     """Get output info of an array element.
 
     1. Check if the array element is control or indicator.
@@ -252,7 +262,7 @@ def get_output_info_of_array_element(element: ETree.Element) -> Tuple[bool, bool
         element (ETree.Element): Element available already created.
 
     Returns:
-        Tuple[bool, bool]: True if the element is an output, False if not and \
+        Optional[Tuple[bool, bool]]: True if the element is an output, False if not and \
         True if the element is string array, False if it is a numeric array.
     """
     for array_element in element.iter():
@@ -263,9 +273,11 @@ def get_output_info_of_array_element(element: ETree.Element) -> Tuple[bool, bool
 
         if tag == UpdateUI.NUMERIC_ARRAY:
             return __get_output_info_for_read_only_based(array_element), False
+    
+    return None
 
 
-def get_output_info(element: ETree.Element) -> bool:
+def get_output_info(element: ETree.Element) -> Optional[bool]:
     """Get output info.
 
     Check if the element is control or indicator.
@@ -274,7 +286,7 @@ def get_output_info(element: ETree.Element) -> bool:
         element (ETree.Element): Element available already.
 
     Returns:
-        bool: True if the element is an output.
+        Optional[bool]: True if the element is an output.
     """
     tag = element.tag.split("}")[-1]
 
@@ -287,8 +299,9 @@ def get_output_info(element: ETree.Element) -> bool:
     if tag in UpdateUI.INTERACTION_MODE_BASED:
         return __get_output_info_for_interaction_mode_based(element)
 
+    return None
 
-def __get_output_info_for_read_only_based(element: AvailableElement) -> bool:
+def __get_output_info_for_read_only_based(element: ETree.Element) -> bool:
     if (
         ElementAttrib.IS_READ_ONLY in element.attrib.keys()
         and element.attrib[ElementAttrib.IS_READ_ONLY] == "[bool]True"
@@ -298,7 +311,7 @@ def __get_output_info_for_read_only_based(element: AvailableElement) -> bool:
     return False
 
 
-def __get_output_info_for_interaction_mode_based(element: AvailableElement) -> bool:
+def __get_output_info_for_interaction_mode_based(element: ETree.Element) -> bool:
     if (
         ElementAttrib.INTERACTION_MODE in element.attrib.keys()
         and element.attrib[ElementAttrib.INTERACTION_MODE]
@@ -342,12 +355,14 @@ def write_updated_measui(filepath: str, updated_ui: List[AvailableElement]) -> N
     root = tree.getroot()
 
     screen = root.find(UpdateUI.SCREEN_TAG, UpdateUI.NAMESPACES)
-    screen_surface = screen.find(UpdateUI.SCREEN_SURFACE_TAG, UpdateUI.NAMESPACES)
 
-    screen.remove(screen_surface)
-    screen.append(updated_ui[0].element)
+    if screen:
+        screen_surface = screen.find(UpdateUI.SCREEN_SURFACE_TAG, UpdateUI.NAMESPACES)
+        if screen_surface:
+            screen.remove(screen_surface)
 
-    tree.write(filepath, encoding=MeasUIFile.ENCODING, xml_declaration=True)
+        screen.append(updated_ui[0].element)
+        tree.write(filepath, encoding=MeasUIFile.ENCODING, xml_declaration=True)
 
 
 def insert_created_elements(filepath: str, elements_str: str) -> None:

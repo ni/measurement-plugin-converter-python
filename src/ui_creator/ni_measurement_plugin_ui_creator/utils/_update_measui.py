@@ -10,24 +10,16 @@ from typing import List, Tuple, Union
 
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
     ConfigurationParameter as V1ConfigParam,
-)
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
     GetMetadataResponse as V1MetaData,
-)
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
     Output as V1Output,
 )
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
     ConfigurationParameter as V2ConfigParam,
-)
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
     GetMetadataResponse as V2MetaData,
-)
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
     Output as V2Output,
 )
 
-from ni_measurement_ui_creator.constants import (
+from ni_measurement_plugin_ui_creator.constants import (
     LOGGER,
     NUMERIC_DATA_TYPE_VALUES,
     TYPE_SPECIFICATION,
@@ -37,12 +29,11 @@ from ni_measurement_ui_creator.constants import (
     MeasUIFile,
     SpecializedDataType,
     UpdateUI,
-    UserMessage,
 )
-from ni_measurement_ui_creator.models import AvailableElement
-from ni_measurement_ui_creator.utils._create_measui import _create_measui
-from ni_measurement_ui_creator.utils._exceptions import InvalidMeasUIError
-from ni_measurement_ui_creator.utils._measui_file import (
+from ni_measurement_plugin_ui_creator.models import AvailableElement
+from ni_measurement_plugin_ui_creator.utils._create_measui import _create_measui
+from ni_measurement_plugin_ui_creator.utils._exceptions import InvalidMeasUIError
+from ni_measurement_plugin_ui_creator.utils._measui_file import (
     get_available_elements,
     get_measui_files,
     get_measui_selection,
@@ -50,10 +41,24 @@ from ni_measurement_ui_creator.utils._measui_file import (
     validate_measui,
     write_updated_measui,
 )
-from ni_measurement_ui_creator.utils._ui_elements import (
+from ni_measurement_plugin_ui_creator.utils._ui_elements import (
     create_input_elements_from_client,
     create_output_elements_from_client,
 )
+
+AVAILABLE_MEASUI_FILES = "Available Measurement UI Files:"
+NO_MEASUI_FILE = (
+    "No Measurement UI file available. "
+    "Creating a new measui file for the selected measurement..."
+)
+INVALID_MEASUI_FILE = (
+    "Invalid Measurement UI file. Creating a new measui file for the selected measurement..."
+)
+BINDING_ELEMENTS = "Binding UI controls and indicators..."
+INPUTS_BOUND = "Inputs are bound successfully."
+OUTPUTS_BOUND = "Outputs are bound successfully."
+CREATING_ELEMENTS = "Creating new controls and indicators..."
+UPDATED_UI = "Measurement UI updated successfully. Please find at {filepath}"
 
 
 def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> None:
@@ -73,11 +78,11 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
 
     measui_files = get_measui_files(metadata)
     if not measui_files:
-        logger.warning(UserMessage.NO_MEASUI_FILE)
+        logger.warning(NO_MEASUI_FILE)
         _create_measui(metadata, output_dir)
         return
 
-    logger.info(UserMessage.AVAILABLE_MEASUI_FILES)
+    logger.info(AVAILABLE_MEASUI_FILES)
     for serial_num, measui_file_path in enumerate(measui_files):
         logger.info(f"{serial_num + 1}. {measui_file_path[1:]}")
 
@@ -89,7 +94,7 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
         validate_measui(tree)
 
     except (ETree.ParseError, InvalidMeasUIError, FileNotFoundError, PermissionError):
-        logger.warning(UserMessage.INVALID_MEASUI_FILE)
+        logger.warning(INVALID_MEASUI_FILE)
         _create_measui(metadata, output_dir)
         return
 
@@ -113,7 +118,7 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
     screen = root.find(UpdateUI.SCREEN_TAG, UpdateUI.NAMESPACES)
     client_id = screen.attrib[ElementAttrib.CLIENT_ID]
 
-    logger.info(UserMessage.BINDING_ELEMENTS)
+    logger.info(BINDING_ELEMENTS)
     updated_elements = bind_elements(client_id, elements, unbind_inputs, unbind_outputs)
 
     write_updated_measui(updated_measui_filepath, updated_elements)
@@ -124,7 +129,7 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
     unmatched_inputs = [input for input in inputs if input.name not in updated_element_names]
     unmatched_outputs = [output for output in outputs if output.name not in updated_element_names]
 
-    logger.info(UserMessage.CREATING_ELEMENTS)
+    logger.info(CREATING_ELEMENTS)
     elements = create_elements(
         client_id,
         top_alignment,
@@ -134,7 +139,7 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
     )
 
     insert_created_elements(updated_measui_filepath, elements)
-    logger.info(UserMessage.UPDATED_UI.format(filepath=os.path.abspath(updated_measui_filepath)))
+    logger.info(UPDATED_UI.format(filepath=os.path.abspath(updated_measui_filepath)))
 
     return None
 
@@ -191,7 +196,7 @@ def bind_inputs(
                 elements = update_label(index, elements)
                 break
 
-    logger.debug(UserMessage.INPUTS_BOUND)
+    logger.debug(INPUTS_BOUND)
     return elements
 
 
@@ -224,7 +229,7 @@ def bind_outputs(
                 elements = update_label(index, elements)
                 break
 
-    logger.debug(UserMessage.OUTPUTS_BOUND)
+    logger.debug(OUTPUTS_BOUND)
     return elements
 
 
@@ -363,24 +368,24 @@ def find_alignments(updated_elements: List[AvailableElement]) -> Tuple[float, fl
         except (AttributeError, ValueError, KeyError):
             return -1.0
 
-    try:
-        elements = updated_elements[1:]
-        lowest_element = max(elements, key=extract_top_value, default=None)
-        top_start_value = (
-            float(lowest_element.attrib[ElementAttrib.TOP].split("]")[-1])
-            + (
-                float(lowest_element.attrib[ElementAttrib.HEIGHT].split("]")[-1])
-                if ElementAttrib.HEIGHT in lowest_element.attrib
-                else float(lowest_element.attrib[ElementAttrib.MIN_HEIGHT].split("]")[-1])
-            )
-            + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
-        )
+    elements = updated_elements[1:]
+    lowest_element = max(elements, key=extract_top_value, default=None)
 
-        left_start_value = float(lowest_element.attrib[ElementAttrib.LEFT].split("]")[-1])
-        return top_start_value, left_start_value
-
-    except AttributeError:
+    if not lowest_element:
         return 50.0, 50.0
+
+    top_start_value = (
+        float(lowest_element.attrib[ElementAttrib.TOP].split("]")[-1])
+        + (
+            float(lowest_element.attrib[ElementAttrib.HEIGHT].split("]")[-1])
+            if ElementAttrib.HEIGHT in lowest_element.attrib
+            else float(lowest_element.attrib[ElementAttrib.MIN_HEIGHT].split("]")[-1])
+        )
+        + MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
+    )
+
+    left_start_value = float(lowest_element.attrib[ElementAttrib.LEFT].split("]")[-1])
+    return top_start_value, left_start_value
 
 
 def create_elements(

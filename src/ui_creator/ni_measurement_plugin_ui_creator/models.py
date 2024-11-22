@@ -6,13 +6,13 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
-from ni_measurement_ui_creator.constants import MeasUIElementPosition
+from ni_measurement_plugin_ui_creator.constants import MeasUIElementPosition
 
 
 class DataElement(BaseModel):
     """Data Element Model."""
 
-    client_id: UUID
+    client_id: Union[UUID, str]
     name: str
     left_alignment: Optional[Union[int, float]] = Field(
         default=MeasUIElementPosition.DEFAULT_LEFT_ALIGNMENT

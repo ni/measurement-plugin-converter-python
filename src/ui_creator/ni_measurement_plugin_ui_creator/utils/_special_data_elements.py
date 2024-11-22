@@ -1,8 +1,21 @@
 """Create special elements for building UI."""
 
-from ni_measurement_ui_creator.constants import MeasUIElement
-from ni_measurement_ui_creator.models import DataElement, LabelElement
-from ni_measurement_ui_creator.utils._common_elements import create_label, get_unique_id
+from ni_measurement_plugin_ui_creator.models import DataElement, LabelElement
+from ni_measurement_plugin_ui_creator.utils._common_elements import (
+    create_label,
+    get_unique_id,
+)
+
+PIN_SELECTOR = (
+    '<ChannelPinSelector AllowUndefinedValues="[bool]True" BaseName="[string]Pin" '
+    'Channel="[string]{client_id}/Configuration/{name}" DataType="[Type]String" '
+    'Enabled="[bool]True" Height="[float]{height}" Id="{shared_id}" '
+    'IsLabelBoundToChannel="[bool]False" Label="[UIModel]{label_id}" '
+    'Left="[float]{left_value}" SelectedResource="[NI_Core_DataValues_TagRefnum]Pin1" '
+    'Top="[float]{top_value}" Width="[float]{width}" '
+    'xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument" />'
+)
+IORESOURCE_ARRAY = '<ChannelPinSelector AllowUndefinedValues="[bool]True" BaseName="[string]Pin" Channel="[string]{client_id}/Configuration/{name}" DataType="[Type]String" Enabled="[bool]True" Height="[float]{height}" Id="{shared_id}" IsLabelBoundToChannel="[bool]False" Label="[UIModel]{label_id}" Left="[float]{left_value}" MultipleSelectionMode="[MultipleSelectionModes]List" SelectedResource="[NI_Core_DataValues_TagRefnum]PinGroup1" Top="[float]{top_value}" Width="[float]{width}" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument" />'
 
 
 def create_pin_control(element_parameter: DataElement) -> str:
@@ -17,7 +30,7 @@ def create_pin_control(element_parameter: DataElement) -> str:
     label_id = get_unique_id()
     shared_id = get_unique_id()
 
-    pin_control = MeasUIElement.PIN_SELECTOR.format(
+    pin_control = PIN_SELECTOR.format(
         client_id=element_parameter.client_id,
         name=element_parameter.name,
         label_id=label_id,
@@ -53,7 +66,7 @@ def create_ioresource_array_control(element_parameter: DataElement) -> str:
     label_id = get_unique_id()
     shared_id = get_unique_id()
 
-    ioresource_control = MeasUIElement.IORESOURCE_ARRAY.format(
+    ioresource_control = IORESOURCE_ARRAY.format(
         client_id=element_parameter.client_id,
         name=element_parameter.name,
         label_id=label_id,

@@ -2,9 +2,18 @@
 
 from typing import List
 
-from ni_measurement_ui_creator.constants import MeasUIElement, MeasUIElementPosition
-from ni_measurement_ui_creator.models import DataElement, LabelElement
-from ni_measurement_ui_creator.utils._common_elements import create_label, get_unique_id
+from ni_measurement_plugin_ui_creator.constants import MeasUIElementPosition
+from ni_measurement_plugin_ui_creator.models import DataElement, LabelElement
+from ni_measurement_plugin_ui_creator.utils._common_elements import (
+    create_label,
+    get_unique_id,
+)
+
+NUMERIC_CONTROL = '<ChannelNumericText AdaptsToType="[bool]True" Channel="[string]{client_id}/Configuration/{name}" Height="[float]{height}" Id="{shared_id}" Label="[UIModel]{element_id}" Left="[float]{left_value}" TabIndex="[int]0" Top="[float]{top_value}" Width="[float]{width}" ValueType="[Type]{value_type}"/>'
+NUMERIC_INDICATOR = '<ChannelNumericText AdaptsToType="[bool]True" Channel="[string]{client_id}/Output/{name}" Height="[float]{height}" Id="{shared_id}" IsReadOnly="[bool]True" Label="[UIModel]{element_id}" Left="[float]{left_value}" TabIndex="[int]2" Top="[float]{top_value}" ValueType="[Type]{value_type}" Width="[float]{width}" />'
+
+NUMERIC_ARRAY_INPUT = '<ChannelArrayViewer AdaptsToType="[bool]True" ArrayElement="[UIModel]{array_element_id}" Channel="[string]{client_id}/Configuration/{name}" Columns="[int]1" Dimensions="[int]1" Height="[float]120" Id="{shared_id}" IndexVisibility="[Visibility]Collapsed" Label="[UIModel]{label_id}" Left="[float]{left_value}" Orientation="[SMOrientation]Vertical" Rows="[int]{rows}" TabIndex="[int]0" Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Visible" Width="[float]104"><p.DefaultElementValue>0</p.DefaultElementValue><ChannelArrayNumericText Height="[float]{height}" Id="{array_element_id}" ValueFormatter="[string]LV:G5" ValueType="[Type]{value_type}" Width="[float]{width}" /></ChannelArrayViewer>'
+NUMERIC_ARRAY_OUTPUT = '<ChannelArrayViewer AdaptsToType="[bool]True" ArrayElement="[UIModel]{array_element_id}" Channel="[string]{client_id}/Output/{name}" Columns="[int]1" Dimensions="[int]1" Height="[float]120" Id="{shared_id}" IndexVisibility="[Visibility]Collapsed" Label="[UIModel]{label_id}" Left="[float]{left_value}" Orientation="[SMOrientation]Vertical" Rows="[int]{rows}" TabIndex="[int]0" Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Visible" Width="[float]104"><p.DefaultElementValue>0</p.DefaultElementValue><ChannelArrayNumericText Height="[float]{height}" Id="{array_element_id}" IsReadOnly="[bool]True" ValueFormatter="[string]LV:G5" ValueType="[Type]{value_type}" Width="[float]{width}" /></ChannelArrayViewer>'
 
 
 def create_numeric_control(element_parameter: DataElement) -> str:
@@ -19,7 +28,7 @@ def create_numeric_control(element_parameter: DataElement) -> str:
     element_id = get_unique_id()
     shared_id = get_unique_id()
 
-    numeric_control = MeasUIElement.NUMERIC_CONTROL.format(
+    numeric_control = NUMERIC_CONTROL.format(
         client_id=element_parameter.client_id,
         element_id=element_id,
         shared_id=shared_id,
@@ -56,7 +65,7 @@ def create_numeric_indicator(element_parameter: DataElement) -> str:
     element_id = get_unique_id()
     shared_id = get_unique_id()
 
-    numeric_indicator = MeasUIElement.NUMERIC_INDICATOR.format(
+    numeric_indicator = NUMERIC_INDICATOR.format(
         client_id=element_parameter.client_id,
         element_id=element_id,
         shared_id=shared_id,
@@ -94,7 +103,7 @@ def create_numeric_array_control(element_parameter: DataElement) -> str:
     shared_id = get_unique_id()
     label_id = get_unique_id()
 
-    numeric_array = MeasUIElement.NUMERIC_ARRAY_INPUT.format(
+    numeric_array = NUMERIC_ARRAY_INPUT.format(
         client_id=element_parameter.client_id,
         array_element_id=array_element_id,
         shared_id=shared_id,
@@ -134,7 +143,7 @@ def create_numeric_array_indicator(element_parameter: DataElement) -> str:
     shared_id = get_unique_id()
     label_id = get_unique_id()
 
-    numeric_array = MeasUIElement.NUMERIC_ARRAY_OUTPUT.format(
+    numeric_array = NUMERIC_ARRAY_OUTPUT.format(
         client_id=element_parameter.client_id,
         array_element_id=array_element_id,
         shared_id=shared_id,

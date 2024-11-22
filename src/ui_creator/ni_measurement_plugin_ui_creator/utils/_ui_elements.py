@@ -1,6 +1,6 @@
 """Create Measurement UI Elements from client."""
 
-from typing import List, Union
+from typing import List, Union, Tuple
 from uuid import UUID
 
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
@@ -16,7 +16,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
     Output as V2Output,
 )
 
-from ni_measurement_ui_creator.constants import (
+from ni_measurement_plugin_ui_creator.constants import (
     CLIENT_ID,
     NUMERIC_DATA_TYPE_VALUES,
     TYPE_SPECIFICATION,
@@ -24,8 +24,8 @@ from ni_measurement_ui_creator.constants import (
     MeasUIElementPosition,
     SpecializedDataType,
 )
-from ni_measurement_ui_creator.models import DataElement
-from ni_measurement_ui_creator.utils._helpers import (
+from ni_measurement_plugin_ui_creator.models import DataElement
+from ni_measurement_plugin_ui_creator.utils._helpers import (
     create_control_elements,
     create_indicator_elements,
 )
@@ -36,7 +36,7 @@ def create_input_elements_from_client(
     client_id: Union[str, UUID] = CLIENT_ID,
     input_top_alignment: Union[int, float] = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE,
     input_left_alignment: Union[int, float] = MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE,
-) -> str:
+) -> Tuple[str, Union[int, float]]:
     """Create input elements.
 
     Args:
@@ -48,7 +48,7 @@ def create_input_elements_from_client(
         Defaults to MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE.
 
     Returns:
-        str: Control elements.
+        Tuple[str, Union[int, float]: Control elements and input elements top alignment.
     """
     input_elements = []
 
