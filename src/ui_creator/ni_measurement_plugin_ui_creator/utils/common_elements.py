@@ -19,7 +19,7 @@ def get_unique_id() -> str:
 
 
 def create_label(element_parameter: LabelElement) -> str:
-    """Create `Label` MeasUI Element.
+    """Create `Label` Measurement plug-in UI Element.
 
     Args:
         element_parameter (LabelElement): Label Element Parameters.

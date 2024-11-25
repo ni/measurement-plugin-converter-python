@@ -11,13 +11,13 @@ BOOLEAN_LED = '<ChannelLED BaseName="[string]Round LED" Channel="[string]{client
 
 
 def create_horizontal_slider(element_parameter: DataElement) -> str:
-    """Create `Horizontal Slider` MeasUI Element.
+    """Create `Horizontal Slider` Measurement plug-in UI Element.
 
     Args:
         element_parameter (DataElement): Horizontal Slider Element Parameters.
 
     Returns:
-        str: MeasUI Horizontal Slider Element.
+        str: Measurement plug-in UI Horizontal Slider Element.
     """
     shared_id = get_unique_id()
     label_id = get_unique_id()
@@ -47,13 +47,13 @@ def create_horizontal_slider(element_parameter: DataElement) -> str:
 
 
 def create_boolean_led(element_parameter: DataElement) -> str:
-    """Create `Round LED` MeasUI Element.
+    """Create `Round LED` Measurement plug-in UI Element.
 
     Args:
         element_parameter (DataElement): Round LED Element Parameters.
 
     Returns:
-        str: MeasUI Round LED Element.
+        str: Measurement plug-in UI Round LED Element.
     """
     shared_id = get_unique_id()
     label_id = get_unique_id()
@@ -83,13 +83,13 @@ def create_boolean_led(element_parameter: DataElement) -> str:
 
 
 def create_horizontal_sliders(elements_parameter: List[DataElement]) -> str:
-    """Create Multiple `Hortizontal Slider` MeasUI Elements.
+    """Create Multiple `Hortizontal Slider` Measurement plug-in UI Elements.
 
     Args:
         elements_parameter (List[DataElement]): List of Horizontal Slider Element Parameters.
 
     Returns:
-        str: MeasUI Horizontal Slider Elements.
+        str: Measurement plug-in UI Horizontal Slider Elements.
     """
     boolean_horizontal_sliders = ""
     top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
@@ -104,13 +104,13 @@ def create_horizontal_sliders(elements_parameter: List[DataElement]) -> str:
 
 
 def create_boolean_leds(elements_parameter: List[DataElement]) -> str:
-    """Create Multiple `Round LED` MeasUI Elements.
+    """Create Multiple `Round LED` Measurement plug-in UI Elements.
 
     Args:
         elements_parameter (List[DataElement]): List of Round LED Element Parameters.
 
     Returns:
-        str: MeasUI Round LED Elements.
+        str: Measurement plug-in UI Round LED Elements.
     """
     boolean_leds = ""
     top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE

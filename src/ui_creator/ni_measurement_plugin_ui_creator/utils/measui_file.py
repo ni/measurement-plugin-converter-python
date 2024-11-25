@@ -1,4 +1,4 @@
-"""Implementation of read and write meas UI file for update command."""
+"""Implementation of read and write measurement plug-in UI file for update command."""
 
 import os
 import urllib.parse
@@ -31,8 +31,8 @@ from ni_measurement_plugin_ui_creator.utils.exceptions import (
     InvalidMeasUIError,
 )
 
-SELECT_MEASUI_FILE = "Select a measurement UI file index ({start}-{end}) to update: "
-INVALID_MEASUI_CHOICE = "Invalid measurement UI selected."
+SELECT_MEASUI_FILE = "Select a measurement plug-in UI file index ({start}-{end}) to update: "
+INVALID_MEASUI_CHOICE = "Invalid measurement plug-in UI selected."
 
 
 def get_metadata() -> Union[V1MetaData, V2MetaData, None]:
@@ -56,7 +56,7 @@ def get_metadata() -> Union[V1MetaData, V2MetaData, None]:
 
 
 def get_measui_selection(total_uis: int) -> int:
-    """Get measurment UI selection.
+    """Get measurment plug-in UI selection.
 
     Args:
         total_uis (int): Total UIs available for the measurement plug-in.
@@ -65,7 +65,7 @@ def get_measui_selection(total_uis: int) -> int:
         InvalidCliInputError: If the entered number is invalid.
 
     Returns:
-        int: Selected measurement UI index.
+        int: Selected measurement plug-in UI index.
     """
     logger = getLogger(LOGGER)
     try:
@@ -88,16 +88,16 @@ def get_measui_selection(total_uis: int) -> int:
 
 
 def get_measui_files(metadata: Union[V1MetaData, V2MetaData]) -> List[str]:
-    """Get measurement UI files.
+    """Get measurement plug-in UI files.
 
-    1. Get UI file paths from metadata.
+    1. Get measurement plug-in UI file paths from metadata.
     2. Filter file paths which has `.measui` as extension.
 
     Args:
         metadata (Union[V1MetaData, V2MetaData]): Metadata of measurement plug-in.
 
     Returns:
-        List[str]: Measurement UI file paths.
+        List[str]: Measurement plug-in UI file paths.
     """
     file_uris = metadata.user_interface_details
     return [
@@ -120,16 +120,16 @@ def uri_to_path(uri: str) -> str:
 
 
 def validate_measui(root: ETree.ElementTree) -> None:
-    """Validate measurement UI file.
+    """Validate measurement plug-in UI file.
 
     1. Check for Screen tag to be present.
     2. Check for ScreenSurface to be present.
 
     Args:
-        root (ETree.ElementTree): Element tree of measurement UI file.
+        root (ETree.ElementTree): Element tree of measurement plug-in UI file.
 
     Raises:
-        InvalidMeasUIError: If measurement UI file is invalid.
+        InvalidMeasUIError: If measurement plug-in UI file is invalid.
     """
     screen = root.findall(UpdateUI.SCREEN_TAG, UpdateUI.NAMESPACES)
     screen_surface = root.findall(UpdateUI.SCREEN_SURFACE_TAG, UpdateUI.NAMESPACES)
@@ -139,10 +139,10 @@ def validate_measui(root: ETree.ElementTree) -> None:
 
 
 def get_available_elements(measui_tree: ETree.ElementTree) -> List[AvailableElement]:
-    """Get available elements from the measurement UI.
+    """Get available elements from the measurement plug-in UI.
 
     Args:
-        measui_tree (ETree.ElementTree): Measurement UI file tree.
+        measui_tree (ETree.ElementTree): Measurement plug-in UI file tree.
 
     Returns:
         List[AvailableElement]: Info of already available elements.
@@ -155,11 +155,11 @@ def get_available_elements(measui_tree: ETree.ElementTree) -> List[AvailableElem
 def find_screen_surface(measui_tree: ETree.ElementTree) -> ETree.Element:
     """Find screen surface tag.
 
-    1. In measurement UI, controls and indicators will be within screen surface tag.
+    1. In measurement plug-in UI, controls and indicators will be within screen surface tag.
     2. Get root element and find screen surface tag.
 
     Args:
-        measui_tree (ETree.ElementTree): Measurement UI file tree.
+        measui_tree (ETree.ElementTree): Measurement plug-in UI file tree.
 
     Returns:
         ETree.Element: Screen surface element.
@@ -359,7 +359,7 @@ def get_bind_info(element: ETree.Element) -> Tuple[bool, Optional[str]]:
     """Get bind info of the element. If bound, name is also taken up.
 
     Args:
-        element (ETree.Element): Measurement UI element.
+        element (ETree.Element): Measurement plug-in UI element.
 
     Returns:
         Tuple[bool, Optional[str]]: Bind and name of the element being bound. None if not bound.
@@ -375,13 +375,13 @@ def get_bind_info(element: ETree.Element) -> Tuple[bool, Optional[str]]:
 
 
 def write_updated_measui(filepath: Path, updated_ui: List[AvailableElement]) -> None:
-    """Write updated meas UI elements.
+    """Write updated measurement plug-in UI elements.
 
     1. Find the Screen tag.
     2. Replace the screen surface tag with updated counterpart.
 
     Args:
-        filepath (Path): Filepath of the updated meas UI.
+        filepath (Path): Filepath of the updated measurement plug-in UI.
         updated_ui (List[AvailableElement]): Updated UI elements.
     """
     tree = ETree.parse(filepath)
@@ -402,7 +402,7 @@ def insert_created_elements(filepath: Path, elements_str: str) -> None:
     """Insert created elements.
 
     Args:
-        filepath (Path): Measurement UI file path.
+        filepath (Path): Measurement plug-in UI file path.
         elements_str (str): Created elements.
     """
     with open(filepath, "r", encoding=MeasUIFile.ENCODING) as file:

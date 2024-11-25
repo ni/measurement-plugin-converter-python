@@ -17,13 +17,13 @@ NUMERIC_ARRAY_OUTPUT = '<ChannelArrayViewer AdaptsToType="[bool]True" ArrayEleme
 
 
 def create_numeric_control(element_parameter: DataElement) -> str:
-    """Create `Numeric Control` MeasUI Element .
+    """Create `Numeric Control` Measurement plug-in UI Element .
 
     Args:
         element_parameter (DataElement): Numeric Control Element Parameters.
 
     Returns:
-        str: MeasUI Numeric Control Element.
+        str: Measurement plug-in UI Numeric Control Element.
     """
     element_id = get_unique_id()
     shared_id = get_unique_id()
@@ -54,13 +54,13 @@ def create_numeric_control(element_parameter: DataElement) -> str:
 
 
 def create_numeric_indicator(element_parameter: DataElement) -> str:
-    """Create `Numeric Indicator` measui element.
+    """Create `Numeric Indicator` measurement plug-in UI element.
 
     Args:
         element_parameter (DataElement): Numeric Indicator Element Parameters.
 
     Returns:
-        str: MeasUI Numeric Indicator Element.
+        str: Measurement plug-in UI Numeric Indicator Element.
     """
     element_id = get_unique_id()
     shared_id = get_unique_id()
@@ -91,13 +91,13 @@ def create_numeric_indicator(element_parameter: DataElement) -> str:
 
 
 def create_numeric_array_control(element_parameter: DataElement) -> str:
-    """Create `Numeric Array Input` MeasUI Element.
+    """Create `Numeric Array Input` Measurement plug-in UI Element.
 
     Args:
         element_parameter (DataElement): Numeric Array Input Element Parameters.
 
     Returns:
-        str: MeasUI Numeric Array Input Element.
+        str: Measurement plug-in UI Numeric Array Input Element.
     """
     array_element_id = get_unique_id()
     shared_id = get_unique_id()
@@ -131,13 +131,13 @@ def create_numeric_array_control(element_parameter: DataElement) -> str:
 
 
 def create_numeric_array_indicator(element_parameter: DataElement) -> str:
-    """Create `Numeric Array Output` MeasUI Element.
+    """Create `Numeric Array Output` Measurement plug-in UI Element.
 
     Args:
         element_parameter (DataElement): Numeric Array Output Element Parameters.
 
     Returns:
-        str: MeasUI Array Output Element.
+        str: Measurement plug-in UI Array Output Element.
     """
     array_element_id = get_unique_id()
     shared_id = get_unique_id()
@@ -171,13 +171,13 @@ def create_numeric_array_indicator(element_parameter: DataElement) -> str:
 
 
 def create_numeric_indicators(elements_parameter: List[DataElement]) -> str:
-    """Create Multiple `Numeric Indicator` MeasUI Elements.
+    """Create Multiple `Numeric Indicator` Measurement plug-in UI Elements.
 
     Args:
         elements_parameter (List[DataElement]): List of Numeric Indicator Element parameters.
 
     Returns:
-        str: MeasUI Numeric Indicator Elements.
+        str: Measurement plug-in UI Numeric Indicator Elements.
     """
     numeric_indicators = ""
     top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
@@ -196,13 +196,13 @@ def create_numeric_indicators(elements_parameter: List[DataElement]) -> str:
 
 
 def create_numeric_array_controls(elements_parameter: List[DataElement]) -> str:
-    """Create Multiple `Numeric Array Input` MeasUI Elements.
+    """Create Multiple `Numeric Array Input` Measurement plug-in UI Elements.
 
     Args:
         element_parameter (List[DataElement]): Numeric Array Input Element Parameters.
 
     Returns:
-        str: MeasUI Numeric Array Input Elements.
+        str: Measurement plug-in UI Numeric Array Input Elements.
     """
     numeric_array_inputs = ""
     top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
@@ -217,14 +217,14 @@ def create_numeric_array_controls(elements_parameter: List[DataElement]) -> str:
 
 
 def create_numeric_array_indicators(elements_parameter: List[DataElement]) -> str:
-    """Create Multiple `Numeric Array Output` MeasUI Elements.
+    """Create Multiple `Numeric Array Output` Measurement plug-in UI Elements.
 
     Args:
         element_parameter (List[DataElement]): List of Numeric Array Output Element \
             parameters.
 
     Returns:
-        str: MeasUI Array Output Elements.
+        str: Measurement plug-in UI Array Output Elements.
     """
     numeric_array_outputs = ""
     top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
@@ -243,13 +243,13 @@ def create_numeric_array_indicators(elements_parameter: List[DataElement]) -> st
 
 
 def create_numeric_controls(elements_parameter: List[DataElement]) -> str:
-    """Create Multiple `Numeric Control` MeasUI Elements.
+    """Create Multiple `Numeric Control` Measurement plug-in UI Elements.
 
     Args:
         elements_parameter (List[DataElement]): List of Numeric Control Element Parameters.
 
     Returns:
-        str: MeasUI Numeric control Elements.
+        str: Measurement plug-in UI Numeric control Elements.
     """
     numeric_controls = ""
     top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE

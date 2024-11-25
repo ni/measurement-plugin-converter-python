@@ -17,13 +17,13 @@ STRING_ARRAY_OUTPUT = '<ChannelArrayViewer ArrayElement="[UIModel]{array_element
 
 
 def create_string_control(element_parameter: DataElement) -> str:
-    """Create `String Control` MeasUI Element.
+    """Create `String Control` Measurement plug-in UI Element.
 
     Args:
         element_parameter (DataElement): String Control Element Parameters.
 
     Returns:
-        str: MeasUI String Control Element.
+        str: Measurement plug-in UI String Control Element.
     """
     label_id = get_unique_id()
     shared_id = get_unique_id()
@@ -53,13 +53,13 @@ def create_string_control(element_parameter: DataElement) -> str:
 
 
 def create_string_indicator(element_parameter: DataElement) -> str:
-    """Create `String Indicator` MeasUI Element.
+    """Create `String Indicator` Measurement plug-in UI Element.
 
     Args:
         element_parameter (DataElement): String Indicator Element Parameters.
 
     Returns:
-        str: MeasUI String Indicator Element.
+        str: Measurement plug-in UI String Indicator Element.
     """
     label_id = get_unique_id()
     shared_id = get_unique_id()
@@ -89,13 +89,13 @@ def create_string_indicator(element_parameter: DataElement) -> str:
 
 
 def create_string_controls(elements_parameter: List[DataElement]) -> str:
-    """Create Multiple `String Control` MeasUI Elements.
+    """Create Multiple `String Control` Measurement plug-in UI Elements.
 
     Args:
         elements_parameter (List[DataElement]): List of String Control Element Parameters.
 
     Returns:
-        str: MeasUI String Control Elements.
+        str: Measurement plug-in UI String Control Elements.
     """
     string_controls = ""
     top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
@@ -110,13 +110,13 @@ def create_string_controls(elements_parameter: List[DataElement]) -> str:
 
 
 def create_string_indicators(elements_parameter: List[DataElement]) -> str:
-    """Create Multiple `String Indicators` MeasUI Elements.
+    """Create Multiple `String Indicators` Measurement plug-in UI Elements.
 
     Args:
         elements_parameter (List[DataElement]): List of String Indicator Element Parameters.
 
     Returns:
-        str: MeasUI String Indicator Elements.
+        str: Measurement plug-in UI String Indicator Elements.
     """
     string_indicators = ""
     top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
@@ -135,13 +135,13 @@ def create_string_indicators(elements_parameter: List[DataElement]) -> str:
 
 
 def create_string_array_control(element_parameter: DataElement) -> str:
-    """Create `String Array Input` MeasUI Element.
+    """Create `String Array Input` Measurement plug-in UI Element.
 
     Args:
         element_parameter (DataElement): String Array Input Element Parameters.
 
     Returns:
-        str: MeasUI String Array Input Element.
+        str: Measurement plug-in UI String Array Input Element.
     """
     array_element_id = get_unique_id()
     shared_id = get_unique_id()
@@ -175,13 +175,13 @@ def create_string_array_control(element_parameter: DataElement) -> str:
 
 
 def create_string_array_indicator(element_parameter: DataElement) -> str:
-    """Create `String Array Output` MeasUI Element.
+    """Create `String Array Output` Measurement plug-in UI Element.
 
     Args:
         element_parameter (DataElement): String Array Output Element Parameters.
 
     Returns:
-        str: MeasUI Sting Array Output Element.
+        str: Measurement plug-in UI Sting Array Output Element.
     """
     array_element_id = get_unique_id()
     shared_id = get_unique_id()

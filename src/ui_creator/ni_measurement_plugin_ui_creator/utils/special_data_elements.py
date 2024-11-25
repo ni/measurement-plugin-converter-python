@@ -19,13 +19,13 @@ IORESOURCE_ARRAY = '<ChannelPinSelector AllowUndefinedValues="[bool]True" BaseNa
 
 
 def create_pin_control(element_parameter: DataElement) -> str:
-    """Create `Pin Control` MeasUI Element.
+    """Create `Pin Control` Measurement plug-in UI Element.
 
     Args:
         element_parameter (DataElement): Pin Control Element Parameters.
 
     Returns:
-        str: MeasUI Pin Control Element.
+        str: Measurement plug-in UI Pin Control Element.
     """
     label_id = get_unique_id()
     shared_id = get_unique_id()
@@ -55,13 +55,13 @@ def create_pin_control(element_parameter: DataElement) -> str:
 
 
 def create_ioresource_array_control(element_parameter: DataElement) -> str:
-    """Create `Pin Control` MeasUI Element as IOResourceArray1D.
+    """Create `Pin Control` Measurement plug-in UI Element as IOResourceArray1D.
 
     Args:
         element_parameter (DataElement): Pin Control Element Parameters.
 
     Returns:
-        str: MeasUI Pin Control Element as IOResourceArray1D.
+        str: Measurement plug-in UI Pin Control Element as IOResourceArray1D.
     """
     label_id = get_unique_id()
     shared_id = get_unique_id()

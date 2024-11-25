@@ -1,4 +1,4 @@
-"""Implementation of update meas UI."""
+"""Implementation of update measurement plug-in UI."""
 
 import re
 import shutil
@@ -6,18 +6,26 @@ import xml.etree.ElementTree as ETree
 from logging import getLogger
 from pathlib import Path
 from typing import List, Tuple, Union
+from uuid import UUID
 
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
     ConfigurationParameter as V1ConfigParam,
+)
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
     GetMetadataResponse as V1MetaData,
+)
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
     Output as V1Output,
 )
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
     ConfigurationParameter as V2ConfigParam,
+)
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
     GetMetadataResponse as V2MetaData,
+)
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
     Output as V2Output,
 )
-
 from ni_measurement_plugin_ui_creator.constants import (
     LOGGER,
     NUMERIC_DATA_TYPE_VALUES,
@@ -145,7 +153,7 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
 
 
 def bind_elements(
-    client_id: str,
+    client_id: Union[str, UUID],
     elements: List[AvailableElement],
     unbind_inputs: List[Union[V1ConfigParam, V2ConfigParam]],
     unbind_outputs: List[Union[V1Output, V2Output]],
@@ -153,7 +161,7 @@ def bind_elements(
     """Bind elements to its possible input/output.
 
     Args:
-        client_id (str): Client ID.
+        client_id (Union[str, UUID]): Client ID.
         elements (List[AvailableElement]): Available elements.
         unbind_inputs (List[Union[V1ConfigParam, V2ConfigParam]]): Unbind inputs.
         unbind_outputs (List[Union[V1Output, V2Output]]): Unbind outputs
@@ -167,14 +175,14 @@ def bind_elements(
 
 
 def bind_inputs(
-    client_id: str,
+    client_id: Union[str, UUID],
     elements: List[AvailableElement],
     unbind_inputs: List[Union[V1ConfigParam, V2ConfigParam]],
 ) -> List[AvailableElement]:
     """Bind inputs to controls if feasible.
 
     Args:
-        client_id (str): Client ID.
+        client_id (Union[str, UUID]): Client ID.
         elements (List[AvailableElement]): List of available elements.
         unbind_inputs (List[Union[V1ConfigParam, V2ConfigParam]]): Unbind inputs.
 
@@ -201,14 +209,14 @@ def bind_inputs(
 
 
 def bind_outputs(
-    client_id: str,
+    client_id: Union[str, UUID],
     elements: List[AvailableElement],
     unbind_outputs: List[Union[V1Output, V2Output]],
 ) -> List[AvailableElement]:
     """Bind outputs to indicators if feasible.
 
     Args:
-        client_id (str): Client ID.
+        client_id (Union[str, UUID]): Client ID.
         elements (List[AvailableElement]): List of available elements.
         unbind_outputs (List[Union[V1Output, V2Output]]): Unbind outputs.
 
@@ -299,14 +307,14 @@ def check_feasibility(
 
 
 def add_channel(
-    client_id: str,
+    client_id: Union[str, UUID],
     element: AvailableElement,
     unbind_param: Union[V1ConfigParam, V2ConfigParam, V1Output, V2Output],
 ) -> AvailableElement:
     """Add channel attribute to bind the lement.
 
     Args:
-        client_id (str): Client ID.
+        client_id (Union[str, UUID]): Client ID.
         element (AvailableElement): Unbind element.
         unbind_input (Union[V1ConfigParam, V2ConfigParam, V1Output, V2Output]): Unbind input/output.
 

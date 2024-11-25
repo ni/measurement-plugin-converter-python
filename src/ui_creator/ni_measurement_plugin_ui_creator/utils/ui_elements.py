@@ -1,6 +1,6 @@
 """Create Measurement UI Elements from client."""
 
-from typing import List, Union, Tuple
+from typing import List, Tuple, Union
 from uuid import UUID
 
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
@@ -15,7 +15,6 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
     Output as V2Output,
 )
-
 from ni_measurement_plugin_ui_creator.constants import (
     CLIENT_ID,
     NUMERIC_DATA_TYPE_VALUES,
