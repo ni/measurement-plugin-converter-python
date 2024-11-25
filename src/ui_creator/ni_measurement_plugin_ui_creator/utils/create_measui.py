@@ -1,10 +1,10 @@
 """Create `.measui` file for the measurements."""
 
-import os
 from logging import getLogger
+from pathlib import Path
 from typing import Union
 from uuid import UUID
-from pathlib import Path
+
 from mako.template import Template
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
     GetMetadataResponse as V1MetaData,
@@ -14,7 +14,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 )
 
 from ni_measurement_plugin_ui_creator.constants import CLIENT_ID, LOGGER, MeasUIFile
-from ni_measurement_plugin_ui_creator.utils._ui_elements import (
+from ni_measurement_plugin_ui_creator.utils.ui_elements import (
     create_input_elements_from_client,
     create_output_elements_from_client,
 )
@@ -23,7 +23,7 @@ CREATING_FILE = "Creating Measurement UI..."
 CREATED_UI = "Measurement UI created successfully at {filepath}"
 
 
-def _create_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> None:
+def create_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> None:
     """Create measurement UI file.
 
     1. Get inputs and outputs from the metadata.
@@ -43,34 +43,30 @@ def _create_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) ->
     outputs = metadata.measurement_signature.outputs
     output_elements = create_output_elements_from_client(outputs=outputs)
 
-    measui_path = os.path.join(output_dir, metadata.measurement_details.display_name)
+    measui_path = Path(output_dir) / metadata.measurement_details.display_name
 
-    create_measui(
+    write_measui(
         filepath=measui_path,
         input_output_elements=input_elements + output_elements,
     )
-    filepath = os.path.abspath(f"{measui_path}{MeasUIFile.MEASUREMENT_UI_FILE_EXTENSION}")
-    logger.info(CREATED_UI.format(filepath=os.path.abspath(filepath)))
+    filepath = (Path(measui_path).with_suffix(MeasUIFile.MEASUREMENT_UI_FILE_EXTENSION)).resolve()
+    logger.info(CREATED_UI.format(filepath=Path(filepath).resolve()))
 
 
-def create_measui(filepath: str, input_output_elements: str) -> None:
-    """Create `measui` file.
+def write_measui(filepath: Union[str, Path], input_output_elements: str) -> None:
+    """Write `measui` file.
 
     Args:
-        filepath (str): MeasUI File Path.
+        filepath (Union[str, Path]): MeasUI File Path.
         input_output_elements (str): Input and Output XML tags.
     """
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    template_file_path = os.path.join(
-        os.path.dirname(current_dir),
-        "templates",
-        "measurement.measui.mako",
-    )
+    current_dir = Path(__file__).resolve().parent
+    template_file_path = current_dir.parent / "templates" / "measurement.measui.mako"
 
-    file_content = __render_template(
+    file_content = render_template(
         template_name=template_file_path,
         client_id=CLIENT_ID,
-        display_name=os.path.basename(filepath),
+        display_name=Path(filepath).name,
         input_output_elements=input_output_elements,
     )
 
@@ -78,8 +74,8 @@ def create_measui(filepath: str, input_output_elements: str) -> None:
         f.write(file_content)
 
 
-def __render_template(
-    template_name: str,
+def render_template(
+    template_name: Path,
     client_id: Union[str, UUID],
     display_name: str,
     input_output_elements: str,
@@ -87,7 +83,7 @@ def __render_template(
     """Render `measui` mako file template.
 
     Args:
-        template_name (str): Name of mako file.
+        template_name (Path): Name of mako file.
         client_id (Union[str, UUUID]): Client ID to be assigned in the template.
         display_name (str): Display name to be assigned in the template.
         input_output_elements (str): Inputs and Output elements of MeasUI file.

@@ -1,14 +1,14 @@
 """Command-line tool to create measui for measurements."""
 
-import os
 from pathlib import Path
 
 import click
-from ni_measurement_plugin_ui_creator.utils._create_measui import _create_measui
-from ni_measurement_plugin_ui_creator.utils._exceptions import InvalidCliInputError
-from ni_measurement_plugin_ui_creator.utils._logger import get_logger
-from ni_measurement_plugin_ui_creator.utils._measui_file import get_metadata
-from ni_measurement_plugin_ui_creator.utils._update_measui import update_measui
+
+from ni_measurement_plugin_ui_creator.utils.create_measui import create_measui
+from ni_measurement_plugin_ui_creator.utils.exceptions import InvalidCliInputError
+from ni_measurement_plugin_ui_creator.utils.logger import get_logger
+from ni_measurement_plugin_ui_creator.utils.measui_file import get_metadata
+from ni_measurement_plugin_ui_creator.utils.update_measui import update_measui
 
 START_CLI = "Starting the NI Measurement UI Creator..."
 SUPPORTED_ELEMENTS = "Supported UI Elements: {elements}"
@@ -48,14 +48,14 @@ def create() -> None:
         if not metadata:
             return
 
-        _create_measui(metadata, output_dir)
+        create_measui(metadata, output_dir)
 
     except InvalidCliInputError as error:
         logger.error(error)
 
     except Exception as error:
         logger.debug(error, exc_info=True)
-        logger.info(ERROR_OCCURRED.format(log_file=log_file_path / 'log.txt'))
+        logger.info(ERROR_OCCURRED.format(log_file=log_file_path / "log.txt"))
 
     finally:
         logger.info(PROCESS_COMPLETED)
@@ -85,7 +85,7 @@ def update() -> None:
 
     except Exception as error:
         logger.debug(error, exc_info=True)
-        logger.info(ERROR_OCCURRED.format(log_file=log_file_path / 'log.txt'))
+        logger.info(ERROR_OCCURRED.format(log_file=log_file_path / "log.txt"))
 
     finally:
         logger.info(PROCESS_COMPLETED)

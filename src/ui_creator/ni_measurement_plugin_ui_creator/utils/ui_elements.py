@@ -25,7 +25,7 @@ from ni_measurement_plugin_ui_creator.constants import (
     SpecializedDataType,
 )
 from ni_measurement_plugin_ui_creator.models import DataElement
-from ni_measurement_plugin_ui_creator.utils._helpers import (
+from ni_measurement_plugin_ui_creator.utils.helpers import (
     create_control_elements,
     create_indicator_elements,
 )

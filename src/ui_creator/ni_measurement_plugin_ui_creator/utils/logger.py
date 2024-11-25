@@ -1,7 +1,6 @@
 """Logger implementation."""
 
 import logging
-import os
 from logging import Logger
 from pathlib import Path
 
@@ -17,7 +16,7 @@ def get_logger(log_file_path: Path) -> Logger:
     Returns:
         Logger: Logger object.
     """
-    os.makedirs(log_file_path, exist_ok=True)
+    Path(log_file_path).mkdir(parents=True, exist_ok=True)
     log_file_path = log_file_path / "log.txt"
 
     logger = logging.getLogger(LOGGER)

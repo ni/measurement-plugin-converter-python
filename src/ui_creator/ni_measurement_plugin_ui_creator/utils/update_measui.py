@@ -1,6 +1,5 @@
 """Implementation of update meas UI."""
 
-import os
 import re
 import shutil
 import xml.etree.ElementTree as ETree
@@ -31,9 +30,9 @@ from ni_measurement_plugin_ui_creator.constants import (
     UpdateUI,
 )
 from ni_measurement_plugin_ui_creator.models import AvailableElement
-from ni_measurement_plugin_ui_creator.utils._create_measui import _create_measui
-from ni_measurement_plugin_ui_creator.utils._exceptions import InvalidMeasUIError
-from ni_measurement_plugin_ui_creator.utils._measui_file import (
+from ni_measurement_plugin_ui_creator.utils.create_measui import create_measui
+from ni_measurement_plugin_ui_creator.utils.exceptions import InvalidMeasUIError
+from ni_measurement_plugin_ui_creator.utils.measui_file import (
     get_available_elements,
     get_measui_files,
     get_measui_selection,
@@ -41,7 +40,7 @@ from ni_measurement_plugin_ui_creator.utils._measui_file import (
     validate_measui,
     write_updated_measui,
 )
-from ni_measurement_plugin_ui_creator.utils._ui_elements import (
+from ni_measurement_plugin_ui_creator.utils.ui_elements import (
     create_input_elements_from_client,
     create_output_elements_from_client,
 )
@@ -79,7 +78,7 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
     measui_files = get_measui_files(metadata)
     if not measui_files:
         logger.warning(NO_MEASUI_FILE)
-        _create_measui(metadata, output_dir)
+        create_measui(metadata, output_dir)
         return
 
     logger.info(AVAILABLE_MEASUI_FILES)
@@ -95,14 +94,13 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
 
     except (ETree.ParseError, InvalidMeasUIError, FileNotFoundError, PermissionError):
         logger.warning(INVALID_MEASUI_FILE)
-        _create_measui(metadata, output_dir)
+        create_measui(metadata, output_dir)
         return
 
-    updated_measui_filepath = os.path.join(
-        output_dir,
-        str(Path(Path(selected_measui).name).stem)
-        + f"_updated{MeasUIFile.MEASUREMENT_UI_FILE_EXTENSION}",
+    updated_measui_filepath = Path(output_dir) / (
+        Path(selected_measui).stem + f"_updated{MeasUIFile.MEASUREMENT_UI_FILE_EXTENSION}"
     )
+
     shutil.copy(selected_measui, updated_measui_filepath)
 
     inputs = metadata.measurement_signature.configuration_parameters
@@ -116,6 +114,8 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
 
     root = tree.getroot()
     screen = root.find(UpdateUI.SCREEN_TAG, UpdateUI.NAMESPACES)
+    if screen is None:
+        return None
     client_id = screen.attrib[ElementAttrib.CLIENT_ID]
 
     logger.info(BINDING_ELEMENTS)
@@ -130,7 +130,7 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
     unmatched_outputs = [output for output in outputs if output.name not in updated_element_names]
 
     logger.info(CREATING_ELEMENTS)
-    elements = create_elements(
+    elements_representation = create_elements(
         client_id,
         top_alignment,
         left_alignment,
@@ -138,8 +138,8 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
         unmatched_outputs,
     )
 
-    insert_created_elements(updated_measui_filepath, elements)
-    logger.info(UPDATED_UI.format(filepath=os.path.abspath(updated_measui_filepath)))
+    insert_created_elements(updated_measui_filepath, elements_representation)
+    logger.info(UPDATED_UI.format(filepath=Path(updated_measui_filepath).resolve()))
 
     return None
 
@@ -392,8 +392,8 @@ def create_elements(
     client_id: str,
     top_alignment: float,
     left_alignment: float,
-    unmatched_inputs: Union[V1ConfigParam, V2ConfigParam],
-    unmatched_outputs: Union[V1Output, V2Output],
+    unmatched_inputs: List[Union[V1ConfigParam, V2ConfigParam]],
+    unmatched_outputs: List[Union[V1Output, V2Output]],
 ) -> str:
     """Create controls and indicators for the unmatched inputs and outputs.
 

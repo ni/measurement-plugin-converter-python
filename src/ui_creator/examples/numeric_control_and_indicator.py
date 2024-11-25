@@ -10,8 +10,8 @@ from ni_measurement_plugin_ui_creator.constants import (
     SupportedDataType,
 )
 from ni_measurement_plugin_ui_creator.models import DataElement
-from ni_measurement_plugin_ui_creator.utils._create_measui import create_measui
-from ni_measurement_plugin_ui_creator.utils._helpers import (
+from ni_measurement_plugin_ui_creator.utils.create_measui import write_measui
+from ni_measurement_plugin_ui_creator.utils.helpers import (
     create_control_elements,
     create_indicator_elements,
 )
@@ -73,7 +73,7 @@ numeric_indicator_elements = create_indicator_elements(
 )
 
 # Create a .measui file
-create_measui(
+write_measui(
     filepath="numeric_controls_indicators",
     input_output_elements=numeric_indicator_elements + numeric_control_elements,
 )

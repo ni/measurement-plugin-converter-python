@@ -14,9 +14,9 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.measurement.info import ServiceInfo
-from ni_measurement_plugin_ui_creator.constants import LOGGER
 
-from ._exceptions import InvalidCliInputError
+from ni_measurement_plugin_ui_creator.constants import LOGGER
+from .exceptions import InvalidCliInputError
 
 NO_MEASUREMENTS_RUNNING = "No measurement services are running."
 AVAILABLE_MEASUREMENTS = "Available/Registered measurements:"
@@ -169,10 +169,18 @@ def get_measurement_service_stub(
         available_services,
         measurements[selected_measurement - 1],
     )
-    channel, measurement_service_interface = get_insecure_grpc_channel_for(
+    if not measurement_service_class:
+        return None
+
+    insecure_channel = get_insecure_grpc_channel_for(
         discovery_client,
         measurement_service_class,
     )
+
+    if not insecure_channel:
+        return None
+
+    channel, measurement_service_interface = insecure_channel[0], insecure_channel[1]
 
     if measurement_service_interface == MEASUREMENT_SERVICE_INTERFACE_V2:
         return V2MeasurementServiceStub(channel)

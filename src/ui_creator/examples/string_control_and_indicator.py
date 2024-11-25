@@ -5,13 +5,10 @@ Note: CLIENT_ID should be same throughout a measui file.
 
 import uuid
 
-from ni_measurement_plugin_ui_creator.constants import (
-    MeasUIElementPosition,
-    SupportedDataType,
-)
+from ni_measurement_plugin_ui_creator.constants import MeasUIElementPosition, SupportedDataType
 from ni_measurement_plugin_ui_creator.models import DataElement
-from ni_measurement_plugin_ui_creator.utils._create_measui import create_measui
-from ni_measurement_plugin_ui_creator.utils._helpers import (
+from ni_measurement_plugin_ui_creator.utils.create_measui import write_measui
+from ni_measurement_plugin_ui_creator.utils.helpers import (
     create_control_elements,
     create_indicator_elements,
 )
@@ -72,7 +69,7 @@ string_indicator_elements = create_indicator_elements(
 )
 
 # Create a .measui file.
-create_measui(
+write_measui(
     filepath="string_controls_indicators",
     input_output_elements=string_control_elements + string_indicator_elements,
 )

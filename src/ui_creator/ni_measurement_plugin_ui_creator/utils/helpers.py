@@ -4,23 +4,23 @@ from typing import List
 
 from ni_measurement_plugin_ui_creator.constants import DataType, SpecializedDataType
 from ni_measurement_plugin_ui_creator.models import DataElement
-from ni_measurement_plugin_ui_creator.utils._numeric_elements import (
+from ni_measurement_plugin_ui_creator.utils.numeric_elements import (
     create_numeric_array_control,
     create_numeric_array_indicator,
     create_numeric_control,
     create_numeric_indicator,
 )
-from ni_measurement_plugin_ui_creator.utils._special_data_elements import (
+from ni_measurement_plugin_ui_creator.utils.special_data_elements import (
     create_ioresource_array_control,
     create_pin_control,
 )
-from ni_measurement_plugin_ui_creator.utils._string_elements import (
+from ni_measurement_plugin_ui_creator.utils.string_elements import (
     create_string_array_control,
     create_string_array_indicator,
     create_string_control,
     create_string_indicator,
 )
-from ni_measurement_plugin_ui_creator.utils._toggle_elements import (
+from ni_measurement_plugin_ui_creator.utils.toggle_elements import (
     create_boolean_led,
     create_horizontal_slider,
 )

@@ -4,6 +4,7 @@ import os
 import urllib.parse
 import xml.etree.ElementTree as ETree
 from logging import getLogger
+from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
@@ -24,12 +25,11 @@ from ni_measurement_plugin_ui_creator.constants import (
     UpdateUI,
 )
 from ni_measurement_plugin_ui_creator.models import AvailableElement
-from ni_measurement_plugin_ui_creator.utils._client import get_measurement_service_stub
-from ni_measurement_plugin_ui_creator.utils._exceptions import (
+from ni_measurement_plugin_ui_creator.utils.client import get_measurement_service_stub
+from ni_measurement_plugin_ui_creator.utils.exceptions import (
     InvalidCliInputError,
     InvalidMeasUIError,
 )
-
 
 SELECT_MEASUI_FILE = "Select a measurement UI file index ({start}-{end}) to update: "
 INVALID_MEASUI_CHOICE = "Invalid measurement UI selected."
@@ -273,7 +273,7 @@ def get_output_info_of_array_element(element: ETree.Element) -> Optional[Tuple[b
 
         if tag == UpdateUI.NUMERIC_ARRAY:
             return __get_output_info_for_read_only_based(array_element), False
-    
+
     return None
 
 
@@ -300,6 +300,7 @@ def get_output_info(element: ETree.Element) -> Optional[bool]:
         return __get_output_info_for_interaction_mode_based(element)
 
     return None
+
 
 def __get_output_info_for_read_only_based(element: ETree.Element) -> bool:
     if (
@@ -341,14 +342,14 @@ def get_bind_info(element: ETree.Element) -> Tuple[bool, Optional[str]]:
     return bind, name
 
 
-def write_updated_measui(filepath: str, updated_ui: List[AvailableElement]) -> None:
+def write_updated_measui(filepath: Path, updated_ui: List[AvailableElement]) -> None:
     """Write updated meas UI elements.
 
     1. Find the Screen tag.
     2. Replace the screen surface tag with updated counterpart.
 
     Args:
-        filepath (str): Filepath of the updated meas UI.
+        filepath (Path): Filepath of the updated meas UI.
         updated_ui (List[AvailableElement]): Updated UI elements.
     """
     tree = ETree.parse(filepath)
@@ -365,11 +366,11 @@ def write_updated_measui(filepath: str, updated_ui: List[AvailableElement]) -> N
         tree.write(filepath, encoding=MeasUIFile.ENCODING, xml_declaration=True)
 
 
-def insert_created_elements(filepath: str, elements_str: str) -> None:
+def insert_created_elements(filepath: Path, elements_str: str) -> None:
     """Insert created elements.
 
     Args:
-        filepath (str): Measurement UI file path.
+        filepath (Path): Measurement UI file path.
         elements_str (str): Created elements.
     """
     with open(filepath, "r", encoding=MeasUIFile.ENCODING) as file:
