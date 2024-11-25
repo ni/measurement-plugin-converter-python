@@ -4,7 +4,7 @@ import logging
 from logging import Logger
 from pathlib import Path
 
-LOGGER = "UI Creator Logger"
+from ni_measurement_plugin_ui_creator.constants import LOGGER
 
 
 def get_logger(log_file_path: Path) -> Logger:

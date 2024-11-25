@@ -64,7 +64,7 @@ def write_measui(filepath: Union[str, Path], input_output_elements: str) -> None
     template_file_path = current_dir.parent / "templates" / "measurement.measui.mako"
 
     file_content = render_template(
-        template_name=template_file_path,
+        template_name=str(template_file_path),
         client_id=CLIENT_ID,
         display_name=Path(filepath).name,
         input_output_elements=input_output_elements,
@@ -75,7 +75,7 @@ def write_measui(filepath: Union[str, Path], input_output_elements: str) -> None
 
 
 def render_template(
-    template_name: Path,
+    template_name: str,
     client_id: Union[str, UUID],
     display_name: str,
     input_output_elements: str,
@@ -83,7 +83,7 @@ def render_template(
     """Render `measui` mako file template.
 
     Args:
-        template_name (Path): Name of mako file.
+        template_name (str): Name of mako file.
         client_id (Union[str, UUUID]): Client ID to be assigned in the template.
         display_name (str): Display name to be assigned in the template.
         input_output_elements (str): Inputs and Output elements of MeasUI file.

@@ -101,13 +101,21 @@ def get_measui_files(metadata: Union[V1MetaData, V2MetaData]) -> List[str]:
     """
     file_uris = metadata.user_interface_details
     return [
-        __uri_to_path(uri.file_url)
+        uri_to_path(uri.file_url)
         for uri in file_uris
-        if __uri_to_path(uri.file_url).lower().endswith(MeasUIFile.MEASUREMENT_UI_FILE_EXTENSION)
+        if uri_to_path(uri.file_url).lower().endswith(MeasUIFile.MEASUREMENT_UI_FILE_EXTENSION)
     ]
 
 
-def __uri_to_path(uri: str):
+def uri_to_path(uri: str) -> str:
+    """Converts the URI to path.
+
+    Args:
+        uri: Input URI.
+
+    Returns:
+        str: Path
+    """
     return urllib.parse.unquote(urllib.parse.urlparse(uri).path)
 
 
@@ -140,7 +148,7 @@ def get_available_elements(measui_tree: ETree.ElementTree) -> List[AvailableElem
         List[AvailableElement]: Info of already available elements.
     """
     screen_surface = find_screen_surface(measui_tree)
-    avlble_elements = __get_available_elements(screen_surface)
+    avlble_elements = parse_measui_elements(screen_surface)
     return avlble_elements
 
 
@@ -161,7 +169,15 @@ def find_screen_surface(measui_tree: ETree.ElementTree) -> ETree.Element:
     return screen_surface[0]
 
 
-def __get_available_elements(screen_surface: ETree.Element) -> List[AvailableElement]:
+def parse_measui_elements(screen_surface: ETree.Element) -> List[AvailableElement]:
+    """Parse the `measui` elements.
+
+    Args:
+        screen_surface (ETree.Element): Elements of measurement plug-in UI.
+
+    Returns:
+        List[AvailableElement]: Parsed elements.
+    """
     avlble_elements = []
 
     for element in screen_surface.iter():
@@ -269,10 +285,10 @@ def get_output_info_of_array_element(element: ETree.Element) -> Optional[Tuple[b
         tag = array_element.tag.split("}")[-1]
 
         if tag == UpdateUI.STRING_ARRAY:
-            return __get_output_info_for_read_only_based(array_element), True
+            return get_output_info_for_read_only_based(array_element), True
 
         if tag == UpdateUI.NUMERIC_ARRAY:
-            return __get_output_info_for_read_only_based(array_element), False
+            return get_output_info_for_read_only_based(array_element), False
 
     return None
 
@@ -294,15 +310,23 @@ def get_output_info(element: ETree.Element) -> Optional[bool]:
         return True
 
     if tag in UpdateUI.READ_ONLY_BASED:
-        return __get_output_info_for_read_only_based(element)
+        return get_output_info_for_read_only_based(element)
 
     if tag in UpdateUI.INTERACTION_MODE_BASED:
-        return __get_output_info_for_interaction_mode_based(element)
+        return get_output_info_for_interaction_mode_based(element)
 
     return None
 
 
-def __get_output_info_for_read_only_based(element: ETree.Element) -> bool:
+def get_output_info_for_read_only_based(element: ETree.Element) -> bool:
+    """Get output information for read only elements.
+
+    Args:
+        element (ETree.Element): Output element.
+
+    Returns:
+        bool: True if the element is read only.
+    """
     if (
         ElementAttrib.IS_READ_ONLY in element.attrib.keys()
         and element.attrib[ElementAttrib.IS_READ_ONLY] == "[bool]True"
@@ -312,7 +336,15 @@ def __get_output_info_for_read_only_based(element: ETree.Element) -> bool:
     return False
 
 
-def __get_output_info_for_interaction_mode_based(element: ETree.Element) -> bool:
+def get_output_info_for_interaction_mode_based(element: ETree.Element) -> bool:
+    """Return if the element is interaction mode based.
+
+    Args:
+        element (ETree.Element): Output element.
+
+    Returns:
+        bool: True if the element is interaction mode based.
+    """
     if (
         ElementAttrib.INTERACTION_MODE in element.attrib.keys()
         and element.attrib[ElementAttrib.INTERACTION_MODE]

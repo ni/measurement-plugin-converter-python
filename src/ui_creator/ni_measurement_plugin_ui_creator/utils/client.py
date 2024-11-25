@@ -16,7 +16,7 @@ from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.measurement.info import ServiceInfo
 
 from ni_measurement_plugin_ui_creator.constants import LOGGER
-from .exceptions import InvalidCliInputError
+from ni_measurement_plugin_ui_creator.utils.exceptions import InvalidCliInputError
 
 NO_MEASUREMENTS_RUNNING = "No measurement services are running."
 AVAILABLE_MEASUREMENTS = "Available/Registered measurements:"
