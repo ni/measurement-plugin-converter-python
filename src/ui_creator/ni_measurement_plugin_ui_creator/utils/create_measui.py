@@ -32,7 +32,7 @@ def create_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
 
     Args:
         metadata (Union[V1MetaData, V2MetaData]): Metadata of a measurement plug-in.
-        output_dir (str): Output directory.
+        output_dir (Path): Output directory.
     """
     logger = getLogger(LOGGER)
     logger.debug(CREATING_FILE)

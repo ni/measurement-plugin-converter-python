@@ -21,7 +21,7 @@ from ni_measurement_plugin_ui_creator.utils.exceptions import InvalidCliInputErr
 NO_MEASUREMENTS_RUNNING = "No measurement services are running."
 AVAILABLE_MEASUREMENTS = "Available/Registered measurements:"
 SELECT_MEASUREMENT = (
-    "Select a measurement service index ({start}-{end}) to update/generate measui file: "
+    "Select a measurement service index ({start}-{end}) to generate/update measui file: "
 )
 INVALID_MEASUREMENT_CHOICE = "Invalid measurement plug-in selected."
 MEASUREMENT_SERVICE_INTERFACE_V1 = "ni.measurementlink.measurement.v1.MeasurementService"
@@ -35,7 +35,7 @@ def get_active_measurement_services(discovery_client: DiscoveryClient) -> List[S
         discovery_client (DiscoveryClient): Client for accessing NI Discovery service.
 
     Returns:
-        Optional[List[ServiceLocation]]: Sequence of active measurement services.
+        List[ServiceInfo]: Sequence of active measurement services.
     """
     v1_measurement_services = discovery_client.enumerate_services(MEASUREMENT_SERVICE_INTERFACE_V1)
     v2_measurement_services = discovery_client.enumerate_services(MEASUREMENT_SERVICE_INTERFACE_V2)
@@ -48,14 +48,14 @@ def get_insecure_grpc_channel_for(
     discovery_client: DiscoveryClient,
     service_class: str,
 ) -> Optional[Tuple[Channel, str]]:
-    """Get insecure GRPC channel.
+    """Get insecure gRPC channel.
 
     Args:
         discovery_client (DiscoveryClient): Client for accessing NI Discovery service.
         service_class (str): Measurement Service Class name.
 
     Returns:
-        Tuple[Channel, str]: Channel to server and measurement service interface name.
+        Optional[Tuple[Channel, str]]: Channel to server and measurement service interface name.
     """
     logger = getLogger(LOGGER)
     resolved_service = None
@@ -83,6 +83,7 @@ def get_insecure_grpc_channel_for(
             grpc.insecure_channel(resolved_service.insecure_address),
             measurement_service_interface,
         )
+
     return None
 
 
@@ -124,7 +125,7 @@ def get_measurement_service_class(
     """Get measurement service class information.
 
     Args:
-        measurement_services Sequence[ServiceLocation]]: List of measurement services.
+        measurement_services (Sequence[ServiceInfo]): List of measurement services.
         measurement_name (str): Measurement name.
 
     Returns:
@@ -133,6 +134,7 @@ def get_measurement_service_class(
     for service in measurement_services:
         if service.display_name == measurement_name:
             return service.service_class
+
     return None
 
 

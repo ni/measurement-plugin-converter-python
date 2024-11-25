@@ -401,9 +401,9 @@ def create_elements(
         client_id (str): Client ID of the file.
         top_alignment (float): Top alignment value.
         left_alignment (float): Left alignment value.
-        unmatched_inputs (Union[V1ConfigParam, V2ConfigParam]): Inputs that \
+        unmatched_inputs (List[Union[V1ConfigParam, V2ConfigParam]]): Inputs that \
         doesn't have a corresponding element.
-        unmatched_outputs (Union[V1Output, V2Output]): Outputs that \
+        unmatched_outputs (List[Union[V1Output, V2Output]]): Outputs that \
         doesn't have a corresponding element.
 
     Returns:

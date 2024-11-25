@@ -108,13 +108,13 @@ def get_measui_files(metadata: Union[V1MetaData, V2MetaData]) -> List[str]:
 
 
 def uri_to_path(uri: str) -> str:
-    """Converts the URI to path.
+    """Convert the URI to path.
 
     Args:
-        uri: Input URI.
+        uri (str): Input URI.
 
     Returns:
-        str: Path
+        str: Path from the URI.
     """
     return urllib.parse.unquote(urllib.parse.urlparse(uri).path)
 

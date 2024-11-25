@@ -1,14 +1,11 @@
-"""Example to create Pin control  and IOResource element.
+"""Example to create Pin control and IOResource element.
 
 Note: CLIENT_ID should be same throughout a measui file.
 """
 
 import uuid
 
-from ni_measurement_plugin_ui_creator.constants import (
-    MeasUIElementPosition,
-    SupportedDataType,
-)
+from ni_measurement_plugin_ui_creator.constants import MeasUIElementPosition, SupportedDataType
 from ni_measurement_plugin_ui_creator.models import DataElement
 from ni_measurement_plugin_ui_creator.utils.create_measui import write_measui
 from ni_measurement_plugin_ui_creator.utils.helpers import create_control_elements
@@ -68,9 +65,9 @@ ioresource_arr_control_elements = create_control_elements(
     ]
 )
 
-# Create a .measui file.
+# Write to file.
 write_measui(
-    filepath="Pin_and_IOResource_control_element",
+    filepath="pin_and_IOResource_control_element",
     input_output_elements=pin_control_elements + ioresource_arr_control_elements,
 )
 

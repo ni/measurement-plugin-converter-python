@@ -1,6 +1,7 @@
 """Command-line tool to create measui for measurements."""
 
 from pathlib import Path
+from typing import Callable
 
 import click
 
@@ -31,12 +32,15 @@ ERROR_OCCURRED = "Error occurred. Please find the log file at {log_file}"
 PROCESS_COMPLETED = "Process completed."
 
 
-@click.command(name="create")
-def create() -> None:
-    """Create a new measurement UI file."""
+def perform_ui_action(process_func: Callable) -> None:
+    """Create or update `measui` file.
+
+    Args:
+        process_func (Callable): Create or update function.
+    """
     try:
         output_dir = Path.cwd()
-        log_file_path = Path(output_dir) / "UI_Creator_Logs"
+        log_file_path = Path(output_dir) / "ui_creator_logs"
         logger = get_logger(log_file_path=log_file_path)
 
         logger.info(START_CLI)
@@ -48,7 +52,7 @@ def create() -> None:
         if not metadata:
             return
 
-        create_measui(metadata, output_dir)
+        process_func(metadata, output_dir)
 
     except InvalidCliInputError as error:
         logger.error(error)
@@ -59,36 +63,18 @@ def create() -> None:
 
     finally:
         logger.info(PROCESS_COMPLETED)
+
+
+@click.command(name="create")
+def create() -> None:
+    """Create a new measurement UI file."""
+    perform_ui_action(create_measui)
 
 
 @click.command(name="update")
 def update() -> None:
     """Update the measurement UI file."""
-    try:
-        output_dir = Path.cwd()
-        log_file_path = Path(output_dir) / "UI_Creator_Logs"
-        logger = get_logger(log_file_path=log_file_path)
-
-        logger.info(START_CLI)
-        logger.info(SUPPORTED_ELEMENTS.format(elements=SUPPORTED_UI_ELEMENTS))
-
-        logger.info(GET_ACTIVE_MEASUREMENTS)
-        metadata = get_metadata()
-
-        if not metadata:
-            return
-
-        update_measui(metadata, output_dir)
-
-    except InvalidCliInputError as error:
-        logger.error(error)
-
-    except Exception as error:
-        logger.debug(error, exc_info=True)
-        logger.info(ERROR_OCCURRED.format(log_file=log_file_path / "log.txt"))
-
-    finally:
-        logger.info(PROCESS_COMPLETED)
+    perform_ui_action(update_measui)
 
 
 @click.group(context_settings=CLI_CONTEXT_SETTINGS)

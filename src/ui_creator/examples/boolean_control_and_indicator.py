@@ -5,10 +5,7 @@ Note: CLIENT_ID should be same throughout a measui file.
 
 import uuid
 
-from ni_measurement_plugin_ui_creator.constants import (
-    MeasUIElementPosition,
-    SupportedDataType,
-)
+from ni_measurement_plugin_ui_creator.constants import MeasUIElementPosition, SupportedDataType
 from ni_measurement_plugin_ui_creator.models import DataElement
 from ni_measurement_plugin_ui_creator.utils.create_measui import write_measui
 from ni_measurement_plugin_ui_creator.utils.helpers import (
@@ -83,7 +80,7 @@ boolean_leds = create_indicator_elements(
     ]
 )
 
-# Create a .measui file.
+# Write to file.
 write_measui(
     filepath="boolean_elements",
     input_output_elements=boolean_hortizontal_sliders + boolean_leds,

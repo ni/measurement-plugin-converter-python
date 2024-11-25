@@ -48,7 +48,7 @@ def create_input_elements_from_client(
         Defaults to MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE.
 
     Returns:
-        Tuple[str, Union[int, float]: Control elements and input elements top alignment.
+        Tuple[str, Union[int, float]]: Control elements and input elements top alignment.
     """
     input_elements = []
 
