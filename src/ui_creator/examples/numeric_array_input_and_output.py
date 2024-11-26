@@ -76,7 +76,6 @@ array_output_elements = create_indicator_elements(
     ]
 )
 
-# Write to file.
 write_measui(
     filepath="numeric_arrays",
     input_output_elements=array_input_elements + array_output_elements,

@@ -68,7 +68,6 @@ string_indicator_elements = create_indicator_elements(
     ]
 )
 
-# Write to file.
 write_measui(
     filepath="string_controls_indicators",
     input_output_elements=string_control_elements + string_indicator_elements,

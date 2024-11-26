@@ -80,7 +80,6 @@ boolean_leds = create_indicator_elements(
     ]
 )
 
-# Write to file.
 write_measui(
     filepath="boolean_elements",
     input_output_elements=boolean_hortizontal_sliders + boolean_leds,
