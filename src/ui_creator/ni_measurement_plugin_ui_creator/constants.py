@@ -1,4 +1,4 @@
-"""Measurement UI constants."""
+"""Measurement plug-in UI constants."""
 
 import uuid
 from enum import Enum
@@ -7,7 +7,7 @@ CLIENT_ID = uuid.uuid4()
 
 
 class MeasUIElementPosition:
-    """Measurement UI Element's Position."""
+    """Measurement plug-in UI's element Position."""
 
     LEFT_ALIGNMENT_START_VALUE = 40
     LEFT_ALIGNMENT_INCREMENTAL_VALUE = 200

@@ -2,7 +2,7 @@
 
 import re
 import shutil
-import xml.etree.ElementTree as ETree
+import xml.etree.ElementTree as ETree # nosec: B405
 from logging import getLogger
 from pathlib import Path
 from typing import List, Tuple, Union
@@ -65,7 +65,7 @@ BINDING_ELEMENTS = "Binding UI controls and indicators..."
 INPUTS_BOUND = "Inputs are bound successfully."
 OUTPUTS_BOUND = "Outputs are bound successfully."
 CREATING_ELEMENTS = "Creating new controls and indicators..."
-UPDATED_UI = "Measurement UI updated successfully. Please find at {filepath}"
+UPDATED_UI = "Measurement UI updated successfully. Please find at {filepath}."
 
 
 def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> None:
@@ -97,7 +97,7 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
     selected_measui = measui_files[get_measui_selection(len(measui_files)) - 1][1:]
 
     try:
-        tree = ETree.parse(selected_measui)
+        tree = ETree.parse(selected_measui) # nosec: B314
         validate_measui(tree)
 
     except (ETree.ParseError, InvalidMeasUIError, FileNotFoundError, PermissionError):

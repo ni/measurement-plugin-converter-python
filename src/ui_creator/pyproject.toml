@@ -35,12 +35,6 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.bandit]
 exclude_dirs = [".venv"]
-skips = [
-    "B405", # xml.etree module used
-    "B314", # xml.etree module used
-    "B702", # Mako template used
-
-]
 
 [tool.mypy]
 ignore_missing_imports = true

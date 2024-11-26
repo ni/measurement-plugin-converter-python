@@ -20,7 +20,7 @@ from ni_measurement_plugin_ui_creator.utils.ui_elements import (
 )
 
 CREATING_FILE = "Creating Measurement UI..."
-CREATED_UI = "Measurement Plug-In UI created successfully at {filepath}"
+CREATED_UI = "Measurement Plug-In UI created successfully at {filepath}."
 
 
 def create_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> None:
@@ -91,7 +91,7 @@ def render_template(
     Returns:
         bytes: MeasUI file content.
     """
-    template = Template(
+    template = Template(   # nosec: B702
         filename=template_name,
         input_encoding=MeasUIFile.ENCODING,
         output_encoding=MeasUIFile.ENCODING,

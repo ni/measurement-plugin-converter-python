@@ -2,7 +2,7 @@
 
 import os
 import urllib.parse
-import xml.etree.ElementTree as ETree
+import xml.etree.ElementTree as ETree # nosec: B405
 from logging import getLogger
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
@@ -32,7 +32,7 @@ from ni_measurement_plugin_ui_creator.utils.exceptions import (
 )
 
 SELECT_MEASUI_FILE = "Select a measurement plug-in UI file index ({start}-{end}) to update: "
-INVALID_MEASUI_CHOICE = "Invalid measurement plug-in UI selected."
+INVALID_MEASUI_CHOICE = "Invalid .measui file selected."
 
 
 def get_metadata() -> Union[V1MetaData, V2MetaData, None]:
@@ -186,9 +186,10 @@ def parse_measui_elements(screen_surface: ETree.Element) -> List[AvailableElemen
         if tag in UpdateUI.UNSUPPORTED_ELEMENTS and ElementAttrib.CHANNEL in element.attrib.keys():
             bind: bool = True
             name: Optional[str] = element.attrib[ElementAttrib.CHANNEL].split("/")[-1]
+            output: Optional[bool]
 
             if element.attrib[ElementAttrib.CHANNEL].split("/")[-2] == "output":
-                output: Optional[bool] = True
+                output = True
             elif element.attrib[ElementAttrib.CHANNEL].split("/")[-2] == "configuration":
                 output = False
 
@@ -384,7 +385,7 @@ def write_updated_measui(filepath: Path, updated_ui: List[AvailableElement]) -> 
         filepath (Path): Filepath of the updated measurement plug-in UI.
         updated_ui (List[AvailableElement]): Updated UI elements.
     """
-    tree = ETree.parse(filepath)
+    tree = ETree.parse(filepath)  # nosec: B314
     root = tree.getroot()
 
     screen = root.find(UpdateUI.SCREEN_TAG, UpdateUI.NAMESPACES)

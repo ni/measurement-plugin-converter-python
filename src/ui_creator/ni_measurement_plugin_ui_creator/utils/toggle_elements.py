@@ -6,8 +6,23 @@ from ni_measurement_plugin_ui_creator.constants import MeasUIElementPosition
 from ni_measurement_plugin_ui_creator.models import DataElement, LabelElement
 from ni_measurement_plugin_ui_creator.utils.common_elements import create_label, get_unique_id
 
-BOOLEAN_HORIZONTAL_SLIDER = '<ChannelSwitch BaseName="[string]Switch" Channel="[string]{client_id}/Configuration/{name}" Enabled="[bool]True" FalseContent="[string]Off" Height="[float]{height}" Id="{shared_id}" IsReadOnly="[bool]False" Label="[UIModel]{label_id}" Left="[float]{left_value}" MinHeight="[float]5" MinWidth="[float]5" Orientation="[SMOrientation]Horizontal" Shape="[SwitchShape]Slider" Top="[float]{top_value}" TrueContent="[string]On" Width="[float]{width}" />'
-BOOLEAN_LED = '<ChannelLED BaseName="[string]Round LED" Channel="[string]{client_id}/Output/{name}" ContentVisibility="[Visibility]Collapsed" FalseContent="[string]Off" Height="[float]{height}" Id="{shared_id}" IsReadOnly="[bool]True" Label="[UIModel]{label_id}" Left="[float]{left_value}" MinHeight="[float]5" MinWidth="[float]5" Shape="[LEDShape]Round" Top="[float]{top_value}" TrueContent="[string]On" Width="[float]{width}" />'
+BOOLEAN_HORIZONTAL_SLIDER = (
+    '<ChannelSwitch BaseName="[string]Switch" '
+    'Channel="[string]{client_id}/Configuration/{name}" Enabled="[bool]True" '
+    'FalseContent="[string]Off" Height="[float]{height}" Id="{shared_id}" '
+    'IsReadOnly="[bool]False" Label="[UIModel]{label_id}" Left="[float]{left_value}" '
+    'MinHeight="[float]5" MinWidth="[float]5" Orientation="[SMOrientation]Horizontal" '
+    'Shape="[SwitchShape]Slider" Top="[float]{top_value}" TrueContent="[string]On" '
+    'Width="[float]{width}" />'
+)
+BOOLEAN_LED = (
+    '<ChannelLED BaseName="[string]Round LED" '
+    'Channel="[string]{client_id}/Output/{name}" ContentVisibility="[Visibility]Collapsed" '
+    'FalseContent="[string]Off" Height="[float]{height}" Id="{shared_id}" IsReadOnly="[bool]True" '
+    'Label="[UIModel]{label_id}" Left="[float]{left_value}" MinHeight="[float]5" '
+    'MinWidth="[float]5" Shape="[LEDShape]Round" Top="[float]{top_value}" '
+    'TrueContent="[string]On" Width="[float]{width}" />'
+)
 
 
 def create_horizontal_slider(element_parameter: DataElement) -> str:

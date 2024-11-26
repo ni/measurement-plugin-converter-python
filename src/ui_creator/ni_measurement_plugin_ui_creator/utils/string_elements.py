@@ -9,11 +9,51 @@ from ni_measurement_plugin_ui_creator.utils.common_elements import (
     get_unique_id,
 )
 
-STRING_CONTROL = '<ChannelStringControl AcceptsReturn="[bool]False" BaseName="[string]String" Channel="[string]{client_id}/Configuration/{name}" Enabled="[bool]True" Height="[float]{height}" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" Id="{shared_id}" Label="[UIModel]{label_id}" Left="[float]{left_value}" Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" Width="[float]{width}" />'
-STRING_INDICATOR = '<ChannelStringControl AcceptsReturn="[bool]False" BaseName="[string]String" Channel="[string]{client_id}/Output/{name}" Height="[float]{height}" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" Id="{shared_id}" IsReadOnly="[bool]True" Label="[UIModel]{label_id}" Left="[float]{left_value}" Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" Width="[float]{width}" />'
+STRING_CONTROL = (
+    '<ChannelStringControl AcceptsReturn="[bool]False" BaseName="[string]String" '
+    'Channel="[string]{client_id}/Configuration/{name}" Enabled="[bool]True" '
+    'Height="[float]{height}" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" '
+    'Id="{shared_id}" Label="[UIModel]{label_id}" Left="[float]{left_value}" '
+    'Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" '
+    'Width="[float]{width}" />'
+)
+STRING_INDICATOR = (
+    '<ChannelStringControl AcceptsReturn="[bool]False" BaseName="[string]String" '
+    'Channel="[string]{client_id}/Output/{name}" Height="[float]{height}" '
+    'HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" Id="{shared_id}" '
+    'IsReadOnly="[bool]True" Label="[UIModel]{label_id}" Left="[float]{left_value}" '
+    'Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" '
+    'Width="[float]{width}" />'
+)
 
-STRING_ARRAY_INPUT = '<ChannelArrayViewer ArrayElement="[UIModel]{array_element_id}" BaseName="[string]String Array Input" Channel="[string]{client_id}/Configuration/{name}" Columns="[int]1" Dimensions="[int]1" Height="[float]{height}" Id="{shared_id}" IndexVisibility="[Visibility]Collapsed" IsFixedSize="[bool]False" Label="[UIModel]{label_id}" Left="[float]{left_value}" Orientation="[SMOrientation]Vertical" Rows="[int]{rows}" Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Visible" Width="[float]105"><p.DefaultElementValue>""</p.DefaultElementValue><ChannelArrayStringControl AcceptsReturn="[bool]False" BaseName="[string]String" Height="[float]{height}" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" Id="{array_element_id}" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" Width="[float]{width}" /></ChannelArrayViewer>'
-STRING_ARRAY_OUTPUT = '<ChannelArrayViewer ArrayElement="[UIModel]{array_element_id}" BaseName="[string]String Array Output" Channel="[string]{client_id}/Output/{name}" Columns="[int]1" Dimensions="[int]1" Height="[float]{height}" Id="{shared_id}" IndexVisibility="[Visibility]Collapsed" IsFixedSize="[bool]False" Label="[UIModel]{label_id}" Left="[float]{left_value}" Orientation="[SMOrientation]Vertical" Rows="[int]{rows}" Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Visible" Width="[float]105"><p.DefaultElementValue>""</p.DefaultElementValue><ChannelArrayStringControl AcceptsReturn="[bool]False" BaseName="[string]String" Height="[float]{height}" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" Id="{array_element_id}" IsReadOnly="[bool]True" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" Width="[float]{width}" /></ChannelArrayViewer>'
+STRING_ARRAY_INPUT = (
+    '<ChannelArrayViewer ArrayElement="[UIModel]{array_element_id}" '
+    'BaseName="[string]String Array Input" Channel="[string]{client_id}/Configuration/{name}" '
+    'Columns="[int]1" Dimensions="[int]1" Height="[float]{height}" Id="{shared_id}" '
+    'IndexVisibility="[Visibility]Collapsed" IsFixedSize="[bool]False" '
+    'Label="[UIModel]{label_id}" Left="[float]{left_value}" Orientation="[SMOrientation]Vertical" '
+    'Rows="[int]{rows}" Top="[float]{top_value}" '
+    'VerticalScrollBarVisibility="[ScrollBarVisibility]Visible" Width="[float]105">'
+    '<p.DefaultElementValue>""</p.DefaultElementValue>'
+    '<ChannelArrayStringControl AcceptsReturn="[bool]False" BaseName="[string]String" '
+    'Height="[float]{height}" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" '
+    'Id="{array_element_id}" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" '
+    'Width="[float]{width}" /></ChannelArrayViewer>'
+)
+STRING_ARRAY_OUTPUT = (
+    '<ChannelArrayViewer ArrayElement="[UIModel]{array_element_id}" '
+    'BaseName="[string]String Array Output" Channel="[string]{client_id}/Output/{name}" '
+    'Columns="[int]1" Dimensions="[int]1" Height="[float]{height}" Id="{shared_id}" '
+    'IndexVisibility="[Visibility]Collapsed" IsFixedSize="[bool]False" Label="[UIModel]{label_id}" '
+    'Left="[float]{left_value}" Orientation="[SMOrientation]Vertical" Rows="[int]{rows}" '
+    'Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Visible" '
+    'Width="[float]105"><p.DefaultElementValue>""</p.DefaultElementValue>'
+    '<ChannelArrayStringControl AcceptsReturn="[bool]False" BaseName="[string]String" '
+    'Height="[float]{height}" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" '
+    'Id="{array_element_id}" IsReadOnly="[bool]True" '
+    'VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" '
+    'Width="[float]{width}" /></ChannelArrayViewer>'
+)
 
 
 def create_string_control(element_parameter: DataElement) -> str:

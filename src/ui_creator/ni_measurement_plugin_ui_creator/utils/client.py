@@ -21,7 +21,7 @@ from ni_measurement_plugin_ui_creator.utils.exceptions import InvalidCliInputErr
 NO_MEASUREMENTS_RUNNING = "No measurement services are running."
 AVAILABLE_MEASUREMENTS = "Available/Registered measurements:"
 SELECT_MEASUREMENT = (
-    "Select a measurement service index ({start}-{end}) to generate/update measui file: "
+    "Select a measurement service index ({start}-{end}) to create/update measui file: "
 )
 INVALID_MEASUREMENT_CHOICE = "Invalid measurement plug-in selected."
 MEASUREMENT_SERVICE_INTERFACE_V1 = "ni.measurementlink.measurement.v1.MeasurementService"
@@ -129,7 +129,7 @@ def get_measurement_service_class(
         measurement_name (str): Measurement name.
 
     Returns:
-        Optional[str]: Measurement service class information or None.
+        Optional[str]: If available, measurement's service class. Else, None.
     """
     for service in measurement_services:
         if service.display_name == measurement_name:

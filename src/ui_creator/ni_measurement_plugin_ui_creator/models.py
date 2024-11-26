@@ -1,6 +1,6 @@
 """UI Elements Base Model."""
 
-import xml.etree.ElementTree as ETree
+import xml.etree.ElementTree as ETree # nosec B405
 from typing import Dict, Optional, Union
 from uuid import UUID
 
