@@ -22,7 +22,7 @@ mako = "^1.3.5"
 ni-measurement-plugin-sdk-service = "^2.1.0"
 
 [tool.poetry.scripts]
-ni-measurement-plugin-ui-creator = "ni_measurement_plugin_ui_creator:execute_cli"
+ni-measurement-plugin-ui-creator = "ni_measurement_plugin_ui_creator:start"
 
 [tool.poetry.group.dev.dependencies]
 ni-python-styleguide = "^0.4.6"

@@ -2,7 +2,7 @@
 
 import re
 import shutil
-import xml.etree.ElementTree as ETree # nosec: B405
+import xml.etree.ElementTree as ETree  # nosec: B405
 from logging import getLogger
 from pathlib import Path
 from typing import List, Tuple, Union
@@ -38,6 +38,7 @@ from ni_measurement_plugin_ui_creator.constants import (
     UpdateUI,
 )
 from ni_measurement_plugin_ui_creator.models import AvailableElement
+from ni_measurement_plugin_ui_creator.utils.common_elements import get_unique_id
 from ni_measurement_plugin_ui_creator.utils.create_measui import create_measui
 from ni_measurement_plugin_ui_creator.utils.exceptions import InvalidMeasUIError
 from ni_measurement_plugin_ui_creator.utils.measui_file import (
@@ -97,19 +98,13 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
     selected_measui = measui_files[get_measui_selection(len(measui_files)) - 1][1:]
 
     try:
-        tree = ETree.parse(selected_measui) # nosec: B314
+        tree = ETree.parse(selected_measui)  # nosec: B314
         validate_measui(tree)
 
     except (ETree.ParseError, InvalidMeasUIError, FileNotFoundError, PermissionError):
         logger.warning(INVALID_MEASUI_FILE)
         create_measui(metadata, output_dir)
         return
-
-    updated_measui_filepath = Path(output_dir) / (
-        Path(selected_measui).stem + f"_updated{MeasUIFile.MEASUREMENT_UI_FILE_EXTENSION}"
-    )
-
-    shutil.copy(selected_measui, updated_measui_filepath)
 
     inputs = metadata.measurement_signature.configuration_parameters
     outputs = metadata.measurement_signature.outputs
@@ -124,12 +119,16 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
     screen = root.find(UpdateUI.SCREEN_TAG, UpdateUI.NAMESPACES)
     if screen is None:
         return None
-    client_id = screen.attrib[ElementAttrib.CLIENT_ID]
+
+    try:
+        client_id = screen.attrib[ElementAttrib.CLIENT_ID]
+    except KeyError:
+        client_id = get_unique_id()
 
     logger.info(BINDING_ELEMENTS)
     updated_elements = bind_elements(client_id, elements, unbind_inputs, unbind_outputs)
 
-    write_updated_measui(updated_measui_filepath, updated_elements)
+    write_updated_measui(selected_measui, updated_elements)
 
     updated_element_names = [element.name for element in updated_elements]
     top_alignment, left_alignment = find_alignments(updated_elements)
@@ -146,8 +145,8 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
         unmatched_outputs,
     )
 
-    insert_created_elements(updated_measui_filepath, elements_representation)
-    logger.info(UPDATED_UI.format(filepath=Path(updated_measui_filepath).resolve()))
+    insert_created_elements(selected_measui, elements_representation)
+    logger.info(UPDATED_UI.format(filepath=Path(selected_measui).resolve()))
 
     return None
 
