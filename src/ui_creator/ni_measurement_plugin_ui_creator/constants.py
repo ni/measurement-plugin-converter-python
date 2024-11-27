@@ -52,7 +52,6 @@ class MeasUIElementPosition:
     INCREASE_FACTOR = 3.5
     LEFT_ALIGNMENT_INCREMENTAL_VALUE = 200
     LEFT_ALIGNMENT_START_VALUE = 40
-    MIN_HEIGHT = "MinHeight"
     REDUCE_FACTOR = 0.5
     TOP_ALIGNMENT_ADDITIONAL_INCREMENTAL_VALUE = 20
     TOP_ALIGNMENT_INCREMENTAL_VALUE = 50
@@ -101,9 +100,6 @@ class UpdateUI:
         "ChannelCheckBox",
         "ChannelSwitch",
     ]
-    BOOLEAN_HORIZONTAL_SLIDER = "ChannelSlider"
-    CLIENT_ID = "ClientId"
-    INCREASE_FACTOR = 3.5
     INTERACTION_MODE_BASED = [
         "ChannelSlider",
         "ChannelKnob",
@@ -124,14 +120,26 @@ class UpdateUI:
         "ChannelRadialProgressBar",
         "ChannelTank",
     ]
+    ONLY_INDICATORS = ["ChannelLinearProgressBar", "ChannelRadialProgressBar", "ChannelCheckBox"]
     PIN_ELEMENT = "ChannelPinSelector"
     RING_AND_DEFAULT_ELEMENT = ["p.DefaultElementValue", "RingSelectorInfo"]
+    READ_ONLY_BASED = [
+        "ChannelNumericText",
+        "ChannelButton",
+        "ChannelSwitch",
+        "ChannelStringControl",
+        "ChannelLED",
+        "ChannelImageButton",
+    ]
     SCREEN_SURFACE_TAG = ".//cf:ScreenSurface"
     SCREEN_TAG = ".//sf:Screen"
-    STRING_ARRAY = "ChannelArrayStringControl"
     SPECIAL_ELEMENTS = ["ChannelPinSelector", "ChannelArrayViewer"]
+    STRING_ARRAY = "ChannelArrayStringControl"
     SUPPORTED_CONTROLS_AND_INDICATORS = (
-        BOOLEAN_ELEMENTS + NUMERIC_ELEMENTS + INTERACTION_MODE_BASED + SPECIAL_ELEMENTS
+        BOOLEAN_ELEMENTS
+        + INTERACTION_MODE_BASED
+        + ONLY_INDICATORS
+        + SPECIAL_ELEMENTS
     )
     UNSUPPORTED_ELEMENTS = [
         "ChannelRingSelector",
@@ -139,10 +147,15 @@ class UpdateUI:
         "ChannelPathSelector",
         "HmiGraphPlot",
     ]
+    NAMESPACES = {
+        "cf": "http://www.ni.com/ConfigurationBasedSoftware.Core",
+        "pf": "http://www.ni.com/PlatformFramework",
+        "pc": "http://www.ni.com/PanelCommon",
+        "sf": "http://www.ni.com/InstrumentFramework/ScreenDocument",
+    }
 
 
 LOGGER = "logger"
-TYPE_SPECIFICATION = "ni/type_specialization"
 NUMERIC_DATA_TYPE_VALUES = [
     DataType.Int32.value,
     DataType.Int64.value,
@@ -151,3 +164,4 @@ NUMERIC_DATA_TYPE_VALUES = [
     DataType.Single.value,
     DataType.Double.value,
 ]
+TYPE_SPECIFICATION = "ni/type_specialization"

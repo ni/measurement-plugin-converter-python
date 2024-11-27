@@ -63,7 +63,7 @@ def write_measui(filepath: Union[str, Path], input_output_elements: str) -> None
     current_dir = Path(__file__).resolve().parent
     template_file_path = current_dir.parent / "templates" / "measurement.measui.mako"
 
-    file_content = render_template(
+    file_content = __render_template(
         template_name=str(template_file_path),
         client_id=CLIENT_ID,
         display_name=Path(filepath).name,
@@ -74,7 +74,7 @@ def write_measui(filepath: Union[str, Path], input_output_elements: str) -> None
         f.write(file_content)
 
 
-def render_template(
+def __render_template(
     template_name: str,
     client_id: Union[str, UUID],
     display_name: str,

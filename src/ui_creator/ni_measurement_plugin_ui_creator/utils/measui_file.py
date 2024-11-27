@@ -101,13 +101,13 @@ def get_measui_files(metadata: Union[V1MetaData, V2MetaData]) -> List[str]:
     """
     file_uris = metadata.user_interface_details
     return [
-        uri_to_path(uri.file_url)
+        __uri_to_path(uri.file_url)
         for uri in file_uris
-        if uri_to_path(uri.file_url).lower().endswith(MeasUIFile.MEASUREMENT_UI_FILE_EXTENSION)
+        if __uri_to_path(uri.file_url).lower().endswith(MeasUIFile.MEASUREMENT_UI_FILE_EXTENSION)
     ]
 
 
-def uri_to_path(uri: str) -> str:
+def __uri_to_path(uri: str) -> str:
     """Convert the URI to path.
 
     Args:
@@ -147,12 +147,12 @@ def get_available_elements(measui_tree: ETree.ElementTree) -> List[AvailableElem
     Returns:
         List[AvailableElement]: Info of already available elements.
     """
-    screen_surface = find_screen_surface(measui_tree)
-    avlble_elements = parse_measui_elements(screen_surface)
+    screen_surface = __find_screen_surface(measui_tree)
+    avlble_elements = __parse_measui_elements(screen_surface)
     return avlble_elements
 
 
-def find_screen_surface(measui_tree: ETree.ElementTree) -> ETree.Element:
+def __find_screen_surface(measui_tree: ETree.ElementTree) -> ETree.Element:
     """Find screen surface tag.
 
     1. In measurement plug-in UI, controls and indicators will be within screen surface tag.
@@ -169,7 +169,7 @@ def find_screen_surface(measui_tree: ETree.ElementTree) -> ETree.Element:
     return screen_surface[0]
 
 
-def parse_measui_elements(screen_surface: ETree.Element) -> List[AvailableElement]:
+def __parse_measui_elements(screen_surface: ETree.Element) -> List[AvailableElement]:
     """Parse the `measui` elements.
 
     Args:
@@ -205,12 +205,12 @@ def parse_measui_elements(screen_surface: ETree.Element) -> List[AvailableElemen
             )
 
         elif tag == UpdateUI.ARRAY_CONTAINER_ELEMENT:
-            output_info = get_output_info_of_array_element(element)
+            output_info = __get_output_info_of_array_element(element)
 
             if output_info:
                 output, is_str_array = output_info[0], output_info[1]
 
-            bind, name = get_bind_info(element)
+            bind, name = __get_bind_info(element)
 
             avlble_elements.append(
                 AvailableElement(
@@ -226,7 +226,7 @@ def parse_measui_elements(screen_surface: ETree.Element) -> List[AvailableElemen
 
         elif tag == UpdateUI.PIN_ELEMENT:
             output = False
-            bind, name = get_bind_info(element)
+            bind, name = __get_bind_info(element)
 
             avlble_elements.append(
                 AvailableElement(
@@ -240,8 +240,8 @@ def parse_measui_elements(screen_surface: ETree.Element) -> List[AvailableElemen
             )
 
         elif tag in UpdateUI.SUPPORTED_CONTROLS_AND_INDICATORS:
-            output = get_output_info(element)
-            bind, name = get_bind_info(element)
+            output = __get_output_info(element)
+            bind, name = __get_bind_info(element)
 
             avlble_elements.append(
                 AvailableElement(
@@ -269,7 +269,7 @@ def parse_measui_elements(screen_surface: ETree.Element) -> List[AvailableElemen
     return avlble_elements
 
 
-def get_output_info_of_array_element(element: ETree.Element) -> Optional[Tuple[bool, bool]]:
+def __get_output_info_of_array_element(element: ETree.Element) -> Optional[Tuple[bool, bool]]:
     """Get output info of an array element.
 
     1. Check if the array element is control or indicator.
@@ -286,15 +286,15 @@ def get_output_info_of_array_element(element: ETree.Element) -> Optional[Tuple[b
         tag = array_element.tag.split("}")[-1]
 
         if tag == UpdateUI.STRING_ARRAY:
-            return get_output_info_for_read_only_based(array_element), True
+            return __get_output_info_for_read_only_based(array_element), True
 
         if tag == UpdateUI.NUMERIC_ARRAY:
-            return get_output_info_for_read_only_based(array_element), False
+            return __get_output_info_for_read_only_based(array_element), False
 
     return None
 
 
-def get_output_info(element: ETree.Element) -> Optional[bool]:
+def __get_output_info(element: ETree.Element) -> Optional[bool]:
     """Get output info.
 
     Check if the element is control or indicator.
@@ -311,15 +311,15 @@ def get_output_info(element: ETree.Element) -> Optional[bool]:
         return True
 
     if tag in UpdateUI.READ_ONLY_BASED:
-        return get_output_info_for_read_only_based(element)
+        return __get_output_info_for_read_only_based(element)
 
     if tag in UpdateUI.INTERACTION_MODE_BASED:
-        return get_output_info_for_interaction_mode_based(element)
+        return __get_output_info_for_interaction_mode_based(element)
 
     return None
 
 
-def get_output_info_for_read_only_based(element: ETree.Element) -> bool:
+def __get_output_info_for_read_only_based(element: ETree.Element) -> bool:
     """Get output information for read only elements.
 
     Args:
@@ -337,7 +337,7 @@ def get_output_info_for_read_only_based(element: ETree.Element) -> bool:
     return False
 
 
-def get_output_info_for_interaction_mode_based(element: ETree.Element) -> bool:
+def __get_output_info_for_interaction_mode_based(element: ETree.Element) -> bool:
     """Return if the element is interaction mode based.
 
     Args:
@@ -356,7 +356,7 @@ def get_output_info_for_interaction_mode_based(element: ETree.Element) -> bool:
     return False
 
 
-def get_bind_info(element: ETree.Element) -> Tuple[bool, Optional[str]]:
+def __get_bind_info(element: ETree.Element) -> Tuple[bool, Optional[str]]:
     """Get bind info of the element. If bound, name is also taken up.
 
     Args:

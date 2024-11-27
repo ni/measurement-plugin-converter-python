@@ -32,7 +32,7 @@ SUPPORTED_UI_ELEMENTS = [
 ]
 
 
-def create_or_update_ui(process_func: Callable) -> None:
+def __create_or_update_ui(process_func: Callable) -> None:
     """Create or update `measui` file.
 
     Args:
@@ -66,15 +66,15 @@ def create_or_update_ui(process_func: Callable) -> None:
 
 
 @click.command(name="create")
-def create() -> None:
+def __create() -> None:
     """Create a new measurement UI file."""
-    create_or_update_ui(create_measui)
+    __create_or_update_ui(create_measui)
 
 
 @click.command(name="update")
-def update() -> None:
+def __update() -> None:
     """Update the measurement UI file."""
-    create_or_update_ui(update_measui)
+    __create_or_update_ui(update_measui)
 
 
 @click.group(context_settings=CLI_CONTEXT_SETTINGS)
@@ -83,5 +83,5 @@ def start() -> None:
     pass
 
 
-start.add_command(create)
-start.add_command(update)
+start.add_command(__create)
+start.add_command(__update)

@@ -4,10 +4,7 @@ from typing import List
 
 from ni_measurement_plugin_ui_creator.constants import MeasUIElementPosition
 from ni_measurement_plugin_ui_creator.models import DataElement, LabelElement
-from ni_measurement_plugin_ui_creator.utils.common_elements import (
-    create_label,
-    get_unique_id,
-)
+from ni_measurement_plugin_ui_creator.utils.common_elements import create_label, get_unique_id
 
 
 STRING_ARRAY_INPUT = (

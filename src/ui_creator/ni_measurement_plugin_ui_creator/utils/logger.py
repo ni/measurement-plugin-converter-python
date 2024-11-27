@@ -22,13 +22,13 @@ def get_logger(log_file_path: Path) -> Logger:
     logger = logging.getLogger(LOGGER)
     logger.setLevel(logging.DEBUG)
 
-    add_file_handler(log_file_path=log_file_path)
-    add_stream_handler()
+    __add_file_handler(log_file_path=log_file_path)
+    __add_stream_handler()
 
     return logger
 
 
-def add_file_handler(log_file_path: Path) -> None:
+def __add_file_handler(log_file_path: Path) -> None:
     """Add file handler to logger object.
 
     Args:
@@ -44,7 +44,7 @@ def add_file_handler(log_file_path: Path) -> None:
     logger.addHandler(file_handler)
 
 
-def add_stream_handler() -> None:
+def __add_stream_handler() -> None:
     """Add stream handler to logger object."""
     console_handler = logging.StreamHandler()
     console_handler.setLevel(logging.INFO)
