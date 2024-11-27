@@ -64,15 +64,15 @@ def get_measurement_service_stub(
     if not measurement_service_class:
         return None
 
-    insecure_channel = __get_insecure_grpc_channel_for(
+    channel_and_interface = __get_channel_and_interface(
         discovery_client,
         measurement_service_class,
     )
 
-    if not insecure_channel:
+    if not channel_and_interface:
         return None
 
-    channel, measurement_service_interface = insecure_channel[0], insecure_channel[1]
+    channel, measurement_service_interface = channel_and_interface[0], channel_and_interface[1]
 
     if measurement_service_interface == MEASUREMENT_SERVICE_INTERFACE_V2:
         return V2MeasurementServiceStub(channel)
@@ -147,11 +147,11 @@ def __get_measurement_service_class(
     return None
 
 
-def __get_insecure_grpc_channel_for(
+def __get_channel_and_interface(
     discovery_client: DiscoveryClient,
     service_class: str,
 ) -> Optional[Tuple[Channel, str]]:
-    """Get insecure gRPC channel.
+    """Get gRPC channel and measurement service interface name.
 
     Args:
         discovery_client (DiscoveryClient): Client for accessing NI Discovery service.
