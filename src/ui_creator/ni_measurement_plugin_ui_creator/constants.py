@@ -7,7 +7,7 @@ CLIENT_ID = uuid.uuid4()
 
 
 class MeasUIElementPosition:
-    """Measurement plug-in UI's element Position."""
+    """Measurement plug-in UI's element position."""
 
     LEFT_ALIGNMENT_START_VALUE = 40
     LEFT_ALIGNMENT_INCREMENTAL_VALUE = 200

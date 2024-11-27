@@ -18,7 +18,7 @@ from ni_measurement_plugin_sdk_service.measurement.info import ServiceInfo
 from ni_measurement_plugin_ui_creator.constants import LOGGER
 from ni_measurement_plugin_ui_creator.utils.exceptions import InvalidCliInputError
 
-AVAILABLE_MEASUREMENTS = "Available/Registered measurements:"
+AVAILABLE_MEASUREMENTS = "Registered measurements:"
 INVALID_MEASUREMENT_CHOICE = "Invalid measurement plug-in selected."
 MEASUREMENT_SERVICE_INTERFACE_V1 = "ni.measurementlink.measurement.v1.MeasurementService"
 MEASUREMENT_SERVICE_INTERFACE_V2 = "ni.measurementlink.measurement.v2.MeasurementService"
