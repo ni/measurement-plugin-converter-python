@@ -87,7 +87,7 @@ class UpdateUI:
     SCREEN_TAG = ".//sf:Screen"
     SCREEN_SURFACE_TAG = ".//cf:ScreenSurface"
 
-    ARRAY_ELEMENT = "ChannelArrayViewer"
+    ARRAY_CONTAINER_ELEMENT = "ChannelArrayViewer"
     PIN_ELEMENT = "ChannelPinSelector"
     RING_AND_DEFAULT_ELEMENT = ["p.DefaultElementValue", "RingSelectorInfo"]
     STRING_ARRAY = "ChannelArrayStringControl"

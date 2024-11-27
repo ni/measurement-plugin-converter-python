@@ -204,7 +204,7 @@ def parse_measui_elements(screen_surface: ETree.Element) -> List[AvailableElemen
                 )
             )
 
-        elif tag == UpdateUI.ARRAY_ELEMENT:
+        elif tag == UpdateUI.ARRAY_CONTAINER_ELEMENT:
             output_info = get_output_info_of_array_element(element)
 
             if output_info:

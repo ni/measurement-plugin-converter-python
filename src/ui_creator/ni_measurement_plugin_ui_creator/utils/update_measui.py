@@ -278,7 +278,7 @@ def check_feasibility(
     if (
         unbind_param.type in NUMERIC_DATA_TYPE_VALUES
         and unbind_param.repeated
-        and element.tag == UpdateUI.ARRAY_ELEMENT
+        and element.tag == UpdateUI.ARRAY_CONTAINER_ELEMENT
         and element.is_str_array is False
     ):
         return True
@@ -297,7 +297,7 @@ def check_feasibility(
     if (
         unbind_param.type == DataType.String.value
         and unbind_param.repeated
-        and element.tag == UpdateUI.ARRAY_ELEMENT
+        and element.tag == UpdateUI.ARRAY_CONTAINER_ELEMENT
         and element.is_str_array
     ):
         return True
