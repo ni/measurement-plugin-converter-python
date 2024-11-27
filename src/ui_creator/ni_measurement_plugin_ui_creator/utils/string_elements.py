@@ -63,7 +63,7 @@ def create_string_control(element_parameter: DataElement) -> str:
         element_parameter (DataElement): String Control Element Parameters.
 
     Returns:
-        str: Measurement plug-in UI String Control Element.
+        str: String Control Element.
     """
     label_id = get_unique_id()
     shared_id = get_unique_id()
@@ -99,7 +99,7 @@ def create_string_indicator(element_parameter: DataElement) -> str:
         element_parameter (DataElement): String Indicator Element Parameters.
 
     Returns:
-        str: Measurement plug-in UI String Indicator Element.
+        str: String Indicator Element.
     """
     label_id = get_unique_id()
     shared_id = get_unique_id()
@@ -135,7 +135,7 @@ def create_string_controls(elements_parameter: List[DataElement]) -> str:
         elements_parameter (List[DataElement]): List of String Control Element Parameters.
 
     Returns:
-        str: Measurement plug-in UI String Control Elements.
+        str: String Control Elements.
     """
     string_controls = ""
     top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
@@ -156,7 +156,7 @@ def create_string_indicators(elements_parameter: List[DataElement]) -> str:
         elements_parameter (List[DataElement]): List of String Indicator Element Parameters.
 
     Returns:
-        str: Measurement plug-in UI String Indicator Elements.
+        str: String Indicator Elements.
     """
     string_indicators = ""
     top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
@@ -181,7 +181,7 @@ def create_string_array_control(element_parameter: DataElement) -> str:
         element_parameter (DataElement): String Array Input Element Parameters.
 
     Returns:
-        str: Measurement plug-in UI String Array Input Element.
+        str: String Array Input Element.
     """
     array_element_id = get_unique_id()
     shared_id = get_unique_id()
@@ -221,7 +221,7 @@ def create_string_array_indicator(element_parameter: DataElement) -> str:
         element_parameter (DataElement): String Array Output Element Parameters.
 
     Returns:
-        str: Measurement plug-in UI Sting Array Output Element.
+        str: Sting Array Output Element.
     """
     array_element_id = get_unique_id()
     shared_id = get_unique_id()

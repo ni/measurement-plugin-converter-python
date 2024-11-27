@@ -55,7 +55,7 @@ class SupportedDataType:
 
 
 class DataType(Enum):
-    """Supported data types and its corresponding input values."""
+    """Supported data types and its corresponding values from ni_measurement_plugin_sdk_service."""
 
     Double = 1
     Single = 2

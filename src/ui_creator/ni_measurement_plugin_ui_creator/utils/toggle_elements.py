@@ -32,7 +32,7 @@ def create_horizontal_slider(element_parameter: DataElement) -> str:
         element_parameter (DataElement): Horizontal Slider Element Parameters.
 
     Returns:
-        str: Measurement plug-in UI Horizontal Slider Element.
+        str: Horizontal Slider Element.
     """
     shared_id = get_unique_id()
     label_id = get_unique_id()
@@ -68,7 +68,7 @@ def create_boolean_led(element_parameter: DataElement) -> str:
         element_parameter (DataElement): Round LED Element Parameters.
 
     Returns:
-        str: Measurement plug-in UI Round LED Element.
+        str: Round LED Element.
     """
     shared_id = get_unique_id()
     label_id = get_unique_id()
@@ -104,7 +104,7 @@ def create_horizontal_sliders(elements_parameter: List[DataElement]) -> str:
         elements_parameter (List[DataElement]): List of Horizontal Slider Element Parameters.
 
     Returns:
-        str: Measurement plug-in UI Horizontal Slider Elements.
+        str: Horizontal Slider Elements.
     """
     boolean_horizontal_sliders = ""
     top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
@@ -125,7 +125,7 @@ def create_boolean_leds(elements_parameter: List[DataElement]) -> str:
         elements_parameter (List[DataElement]): List of Round LED Element Parameters.
 
     Returns:
-        str: Measurement plug-in UI Round LED Elements.
+        str: Round LED Elements.
     """
     boolean_leds = ""
     top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE

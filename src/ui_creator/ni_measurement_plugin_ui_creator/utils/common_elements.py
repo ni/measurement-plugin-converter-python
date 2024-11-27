@@ -29,7 +29,7 @@ def create_label(element_parameter: LabelElement) -> str:
         element_parameter (LabelElement): Label Element Parameters.
 
     Returns:
-        str: MeasUI Label Element.
+        str: Label Element.
     """
     label = LABEL.format(
         id=element_parameter.id,
