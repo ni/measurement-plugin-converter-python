@@ -71,6 +71,7 @@ numeric_indicator_elements = create_indicator_elements(
 
 write_measui(
     filepath="numeric_controls_indicators",
+    service_class="Sample Measurement",
     input_output_elements=numeric_indicator_elements + numeric_control_elements,
 )
 

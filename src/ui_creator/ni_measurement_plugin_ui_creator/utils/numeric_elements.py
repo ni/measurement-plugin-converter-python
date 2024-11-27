@@ -1,13 +1,7 @@
 """Create numeric elements for building UI."""
 
-from typing import List
-
-from ni_measurement_plugin_ui_creator.constants import MeasUIElementPosition
 from ni_measurement_plugin_ui_creator.models import DataElement, LabelElement
-from ni_measurement_plugin_ui_creator.utils.common_elements import (
-    create_label,
-    get_unique_id,
-)
+from ni_measurement_plugin_ui_creator.utils.common_elements import create_label, get_unique_id
 
 NUMERIC_ARRAY_INPUT = (
     '<ChannelArrayViewer AdaptsToType="[bool]True" '
@@ -202,96 +196,3 @@ def create_numeric_array_indicator(element_parameter: DataElement) -> str:
     )
 
     return numeric_array + label
-
-
-def create_numeric_indicators(elements_parameter: List[DataElement]) -> str:
-    """Create Multiple `Numeric Indicator` Measurement plug-in UI Elements.
-
-    Args:
-        elements_parameter (List[DataElement]): List of Numeric Indicator Element parameters.
-
-    Returns:
-        str: Numeric Indicator Elements.
-    """
-    numeric_indicators = ""
-    top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
-
-    for element_parameter in elements_parameter:
-        element_parameter.left_alignment = (
-            MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
-            + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
-        )
-        element_parameter.top_alignment = top_alignment
-        top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
-
-        numeric_indicators += create_numeric_indicator(element_parameter=element_parameter)
-
-    return numeric_indicators
-
-
-def create_numeric_array_controls(elements_parameter: List[DataElement]) -> str:
-    """Create Multiple `Numeric Array Input` Measurement plug-in UI Elements.
-
-    Args:
-        element_parameter (List[DataElement]): Numeric Array Input Element Parameters.
-
-    Returns:
-        str: Numeric Array Input Elements.
-    """
-    numeric_array_inputs = ""
-    top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
-
-    for element_parameter in elements_parameter:
-        element_parameter.top_alignment = top_alignment
-        top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
-
-        numeric_array_inputs += create_numeric_array_control(element_parameter=element_parameter)
-
-    return numeric_array_inputs
-
-
-def create_numeric_array_indicators(elements_parameter: List[DataElement]) -> str:
-    """Create Multiple `Numeric Array Output` Measurement plug-in UI Elements.
-
-    Args:
-        element_parameter (List[DataElement]): List of Numeric Array Output Element \
-            parameters.
-
-    Returns:
-        str: Array Output Elements.
-    """
-    numeric_array_outputs = ""
-    top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
-
-    for element_parameter in elements_parameter:
-        element_parameter.left_alignment = (
-            MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
-            + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
-        )
-        element_parameter.top_alignment = top_alignment
-        top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
-
-        numeric_array_outputs += create_numeric_array_indicator(element_parameter=element_parameter)
-
-    return numeric_array_outputs
-
-
-def create_numeric_controls(elements_parameter: List[DataElement]) -> str:
-    """Create Multiple `Numeric Control` Measurement plug-in UI Elements.
-
-    Args:
-        elements_parameter (List[DataElement]): List of Numeric Control Element Parameters.
-
-    Returns:
-        str: Numeric control Elements.
-    """
-    numeric_controls = ""
-    top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
-
-    for element_parameter in elements_parameter:
-        element_parameter.top_alignment = top_alignment
-        top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
-
-        numeric_controls += create_numeric_control(element_parameter=element_parameter)
-
-    return numeric_controls

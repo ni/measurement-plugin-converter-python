@@ -1,8 +1,5 @@
 """Create toggle elements for building UI."""
 
-from typing import List
-
-from ni_measurement_plugin_ui_creator.constants import MeasUIElementPosition
 from ni_measurement_plugin_ui_creator.models import DataElement, LabelElement
 from ni_measurement_plugin_ui_creator.utils.common_elements import create_label, get_unique_id
 
@@ -95,49 +92,3 @@ def create_boolean_led(element_parameter: DataElement) -> str:
     )
 
     return boolean_led + label
-
-
-def create_horizontal_sliders(elements_parameter: List[DataElement]) -> str:
-    """Create Multiple `Hortizontal Slider` Measurement plug-in UI Elements.
-
-    Args:
-        elements_parameter (List[DataElement]): List of Horizontal Slider Element Parameters.
-
-    Returns:
-        str: Horizontal Slider Elements.
-    """
-    boolean_horizontal_sliders = ""
-    top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
-
-    for element_parameter in elements_parameter:
-        element_parameter.top_alignment = top_alignment
-        top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
-
-        boolean_horizontal_sliders += create_horizontal_slider(element_parameter=element_parameter)
-
-    return boolean_horizontal_sliders
-
-
-def create_boolean_leds(elements_parameter: List[DataElement]) -> str:
-    """Create Multiple `Round LED` Measurement plug-in UI Elements.
-
-    Args:
-        elements_parameter (List[DataElement]): List of Round LED Element Parameters.
-
-    Returns:
-        str: Round LED Elements.
-    """
-    boolean_leds = ""
-    top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
-
-    for element_parameter in elements_parameter:
-        element_parameter.left_alignment = (
-            MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
-            + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
-        )
-        element_parameter.top_alignment = top_alignment
-        top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
-
-        boolean_leds += create_boolean_led(element_parameter=element_parameter)
-
-    return boolean_leds

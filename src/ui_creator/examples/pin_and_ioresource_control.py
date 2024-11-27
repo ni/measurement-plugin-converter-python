@@ -67,6 +67,7 @@ ioresource_arr_control_elements = create_control_elements(
 
 write_measui(
     filepath="pin_and_IOResource_control_element",
+    service_class="Sample Measurement",
     input_output_elements=pin_control_elements + ioresource_arr_control_elements,
 )
 

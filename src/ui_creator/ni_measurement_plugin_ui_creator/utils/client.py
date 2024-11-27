@@ -28,17 +28,18 @@ SELECT_MEASUREMENT = (
 )
 
 
-def get_measurement_service_stub(
+def get_measurement_service_stub_and_class(
     discovery_client: DiscoveryClient,
-) -> Union[V1MeasurementServiceStub, V2MeasurementServiceStub, None]:
-    """Get measurement services.
+) -> Optional[Tuple[Union[V1MeasurementServiceStub, V2MeasurementServiceStub], str]]:
+    """Get measurement service stub and measurement service class.
 
     Args:
         discovery_client (DiscoveryClient): Client for accessing NI Discovery service.
 
     Returns:
-        Union[V1MeasurementServiceStub, V2MeasurementServiceStub, None]: Measurement services or \
-            None in case of no active measurement services.
+        Optional[Tuple[Union[V1MeasurementServiceStub, V2MeasurementServiceStub], str]]: if available
+            measurement service stub and service class. None in case of no active measurement
+            services.
     """
     logger = getLogger(LOGGER)
     available_services = __get_active_measurement_services(discovery_client)
@@ -75,9 +76,9 @@ def get_measurement_service_stub(
     channel, measurement_service_interface = channel_and_interface[0], channel_and_interface[1]
 
     if measurement_service_interface == MEASUREMENT_SERVICE_INTERFACE_V2:
-        return V2MeasurementServiceStub(channel)
+        return V2MeasurementServiceStub(channel), measurement_service_class
 
-    return V1MeasurementServiceStub(channel)
+    return V1MeasurementServiceStub(channel), measurement_service_class
 
 
 def __get_active_measurement_services(discovery_client: DiscoveryClient) -> List[ServiceInfo]:

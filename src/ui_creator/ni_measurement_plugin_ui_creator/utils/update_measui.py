@@ -67,7 +67,7 @@ OUTPUTS_BOUND = "Outputs are bound successfully."
 UPDATED_UI = "Measurement UI updated successfully. Please find at {filepath}."
 
 
-def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> None:
+def update_measui(metadata: Union[V1MetaData, V2MetaData], service_class: str, output_dir: Path) -> None:
     """Update measurment UI.
 
     1. Get measurement files of the selected measurement plug-in.
@@ -78,6 +78,7 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
 
     Args:
         metadata (Union[V1MetaData, V2MetaData]): Metadata of the measurement plug-in.
+        service_class (str): Service class name of the measurement plug-in.
         output_dir (Path): Output directory where updated measurement UI is outputted.
     """
     logger = getLogger(LOGGER)
@@ -85,7 +86,7 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
     measui_files = get_measui_files(metadata)
     if not measui_files:
         logger.warning(NO_MEASUI_FILE)
-        create_measui(metadata, output_dir)
+        create_measui(metadata, service_class, output_dir)
         return
 
     logger.info(AVAILABLE_MEASUI_FILES)
@@ -101,7 +102,7 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], output_dir: Path) -> 
 
     except (ETree.ParseError, InvalidMeasUIError, FileNotFoundError, PermissionError):
         logger.warning(INVALID_MEASUI_FILE)
-        create_measui(metadata, output_dir)
+        create_measui(metadata, service_class, output_dir)
         return
 
     updated_measui_filepath = Path(output_dir) / (

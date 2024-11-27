@@ -82,6 +82,7 @@ boolean_leds = create_indicator_elements(
 
 write_measui(
     filepath="boolean_elements",
+    service_class="Sample Measurement",
     input_output_elements=boolean_hortizontal_sliders + boolean_leds,
 )
 

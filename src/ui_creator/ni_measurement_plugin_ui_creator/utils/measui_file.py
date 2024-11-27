@@ -2,7 +2,7 @@
 
 import os
 import urllib.parse
-import xml.etree.ElementTree as ETree # nosec: B405
+import xml.etree.ElementTree as ETree  # nosec: B405
 from logging import getLogger
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
@@ -25,7 +25,7 @@ from ni_measurement_plugin_ui_creator.constants import (
     UpdateUI,
 )
 from ni_measurement_plugin_ui_creator.models import AvailableElement
-from ni_measurement_plugin_ui_creator.utils.client import get_measurement_service_stub
+from ni_measurement_plugin_ui_creator.utils.client import get_measurement_service_stub_and_class
 from ni_measurement_plugin_ui_creator.utils.exceptions import (
     InvalidCliInputError,
     InvalidMeasUIError,
@@ -35,24 +35,29 @@ INVALID_MEASUI_CHOICE = "Invalid .measui file selected."
 SELECT_MEASUI_FILE = "Select a measurement plug-in UI file index ({start}-{end}) to update: "
 
 
-def get_metadata() -> Union[V1MetaData, V2MetaData, None]:
-    """Get metadata of the measurement plug-in.
+def get_metadata_and_service_class() -> Optional[Tuple[Union[V1MetaData, V2MetaData], str]]:
+    """Get metadata and service class of the measurement plug-in.
 
-    1. Get measurement service.
+    1. Get measurement service and service class name.
     2. Get metadata of measurement plug-in.
 
     Returns:
-        Union[V1MetaData, V2MetaData, None]: Metadata if selected measurement plug-in is valid.
+        Optional[Tuple[Union[V1MetaData, V2MetaData], str]]: Metadata and service class name 
+        if selected measurement plug-in is valid. Else None.
     """
     os.environ["GRPC_VERBOSITY"] = "NONE"
     discovery_client = DiscoveryClient()
-    measurement_service_stub = get_measurement_service_stub(discovery_client)
+    service_stub_and_class = get_measurement_service_stub_and_class(discovery_client)
 
-    if not measurement_service_stub:
+    if not service_stub_and_class:
         return None
 
+    measurement_service_stub, measurement_service_class = (
+        service_stub_and_class[0],
+        service_stub_and_class[1],
+    )
     metadata = measurement_service_stub.GetMetadata(v2_measurement_service_pb2.GetMetadataRequest())
-    return metadata
+    return metadata, measurement_service_class
 
 
 def get_measui_selection(total_uis: int) -> int:

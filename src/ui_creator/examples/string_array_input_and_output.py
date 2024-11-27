@@ -78,6 +78,7 @@ array_output_elements = create_indicator_elements(
 
 write_measui(
     filepath="string_arrays",
+    service_class="Sample Measurement",
     input_output_elements=array_input_elements + array_output_elements,
 )
 

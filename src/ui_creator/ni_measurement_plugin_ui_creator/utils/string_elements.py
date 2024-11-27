@@ -1,11 +1,7 @@
 """Create string elements for building UI."""
 
-from typing import List
-
-from ni_measurement_plugin_ui_creator.constants import MeasUIElementPosition
 from ni_measurement_plugin_ui_creator.models import DataElement, LabelElement
 from ni_measurement_plugin_ui_creator.utils.common_elements import create_label, get_unique_id
-
 
 STRING_ARRAY_INPUT = (
     '<ChannelArrayViewer ArrayElement="[UIModel]{array_element_id}" '
@@ -123,52 +119,6 @@ def create_string_indicator(element_parameter: DataElement) -> str:
     )
 
     return string_indicator + label
-
-
-def create_string_controls(elements_parameter: List[DataElement]) -> str:
-    """Create Multiple `String Control` Measurement plug-in UI Elements.
-
-    Args:
-        elements_parameter (List[DataElement]): List of String Control Element Parameters.
-
-    Returns:
-        str: String Control Elements.
-    """
-    string_controls = ""
-    top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
-
-    for element_parameter in elements_parameter:
-        element_parameter.top_alignment = top_alignment
-        top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
-
-        string_controls += create_string_control(element_parameter=element_parameter)
-
-    return string_controls
-
-
-def create_string_indicators(elements_parameter: List[DataElement]) -> str:
-    """Create Multiple `String Indicators` Measurement plug-in UI Elements.
-
-    Args:
-        elements_parameter (List[DataElement]): List of String Indicator Element Parameters.
-
-    Returns:
-        str: String Indicator Elements.
-    """
-    string_indicators = ""
-    top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
-
-    for element_parameter in elements_parameter:
-        element_parameter.left_alignment = (
-            MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
-            + MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE
-        )
-        element_parameter.top_alignment = top_alignment
-        top_alignment += MeasUIElementPosition.TOP_ALIGNMENT_INCREMENTAL_VALUE
-
-        string_indicators += create_string_indicator(element_parameter=element_parameter)
-
-    return string_indicators
 
 
 def create_string_array_control(element_parameter: DataElement) -> str:

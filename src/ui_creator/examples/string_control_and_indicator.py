@@ -70,6 +70,7 @@ string_indicator_elements = create_indicator_elements(
 
 write_measui(
     filepath="string_controls_indicators",
+    service_class="Sample Measurement",
     input_output_elements=string_control_elements + string_indicator_elements,
 )
 
