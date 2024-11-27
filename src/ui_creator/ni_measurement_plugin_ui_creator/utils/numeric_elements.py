@@ -9,21 +9,6 @@ from ni_measurement_plugin_ui_creator.utils.common_elements import (
     get_unique_id,
 )
 
-NUMERIC_CONTROL = (
-    '<ChannelNumericText AdaptsToType="[bool]True" '
-    'Channel="[string]{client_id}/Configuration/{name}" Height="[float]{height}" '
-    'Id="{shared_id}" Label="[UIModel]{element_id}" Left="[float]{left_value}" '
-    'TabIndex="[int]0" Top="[float]{top_value}" Width="[float]{width}" '
-    'ValueType="[Type]{value_type}"/>'
-)
-NUMERIC_INDICATOR = (
-    '<ChannelNumericText AdaptsToType="[bool]True" '
-    'Channel="[string]{client_id}/Output/{name}" Height="[float]{height}" '
-    'Id="{shared_id}" IsReadOnly="[bool]True" Label="[UIModel]{element_id}" '
-    'Left="[float]{left_value}" TabIndex="[int]2" Top="[float]{top_value}" '
-    'ValueType="[Type]{value_type}" Width="[float]{width}" />'
-)
-
 NUMERIC_ARRAY_INPUT = (
     '<ChannelArrayViewer AdaptsToType="[bool]True" '
     'ArrayElement="[UIModel]{array_element_id}" Channel="[string]{client_id}/Configuration/{name}" '
@@ -48,6 +33,20 @@ NUMERIC_ARRAY_OUTPUT = (
     '<ChannelArrayNumericText Height="[float]{height}" Id="{array_element_id}" '
     'IsReadOnly="[bool]True" ValueFormatter="[string]LV:G5" ValueType="[Type]{value_type}" '
     'Width="[float]{width}" /></ChannelArrayViewer>'
+)
+NUMERIC_CONTROL = (
+    '<ChannelNumericText AdaptsToType="[bool]True" '
+    'Channel="[string]{client_id}/Configuration/{name}" Height="[float]{height}" '
+    'Id="{shared_id}" Label="[UIModel]{element_id}" Left="[float]{left_value}" '
+    'TabIndex="[int]0" Top="[float]{top_value}" Width="[float]{width}" '
+    'ValueType="[Type]{value_type}"/>'
+)
+NUMERIC_INDICATOR = (
+    '<ChannelNumericText AdaptsToType="[bool]True" '
+    'Channel="[string]{client_id}/Output/{name}" Height="[float]{height}" '
+    'Id="{shared_id}" IsReadOnly="[bool]True" Label="[UIModel]{element_id}" '
+    'Left="[float]{left_value}" TabIndex="[int]2" Top="[float]{top_value}" '
+    'ValueType="[Type]{value_type}" Width="[float]{width}" />'
 )
 
 

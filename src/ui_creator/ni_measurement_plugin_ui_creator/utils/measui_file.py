@@ -31,8 +31,8 @@ from ni_measurement_plugin_ui_creator.utils.exceptions import (
     InvalidMeasUIError,
 )
 
-SELECT_MEASUI_FILE = "Select a measurement plug-in UI file index ({start}-{end}) to update: "
 INVALID_MEASUI_CHOICE = "Invalid .measui file selected."
+SELECT_MEASUI_FILE = "Select a measurement plug-in UI file index ({start}-{end}) to update: "
 
 
 def get_metadata() -> Union[V1MetaData, V2MetaData, None]:

@@ -6,15 +6,6 @@ from ni_measurement_plugin_ui_creator.utils.common_elements import (
     get_unique_id,
 )
 
-PIN_SELECTOR = (
-    '<ChannelPinSelector AllowUndefinedValues="[bool]True" BaseName="[string]Pin" '
-    'Channel="[string]{client_id}/Configuration/{name}" DataType="[Type]String" '
-    'Enabled="[bool]True" Height="[float]{height}" Id="{shared_id}" '
-    'IsLabelBoundToChannel="[bool]False" Label="[UIModel]{label_id}" '
-    'Left="[float]{left_value}" SelectedResource="[NI_Core_DataValues_TagRefnum]Pin1" '
-    'Top="[float]{top_value}" Width="[float]{width}" '
-    'xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument" />'
-)
 IORESOURCE_ARRAY = (
     '<ChannelPinSelector AllowUndefinedValues="[bool]True" BaseName="[string]Pin" '
     'Channel="[string]{client_id}/Configuration/{name}" DataType="[Type]String" '
@@ -23,6 +14,15 @@ IORESOURCE_ARRAY = (
     'MultipleSelectionMode="[MultipleSelectionModes]List" '
     'SelectedResource="[NI_Core_DataValues_TagRefnum]PinGroup1" Top="[float]{top_value}" '
     'Width="[float]{width}" xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument" />'
+)
+PIN_SELECTOR = (
+    '<ChannelPinSelector AllowUndefinedValues="[bool]True" BaseName="[string]Pin" '
+    'Channel="[string]{client_id}/Configuration/{name}" DataType="[Type]String" '
+    'Enabled="[bool]True" Height="[float]{height}" Id="{shared_id}" '
+    'IsLabelBoundToChannel="[bool]False" Label="[UIModel]{label_id}" '
+    'Left="[float]{left_value}" SelectedResource="[NI_Core_DataValues_TagRefnum]Pin1" '
+    'Top="[float]{top_value}" Width="[float]{width}" '
+    'xmlns="http://www.ni.com/InstrumentFramework/ScreenDocument" />'
 )
 
 

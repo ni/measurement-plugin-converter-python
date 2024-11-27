@@ -9,22 +9,6 @@ from ni_measurement_plugin_ui_creator.utils.common_elements import (
     get_unique_id,
 )
 
-STRING_CONTROL = (
-    '<ChannelStringControl AcceptsReturn="[bool]False" BaseName="[string]String" '
-    'Channel="[string]{client_id}/Configuration/{name}" Enabled="[bool]True" '
-    'Height="[float]{height}" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" '
-    'Id="{shared_id}" Label="[UIModel]{label_id}" Left="[float]{left_value}" '
-    'Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" '
-    'Width="[float]{width}" />'
-)
-STRING_INDICATOR = (
-    '<ChannelStringControl AcceptsReturn="[bool]False" BaseName="[string]String" '
-    'Channel="[string]{client_id}/Output/{name}" Height="[float]{height}" '
-    'HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" Id="{shared_id}" '
-    'IsReadOnly="[bool]True" Label="[UIModel]{label_id}" Left="[float]{left_value}" '
-    'Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" '
-    'Width="[float]{width}" />'
-)
 
 STRING_ARRAY_INPUT = (
     '<ChannelArrayViewer ArrayElement="[UIModel]{array_element_id}" '
@@ -53,6 +37,22 @@ STRING_ARRAY_OUTPUT = (
     'Id="{array_element_id}" IsReadOnly="[bool]True" '
     'VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" '
     'Width="[float]{width}" /></ChannelArrayViewer>'
+)
+STRING_CONTROL = (
+    '<ChannelStringControl AcceptsReturn="[bool]False" BaseName="[string]String" '
+    'Channel="[string]{client_id}/Configuration/{name}" Enabled="[bool]True" '
+    'Height="[float]{height}" HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" '
+    'Id="{shared_id}" Label="[UIModel]{label_id}" Left="[float]{left_value}" '
+    'Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" '
+    'Width="[float]{width}" />'
+)
+STRING_INDICATOR = (
+    '<ChannelStringControl AcceptsReturn="[bool]False" BaseName="[string]String" '
+    'Channel="[string]{client_id}/Output/{name}" Height="[float]{height}" '
+    'HorizontalScrollBarVisibility="[ScrollBarVisibility]Hidden" Id="{shared_id}" '
+    'IsReadOnly="[bool]True" Label="[UIModel]{label_id}" Left="[float]{left_value}" '
+    'Top="[float]{top_value}" VerticalScrollBarVisibility="[ScrollBarVisibility]Auto" '
+    'Width="[float]{width}" />'
 )
 
 

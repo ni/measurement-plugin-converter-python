@@ -54,17 +54,16 @@ from ni_measurement_plugin_ui_creator.utils.ui_elements import (
 )
 
 AVAILABLE_MEASUI_FILES = "Available Measurement UI Files:"
-NO_MEASUI_FILE = (
-    "No Measurement UI file available. "
-    "Creating a new measui file for the selected measurement..."
-)
+BINDING_ELEMENTS = "Binding UI controls and indicators..."
+CREATING_ELEMENTS = "Creating new controls and indicators..."
+INPUTS_BOUND = "Inputs are bound successfully."
 INVALID_MEASUI_FILE = (
     "Invalid Measurement UI file. Creating a new measui file for the selected measurement..."
 )
-BINDING_ELEMENTS = "Binding UI controls and indicators..."
-INPUTS_BOUND = "Inputs are bound successfully."
+NO_MEASUI_FILE = (
+    "No Measurement UI file available. Creating a new measui file for the selected measurement..."
+)
 OUTPUTS_BOUND = "Outputs are bound successfully."
-CREATING_ELEMENTS = "Creating new controls and indicators..."
 UPDATED_UI = "Measurement UI updated successfully. Please find at {filepath}."
 
 

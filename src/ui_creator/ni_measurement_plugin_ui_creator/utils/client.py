@@ -18,14 +18,14 @@ from ni_measurement_plugin_sdk_service.measurement.info import ServiceInfo
 from ni_measurement_plugin_ui_creator.constants import LOGGER
 from ni_measurement_plugin_ui_creator.utils.exceptions import InvalidCliInputError
 
-NO_MEASUREMENTS_RUNNING = "No measurement services are running."
 AVAILABLE_MEASUREMENTS = "Available/Registered measurements:"
-SELECT_MEASUREMENT = (
-    "Select a measurement service index ({start}-{end}) to create/update measui file: "
-)
 INVALID_MEASUREMENT_CHOICE = "Invalid measurement plug-in selected."
 MEASUREMENT_SERVICE_INTERFACE_V1 = "ni.measurementlink.measurement.v1.MeasurementService"
 MEASUREMENT_SERVICE_INTERFACE_V2 = "ni.measurementlink.measurement.v2.MeasurementService"
+NO_MEASUREMENTS_RUNNING = "No measurement services are running."
+SELECT_MEASUREMENT = (
+    "Select a measurement service index ({start}-{end}) to create/update measui file: "
+)
 
 
 def get_active_measurement_services(discovery_client: DiscoveryClient) -> List[ServiceInfo]:
