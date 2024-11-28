@@ -136,10 +136,7 @@ class UpdateUI:
     SPECIAL_ELEMENTS = ["ChannelPinSelector", "ChannelArrayViewer"]
     STRING_ARRAY = "ChannelArrayStringControl"
     SUPPORTED_CONTROLS_AND_INDICATORS = (
-        BOOLEAN_ELEMENTS
-        + INTERACTION_MODE_BASED
-        + ONLY_INDICATORS
-        + SPECIAL_ELEMENTS
+        BOOLEAN_ELEMENTS + INTERACTION_MODE_BASED + ONLY_INDICATORS + SPECIAL_ELEMENTS
     )
     UNSUPPORTED_ELEMENTS = [
         "ChannelRingSelector",

@@ -2,7 +2,7 @@
 
 import re
 import shutil
-import xml.etree.ElementTree as ETree # nosec: B405
+import xml.etree.ElementTree as ETree  # nosec: B405
 from logging import getLogger
 from pathlib import Path
 from typing import List, Tuple, Union
@@ -10,22 +10,15 @@ from uuid import UUID
 
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
     ConfigurationParameter as V1ConfigParam,
-)
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
     GetMetadataResponse as V1MetaData,
-)
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
     Output as V1Output,
 )
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
     ConfigurationParameter as V2ConfigParam,
-)
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
     GetMetadataResponse as V2MetaData,
-)
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
     Output as V2Output,
 )
+
 from ni_measurement_plugin_ui_creator.constants import (
     LOGGER,
     NUMERIC_DATA_TYPE_VALUES,
@@ -67,7 +60,9 @@ OUTPUTS_BOUND = "Outputs are bound successfully."
 UPDATED_UI = "Measurement UI updated successfully. Please find at {filepath}."
 
 
-def update_measui(metadata: Union[V1MetaData, V2MetaData], service_class: str, output_dir: Path) -> None:
+def update_measui(
+    metadata: Union[V1MetaData, V2MetaData], service_class: str, output_dir: Path
+) -> None:
     """Update measurment UI.
 
     1. Get measurement files of the selected measurement plug-in.
@@ -97,7 +92,7 @@ def update_measui(metadata: Union[V1MetaData, V2MetaData], service_class: str, o
     selected_measui = measui_files[get_measui_selection(len(measui_files)) - 1][1:]
 
     try:
-        tree = ETree.parse(selected_measui) # nosec: B314
+        tree = ETree.parse(selected_measui)  # nosec: B314
         validate_measui(tree)
 
     except (ETree.ParseError, InvalidMeasUIError, FileNotFoundError, PermissionError):

@@ -37,9 +37,9 @@ def get_measurement_service_stub_and_class(
         discovery_client (DiscoveryClient): Client for accessing NI Discovery service.
 
     Returns:
-        Optional[Tuple[Union[V1MeasurementServiceStub, V2MeasurementServiceStub], str]]: if available
-            measurement service stub and service class. None in case of no active measurement
-            services.
+        Optional[Tuple[Union[V1MeasurementServiceStub, V2MeasurementServiceStub], str]]: if
+        available measurement service stub and service class. None in case of no active measurement
+        services.
     """
     logger = getLogger(LOGGER)
     available_services = __get_active_measurement_services(discovery_client)

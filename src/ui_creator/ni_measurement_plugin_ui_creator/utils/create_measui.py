@@ -36,7 +36,7 @@ def create_measui(
 
     Args:
         metadata (Union[V1MetaData, V2MetaData]): Metadata of a measurement plug-in.
-        service_class (str): Service class name of the measurement plug-in.
+        service_class (str): Service class name of a measurement plug-in.
         output_dir (Path): Output directory.
     """
     logger = getLogger(LOGGER)

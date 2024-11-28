@@ -25,7 +25,9 @@ from ni_measurement_plugin_ui_creator.constants import (
     UpdateUI,
 )
 from ni_measurement_plugin_ui_creator.models import AvailableElement
-from ni_measurement_plugin_ui_creator.utils.client import get_measurement_service_stub_and_class
+from ni_measurement_plugin_ui_creator.utils.client import (
+    get_measurement_service_stub_and_class,
+)
 from ni_measurement_plugin_ui_creator.utils.exceptions import (
     InvalidCliInputError,
     InvalidMeasUIError,
@@ -42,7 +44,7 @@ def get_metadata_and_service_class() -> Optional[Tuple[Union[V1MetaData, V2MetaD
     2. Get metadata of measurement plug-in.
 
     Returns:
-        Optional[Tuple[Union[V1MetaData, V2MetaData], str]]: Metadata and service class name 
+        Optional[Tuple[Union[V1MetaData, V2MetaData], str]]: Metadata and service class name
         if selected measurement plug-in is valid. Else None.
     """
     os.environ["GRPC_VERBOSITY"] = "NONE"
