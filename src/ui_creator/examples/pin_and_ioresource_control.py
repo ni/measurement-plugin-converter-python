@@ -4,6 +4,7 @@ Note: CLIENT_ID should be same throughout a measui file.
 """
 
 import uuid
+from pathlib import Path
 
 from ni_measurement_plugin_ui_creator.constants import MeasUIElementPosition, SupportedDataType
 from ni_measurement_plugin_ui_creator.models import DataElement
@@ -66,7 +67,7 @@ ioresource_arr_control_elements = create_control_elements(
 )
 
 write_measui(
-    filepath="pin_and_IOResource_control_element",
+    filepath=Path("pin_and_IOResource_control_element"),
     service_class="Sample Measurement",
     input_output_elements=pin_control_elements + ioresource_arr_control_elements,
 )

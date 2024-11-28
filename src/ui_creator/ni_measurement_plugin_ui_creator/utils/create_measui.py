@@ -23,7 +23,11 @@ CREATING_FILE = "Creating Measurement UI..."
 CREATED_UI = "Measurement Plug-In UI created successfully at {filepath}."
 
 
-def create_measui(metadata: Union[V1MetaData, V2MetaData], service_class: str, output_dir: Path) -> None:
+def create_measui(
+    metadata: Union[V1MetaData, V2MetaData],
+    service_class: str,
+    output_dir: Path,
+) -> None:
     """Create measurement UI file.
 
     1. Get inputs and outputs from the metadata.
@@ -55,11 +59,11 @@ def create_measui(metadata: Union[V1MetaData, V2MetaData], service_class: str, o
     logger.info(CREATED_UI.format(filepath=Path(filepath).resolve()))
 
 
-def write_measui(filepath: Union[str, Path], service_class: str, input_output_elements: str) -> None:
+def write_measui(filepath: Path, service_class: str, input_output_elements: str) -> None:
     """Write `measui` file.
 
     Args:
-        filepath (Union[str, Path]): File path.
+        filepath (Path): File path.
         service_class (str): Service class name of the measurement plug-in.
         input_output_elements (str): Input and Output XML tags.
     """
@@ -70,7 +74,7 @@ def write_measui(filepath: Union[str, Path], service_class: str, input_output_el
         template_name=str(template_file_path),
         client_id=CLIENT_ID,
         display_name=Path(filepath).name,
-        service_class=service_class, 
+        service_class=service_class,
         input_output_elements=input_output_elements,
     )
 
@@ -97,7 +101,7 @@ def __render_template(
     Returns:
         bytes: MeasUI file content.
     """
-    template = Template(   # nosec: B702
+    template = Template(  # nosec: B702
         filename=template_name,
         input_encoding=MeasUIFile.ENCODING,
         output_encoding=MeasUIFile.ENCODING,

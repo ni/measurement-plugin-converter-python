@@ -4,6 +4,7 @@ Note: CLIENT ID should be same throughout a measui file.
 """
 
 import uuid
+from pathlib import Path
 
 from ni_measurement_plugin_ui_creator.constants import MeasUIElementPosition, SupportedDataType
 from ni_measurement_plugin_ui_creator.models import DataElement
@@ -77,7 +78,7 @@ array_output_elements = create_indicator_elements(
 )
 
 write_measui(
-    filepath="numeric_arrays",
+    filepath=Path("numeric_arrays"),
     service_class="Sample Measurement",
     input_output_elements=array_input_elements + array_output_elements,
 )
