@@ -14,6 +14,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.measurement.info import ServiceInfo
+
 from ni_measurement_plugin_ui_creator.constants import LOGGER
 from ni_measurement_plugin_ui_creator.utils.exceptions import InvalidCliInputError
 

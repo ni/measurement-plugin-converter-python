@@ -77,7 +77,7 @@ def _update() -> None:
 
 @click.group(context_settings=CLI_CONTEXT_SETTINGS)
 def start() -> None:
-    """NI Measurement UI Creator is a Command Line tool for creating/updating measui files."""
+    """NI Measurement Plug-In UI Creator is a Command Line tool to create/update .measui files."""
     pass
 
 

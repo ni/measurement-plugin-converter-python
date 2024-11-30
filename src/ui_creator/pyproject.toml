@@ -1,9 +1,9 @@
 [tool.poetry]
 name = "ni_measurement_plugin_ui_creator"
 version = "1.0.0-dev9"
-description = "NI Measurement UI Creator"
+description = "CLI tool to create/update `.measui` files for measurement plug-ins."
 authors = ["NI <opensource@ni.com>"]
-repository = "https://github.com/ni/"
+repository = "https://github.com/ni/measurement-plugin-converter-python"
 license = "MIT"
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -22,7 +22,7 @@ mako = "^1.3.5"
 ni-measurement-plugin-sdk-service = "^2.1.0"
 
 [tool.poetry.scripts]
-ni-measurement-plugin-ui-creator = "ni_measurement_plugin_ui_creator:execute_cli"
+ni-measurement-plugin-ui-creator = "ni_measurement_plugin_ui_creator:start"
 
 [tool.poetry.group.dev.dependencies]
 ni-python-styleguide = "^0.4.6"
