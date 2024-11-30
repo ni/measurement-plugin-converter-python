@@ -3,8 +3,6 @@
 import uuid
 from enum import Enum
 
-CLIENT_ID = uuid.uuid4()
-
 
 class DataType(Enum):
     """Supported data types and its corresponding values from ni_measurement_plugin_sdk_service."""
@@ -152,6 +150,7 @@ class UpdateUI:
     }
 
 
+CLIENT_ID = uuid.uuid4()
 LOGGER = "logger"
 NUMERIC_DATA_TYPE_VALUES = [
     DataType.Int32.value,

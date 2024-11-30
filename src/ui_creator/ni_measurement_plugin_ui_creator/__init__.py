@@ -34,12 +34,8 @@ SUPPORTED_UI_ELEMENTS = [
 ]
 
 
-def __create_or_update_ui(process_func: Callable) -> None:
-    """Create or update `measui` file.
-
-    Args:
-        process_func (Callable): Create or update function.
-    """
+def _create_or_update_ui(process_func: Callable) -> None:
+    """Create or update `measui` file."""
     try:
         output_dir = Path.cwd()
         log_file_path = Path(output_dir) / "ui_creator_logs"
@@ -68,15 +64,15 @@ def __create_or_update_ui(process_func: Callable) -> None:
 
 
 @click.command(name="create")
-def __create() -> None:
+def _create() -> None:
     """Create a new measurement UI file."""
-    __create_or_update_ui(create_measui)
+    _create_or_update_ui(create_measui)
 
 
 @click.command(name="update")
-def __update() -> None:
+def _update() -> None:
     """Update the measurement UI file."""
-    __create_or_update_ui(update_measui)
+    _create_or_update_ui(update_measui)
 
 
 @click.group(context_settings=CLI_CONTEXT_SETTINGS)
@@ -85,5 +81,5 @@ def start() -> None:
     pass
 
 
-start.add_command(__create)
-start.add_command(__update)
+start.add_command(_create)
+start.add_command(_update)

@@ -40,9 +40,6 @@ SELECT_MEASUI_FILE = "Select a measurement plug-in UI file index ({start}-{end})
 def get_metadata_and_service_class() -> Optional[Tuple[Union[V1MetaData, V2MetaData], str]]:
     """Get metadata and service class of the measurement plug-in.
 
-    1. Get measurement service and service class name.
-    2. Get metadata of measurement plug-in.
-
     Returns:
         Optional[Tuple[Union[V1MetaData, V2MetaData], str]]: Metadata and service class name
         if selected measurement plug-in is valid. Else None.
@@ -97,9 +94,6 @@ def get_measui_selection(total_uis: int) -> int:
 def get_measui_files(metadata: Union[V1MetaData, V2MetaData]) -> List[str]:
     """Get measurement plug-in UI files.
 
-    1. Get measurement plug-in UI file paths from metadata.
-    2. Filter file paths which has `.measui` as extension.
-
     Args:
         metadata (Union[V1MetaData, V2MetaData]): Metadata of measurement plug-in.
 
@@ -108,13 +102,13 @@ def get_measui_files(metadata: Union[V1MetaData, V2MetaData]) -> List[str]:
     """
     file_uris = metadata.user_interface_details
     return [
-        __uri_to_path(uri.file_url)
+        _uri_to_path(uri.file_url)
         for uri in file_uris
-        if __uri_to_path(uri.file_url).lower().endswith(MeasUIFile.MEASUREMENT_UI_FILE_EXTENSION)
+        if _uri_to_path(uri.file_url).lower().endswith(MeasUIFile.MEASUREMENT_UI_FILE_EXTENSION)
     ]
 
 
-def __uri_to_path(uri: str) -> str:
+def _uri_to_path(uri: str) -> str:
     """Convert the URI to path.
 
     Args:
@@ -128,9 +122,6 @@ def __uri_to_path(uri: str) -> str:
 
 def validate_measui(root: ETree.ElementTree) -> None:
     """Validate measurement plug-in UI file.
-
-    1. Check for Screen tag to be present.
-    2. Check for ScreenSurface to be present.
 
     Args:
         root (ETree.ElementTree): Element tree of measurement plug-in UI file.
@@ -154,16 +145,13 @@ def get_available_elements(measui_tree: ETree.ElementTree) -> List[AvailableElem
     Returns:
         List[AvailableElement]: Info of already available elements.
     """
-    screen_surface = __find_screen_surface(measui_tree)
-    avlble_elements = __parse_measui_elements(screen_surface)
+    screen_surface = _find_screen_surface(measui_tree)
+    avlble_elements = _parse_measui_elements(screen_surface)
     return avlble_elements
 
 
-def __find_screen_surface(measui_tree: ETree.ElementTree) -> ETree.Element:
+def _find_screen_surface(measui_tree: ETree.ElementTree) -> ETree.Element:
     """Find screen surface tag.
-
-    1. In measurement plug-in UI, controls and indicators will be within screen surface tag.
-    2. Get root element and find screen surface tag.
 
     Args:
         measui_tree (ETree.ElementTree): Measurement plug-in UI file tree.
@@ -176,7 +164,7 @@ def __find_screen_surface(measui_tree: ETree.ElementTree) -> ETree.Element:
     return screen_surface[0]
 
 
-def __parse_measui_elements(screen_surface: ETree.Element) -> List[AvailableElement]:
+def _parse_measui_elements(screen_surface: ETree.Element) -> List[AvailableElement]:
     """Parse the `measui` elements.
 
     Args:
@@ -212,12 +200,12 @@ def __parse_measui_elements(screen_surface: ETree.Element) -> List[AvailableElem
             )
 
         elif tag == UpdateUI.ARRAY_CONTAINER_ELEMENT:
-            output_info = __get_output_info_of_array_element(element)
+            output_info = _get_output_info_of_array_element(element)
 
             if output_info:
                 output, is_str_array = output_info[0], output_info[1]
 
-            bind, name = __get_bind_info(element)
+            bind, name = _get_bind_info(element)
 
             avlble_elements.append(
                 AvailableElement(
@@ -233,7 +221,7 @@ def __parse_measui_elements(screen_surface: ETree.Element) -> List[AvailableElem
 
         elif tag == UpdateUI.PIN_ELEMENT:
             output = False
-            bind, name = __get_bind_info(element)
+            bind, name = _get_bind_info(element)
 
             avlble_elements.append(
                 AvailableElement(
@@ -247,8 +235,8 @@ def __parse_measui_elements(screen_surface: ETree.Element) -> List[AvailableElem
             )
 
         elif tag in UpdateUI.SUPPORTED_CONTROLS_AND_INDICATORS:
-            output = __get_output_info(element)
-            bind, name = __get_bind_info(element)
+            output = _get_output_info(element)
+            bind, name = _get_bind_info(element)
 
             avlble_elements.append(
                 AvailableElement(
@@ -276,11 +264,8 @@ def __parse_measui_elements(screen_surface: ETree.Element) -> List[AvailableElem
     return avlble_elements
 
 
-def __get_output_info_of_array_element(element: ETree.Element) -> Optional[Tuple[bool, bool]]:
+def _get_output_info_of_array_element(element: ETree.Element) -> Optional[Tuple[bool, bool]]:
     """Get output info of an array element.
-
-    1. Check if the array element is control or indicator.
-    2. Check type of array element i.e., String array or numeric array.
 
     Args:
         element (ETree.Element): Element available already created.
@@ -293,24 +278,22 @@ def __get_output_info_of_array_element(element: ETree.Element) -> Optional[Tuple
         tag = array_element.tag.split("}")[-1]
 
         if tag == UpdateUI.STRING_ARRAY:
-            return __get_output_info_for_read_only_based(array_element), True
+            return _get_output_info_for_read_only_based(array_element), True
 
         if tag == UpdateUI.NUMERIC_ARRAY:
-            return __get_output_info_for_read_only_based(array_element), False
+            return _get_output_info_for_read_only_based(array_element), False
 
     return None
 
 
-def __get_output_info(element: ETree.Element) -> Optional[bool]:
-    """Get output info.
-
-    Check if the element is control or indicator.
+def _get_output_info(element: ETree.Element) -> Optional[bool]:
+    """Get output info. Check if the element is control or indicator or neither.
 
     Args:
         element (ETree.Element): Element available already.
 
     Returns:
-        Optional[bool]: True if the element is an output.
+        Optional[bool]: True if the element is an output. Else False.
     """
     tag = element.tag.split("}")[-1]
 
@@ -318,22 +301,22 @@ def __get_output_info(element: ETree.Element) -> Optional[bool]:
         return True
 
     if tag in UpdateUI.READ_ONLY_BASED:
-        return __get_output_info_for_read_only_based(element)
+        return _get_output_info_for_read_only_based(element)
 
     if tag in UpdateUI.INTERACTION_MODE_BASED:
-        return __get_output_info_for_interaction_mode_based(element)
+        return _get_output_info_for_interaction_mode_based(element)
 
     return None
 
 
-def __get_output_info_for_read_only_based(element: ETree.Element) -> bool:
+def _get_output_info_for_read_only_based(element: ETree.Element) -> bool:
     """Get output information for read only elements.
 
     Args:
         element (ETree.Element): Output element.
 
     Returns:
-        bool: True if the element is read only.
+        bool: True if the element is read only. Else False.
     """
     if (
         ElementAttrib.IS_READ_ONLY in element.attrib.keys()
@@ -344,14 +327,14 @@ def __get_output_info_for_read_only_based(element: ETree.Element) -> bool:
     return False
 
 
-def __get_output_info_for_interaction_mode_based(element: ETree.Element) -> bool:
+def _get_output_info_for_interaction_mode_based(element: ETree.Element) -> bool:
     """Return if the element is interaction mode based.
 
     Args:
         element (ETree.Element): Output element.
 
     Returns:
-        bool: True if the element is interaction mode based.
+        bool: True if the element is interaction mode based. Else False.
     """
     if (
         ElementAttrib.INTERACTION_MODE in element.attrib.keys()
@@ -363,7 +346,7 @@ def __get_output_info_for_interaction_mode_based(element: ETree.Element) -> bool
     return False
 
 
-def __get_bind_info(element: ETree.Element) -> Tuple[bool, Optional[str]]:
+def _get_bind_info(element: ETree.Element) -> Tuple[bool, Optional[str]]:
     """Get bind info of the element. If bound, name is also taken up.
 
     Args:
@@ -384,9 +367,6 @@ def __get_bind_info(element: ETree.Element) -> Tuple[bool, Optional[str]]:
 
 def write_updated_measui(filepath: Path, updated_ui: List[AvailableElement]) -> None:
     """Write updated measurement plug-in UI elements.
-
-    1. Find the Screen tag.
-    2. Replace the screen surface tag with updated counterpart.
 
     Args:
         filepath (Path): Filepath of the updated measurement plug-in UI.

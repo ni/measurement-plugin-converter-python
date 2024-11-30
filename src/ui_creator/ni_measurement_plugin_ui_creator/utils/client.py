@@ -14,11 +14,11 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measur
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.measurement.info import ServiceInfo
-
 from ni_measurement_plugin_ui_creator.constants import LOGGER
 from ni_measurement_plugin_ui_creator.utils.exceptions import InvalidCliInputError
 
 AVAILABLE_MEASUREMENTS = "Registered measurements:"
+INACTIVE_MEASUREMENNT = "Selected measurement service is not running."
 INVALID_MEASUREMENT_CHOICE = "Invalid measurement plug-in selected."
 MEASUREMENT_SERVICE_INTERFACE_V1 = "ni.measurementlink.measurement.v1.MeasurementService"
 MEASUREMENT_SERVICE_INTERFACE_V2 = "ni.measurementlink.measurement.v2.MeasurementService"
@@ -42,7 +42,7 @@ def get_measurement_service_stub_and_class(
         services.
     """
     logger = getLogger(LOGGER)
-    available_services = __get_active_measurement_services(discovery_client)
+    available_services = _get_active_measurement_services(discovery_client)
 
     if not available_services:
         logger.warning(NO_MEASUREMENTS_RUNNING)
@@ -56,16 +56,16 @@ def get_measurement_service_stub_and_class(
         logger.info(f"{serial_num + 1}. {services}")
 
     logger.info("")
-    selected_measurement = __get_measurement_selection(total_measurements=len(measurements))
+    selected_measurement = _get_measurement_selection(total_measurements=len(measurements))
 
-    measurement_service_class = __get_measurement_service_class(
+    measurement_service_class = _get_measurement_service_class(
         available_services,
         measurements[selected_measurement - 1],
     )
     if not measurement_service_class:
         return None
 
-    channel_and_interface = __get_channel_and_interface(
+    channel_and_interface = _get_channel_and_interface(
         discovery_client,
         measurement_service_class,
     )
@@ -81,7 +81,7 @@ def get_measurement_service_stub_and_class(
     return V1MeasurementServiceStub(channel), measurement_service_class
 
 
-def __get_active_measurement_services(discovery_client: DiscoveryClient) -> List[ServiceInfo]:
+def _get_active_measurement_services(discovery_client: DiscoveryClient) -> List[ServiceInfo]:
     """Get available measurement services.
 
     Args:
@@ -97,11 +97,11 @@ def __get_active_measurement_services(discovery_client: DiscoveryClient) -> List
     return available_services
 
 
-def __get_measurement_selection(total_measurements: int) -> int:
+def _get_measurement_selection(total_measurements: int) -> int:
     """Prompt user to select a measurement.
 
     Args:
-        total_measurements (int): Total measurements count.
+        total_measurements (int): Count of total measurements.
 
     Returns:
         int: Selected measurement.
@@ -128,7 +128,7 @@ def __get_measurement_selection(total_measurements: int) -> int:
         raise InvalidCliInputError(INVALID_MEASUREMENT_CHOICE)
 
 
-def __get_measurement_service_class(
+def _get_measurement_service_class(
     measurement_services: Sequence[ServiceInfo],
     measurement_name: str,
 ) -> Optional[str]:
@@ -148,7 +148,7 @@ def __get_measurement_service_class(
     return None
 
 
-def __get_channel_and_interface(
+def _get_channel_and_interface(
     discovery_client: DiscoveryClient,
     service_class: str,
 ) -> Optional[Tuple[Channel, str]]:
@@ -181,6 +181,7 @@ def __get_channel_and_interface(
             measurement_service_interface = MEASUREMENT_SERVICE_INTERFACE_V1
         except _InactiveRpcError as exp:
             logger.debug(exp)
+            logger.info(INACTIVE_MEASUREMENNT)
 
     if resolved_service and measurement_service_interface:
         return (

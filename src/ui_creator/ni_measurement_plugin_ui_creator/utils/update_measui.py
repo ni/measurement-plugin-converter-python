@@ -65,12 +65,6 @@ def update_measui(
 ) -> None:
     """Update measurment UI.
 
-    1. Get measurement files of the selected measurement plug-in.
-    2. Get the measurement UI to be updated.
-    3. Create a copy.
-    4. Bind elements.
-    5. Create elements.
-
     Args:
         metadata (Union[V1MetaData, V2MetaData]): Metadata of the measurement plug-in.
         service_class (str): Service class name of the measurement plug-in.
@@ -122,18 +116,18 @@ def update_measui(
     client_id = screen.attrib[ElementAttrib.CLIENT_ID]
 
     logger.info(BINDING_ELEMENTS)
-    updated_elements = __bind_elements(client_id, elements, unbind_inputs, unbind_outputs)
+    updated_elements = _bind_elements(client_id, elements, unbind_inputs, unbind_outputs)
 
     write_updated_measui(updated_measui_filepath, updated_elements)
 
     updated_element_names = [element.name for element in updated_elements]
-    top_alignment, left_alignment = __find_alignments(updated_elements)
+    top_alignment, left_alignment = _find_alignments(updated_elements)
 
     unmatched_inputs = [input for input in inputs if input.name not in updated_element_names]
     unmatched_outputs = [output for output in outputs if output.name not in updated_element_names]
 
     logger.info(CREATING_ELEMENTS)
-    elements_representation = __create_elements(
+    elements_representation = _create_elements(
         client_id,
         top_alignment,
         left_alignment,
@@ -147,7 +141,7 @@ def update_measui(
     return None
 
 
-def __bind_elements(
+def _bind_elements(
     client_id: Union[str, UUID],
     elements: List[AvailableElement],
     unbind_inputs: List[Union[V1ConfigParam, V2ConfigParam]],
@@ -164,12 +158,12 @@ def __bind_elements(
     Returns:
         List[AvailableElement]: Updated elements.
     """
-    updated_elements = __bind_inputs(client_id, elements, unbind_inputs)
-    updated_elements = __bind_outputs(client_id, updated_elements, unbind_outputs)
+    updated_elements = _bind_inputs(client_id, elements, unbind_inputs)
+    updated_elements = _bind_outputs(client_id, updated_elements, unbind_outputs)
     return updated_elements
 
 
-def __bind_inputs(
+def _bind_inputs(
     client_id: Union[str, UUID],
     elements: List[AvailableElement],
     unbind_inputs: List[Union[V1ConfigParam, V2ConfigParam]],
@@ -191,19 +185,19 @@ def __bind_inputs(
             if (
                 element.bind is False
                 and element.output is False
-                and __check_feasibility(unbind_input, element)
+                and _check_feasibility(unbind_input, element)
             ):
-                element = __add_channel(client_id, element, unbind_input)
+                element = _add_channel(client_id, element, unbind_input)
                 element.name = unbind_input.name
                 element.bind = True
-                elements = __update_lable(index, elements)
+                elements = _update_lable(index, elements)
                 break
 
     logger.debug(INPUTS_BOUND)
     return elements
 
 
-def __bind_outputs(
+def _bind_outputs(
     client_id: Union[str, UUID],
     elements: List[AvailableElement],
     unbind_outputs: List[Union[V1Output, V2Output]],
@@ -224,19 +218,19 @@ def __bind_outputs(
             if (
                 element.bind is False
                 and element.output is True
-                and __check_feasibility(unbind_output, element)
+                and _check_feasibility(unbind_output, element)
             ):
-                element = __add_channel(client_id, element, unbind_output)
+                element = _add_channel(client_id, element, unbind_output)
                 element.name = unbind_output.name
                 element.bind = True
-                elements = __update_lable(index, elements)
+                elements = _update_lable(index, elements)
                 break
 
     logger.debug(OUTPUTS_BOUND)
     return elements
 
 
-def __check_feasibility(
+def _check_feasibility(
     unbind_param: Union[V1ConfigParam, V2ConfigParam, V1Output, V2Output],
     element: AvailableElement,
 ) -> bool:
@@ -301,7 +295,7 @@ def __check_feasibility(
     return False
 
 
-def __add_channel(
+def _add_channel(
     client_id: Union[str, UUID],
     element: AvailableElement,
     unbind_param: Union[V1ConfigParam, V2ConfigParam, V1Output, V2Output],
@@ -325,11 +319,8 @@ def __add_channel(
     return element
 
 
-def __update_lable(index: int, elements: List[AvailableElement]) -> List[AvailableElement]:
+def _update_lable(index: int, elements: List[AvailableElement]) -> List[AvailableElement]:
     """Update label element.
-
-    1. Find the bound label element of the element.
-    2. Update the label element with the name.
 
     Args:
         index (int): Index of bound element.
@@ -355,7 +346,7 @@ def __update_lable(index: int, elements: List[AvailableElement]) -> List[Availab
     return elements
 
 
-def __find_alignments(updated_elements: List[AvailableElement]) -> Tuple[float, float]:
+def _find_alignments(updated_elements: List[AvailableElement]) -> Tuple[float, float]:
     """Find bottom most element to get the top and left values.
 
     Args:
@@ -391,7 +382,7 @@ def __find_alignments(updated_elements: List[AvailableElement]) -> Tuple[float, 
     return top_start_value, left_start_value
 
 
-def __create_elements(
+def _create_elements(
     client_id: str,
     top_alignment: float,
     left_alignment: float,
@@ -424,12 +415,12 @@ def __create_elements(
         output_top_alignment=top_alignment,
         output_left_alignment=left_alignment,
     )
-    ui_elements = __add_namespace(inputs + outputs)
+    ui_elements = _add_namespace(inputs + outputs)
 
     return ui_elements
 
 
-def __add_namespace(ui_elements: str) -> str:
+def _add_namespace(ui_elements: str) -> str:
     """Add namespace to UI elements created.
 
     Args:

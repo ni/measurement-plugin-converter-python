@@ -30,10 +30,6 @@ def create_measui(
 ) -> None:
     """Create measurement UI file.
 
-    1. Get inputs and outputs from the metadata.
-    2. Create input elements.
-    3. Create output elements.
-
     Args:
         metadata (Union[V1MetaData, V2MetaData]): Metadata of a measurement plug-in.
         service_class (str): Service class name of a measurement plug-in.
@@ -70,7 +66,7 @@ def write_measui(filepath: Path, service_class: str, input_output_elements: str)
     current_dir = Path(__file__).resolve().parent
     template_file_path = current_dir.parent / "templates" / "measurement.measui.mako"
 
-    file_content = __render_template(
+    file_content = _render_template(
         template_name=str(template_file_path),
         client_id=CLIENT_ID,
         display_name=Path(filepath).name,
@@ -82,7 +78,7 @@ def write_measui(filepath: Path, service_class: str, input_output_elements: str)
         f.write(file_content)
 
 
-def __render_template(
+def _render_template(
     template_name: str,
     client_id: Union[str, UUID],
     display_name: str,
