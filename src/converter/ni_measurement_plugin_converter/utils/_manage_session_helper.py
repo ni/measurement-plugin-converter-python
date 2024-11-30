@@ -4,7 +4,10 @@ import ast
 import re
 from typing import Dict, List, Union
 
-from ni_measurement_plugin_converter.constants import ALPHANUMERIC_PATTERN, SessionManagement
+from ni_measurement_plugin_converter.constants import (
+    ALPHANUMERIC_PATTERN,
+    SessionManagement,
+)
 from ni_measurement_plugin_converter.models import PinInfo, RelayInfo, SessionMapping
 
 
@@ -214,7 +217,6 @@ def get_sessions_signature(session_mappings: List[SessionMapping]) -> str:
         str: Session mapping signature.
     """
     sessions = [
-        f"{session_mapping.name}={session_mapping.name}"
-        for session_mapping in session_mappings
+        f"{session_mapping.name}={session_mapping.name}" for session_mapping in session_mappings
     ]
     return ", ".join(sessions)
