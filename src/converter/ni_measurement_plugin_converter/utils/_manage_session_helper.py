@@ -4,10 +4,7 @@ import ast
 import re
 from typing import Dict, List, Union
 
-from ni_measurement_plugin_converter.constants import (
-    ALPHANUMERIC_PATTERN,
-    SessionManagement,
-)
+from ni_measurement_plugin_converter.constants import ALPHANUMERIC_PATTERN, SessionManagement
 from ni_measurement_plugin_converter.models import PinInfo, RelayInfo, SessionMapping
 
 
