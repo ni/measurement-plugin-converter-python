@@ -5,11 +5,15 @@ import re
 from logging import getLogger
 from typing import Any, List, Tuple
 
-from ni_measurement_plugin_converter._constants import DEBUG_LOGGER, UNSUPPORTED_OUTPUTS
+from ni_measurement_plugin_converter._constants import DEBUG_LOGGER
 from ni_measurement_plugin_converter.models import OutputInfo
 from ni_measurement_plugin_converter.utils._measurement_service import (
     extract_type,
     get_nims_datatype,
+)
+
+UNSUPPORTED_OUTPUTS = (
+    "The outputs {variables} are skipped because their data types are unsupported."
 )
 
 

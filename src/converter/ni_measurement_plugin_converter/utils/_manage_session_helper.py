@@ -6,12 +6,13 @@ from typing import Dict, List, Union
 
 from ni_measurement_plugin_converter._constants import (
     ALPHANUMERIC_PATTERN,
-    INSTRUMENT_TYPE,
     NI_DRIVERS,
     RESERVATION,
-    SESSION_CONSTRUCTOR,
 )
 from ni_measurement_plugin_converter.models import PinInfo, RelayInfo, SessionMapping
+
+SESSION_CONSTRUCTOR = "session_constructor"
+INSTRUMENT_TYPE = "instrument_type"
 
 
 def get_sessions_details(function_node: ast.FunctionDef) -> Dict[str, List[str]]:

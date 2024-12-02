@@ -6,8 +6,6 @@ from typing import Dict, List, Union
 
 from ni_measurement_plugin_converter._constants import (
     DEBUG_LOGGER,
-    TYPE_DEFAULT_VALUES,
-    UNSUPPORTED_INPUTS,
 )
 from ni_measurement_plugin_converter.models import InputInfo
 from ni_measurement_plugin_converter.utils._measurement_service import (
@@ -17,6 +15,18 @@ from ni_measurement_plugin_converter.utils._measurement_service import (
 
 PYTHON_DATATYPE = "python datatype"
 _DEFAULT = "default"
+# Default values for datatypes.
+TYPE_DEFAULT_VALUES = {
+    "int": 1,
+    "float": 1.1,
+    "str": "",
+    "bool": True,
+    "List[int]": [1],
+    "List[float]": [1.1],
+    "List[str]": [""],
+    "List[bool]": [True],
+}
+UNSUPPORTED_INPUTS = "The inputs {params} are skipped because their data types are unsupported."
 
 
 def extract_inputs(function_node: ast.FunctionDef) -> List[InputInfo]:

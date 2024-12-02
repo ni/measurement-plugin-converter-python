@@ -12,36 +12,8 @@ from mako.exceptions import CompileException, TemplateLookupException
 
 from ni_measurement_plugin_converter._constants import (
     ACCESS_DENIED,
-    ADD_SESSION_INITIALIZATION,
-    ADD_SESSION_MAPPING,
     ALPHANUMERIC_PATTERN,
-    BATCH_FILE_CREATED,
-    BATCH_FILENAME,
-    BATCH_TEMPLATE,
     DEBUG_LOGGER,
-    DEFINE_PINS_RELAYS,
-    ERROR_OCCURRED,
-    EXTRACT_INPUT_INFO,
-    EXTRACT_OUTPUT_INFO,
-    FILE_MIGRATED,
-    GET_FUNCTION,
-    HELPER_FILE_CREATED,
-    HELPER_FILENAME,
-    HELPER_TEMPLATE,
-    MEASUI_FILE_CREATED,
-    MEASUREMENT_FILE_CREATED,
-    MEASUREMENT_FILENAME,
-    MEASUREMENT_PLUGIN_CREATED,
-    MEASUREMENT_TEMPLATE,
-    MEASUREMENT_VERSION,
-    MIGRATED_MEASUREMENT_FILENAME,
-    PROCESS_COMPLETED,
-    SERVICE_CONFIG_CREATED,
-    SERVICE_CONFIG_FILE_EXTENSION,
-    SERVICE_CONFIG_TEMPLATE,
-    STARTING_EXECUTION,
-    VALIDATE_CLI_ARGS,
-    VERSION,
 )
 from ni_measurement_plugin_converter.models import (
     CliInputs,
@@ -71,6 +43,40 @@ from ni_measurement_plugin_converter.utils import (
 )
 
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
+
+STARTING_EXECUTION = "Starting NI Measurement Plug-In Converter..."
+VERSION = "NI Measurement Plug-In Converter - {version}"
+PROCESS_COMPLETED = "Process completed."
+ERROR_OCCURRED = (
+    "Error occurred. Please verify that the provided measurement is in the expected format."
+)
+MEASUREMENT_PLUGIN_CREATED = "Measurement plug-in is created at {plugin_dir}"
+MEASUI_FILE_CREATED = "Measurement UI file is created."
+MEASUREMENT_FILE_CREATED = "Measurement file is created."
+FILE_MIGRATED = "Migrated file is created."
+BATCH_FILE_CREATED = "Batch file is created."
+HELPER_FILE_CREATED = "Helper file is created."
+SERVICE_CONFIG_CREATED = "Service config is created."
+GET_FUNCTION = "Getting function node tree..."
+VALIDATE_CLI_ARGS = "Inputs validated successfully."
+EXTRACT_INPUT_INFO = "Extracting inputs information from measurement function..."
+EXTRACT_OUTPUT_INFO = "Extracting outputs information from measurement function..."
+DEFINE_PINS_RELAYS = "Defining pins and relays..."
+ADD_SESSION_MAPPING = "Adding session mapping..."
+ADD_SESSION_INITIALIZATION = "Adding session initialization..."
+LOG_FILE = "Please find the log file at {log_file_path}"
+
+MEASUREMENT_TEMPLATE = "measurement.py.mako"
+MEASUREMENT_FILENAME = "measurement.py"
+HELPER_TEMPLATE = "_helpers.py.mako"
+HELPER_FILENAME = "_helpers.py"
+SERVICE_CONFIG_TEMPLATE = "measurement.serviceconfig.mako"
+SERVICE_CONFIG_FILE_EXTENSION = ".serviceconfig"
+BATCH_TEMPLATE = "start.bat.mako"
+BATCH_FILENAME = "start.bat"
+MIGRATED_MEASUREMENT_FILENAME = "_migrated.py"
+
+MEASUREMENT_VERSION = 1.0
 
 
 @click.command(context_settings=CONTEXT_SETTINGS)

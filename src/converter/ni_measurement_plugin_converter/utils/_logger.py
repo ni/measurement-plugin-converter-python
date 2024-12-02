@@ -5,13 +5,14 @@ import sys
 from logging import Logger, StreamHandler, handlers
 from pathlib import Path
 
-from ni_measurement_plugin_converter._constants import DEBUG_LOGGER, LOG_FILE
+from ni_measurement_plugin_converter._constants import DEBUG_LOGGER
 
 LOG_FILE_NAME = "log.txt"
 LOG_FILE_COUNT_LIMIT = 20
 LOG_FILE_SIZE_LIMIT_IN_BYTES = 10 * 1024 * 1024  # 10MB
 LOG_FILE_MSG_FORMAT = "%(asctime)s [%(name)s] [%(levelname)s] %(message)s"
 LOG_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
+LOG_FILE = "Please find the log file at {log_file_path}"
 
 
 def initialize_logger(name: str, log_directory: str) -> Logger:

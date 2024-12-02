@@ -13,9 +13,6 @@ from ni_measurement_plugin_converter._constants import (
     ADD_SESSION,
     DEBUG_LOGGER,
     ENCODING,
-    EXTRACT_DRIVER_SESSIONS,
-    INVALID_DRIVERS,
-    MIGRATED_FILE_MODIFIED,
     NI_DRIVERS,
     RESERVATION,
 )
@@ -31,6 +28,12 @@ from ni_measurement_plugin_converter.utils._manage_session_helper import (
     instrument_is_visa_type,
     ni_drivers_supported_instrument,
 )
+
+SESSION_CONSTRUCTOR = "session_constructor"
+INSTRUMENT_TYPE = "instrument_type"
+INVALID_DRIVERS = "Invalid/No driver used. Supported drivers: {supported_drivers}"
+EXTRACT_DRIVER_SESSIONS = "Extracting driver sessions from measurement function..."
+MIGRATED_FILE_MODIFIED = "Migrated file is modified."
 
 
 class DriverSession(Enum):
