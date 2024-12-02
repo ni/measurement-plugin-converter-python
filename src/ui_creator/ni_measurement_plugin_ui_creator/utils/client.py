@@ -126,6 +126,7 @@ def _get_measurement_selection(total_measurements: int) -> int:
         return user_input
 
     except ValueError:
+        logger.info("")
         raise InvalidCliInputError(INVALID_MEASUREMENT_CHOICE)
 
 
