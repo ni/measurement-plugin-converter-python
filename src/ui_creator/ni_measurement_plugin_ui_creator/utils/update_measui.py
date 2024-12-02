@@ -32,6 +32,7 @@ from ni_measurement_plugin_ui_creator.constants import (
 )
 from ni_measurement_plugin_ui_creator.models import AvailableElement
 from ni_measurement_plugin_ui_creator.utils.create_measui import create_measui
+from ni_measurement_plugin_ui_creator.utils.common_elements import get_unique_id
 from ni_measurement_plugin_ui_creator.utils.exceptions import InvalidMeasUIError
 from ni_measurement_plugin_ui_creator.utils.measui_file import (
     get_available_elements,
@@ -61,7 +62,9 @@ UPDATED_UI = "Measurement UI updated successfully. Please find at {filepath}."
 
 
 def update_measui(
-    metadata: Union[V1MetaData, V2MetaData], service_class: str, output_dir: Path
+    metadata: Union[V1MetaData, V2MetaData],
+    service_class: str,
+    output_dir: Path,
 ) -> None:
     """Update measurment UI.
 
@@ -113,7 +116,11 @@ def update_measui(
     screen = root.find(UpdateUI.SCREEN_TAG, UpdateUI.NAMESPACES)
     if screen is None:
         return None
-    client_id = screen.attrib[ElementAttrib.CLIENT_ID]
+
+    try:
+        client_id = screen.attrib[ElementAttrib.CLIENT_ID]
+    except KeyError:
+        client_id = get_unique_id()
 
     logger.info(BINDING_ELEMENTS)
     updated_elements = _bind_elements(client_id, elements, unbind_inputs, unbind_outputs)
@@ -287,6 +294,7 @@ def _check_feasibility(
     if (
         unbind_param.type == DataType.String.value
         and unbind_param.repeated
+        and not unbind_param.annotations
         and element.tag == UpdateUI.ARRAY_CONTAINER_ELEMENT
         and element.is_str_array
     ):
