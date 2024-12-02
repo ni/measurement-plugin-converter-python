@@ -6,14 +6,12 @@ from typing import Optional
 
 from pydantic import BaseModel, model_validator
 
-from ._exceptions import InvalidCliArgsError
+from ni_measurement_plugin_converter.models._exceptions import InvalidCliArgsError
 
 INVALID_FILE_DIR = (
     "Invalid measurement file directory. Please provide valid measurement file directory."
 )
-FUNCTION_NOT_FOUND = (
-    "Measurement function {function} not found in the file {measurement_file_dir}"
-)
+FUNCTION_NOT_FOUND = "Measurement function {function} not found in the file {measurement_file_dir}"
 ACCESS_DENIED = (
     "Access is denied. "
     "Please run the tool with Admin privileges or provide a different file directory."

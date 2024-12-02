@@ -1,4 +1,3 @@
-
 """Implementation of command line interface and measurement plug-in conversion."""
 
 __version__ = "1.0.0-dev8"
@@ -11,6 +10,39 @@ import click
 from click import ClickException
 from mako.exceptions import CompileException, TemplateLookupException
 
+from ni_measurement_plugin_converter._constants import (
+    ACCESS_DENIED,
+    ADD_SESSION_INITIALIZATION,
+    ADD_SESSION_MAPPING,
+    ALPHANUMERIC_PATTERN,
+    BATCH_FILE_CREATED,
+    BATCH_FILENAME,
+    BATCH_TEMPLATE,
+    DEBUG_LOGGER,
+    DEFINE_PINS_RELAYS,
+    ERROR_OCCURRED,
+    EXTRACT_INPUT_INFO,
+    EXTRACT_OUTPUT_INFO,
+    FILE_MIGRATED,
+    GET_FUNCTION,
+    HELPER_FILE_CREATED,
+    HELPER_FILENAME,
+    HELPER_TEMPLATE,
+    MEASUI_FILE_CREATED,
+    MEASUREMENT_FILE_CREATED,
+    MEASUREMENT_FILENAME,
+    MEASUREMENT_PLUGIN_CREATED,
+    MEASUREMENT_TEMPLATE,
+    MEASUREMENT_VERSION,
+    MIGRATED_MEASUREMENT_FILENAME,
+    PROCESS_COMPLETED,
+    SERVICE_CONFIG_CREATED,
+    SERVICE_CONFIG_FILE_EXTENSION,
+    SERVICE_CONFIG_TEMPLATE,
+    STARTING_EXECUTION,
+    VALIDATE_CLI_ARGS,
+    VERSION,
+)
 from ni_measurement_plugin_converter.models import (
     CliInputs,
     InvalidCliArgsError,
@@ -37,37 +69,32 @@ from ni_measurement_plugin_converter.utils import (
     print_log_file_location,
     remove_handlers,
 )
-from ni_measurement_plugin_converter.utils._constants import *
-from ni_measurement_plugin_converter.utils._constants import (
-    MEASUREMENT_TEMPLATE,
-    MEASUREMENT_FILENAME,
-    SERVICE_CONFIG_FILE_EXTENSION,
-    SERVICE_CONFIG_TEMPLATE,
-    BATCH_TEMPLATE,
-    BATCH_FILENAME,
-    HELPER_TEMPLATE,
-    HELPER_FILENAME,
-    ALPHANUMERIC_PATTERN,
-    MEASUREMENT_VERSION,
-    MIGRATED_MEASUREMENT_FILENAME,
-)
 
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
-DISPLAY_NAME = "Display name."
-MEASUREMENT_FILE_DIR = "Measurement file directory."
-FUNCTION = "Measurement function name."
-DIRECTORY_OUT = "Output directory."
+
 
 @click.command(context_settings=CONTEXT_SETTINGS)
-@click.option("-d", "--display-name", help=DISPLAY_NAME, required=True)
+@click.option(
+    "-d",
+    "--display-name",
+    help="Display name for the plug-in that will be converted.",
+    required=True,
+)
 @click.option(
     "-m",
     "--measurement-file-dir",
-    help=MEASUREMENT_FILE_DIR,
+    help="Path to the directory containing the Python measurement file to be converted.",
     required=True,
 )
-@click.option("-f", "--function", help=FUNCTION, required=True)
-@click.option("-o", "--directory-out", help=DIRECTORY_OUT, required=True)
+@click.option(
+    "-f",
+    "--function",
+    help="Name of the function within the measurement file --measurement-file-dir that contains the measurement logic.",
+    required=True,
+)
+@click.option(
+    "-o", "--directory-out", help="Output directory for measurement plug-in files.", required=True
+)
 def convert_to_plugin(
     display_name: str,
     measurement_file_dir: str,
@@ -155,9 +182,7 @@ def convert_to_plugin(
             pin_or_relay_names=pin_or_relay_names,
             sessions=sessions,
             version=MEASUREMENT_VERSION,
-            serviceconfig_file=(
-                f"{sanitized_display_name}{SERVICE_CONFIG_FILE_EXTENSION}"
-            ),
+            serviceconfig_file=(f"{sanitized_display_name}{SERVICE_CONFIG_FILE_EXTENSION}"),
             inputs_info=inputs_info,
             outputs_info=outputs_info,
             input_signature=input_signature,
@@ -204,9 +229,7 @@ def convert_to_plugin(
         )
         logger.debug(HELPER_FILE_CREATED)
 
-        logger.info(
-            MEASUREMENT_PLUGIN_CREATED.format(plugin_dir=str(directory_out_path.resolve()))
-        )
+        logger.info(MEASUREMENT_PLUGIN_CREATED.format(plugin_dir=str(directory_out_path.resolve())))
 
     except PermissionError as error:
         logger.debug(error)

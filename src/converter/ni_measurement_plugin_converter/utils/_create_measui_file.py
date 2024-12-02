@@ -17,7 +17,12 @@ from ni_measurement_ui_creator.utils._helpers import (
     create_indicator_elements,
 )
 
-from ni_measurement_plugin_converter.models import InputInfo, OutputInfo, PinInfo, RelayInfo
+from ni_measurement_plugin_converter.models import (
+    InputInfo,
+    OutputInfo,
+    PinInfo,
+    RelayInfo,
+)
 
 _REDUCTION_IN_HEIGHT = 20
 SUPPORTED_NIMS_DATATYPES = [
@@ -28,6 +33,7 @@ SUPPORTED_NIMS_DATATYPES = [
     nims.DataType.Int64Array1D.name,
     nims.DataType.DoubleArray1D.name,
 ]
+
 
 def create_measui_file(
     pins: List[PinInfo],

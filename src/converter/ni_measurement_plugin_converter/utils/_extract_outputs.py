@@ -5,9 +5,12 @@ import re
 from logging import getLogger
 from typing import Any, List, Tuple
 
+from ni_measurement_plugin_converter._constants import DEBUG_LOGGER, UNSUPPORTED_OUTPUTS
 from ni_measurement_plugin_converter.models import OutputInfo
-from ni_measurement_plugin_converter.utils._constants import UNSUPPORTED_OUTPUTS, DEBUG_LOGGER
-from ._measurement_service import extract_type, get_nims_datatype
+from ni_measurement_plugin_converter.utils._measurement_service import (
+    extract_type,
+    get_nims_datatype,
+)
 
 
 def extract_outputs(function_node: ast.FunctionDef) -> Tuple[List[OutputInfo], bool]:

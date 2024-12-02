@@ -4,9 +4,16 @@ import ast
 from logging import getLogger
 from typing import Dict, List, Union
 
-from ni_measurement_plugin_converter.utils._constants import UNSUPPORTED_INPUTS, TYPE_DEFAULT_VALUES, DEBUG_LOGGER
+from ni_measurement_plugin_converter._constants import (
+    DEBUG_LOGGER,
+    TYPE_DEFAULT_VALUES,
+    UNSUPPORTED_INPUTS,
+)
 from ni_measurement_plugin_converter.models import InputInfo
-from ._measurement_service import extract_type, get_nims_datatype
+from ni_measurement_plugin_converter.utils._measurement_service import (
+    extract_type,
+    get_nims_datatype,
+)
 
 PYTHON_DATATYPE = "python datatype"
 _DEFAULT = "default"

@@ -2,12 +2,23 @@
 
 import ast
 import itertools
+from enum import Enum
 from logging import getLogger
 from typing import Any, Dict, List, Tuple, Union
 
 import astor
 import black
 
+from ni_measurement_plugin_converter._constants import (
+    ADD_SESSION,
+    DEBUG_LOGGER,
+    ENCODING,
+    EXTRACT_DRIVER_SESSIONS,
+    INVALID_DRIVERS,
+    MIGRATED_FILE_MODIFIED,
+    NI_DRIVERS,
+    RESERVATION,
+)
 from ni_measurement_plugin_converter.models import (
     PinInfo,
     RelayInfo,
@@ -15,12 +26,12 @@ from ni_measurement_plugin_converter.models import (
     UnsupportedDriverError,
 )
 from ni_measurement_plugin_converter.utils import get_function_node
-from ni_measurement_plugin_converter.utils._constants import *
-from ._manage_session_helper import (
+from ni_measurement_plugin_converter.utils._manage_session_helper import (
     get_sessions_details,
     instrument_is_visa_type,
     ni_drivers_supported_instrument,
 )
+
 
 class DriverSession(Enum):
     """Instrument drivers' session."""
@@ -32,6 +43,7 @@ class DriverSession(Enum):
     niscope = "nims.session_management.INSTRUMENT_TYPE_NI_SCOPE"
     niswitch = "nims.session_management.INSTRUMENT_TYPE_NI_RELAY_DRIVER"
     nidaqmx = "nims.session_management.INSTRUMENT_TYPE_NI_DAQMX"
+
 
 def manage_session(migrated_file_dir: str, function: str) -> Dict[str, List[str]]:
     """Manage session.
@@ -55,9 +67,7 @@ def manage_session(migrated_file_dir: str, function: str) -> Dict[str, List[str]
     sessions_details = get_sessions_details(function_node=measurement_function_node)
     if not sessions_details:
         raise UnsupportedDriverError(
-            INVALID_DRIVERS.format(
-                supported_drivers=NI_DRIVERS + ["VISA"]
-            )
+            INVALID_DRIVERS.format(supported_drivers=NI_DRIVERS + ["VISA"])
         )
 
     logger.info(ADD_SESSION)
@@ -213,7 +223,9 @@ def get_session_mapping(sessions_details: Dict[str, List[str]]) -> List[SessionM
             if driver in NI_DRIVERS:
                 connection = f"{RESERVATION}.get_{driver}_connection({session_var}_pin).session"
             else:
-                connection = f"{RESERVATION}.get_connection({driver}.Session, {session_var}_pin).session"
+                connection = (
+                    f"{RESERVATION}.get_connection({driver}.Session, {session_var}_pin).session"
+                )
 
             sessions_connections.append(SessionMapping(name=session_var, mapping=connection))
 

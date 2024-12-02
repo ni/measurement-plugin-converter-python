@@ -15,6 +15,7 @@ NIMS_TYPE = {
     "List[bool]": "nims.DataType.BooleanArray1D",
 }
 
+
 def get_nims_datatype(python_native_data_type: str) -> str:
     """Get `measurement_plugin_sdk_service` data type.
 

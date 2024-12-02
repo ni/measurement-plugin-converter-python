@@ -1,7 +1,6 @@
 """Constants utilized in measurement file."""
-"""Constants utilized in accessing files."""
 
-from enum import Enum
+"""Constants utilized in accessing files."""
 
 DEBUG_LOGGER = "debug_logger"
 
@@ -12,6 +11,7 @@ TEMPLATE_DIR = "templates"
 ENCODING = "utf-8"
 
 ALPHANUMERIC_PATTERN = r"[^a-zA-Z0-9]"
+
 
 # Constants for Template File
 MEASUREMENT_TEMPLATE = "measurement.py.mako"
@@ -25,7 +25,6 @@ SERVICE_CONFIG_FILE_EXTENSION = ".serviceconfig"
 
 BATCH_TEMPLATE = "start.bat.mako"
 BATCH_FILENAME = "start.bat"
-
 
 
 # Default values for datatypes.
@@ -68,16 +67,11 @@ NI_DRIVERS = [
 
 STARTING_EXECUTION = "Starting NI Measurement Plug-In Converter..."
 
-INVALID_FILE_DIR = (
-    "Invalid measurement file directory. Please provide valid measurement file directory."
-)
 ACCESS_DENIED = (
     "Access is denied. "
     "Please run the tool with Admin privileges or provide a different file directory."
 )
-FUNCTION_NOT_FOUND = (
-    "Measurement function {function} not found in the file {measurement_file_dir}"
-)
+
 INVALID_DRIVERS = "Invalid/No driver used. Supported drivers: {supported_drivers}"
 VALIDATE_CLI_ARGS = "Inputs validated successfully."
 

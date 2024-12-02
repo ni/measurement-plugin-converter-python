@@ -2,7 +2,8 @@
 
 import ast
 from typing import Union
-from ni_measurement_plugin_converter.utils._constants import ENCODING
+
+from ni_measurement_plugin_converter._constants import ENCODING
 
 
 def get_function_node(
