@@ -5,8 +5,8 @@ import re
 from logging import getLogger
 from typing import Any, List, Tuple
 
-from ni_measurement_plugin_converter.constants import DEBUG_LOGGER, UserMessage
 from ni_measurement_plugin_converter.models import OutputInfo
+from ni_measurement_plugin_converter.utils._constants import UNSUPPORTED_OUTPUTS, DEBUG_LOGGER
 from ._measurement_service import extract_type, get_nims_datatype
 
 
@@ -109,7 +109,7 @@ def get_output_info(
         )
 
     if unsupported_outputs:
-        logger.info(UserMessage.UNSUPPORTED_OUTPUTS.format(variables=unsupported_outputs))
+        logger.info(UNSUPPORTED_OUTPUTS.format(variables=unsupported_outputs))
 
     return output_configurations
 

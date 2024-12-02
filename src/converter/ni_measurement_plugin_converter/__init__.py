@@ -11,17 +11,6 @@ import click
 from click import ClickException
 from mako.exceptions import CompileException, TemplateLookupException
 
-from ni_measurement_plugin_converter.constants import (
-    ALPHANUMERIC_PATTERN,
-    CONTEXT_SETTINGS,
-    DEBUG_LOGGER,
-    MEASUREMENT_VERSION,
-    MIGRATED_MEASUREMENT_FILENAME,
-    ArgsDescription,
-    DebugMessage,
-    TemplateFile,
-    UserMessage,
-)
 from ni_measurement_plugin_converter.models import (
     CliInputs,
     InvalidCliArgsError,
@@ -48,18 +37,37 @@ from ni_measurement_plugin_converter.utils import (
     print_log_file_location,
     remove_handlers,
 )
+from ni_measurement_plugin_converter.utils._constants import *
+from ni_measurement_plugin_converter.utils._constants import (
+    MEASUREMENT_TEMPLATE,
+    MEASUREMENT_FILENAME,
+    SERVICE_CONFIG_FILE_EXTENSION,
+    SERVICE_CONFIG_TEMPLATE,
+    BATCH_TEMPLATE,
+    BATCH_FILENAME,
+    HELPER_TEMPLATE,
+    HELPER_FILENAME,
+    ALPHANUMERIC_PATTERN,
+    MEASUREMENT_VERSION,
+    MIGRATED_MEASUREMENT_FILENAME,
+)
 
+CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
+DISPLAY_NAME = "Display name."
+MEASUREMENT_FILE_DIR = "Measurement file directory."
+FUNCTION = "Measurement function name."
+DIRECTORY_OUT = "Output directory."
 
 @click.command(context_settings=CONTEXT_SETTINGS)
-@click.option("-d", "--display-name", help=ArgsDescription.DISPLAY_NAME, required=True)
+@click.option("-d", "--display-name", help=DISPLAY_NAME, required=True)
 @click.option(
     "-m",
     "--measurement-file-dir",
-    help=ArgsDescription.MEASUREMENT_FILE_DIR,
+    help=MEASUREMENT_FILE_DIR,
     required=True,
 )
-@click.option("-f", "--function", help=ArgsDescription.FUNCTION, required=True)
-@click.option("-o", "--directory-out", help=ArgsDescription.DIRECTORY_OUT, required=True)
+@click.option("-f", "--function", help=FUNCTION, required=True)
+@click.option("-o", "--directory-out", help=DIRECTORY_OUT, required=True)
 def convert_to_plugin(
     display_name: str,
     measurement_file_dir: str,
@@ -71,7 +79,7 @@ def convert_to_plugin(
     try:
         log_directory = None
         logger = initialize_logger(name="console_logger", log_directory=log_directory)
-        logger.info(UserMessage.STARTING_EXECUTION)
+        logger.info(STARTING_EXECUTION)
 
         CliInputs(
             display_name=display_name,
@@ -84,26 +92,26 @@ def convert_to_plugin(
 
         log_directory = directory_out
         logger = initialize_logger(name=DEBUG_LOGGER, log_directory=log_directory)
-        logger.debug(DebugMessage.VERSION.format(version=__version__))
+        logger.debug(VERSION.format(version=__version__))
 
-        logger.info(UserMessage.VALIDATE_CLI_ARGS)
+        logger.info(VALIDATE_CLI_ARGS)
 
         directory_out_path = Path(directory_out)
         measurement_file_path = Path(measurement_file_dir)
         migrated_file_path = directory_out_path / MIGRATED_MEASUREMENT_FILENAME
         shutil.copy(measurement_file_path, migrated_file_path)
-        logger.debug(DebugMessage.FILE_MIGRATED)
+        logger.debug(FILE_MIGRATED)
 
-        logger.debug(DebugMessage.GET_FUNCTION)
+        logger.debug(GET_FUNCTION)
         function_node = get_function_node(file_dir=str(measurement_file_path), function=function)
 
-        logger.info(UserMessage.EXTRACT_INPUT_INFO)
+        logger.info(EXTRACT_INPUT_INFO)
 
         inputs_info = extract_inputs(function_node)
         input_param_names = generate_input_params(inputs_info)
         input_signature = generate_input_signature(inputs_info)
 
-        logger.info(UserMessage.EXTRACT_OUTPUT_INFO)
+        logger.info(EXTRACT_OUTPUT_INFO)
 
         outputs_info, iterable_outputs = extract_outputs(function_node)
         output_signature = generate_output_signature(outputs_info)
@@ -111,7 +119,7 @@ def convert_to_plugin(
         # Manage session.
         sessions_details = manage_session(str(migrated_file_path), function)
 
-        logger.info(UserMessage.DEFINE_PINS_RELAYS)
+        logger.info(DEFINE_PINS_RELAYS)
 
         pins_info, relays_info = get_pins_and_relays_info(sessions_details)
 
@@ -121,12 +129,12 @@ def convert_to_plugin(
         pin_and_relay_signature = get_pin_and_relay_names_signature(pins_and_relays)
         pin_or_relay_names = get_pin_and_relay_names(pins_and_relays)
 
-        logger.info(UserMessage.ADD_SESSION_MAPPING)
+        logger.info(ADD_SESSION_MAPPING)
 
         session_mappings = get_session_mapping(sessions_details)
         sessions = get_sessions_signature(session_mappings)
 
-        logger.info(UserMessage.ADD_SESSION_INITIALIZATION)
+        logger.info(ADD_SESSION_INITIALIZATION)
 
         plugin_session_initializations = get_plugin_session_initializations(sessions_details)
 
@@ -136,8 +144,8 @@ def convert_to_plugin(
         service_class = f"{sanitized_display_name}_Python"
 
         create_file(
-            TemplateFile.MEASUREMENT_TEMPLATE,
-            directory_out_path / TemplateFile.MEASUREMENT_FILENAME,
+            MEASUREMENT_TEMPLATE,
+            directory_out_path / MEASUREMENT_FILENAME,
             display_name=sanitized_display_name,
             pins_info=pins_info,
             relays_info=relays_info,
@@ -148,7 +156,7 @@ def convert_to_plugin(
             sessions=sessions,
             version=MEASUREMENT_VERSION,
             serviceconfig_file=(
-                f"{sanitized_display_name}{TemplateFile.SERVICE_CONFIG_FILE_EXTENSION}"
+                f"{sanitized_display_name}{SERVICE_CONFIG_FILE_EXTENSION}"
             ),
             inputs_info=inputs_info,
             outputs_info=outputs_info,
@@ -161,7 +169,7 @@ def convert_to_plugin(
             directory_out=str(directory_out_path),
             iterable_outputs=iterable_outputs,
         )
-        logger.debug(DebugMessage.MEASUREMENT_FILE_CREATED)
+        logger.debug(MEASUREMENT_FILE_CREATED)
 
         create_measui_file(
             pins=pins_info,
@@ -171,38 +179,38 @@ def convert_to_plugin(
             file_path=str(directory_out_path),
             measurement_name=sanitized_display_name,
         )
-        logger.debug(DebugMessage.MEASUI_FILE_CREATED)
+        logger.debug(MEASUI_FILE_CREATED)
 
         create_file(
-            TemplateFile.SERVICE_CONFIG_TEMPLATE,
-            directory_out_path / f"{sanitized_display_name}{TemplateFile.SERVICE_CONFIG_FILE_EXTENSION}",
+            SERVICE_CONFIG_TEMPLATE,
+            directory_out_path / f"{sanitized_display_name}{SERVICE_CONFIG_FILE_EXTENSION}",
             display_name=sanitized_display_name,
             service_class=service_class,
             directory_out=str(directory_out_path),
         )
-        logger.debug(DebugMessage.SERVICE_CONFIG_CREATED)
+        logger.debug(SERVICE_CONFIG_CREATED)
 
         create_file(
-            TemplateFile.BATCH_TEMPLATE,
-            directory_out_path / TemplateFile.BATCH_FILENAME,
+            BATCH_TEMPLATE,
+            directory_out_path / BATCH_FILENAME,
             directory_out=str(directory_out_path),
         )
-        logger.debug(DebugMessage.BATCH_FILE_CREATED)
+        logger.debug(BATCH_FILE_CREATED)
 
         create_file(
-            TemplateFile.HELPER_TEMPLATE,
-            directory_out_path / TemplateFile.HELPER_FILENAME,
+            HELPER_TEMPLATE,
+            directory_out_path / HELPER_FILENAME,
             directory_out=str(directory_out_path),
         )
-        logger.debug(DebugMessage.HELPER_FILE_CREATED)
+        logger.debug(HELPER_FILE_CREATED)
 
         logger.info(
-            UserMessage.MEASUREMENT_PLUGIN_CREATED.format(plugin_dir=str(directory_out_path.resolve()))
+            MEASUREMENT_PLUGIN_CREATED.format(plugin_dir=str(directory_out_path.resolve()))
         )
 
     except PermissionError as error:
         logger.debug(error)
-        logger.error(UserMessage.ACCESS_DENIED)
+        logger.error(ACCESS_DENIED)
         print_log_file_location()
 
     except (
@@ -217,8 +225,8 @@ def convert_to_plugin(
 
     except Exception as error:
         logger.debug(error, exc_info=True)
-        logger.error(UserMessage.ERROR_OCCURRED)
+        logger.error(ERROR_OCCURRED)
         print_log_file_location()
 
     finally:
-        logger.info(UserMessage.PROCESS_COMPLETED)
+        logger.info(PROCESS_COMPLETED)

@@ -5,7 +5,7 @@ from typing import Any
 
 from mako.template import Template
 
-from ni_measurement_plugin_converter.constants import ENCODING, TEMPLATE_DIR
+from ni_measurement_plugin_converter.utils._constants import ENCODING, TEMPLATE_DIR
 
 
 def create_file(template_name: str, file_name: str, **template_args: Any) -> None:
