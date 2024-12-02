@@ -88,6 +88,7 @@ def get_measui_selection(total_uis: int) -> int:
         return user_input
 
     except ValueError:
+        logger.info("")
         raise InvalidCliInputError(INVALID_MEASUI_CHOICE)
 
 

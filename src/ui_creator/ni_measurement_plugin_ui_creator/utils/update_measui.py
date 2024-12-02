@@ -31,8 +31,8 @@ from ni_measurement_plugin_ui_creator.constants import (
     UpdateUI,
 )
 from ni_measurement_plugin_ui_creator.models import AvailableElement
-from ni_measurement_plugin_ui_creator.utils.create_measui import create_measui
 from ni_measurement_plugin_ui_creator.utils.common_elements import get_unique_id
+from ni_measurement_plugin_ui_creator.utils.create_measui import create_measui
 from ni_measurement_plugin_ui_creator.utils.exceptions import InvalidMeasUIError
 from ni_measurement_plugin_ui_creator.utils.measui_file import (
     get_available_elements,
@@ -47,18 +47,14 @@ from ni_measurement_plugin_ui_creator.utils.ui_elements import (
     create_output_elements_from_client,
 )
 
-AVAILABLE_MEASUI_FILES = "Available Measurement UI Files:"
+AVAILABLE_MEASUI_FILES = "Available Measurement Plug-In UI Files:"
 BINDING_ELEMENTS = "Binding UI controls and indicators..."
 CREATING_ELEMENTS = "Creating new controls and indicators..."
 INPUTS_BOUND = "Inputs are bound successfully."
-INVALID_MEASUI_FILE = (
-    "Invalid Measurement UI file. Creating a new measui file for the selected measurement..."
-)
-NO_MEASUI_FILE = (
-    "No Measurement UI file available. Creating a new measui file for the selected measurement..."
-)
+INVALID_MEASUI_FILE = "Invalid Measurement Plug-In UI file. Creating a new measui file for the selected measurement..."
+NO_MEASUI_FILE = "No Measurement Plug-In UI file available. Creating a new measui file for the selected measurement..."
 OUTPUTS_BOUND = "Outputs are bound successfully."
-UPDATED_UI = "Measurement UI updated successfully. Please find at {filepath}."
+UPDATED_UI = "Measurement Plug-In UI updated successfully. Please find at {filepath}."
 
 
 def update_measui(

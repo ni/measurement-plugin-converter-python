@@ -19,7 +19,7 @@ from ni_measurement_plugin_ui_creator.utils.ui_elements import (
     create_output_elements_from_client,
 )
 
-CREATING_FILE = "Creating Measurement UI..."
+CREATING_FILE = "Creating Measurement Plug-In UI..."
 CREATED_UI = "Measurement Plug-In UI created successfully at {filepath}."
 
 
