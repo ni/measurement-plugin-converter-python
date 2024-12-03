@@ -18,7 +18,7 @@ from ni_measurement_plugin_converter._constants import (
 from ni_measurement_plugin_converter.models import (
     CliInputs,
 )
-from ni_measurement_plugin_converter.utils import (
+from ni_measurement_plugin_converter._utils import (
     check_for_visa,
     create_file,
     create_measui_file,

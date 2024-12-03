@@ -17,8 +17,8 @@ from ni_measurement_plugin_converter._constants import (
     RESERVATION,
 )
 from ni_measurement_plugin_converter.models import PinInfo, RelayInfo, SessionMapping
-from ni_measurement_plugin_converter.utils import get_function_node
-from ni_measurement_plugin_converter.utils._manage_session_helper import (
+from ni_measurement_plugin_converter._utils import get_function_node
+from ni_measurement_plugin_converter._utils._manage_session_helper import (
     get_sessions_details,
     instrument_is_visa_type,
     ni_drivers_supported_instrument,
