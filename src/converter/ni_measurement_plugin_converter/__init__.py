@@ -28,7 +28,6 @@ from ni_measurement_plugin_converter.utils import (
     extract_outputs,
     generate_input_params,
     generate_input_signature,
-    generate_output_signature,
     get_function_node,
     get_pin_and_relay_names,
     get_pin_and_relay_names_signature,
@@ -76,7 +75,7 @@ BATCH_TEMPLATE = "start.bat.mako"
 BATCH_FILENAME = "start.bat"
 MIGRATED_MEASUREMENT_FILENAME = "_migrated.py"
 
-MEASUREMENT_VERSION = 1.0
+MEASUREMENT_VERSION = "1.0.0.0"
 
 
 @click.command(context_settings=CONTEXT_SETTINGS)
@@ -147,7 +146,6 @@ def convert_to_plugin(
         logger.info(EXTRACT_OUTPUT_INFO)
 
         outputs_info, iterable_outputs = extract_outputs(function_node)
-        output_signature = generate_output_signature(outputs_info)
 
         # Manage session.
         sessions_details = manage_session(str(migrated_file_path), function)
@@ -187,13 +185,11 @@ def convert_to_plugin(
             pin_and_relay_signature=pin_and_relay_signature,
             pin_or_relay_names=pin_or_relay_names,
             sessions=sessions,
-            version=MEASUREMENT_VERSION,
             serviceconfig_file=(f"{sanitized_display_name}{SERVICE_CONFIG_FILE_EXTENSION}"),
             inputs_info=inputs_info,
             outputs_info=outputs_info,
             input_signature=input_signature,
             input_param_names=input_param_names,
-            output_signature=output_signature,
             is_visa=is_visa,
             migrated_file=migrated_file_path.stem,
             function_name=function,
@@ -217,6 +213,7 @@ def convert_to_plugin(
             directory_out_path / f"{sanitized_display_name}{SERVICE_CONFIG_FILE_EXTENSION}",
             display_name=sanitized_display_name,
             service_class=service_class,
+            version=MEASUREMENT_VERSION,
             directory_out=str(directory_out_path),
         )
         logger.debug(SERVICE_CONFIG_CREATED)
