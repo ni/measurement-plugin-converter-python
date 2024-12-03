@@ -9,4 +9,4 @@ class ArgsDescription:
     DISPLAY_NAME = "Display name."
     MEASUREMENT_FILE_DIR = "Measurement file directory."
     FUNCTION = "Measurement function name."
-    OUTPUT_DIR = "Output directory."
+    DIRECTORY_OUT = "Output directory."

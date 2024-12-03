@@ -21,13 +21,13 @@ def get_sessions_details(function_node: ast.FunctionDef) -> Dict[str, List[str]]
 
     for child_node in ast.walk(function_node):
         if isinstance(child_node, ast.With) and hasattr(child_node, "items") and child_node.items:
-            sessions_details = __get_session_details(child_node)
+            sessions_details = _get_session_details(child_node)
             break
 
     return sessions_details
 
 
-def __get_session_details(child_node: ast.With) -> Dict[str, List[str]]:
+def _get_session_details(child_node: ast.With) -> Dict[str, List[str]]:
     sessions_details = {}
 
     for item in child_node.items:
