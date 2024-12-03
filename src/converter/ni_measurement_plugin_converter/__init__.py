@@ -105,8 +105,7 @@ def convert_to_plugin(
     function: str,
     directory_out: str,
 ) -> None:
-    """NI Measurement Plug-In Converter is a Command Line tool to convert \
-        Python measurements to measurement plug-ins."""
+    """Convert Python measurements to Python Measurement plug-ins."""
     try:
         log_directory = None
         logger = initialize_logger(name="console_logger", log_directory=log_directory)
