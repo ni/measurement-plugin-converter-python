@@ -124,6 +124,7 @@ def ni_drivers_supported_instrument(call: ast.Call) -> bool:
         isinstance(call.func, ast.Attribute)
         and isinstance(call.func.value, ast.Name)
         and call.func.value.id in NI_DRIVERS
+        and call.func.value.id in NI_DRIVERS
         and (call.func.attr == "Session" or call.func.attr == "Task")
     ):
         return True
