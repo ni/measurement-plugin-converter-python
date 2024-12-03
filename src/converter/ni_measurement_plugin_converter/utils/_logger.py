@@ -1,19 +1,18 @@
 """Implementation of logger."""
 
 import logging
-import os
 import sys
 from logging import Logger, StreamHandler, handlers
+from pathlib import Path
 
-from ni_measurement_plugin_converter.constants import (
-    DEBUG_LOGGER,
-    LOG_DATE_FORMAT,
-    LOG_FILE_COUNT_LIMIT,
-    LOG_FILE_MSG_FORMAT,
-    LOG_FILE_NAME,
-    LOG_FILE_SIZE_LIMIT_IN_BYTES,
-    UserMessage,
-)
+from ni_measurement_plugin_converter._constants import DEBUG_LOGGER
+
+LOG_FILE_NAME = "log.txt"
+LOG_FILE_COUNT_LIMIT = 20
+LOG_FILE_SIZE_LIMIT_IN_BYTES = 10 * 1024 * 1024  # 10MB
+LOG_FILE_MSG_FORMAT = "%(asctime)s [%(name)s] [%(levelname)s] %(message)s"
+LOG_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
+LOG_FILE = "Please find the log file at {log_file_path}"
 
 
 def initialize_logger(name: str, log_directory: str) -> Logger:
@@ -32,8 +31,7 @@ def initialize_logger(name: str, log_directory: str) -> Logger:
     if log_directory:
         add_file_handler(logger, log_directory)
 
-    add_stream_handler(logger=logger)
-
+    add_stream_handler(logger)
     return logger
 
 
@@ -44,15 +42,15 @@ def add_file_handler(logger: Logger, log_directory: str) -> None:
         logger (Logger): Logger object.
         log_directory (str): Log directory.
     """
-    handler = __create_file_handler(log_directory=log_directory, file_name=LOG_FILE_NAME)
+    handler = _create_file_handler(log_directory=log_directory, file_name=LOG_FILE_NAME)
     logger.addHandler(handler)
 
 
-def __create_file_handler(log_directory: str, file_name: str) -> handlers.RotatingFileHandler:
-    log_file = os.path.join(log_directory, file_name)
+def _create_file_handler(log_directory: str, file_name: str) -> handlers.RotatingFileHandler:
+    log_file = Path(log_directory) / file_name
 
     handler = handlers.RotatingFileHandler(
-        log_file,
+        str(log_file),
         maxBytes=LOG_FILE_SIZE_LIMIT_IN_BYTES,
         backupCount=LOG_FILE_COUNT_LIMIT,
     )
@@ -70,19 +68,18 @@ def add_stream_handler(logger: Logger) -> None:
     Args:
         logger (Logger): Logger object.
     """
-    stream_handler = __create_stream_handler()
+    stream_handler = _create_stream_handler()
     logger.addHandler(stream_handler)
 
 
-def __create_stream_handler() -> StreamHandler:
+def _create_stream_handler() -> StreamHandler:
     handler = logging.StreamHandler(sys.stdout)
     handler.setLevel(logging.INFO)
-
     return handler
 
 
 def remove_handlers(logger: Logger) -> None:
-    """Remove Log Handlers.
+    """Remove log handlers.
 
     Args:
         logger (Logger): Logger object.
@@ -97,4 +94,4 @@ def print_log_file_location() -> None:
 
     for handler in logger.handlers:
         if isinstance(handler, handlers.RotatingFileHandler):
-            logger.info(UserMessage.LOG_FILE.format(log_file_path=handler.baseFilename))
+            logger.info(LOG_FILE.format(log_file_path=handler.baseFilename))

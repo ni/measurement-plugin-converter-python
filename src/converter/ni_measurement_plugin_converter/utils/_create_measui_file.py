@@ -1,6 +1,6 @@
 """Creation of .measui file for the converted measurement."""
 
-import os
+from pathlib import Path
 from typing import List
 
 import ni_measurement_plugin_sdk_service as nims
@@ -17,10 +17,22 @@ from ni_measurement_ui_creator.utils._helpers import (
     create_indicator_elements,
 )
 
-from ni_measurement_plugin_converter.constants import SUPPORTED_NIMS_DATATYPES
-from ni_measurement_plugin_converter.models import InputInfo, OutputInfo, PinInfo, RelayInfo
+from ni_measurement_plugin_converter.models import (
+    InputInfo,
+    OutputInfo,
+    PinInfo,
+    RelayInfo,
+)
 
 _REDUCTION_IN_HEIGHT = 20
+SUPPORTED_NIMS_DATATYPES = [
+    nims.DataType.Int64.name,
+    nims.DataType.Double.name,
+    nims.DataType.String.name,
+    nims.DataType.Boolean.name,
+    nims.DataType.Int64Array1D.name,
+    nims.DataType.DoubleArray1D.name,
+]
 
 
 def create_measui_file(
@@ -47,9 +59,9 @@ def create_measui_file(
     input_ui_elements = create_control_elements(input_data_elements)
     output_ui_elements = create_indicator_elements(output_data_elements)
 
-    measui_path = os.path.join(file_path, measurement_name)
+    measui_path = Path(file_path) / measurement_name
     create_measui(
-        filepath=measui_path,
+        filepath=str(measui_path),
         input_output_elements=input_ui_elements + output_ui_elements,
     )
 

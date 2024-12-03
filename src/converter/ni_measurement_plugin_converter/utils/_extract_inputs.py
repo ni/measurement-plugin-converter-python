@@ -4,12 +4,29 @@ import ast
 from logging import getLogger
 from typing import Dict, List, Union
 
-from ni_measurement_plugin_converter.constants import DEBUG_LOGGER, TYPE_DEFAULT_VALUES, UserMessage
+from ni_measurement_plugin_converter._constants import (
+    DEBUG_LOGGER,
+)
 from ni_measurement_plugin_converter.models import InputInfo
-from ._measurement_service import extract_type, get_nims_datatype
+from ni_measurement_plugin_converter.utils._measurement_service import (
+    extract_type,
+    get_nims_datatype,
+)
 
 PYTHON_DATATYPE = "python datatype"
 _DEFAULT = "default"
+# Default values for datatypes.
+TYPE_DEFAULT_VALUES = {
+    "int": 1,
+    "float": 1.1,
+    "str": "",
+    "bool": True,
+    "List[int]": [1],
+    "List[float]": [1.1],
+    "List[str]": [""],
+    "List[bool]": [True],
+}
+UNSUPPORTED_INPUTS = "The inputs {params} are skipped because their data types are unsupported."
 
 
 def extract_inputs(function_node: ast.FunctionDef) -> List[InputInfo]:
@@ -131,7 +148,7 @@ def update_inputs_info(inputs_info: Dict[str, Dict[str, str]]) -> List[InputInfo
         )
 
     if unsupported_inputs:
-        logger.info(UserMessage.UNSUPPORTED_INPUTS.format(params=unsupported_inputs))
+        logger.info(UNSUPPORTED_INPUTS.format(params=unsupported_inputs))
 
     return updated_inputs_info
 

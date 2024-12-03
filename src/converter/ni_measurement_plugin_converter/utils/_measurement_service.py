@@ -4,7 +4,17 @@ import ast
 import sys
 from typing import Union
 
-from ni_measurement_plugin_converter.constants import NIMS_TYPE
+# Python native data types and its corresponding `measurement_plugin_sdk_service` data types.
+NIMS_TYPE = {
+    "int": "nims.DataType.Int64",
+    "float": "nims.DataType.Double",
+    "str": "nims.DataType.String",
+    "bool": "nims.DataType.Boolean",
+    "List[int]": "nims.DataType.Int64Array1D",
+    "List[float]": "nims.DataType.DoubleArray1D",
+    "List[str]": "nims.DataType.StringArray1D",
+    "List[bool]": "nims.DataType.BooleanArray1D",
+}
 
 
 def get_nims_datatype(python_native_data_type: str) -> str:

@@ -24,6 +24,7 @@ click = "^8.1.3"
 astor = "^0.8.1"
 pydantic = "^2.8.2"
 ni-measurement-plugin-ui-creator = "^1.0.0.dev8"
+ni-measurement-plugin-sdk-service = "^2.1.0"
 black = "^24.8.0"
 
 [tool.poetry.group.dev.dependencies]
@@ -40,7 +41,7 @@ pyvisa = "^1.14.1"
 pyvisa-sim = "^0.6.0"
 
 [tool.poetry.scripts]
-ni-measurement-plugin-converter = "ni_measurement_plugin_converter.main:run"
+ni-measurement-plugin-converter = "ni_measurement_plugin_converter:convert_to_plugin"
 
 [build-system]
 requires = ["poetry-core"]

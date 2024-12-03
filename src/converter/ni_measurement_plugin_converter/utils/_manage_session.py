@@ -2,19 +2,19 @@
 
 import ast
 import itertools
+from enum import Enum
 from logging import getLogger
 from typing import Any, Dict, List, Tuple, Union
 
 import astor
 import black
 
-from ni_measurement_plugin_converter.constants import (
+from ni_measurement_plugin_converter._constants import (
+    ADD_SESSION,
     DEBUG_LOGGER,
     ENCODING,
-    DebugMessage,
-    DriverSession,
-    SessionManagement,
-    UserMessage,
+    NI_DRIVERS,
+    RESERVATION,
 )
 from ni_measurement_plugin_converter.models import (
     PinInfo,
@@ -23,11 +23,29 @@ from ni_measurement_plugin_converter.models import (
     UnsupportedDriverError,
 )
 from ni_measurement_plugin_converter.utils import get_function_node
-from ._manage_session_helper import (
+from ni_measurement_plugin_converter.utils._manage_session_helper import (
     get_sessions_details,
     instrument_is_visa_type,
     ni_drivers_supported_instrument,
 )
+
+SESSION_CONSTRUCTOR = "session_constructor"
+INSTRUMENT_TYPE = "instrument_type"
+INVALID_DRIVERS = "Invalid/No driver used. Supported drivers: {supported_drivers}"
+EXTRACT_DRIVER_SESSIONS = "Extracting driver sessions from measurement function..."
+MIGRATED_FILE_MODIFIED = "Migrated file is modified."
+
+
+class DriverSession(Enum):
+    """Instrument drivers' session."""
+
+    nidcpower = "nims.session_management.INSTRUMENT_TYPE_NI_DCPOWER"
+    nidmm = "nims.session_management.INSTRUMENT_TYPE_NI_DMM"
+    nidigital = "nims.session_management.INSTRUMENT_TYPE_NI_DIGITAL_PATTERN"
+    nifgen = "nims.session_management.INSTRUMENT_TYPE_NI_FGEN"
+    niscope = "nims.session_management.INSTRUMENT_TYPE_NI_SCOPE"
+    niswitch = "nims.session_management.INSTRUMENT_TYPE_NI_RELAY_DRIVER"
+    nidaqmx = "nims.session_management.INSTRUMENT_TYPE_NI_DAQMX"
 
 
 def manage_session(migrated_file_dir: str, function: str) -> Dict[str, List[str]]:
@@ -47,17 +65,15 @@ def manage_session(migrated_file_dir: str, function: str) -> Dict[str, List[str]
 
     measurement_function_node = get_function_node(file_dir=migrated_file_dir, function=function)
 
-    logger.info(UserMessage.EXTRACT_DRIVER_SESSIONS)
+    logger.info(EXTRACT_DRIVER_SESSIONS)
 
     sessions_details = get_sessions_details(function_node=measurement_function_node)
     if not sessions_details:
         raise UnsupportedDriverError(
-            UserMessage.INVALID_DRIVERS.format(
-                supported_drivers=SessionManagement.NI_DRIVERS + ["VISA"]
-            )
+            INVALID_DRIVERS.format(supported_drivers=NI_DRIVERS + ["VISA"])
         )
 
-    logger.info(UserMessage.ADD_SESSION)
+    logger.info(ADD_SESSION)
 
     params_added_function = add_params(
         function_node=measurement_function_node,
@@ -81,7 +97,7 @@ def manage_session(migrated_file_dir: str, function: str) -> Dict[str, List[str]
     with open(migrated_file_dir, "w", encoding=ENCODING) as file:
         file.write(formatted_code)
 
-    logger.debug(DebugMessage.MIGRATED_FILE_MODIFIED)
+    logger.debug(MIGRATED_FILE_MODIFIED)
 
     return sessions_details
 
@@ -103,7 +119,7 @@ def add_params(function_node: ast.FunctionDef, params: List[str]) -> ast.Functio
 
 
 def get_with_removed_function(function_node: ast.FunctionDef) -> List[Any]:
-    """Remove `with` statement and its withitems in the function_node.
+    """Remove `with` statement and its with items in the function_node.
 
     Args:
         function_node (ast.FunctionDef): Measurement function code tree.
@@ -207,10 +223,12 @@ def get_session_mapping(sessions_details: Dict[str, List[str]]) -> List[SessionM
 
     for driver, session_vars in sessions_details.items():
         for session_var in session_vars:
-            if driver in SessionManagement.NI_DRIVERS:
-                connection = f"{SessionManagement.RESERVATION}.get_{driver}_connection({session_var}_pin).session"
+            if driver in NI_DRIVERS:
+                connection = f"{RESERVATION}.get_{driver}_connection({session_var}_pin).session"
             else:
-                connection = f"{SessionManagement.RESERVATION}.get_connection({driver}.Session, {session_var}_pin).session"
+                connection = (
+                    f"{RESERVATION}.get_connection({driver}.Session, {session_var}_pin).session"
+                )
 
             sessions_connections.append(SessionMapping(name=session_var, mapping=connection))
 
