@@ -1,7 +1,7 @@
 """Models utilized in Command Line Interface implementation."""
 
 import ast
-import os
+from pathlib import Path
 from typing import Optional
 
 from pydantic import BaseModel, model_validator
@@ -25,7 +25,10 @@ class CliInputs(BaseModel):
         Returns:
             CliInputs: Validated CLI inputs.
         """
-        if not os.path.exists(self.measurement_file_dir):
+        measurement_file_path = Path(self.measurement_file_dir)
+        output_dir_path = Path(self.output_dir)
+
+        if not measurement_file_path.exists():
             raise InvalidCliArgsError(UserMessage.INVALID_FILE_DIR)
 
         if not self.validate_function():
@@ -37,7 +40,7 @@ class CliInputs(BaseModel):
             )
 
         try:
-            os.makedirs(self.output_dir, exist_ok=True)
+            output_dir_path.mkdir(parents=True, exist_ok=True)
         except (PermissionError, OSError):
             raise InvalidCliArgsError(UserMessage.ACCESS_DENIED)
 
@@ -51,8 +54,9 @@ class CliInputs(BaseModel):
                 Else `None` is returned.
         """
         function_node = None
+        measurement_file_path = Path(self.measurement_file_dir)
 
-        with open(self.measurement_file_dir, "r", encoding=ENCODING) as file:
+        with measurement_file_path.open("r", encoding=ENCODING) as file:
             code = file.read()
 
         code_tree = ast.parse(code)

@@ -1,6 +1,6 @@
 """Creation of .measui file for the converted measurement."""
 
-import os
+from pathlib import Path
 from typing import List
 
 import ni_measurement_plugin_sdk_service as nims
@@ -47,9 +47,9 @@ def create_measui_file(
     input_ui_elements = create_control_elements(input_data_elements)
     output_ui_elements = create_indicator_elements(output_data_elements)
 
-    measui_path = os.path.join(file_path, measurement_name)
+    measui_path = Path(file_path) / measurement_name
     create_measui(
-        filepath=measui_path,
+        filepath=str(measui_path),
         input_output_elements=input_ui_elements + output_ui_elements,
     )
 
