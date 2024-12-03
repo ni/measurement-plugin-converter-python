@@ -6,7 +6,7 @@ from logging import getLogger
 from typing import Any, List, Tuple
 
 from ni_measurement_plugin_converter._constants import DEBUG_LOGGER
-from ni_measurement_plugin_converter.models import OutputInfo
+from ni_measurement_plugin_converter._models import OutputInfo
 from ni_measurement_plugin_converter._utils._measurement_service import (
     extract_type,
     get_nims_datatype,

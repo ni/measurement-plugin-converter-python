@@ -9,7 +9,7 @@ from ni_measurement_plugin_converter._constants import (
     NI_DRIVERS,
     RESERVATION,
 )
-from ni_measurement_plugin_converter.models import PinInfo, RelayInfo, SessionMapping
+from ni_measurement_plugin_converter._models import PinInfo, RelayInfo, SessionMapping
 
 SESSION_CONSTRUCTOR = "session_constructor"
 INSTRUMENT_TYPE = "instrument_type"

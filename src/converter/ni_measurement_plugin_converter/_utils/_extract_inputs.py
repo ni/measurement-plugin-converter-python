@@ -7,7 +7,7 @@ from typing import Dict, List, Union
 from ni_measurement_plugin_converter._constants import (
     DEBUG_LOGGER,
 )
-from ni_measurement_plugin_converter.models import InputInfo
+from ni_measurement_plugin_converter._models import InputInfo
 from ni_measurement_plugin_converter._utils._measurement_service import (
     extract_type,
     get_nims_datatype,

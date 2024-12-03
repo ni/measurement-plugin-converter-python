@@ -15,7 +15,7 @@ from ni_measurement_plugin_converter._constants import (
     ALPHANUMERIC_PATTERN,
     DEBUG_LOGGER,
 )
-from ni_measurement_plugin_converter.models import (
+from ni_measurement_plugin_converter._models import (
     CliInputs,
 )
 from ni_measurement_plugin_converter._utils import (

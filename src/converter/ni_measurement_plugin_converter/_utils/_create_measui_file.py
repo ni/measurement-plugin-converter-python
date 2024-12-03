@@ -17,7 +17,7 @@ from ni_measurement_ui_creator.utils._helpers import (
     create_indicator_elements,
 )
 
-from ni_measurement_plugin_converter.models import (
+from ni_measurement_plugin_converter._models import (
     InputInfo,
     OutputInfo,
     PinInfo,
