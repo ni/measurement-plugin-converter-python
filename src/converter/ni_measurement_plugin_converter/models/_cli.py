@@ -7,8 +7,6 @@ from typing import Optional
 
 from pydantic import BaseModel, model_validator
 
-from ni_measurement_plugin_converter.models._exceptions import InvalidCliArgsError
-
 INVALID_FILE_DIR = (
     "Invalid measurement file directory. Please provide valid measurement file directory."
 )
@@ -39,10 +37,10 @@ class CliInputs(BaseModel):
         output_dir_path = Path(self.output_dir)
 
         if not measurement_file_path.exists():
-            raise InvalidCliArgsError(INVALID_FILE_DIR)
+            raise FileNotFoundError(INVALID_FILE_DIR)
 
         if not self.validate_function():
-            raise InvalidCliArgsError(
+            raise NameError(
                 FUNCTION_NOT_FOUND.format(
                     function=self.function,
                     measurement_file_dir=self.measurement_file_dir,
@@ -51,8 +49,10 @@ class CliInputs(BaseModel):
 
         try:
             output_dir_path.mkdir(parents=True, exist_ok=True)
-        except (PermissionError, OSError):
-            raise InvalidCliArgsError(ACCESS_DENIED)
+        except PermissionError:
+            raise PermissionError(ACCESS_DENIED)
+        except OSError as e:
+            raise OSError(f"{ACCESS_DENIED}: {e}")
 
         return self
 

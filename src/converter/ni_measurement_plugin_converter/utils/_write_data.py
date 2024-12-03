@@ -17,21 +17,13 @@ def create_file(template_name: str, file_name: str, **template_args: Any) -> Non
         template_name (str): Template file name.
         file_name (str): Output file name.
     """
-    output = render_template(template_name, **template_args)
+    output = _render_template(template_name, **template_args)
 
     with open(file_name, "wb") as f:
         f.write(output)
 
 
-def render_template(template_name: str, **template_args: Any) -> bytes:
-    """Render template files.
-
-    Args:
-        template_name (str): Template file name.
-
-    Returns:
-        bytes: Template file.
-    """
+def _render_template(template_name: str, **template_args: Any) -> bytes:
     file_dir = str(pathlib.Path(__file__).parent.parent / TEMPLATE_DIR / template_name)
 
     template = Template(

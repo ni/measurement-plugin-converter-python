@@ -17,8 +17,6 @@ from ni_measurement_plugin_converter._constants import (
 )
 from ni_measurement_plugin_converter.models import (
     CliInputs,
-    InvalidCliArgsError,
-    UnsupportedDriverError,
 )
 from ni_measurement_plugin_converter.utils import (
     check_for_visa,
@@ -243,11 +241,14 @@ def convert_to_plugin(
         print_log_file_location()
 
     except (
-        InvalidCliArgsError,
+        FileNotFoundError,
+        NameError,
+        OSError,
+        PermissionError,
         ClickException,
         TemplateLookupException,
         CompileException,
-        UnsupportedDriverError,
+        ValueError,
     ) as error:
         logger.error(error)
         print_log_file_location()
