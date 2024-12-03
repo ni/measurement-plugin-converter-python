@@ -64,7 +64,7 @@ def print_log_file_location() -> None:
     for handler in logger.handlers:
         if isinstance(handler, handlers.RotatingFileHandler):
             logger.info(LOG_FILE.format(log_file_path=handler.baseFilename))
-            
+
 
 def initialize_logger(name: str, log_directory: str) -> Logger:
     """Initialize logger object.

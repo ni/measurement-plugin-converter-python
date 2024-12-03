@@ -86,14 +86,14 @@ MEASUREMENT_VERSION = 1.0
 )
 @click.option(
     "-m",
-    "--measurement-file-dir",
+    "--measurement-file-path",
     help="Path to the directory containing the Python measurement file to be converted.",
     required=True,
 )
 @click.option(
     "-f",
     "--function",
-    help="Name of the function within the measurement file --measurement-file-dir that contains the measurement logic.",
+    help="Name of the function within the measurement file --measurement-file-path that contains the measurement logic.",
     required=True,
 )
 @click.option(
@@ -101,7 +101,7 @@ MEASUREMENT_VERSION = 1.0
 )
 def convert_to_plugin(
     display_name: str,
-    measurement_file_dir: str,
+    measurement_file_path: str,
     function: str,
     directory_out: str,
 ) -> None:
@@ -114,7 +114,7 @@ def convert_to_plugin(
 
         CliInputs(
             display_name=display_name,
-            measurement_file_dir=measurement_file_dir,
+            measurement_file_dir=measurement_file_path,
             function=function,
             output_dir=directory_out,
         )
@@ -128,7 +128,7 @@ def convert_to_plugin(
         logger.info(VALIDATE_CLI_ARGS)
 
         directory_out_path = Path(directory_out)
-        measurement_file_path = Path(measurement_file_dir)
+        measurement_file_path = Path(measurement_file_path)
         migrated_file_path = directory_out_path / MIGRATED_MEASUREMENT_FILENAME
         shutil.copy(measurement_file_path, migrated_file_path)
         logger.debug(FILE_MIGRATED)

@@ -16,11 +16,7 @@ from ni_measurement_plugin_converter._constants import (
     NI_DRIVERS,
     RESERVATION,
 )
-from ni_measurement_plugin_converter.models import (
-    PinInfo,
-    RelayInfo,
-    SessionMapping,
-)
+from ni_measurement_plugin_converter.models import PinInfo, RelayInfo, SessionMapping
 from ni_measurement_plugin_converter.utils import get_function_node
 from ni_measurement_plugin_converter.utils._manage_session_helper import (
     get_sessions_details,
@@ -103,9 +99,7 @@ def manage_session(migrated_file_dir: str, function: str) -> Dict[str, List[str]
 
     sessions_details = get_sessions_details(function_node=measurement_function_node)
     if not sessions_details:
-        raise ValueError(
-            INVALID_DRIVERS.format(supported_drivers=NI_DRIVERS + ["VISA"])
-        )
+        raise ValueError(INVALID_DRIVERS.format(supported_drivers=NI_DRIVERS + ["VISA"]))
 
     logger.info(ADD_SESSION)
 
