@@ -33,8 +33,8 @@ Measurement Plug-In Converter for Python has the following packages
 
 - Measurement Plug-In Converter
 
-  - [Python = 3.8.5](https://www.python.org/downloads/release/python-385/)
-  - [NI Measurement Plug-In UI Creator](dependencies/ni_measurement_ui_creator-1.0.0.dev8-py3-none-any.whl)
+  - [Python = ^3.8](https://www.python.org/downloads/release/python-385/)
+  - [NI Measurement Plug-In UI Creator](dependencies/ni_measurement_ui_creator-1.0.0.dev8-py3-none-any.whl)   <!-- - Path of UI Creator to be updated -->
 
 - Measurement Plug-In UI Creator
 
@@ -231,8 +231,8 @@ For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tr
   ```cmd
   Usage: ni-measurement-plugin-ui-creator [OPTIONS] COMMAND [ARGS]...
 
-    NI Measurement Plug-In UI Creator is a Command Line tool for creating/updating
-    measui files.
+  NI Measurement Plug-In UI Creator is a Command Line tool to create/update 
+  .measui files.
 
   Options:
     -h, --help  Show this message and exit.
@@ -257,7 +257,7 @@ The create command will create a new UI file for the selected active measurement
   Supported UI Elements: ['Numeric Indicator', 'Numeric Control', 'Numeric Array Input', 'Numeric Array Output', 'Boolean Horizontal Slider', 'Boolean Round LED', 'String Control', 'String Indicator', 'String Array Input', 'String Array Output', 'Pin']
   Getting the active measurements...
 
-  Registered/Available measurements:
+  Registered measurements:
   1. First Measurement (Py)
   2. Second Measurement (Py)
 
@@ -291,7 +291,7 @@ The update command will update the UI file by
   Supported UI Elements: ['Numeric Indicator', 'Numeric Control', 'Numeric Array Input', 'Numeric Array Output', 'Boolean Horizontal Slider', 'Boolean Round LED', 'String Control', 'String Indicator', 'String Array Input', 'String Array Output', 'Pin']
   Getting the active measurements...
 
-  Registered/Available measurements:
+  Registered measurements:
   1. First Measurement (Py)
   2. Second Measurement (Py)
 
@@ -361,7 +361,7 @@ For update command,
 #### Event logger
 
 - The tool generates a log at the start of the conversion process, recording all actions performed throughout.
-- The log file is located inside the "Logs" folder within the output directory.
+- The log file is located inside the "ui_creator_logs" folder within the output directory.
 - This log includes detailed information on any errors encountered during the process.
 
 #### Limitations
