@@ -48,6 +48,41 @@ class DriverSession(Enum):
     nidaqmx = "nims.session_management.INSTRUMENT_TYPE_NI_DAQMX"
 
 
+def _add_params(function_node: ast.FunctionDef, params: List[str]) -> ast.FunctionDef:
+    for param in params[::-1]:
+        function_node.args.args.insert(0, param)
+
+    return function_node
+
+
+def _get_with_removed_function(function_node: ast.FunctionDef) -> List[Any]:
+    body = []
+
+    for child_node in function_node.body:
+        if (
+            isinstance(child_node, ast.With)
+            and hasattr(child_node, "items")
+            and child_node.items
+            and _check_driver_session(child_node)
+        ):
+            body.extend(child_node.body)
+        else:
+            body.append(child_node)
+
+    return body
+
+
+def _check_driver_session(child_node: ast.With) -> bool:
+    for item in child_node.items:
+        if isinstance(item.context_expr, ast.Call):
+            if ni_drivers_supported_instrument(item.context_expr) or instrument_is_visa_type(
+                item.context_expr
+            ):
+                return True
+
+    return False
+
+
 def manage_session(migrated_file_dir: str, function: str) -> Dict[str, List[str]]:
     """Manage session.
 
@@ -75,7 +110,7 @@ def manage_session(migrated_file_dir: str, function: str) -> Dict[str, List[str]
 
     logger.info(ADD_SESSION)
 
-    params_added_function = add_params(
+    params_added_function = _add_params(
         function_node=measurement_function_node,
         params=list(itertools.chain.from_iterable(list(sessions_details.values()))),
     )
@@ -88,7 +123,7 @@ def manage_session(migrated_file_dir: str, function: str) -> Dict[str, List[str]
     for node in ast.walk(source_code_tree):
         if isinstance(node, ast.FunctionDef) and node.name == function:
             node.args = params_added_function.args
-            node.body = get_with_removed_function(function_node=params_added_function)
+            node.body = _get_with_removed_function(function_node=params_added_function)
             break
 
     source_code = astor.to_source(source_code_tree)
@@ -100,66 +135,6 @@ def manage_session(migrated_file_dir: str, function: str) -> Dict[str, List[str]
     logger.debug(MIGRATED_FILE_MODIFIED)
 
     return sessions_details
-
-
-def add_params(function_node: ast.FunctionDef, params: List[str]) -> ast.FunctionDef:
-    """Add parameters to user measurement function.
-
-    Args:
-        function_node (ast.FunctionDef): Measurement function code tree.
-        params (List[str]): Parameters to be added.
-
-    Returns:
-        ast.FunctionDef: Parameters added function code tree.
-    """
-    for param in params[::-1]:
-        function_node.args.args.insert(0, param)
-
-    return function_node
-
-
-def get_with_removed_function(function_node: ast.FunctionDef) -> List[Any]:
-    """Remove `with` statement and its with items in the function_node.
-
-    Args:
-        function_node (ast.FunctionDef): Measurement function code tree.
-
-    Returns:
-        List[Any]: List of child nodes except the with items.
-    """
-    body = []
-
-    for child_node in function_node.body:
-        if (
-            isinstance(child_node, ast.With)
-            and hasattr(child_node, "items")
-            and child_node.items
-            and check_driver_session(child_node)
-        ):
-            body.extend(child_node.body)
-        else:
-            body.append(child_node)
-
-    return body
-
-
-def check_driver_session(child_node: ast.With) -> bool:
-    """Check for instrument session initialization.
-
-    Args:
-        child_node (ast.With): Session initialization of Measurement function.
-
-    Returns:
-        bool: True if with statement is session initialization.
-    """
-    for item in child_node.items:
-        if isinstance(item.context_expr, ast.Call):
-            if ni_drivers_supported_instrument(item.context_expr) or instrument_is_visa_type(
-                item.context_expr
-            ):
-                return True
-
-    return False
 
 
 def get_pins_and_relays_info(

@@ -15,33 +15,7 @@ LOG_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 LOG_FILE = "Please find the log file at {log_file_path}"
 
 
-def initialize_logger(name: str, log_directory: str) -> Logger:
-    """Initialize logger object.
-
-    Args:
-        name (str): Logger name.
-        log_directory (str): Log directory.
-
-    Returns:
-        Logger: Logger object.
-    """
-    logger = logging.getLogger(name)
-    logger.setLevel(logging.DEBUG)
-
-    if log_directory:
-        add_file_handler(logger, log_directory)
-
-    add_stream_handler(logger)
-    return logger
-
-
-def add_file_handler(logger: Logger, log_directory: str) -> None:
-    """Add file handler.
-
-    Args:
-        logger (Logger): Logger object.
-        log_directory (str): Log directory.
-    """
+def _add_file_handler(logger: Logger, log_directory: str) -> None:
     handler = _create_file_handler(log_directory=log_directory, file_name=LOG_FILE_NAME)
     logger.addHandler(handler)
 
@@ -62,12 +36,7 @@ def _create_file_handler(log_directory: str, file_name: str) -> handlers.Rotatin
     return handler
 
 
-def add_stream_handler(logger: Logger) -> None:
-    """Add stream handler.
-
-    Args:
-        logger (Logger): Logger object.
-    """
+def _add_stream_handler(logger: Logger) -> None:
     stream_handler = _create_stream_handler()
     logger.addHandler(stream_handler)
 
@@ -95,3 +64,23 @@ def print_log_file_location() -> None:
     for handler in logger.handlers:
         if isinstance(handler, handlers.RotatingFileHandler):
             logger.info(LOG_FILE.format(log_file_path=handler.baseFilename))
+            
+
+def initialize_logger(name: str, log_directory: str) -> Logger:
+    """Initialize logger object.
+
+    Args:
+        name (str): Logger name.
+        log_directory (str): Log directory.
+
+    Returns:
+        Logger: Logger object.
+    """
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.DEBUG)
+
+    if log_directory:
+        _add_file_handler(logger, log_directory)
+
+    _add_stream_handler(logger)
+    return logger

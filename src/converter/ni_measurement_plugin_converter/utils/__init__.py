@@ -12,8 +12,6 @@ from ni_measurement_plugin_converter.utils._extract_outputs import (
 )
 from ni_measurement_plugin_converter.utils._get_function_tree import get_function_node
 from ni_measurement_plugin_converter.utils._logger import (
-    add_file_handler,
-    add_stream_handler,
     initialize_logger,
     print_log_file_location,
     remove_handlers,

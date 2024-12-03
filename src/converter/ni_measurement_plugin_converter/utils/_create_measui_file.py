@@ -35,52 +35,11 @@ SUPPORTED_NIMS_DATATYPES = [
 ]
 
 
-def create_measui_file(
-    pins: List[PinInfo],
-    relays: List[RelayInfo],
-    inputs: List[InputInfo],
-    outputs: List[OutputInfo],
-    file_path: str,
-    measurement_name: str,
-) -> None:
-    """Create `.measui` file for the converted measurement.
-
-    Args:
-        pins (List[PinInfo]): List of pins.
-        relays (List[RelayInfo]): List of relays.
-        inputs (List[InputInfo]): List of inputs from measurement.
-        outputs (List[OutputInfo]): List of outputs from measurement.
-        file_path (str): File path of the measurement.
-        measurement_name (str): Measurement name.
-    """
-    input_data_elements = get_input_data_elements(pins, relays, inputs)
-    output_data_elements = get_output_data_elements(outputs)
-
-    input_ui_elements = create_control_elements(input_data_elements)
-    output_ui_elements = create_indicator_elements(output_data_elements)
-
-    measui_path = Path(file_path) / measurement_name
-    create_measui(
-        filepath=str(measui_path),
-        input_output_elements=input_ui_elements + output_ui_elements,
-    )
-
-
-def get_input_data_elements(
+def _get_input_data_elements(
     pins: List[PinInfo],
     relays: List[RelayInfo],
     inputs: List[InputInfo],
 ) -> List[DataElement]:
-    """Get input data elements for creating `measui` file.
-
-    Args:
-        pins (List[PinInfo]): List of pins for the measurement.
-        relays (List[RelayInfo]): List of relays for the measurement.
-        inputs (List[InputInfo]): List of inputs from measurement.
-
-    Returns:
-        List[DataElement]: List of data element for input UI components.
-    """
     input_data_elements = []
     left_alignment = MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
     top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
@@ -182,15 +141,7 @@ def get_input_data_elements(
     return input_data_elements
 
 
-def get_output_data_elements(outputs: List[OutputInfo]) -> List[DataElement]:
-    """Get output data elements for creating `measui` file.
-
-    Args:
-        outputs (List[OutputInfo]): List of outputs from measurement.
-
-    Returns:
-        List[DataElement]: List of data element for output UI components.
-    """
+def _get_output_data_elements(outputs: List[OutputInfo]) -> List[DataElement]:
     output_data_elements = []
     top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
 
@@ -257,3 +208,34 @@ def get_output_data_elements(outputs: List[OutputInfo]) -> List[DataElement]:
         )
 
     return output_data_elements
+
+
+def create_measui_file(
+    pins: List[PinInfo],
+    relays: List[RelayInfo],
+    inputs: List[InputInfo],
+    outputs: List[OutputInfo],
+    file_path: str,
+    measurement_name: str,
+) -> None:
+    """Create `.measui` file for the converted measurement.
+
+    Args:
+        pins (List[PinInfo]): List of pins.
+        relays (List[RelayInfo]): List of relays.
+        inputs (List[InputInfo]): List of inputs from measurement.
+        outputs (List[OutputInfo]): List of outputs from measurement.
+        file_path (str): File path of the measurement.
+        measurement_name (str): Measurement name.
+    """
+    input_data_elements = _get_input_data_elements(pins, relays, inputs)
+    output_data_elements = _get_output_data_elements(outputs)
+
+    input_ui_elements = create_control_elements(input_data_elements)
+    output_ui_elements = create_indicator_elements(output_data_elements)
+
+    measui_path = Path(file_path) / measurement_name
+    create_measui(
+        filepath=str(measui_path),
+        input_output_elements=input_ui_elements + output_ui_elements,
+    )
