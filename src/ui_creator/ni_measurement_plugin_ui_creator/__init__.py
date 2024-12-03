@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import Callable
 
 import click
-
 from ni_measurement_plugin_ui_creator.utils.create_measui import create_measui
 from ni_measurement_plugin_ui_creator.utils.exceptions import InvalidCliInputError
 from ni_measurement_plugin_ui_creator.utils.logger import get_logger
