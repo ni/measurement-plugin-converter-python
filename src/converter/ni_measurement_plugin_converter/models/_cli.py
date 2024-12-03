@@ -1,13 +1,18 @@
 """Models utilized in Command Line Interface implementation."""
 
 import ast
-import os
+from pathlib import Path
 from typing import Optional
 
 from pydantic import BaseModel, model_validator
 
-from ni_measurement_plugin_converter.constants import ENCODING, UserMessage
-from ._exceptions import InvalidCliArgsError
+from ni_measurement_plugin_converter._constants import ACCESS_DENIED, ENCODING
+from ni_measurement_plugin_converter.models._exceptions import InvalidCliArgsError
+
+INVALID_FILE_DIR = (
+    "Invalid measurement file directory. Please provide valid measurement file directory."
+)
+FUNCTION_NOT_FOUND = "Measurement function {function} not found in the file {measurement_file_dir}"
 
 
 class CliInputs(BaseModel):
@@ -25,21 +30,24 @@ class CliInputs(BaseModel):
         Returns:
             CliInputs: Validated CLI inputs.
         """
-        if not os.path.exists(self.measurement_file_dir):
-            raise InvalidCliArgsError(UserMessage.INVALID_FILE_DIR)
+        measurement_file_path = Path(self.measurement_file_dir)
+        output_dir_path = Path(self.output_dir)
+
+        if not measurement_file_path.exists():
+            raise InvalidCliArgsError(INVALID_FILE_DIR)
 
         if not self.validate_function():
             raise InvalidCliArgsError(
-                UserMessage.FUNCTION_NOT_FOUND.format(
+                FUNCTION_NOT_FOUND.format(
                     function=self.function,
                     measurement_file_dir=self.measurement_file_dir,
                 )
             )
 
         try:
-            os.makedirs(self.output_dir, exist_ok=True)
+            output_dir_path.mkdir(parents=True, exist_ok=True)
         except (PermissionError, OSError):
-            raise InvalidCliArgsError(UserMessage.ACCESS_DENIED)
+            raise InvalidCliArgsError(ACCESS_DENIED)
 
         return self
 
@@ -51,8 +59,9 @@ class CliInputs(BaseModel):
                 Else `None` is returned.
         """
         function_node = None
+        measurement_file_path = Path(self.measurement_file_dir)
 
-        with open(self.measurement_file_dir, "r", encoding=ENCODING) as file:
+        with measurement_file_path.open("r", encoding=ENCODING) as file:
             code = file.read()
 
         code_tree = ast.parse(code)
