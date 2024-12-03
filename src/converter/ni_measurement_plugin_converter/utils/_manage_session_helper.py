@@ -4,8 +4,15 @@ import ast
 import re
 from typing import Dict, List, Union
 
-from ni_measurement_plugin_converter.constants import ALPHANUMERIC_PATTERN, SessionManagement
+from ni_measurement_plugin_converter._constants import (
+    ALPHANUMERIC_PATTERN,
+    NI_DRIVERS,
+    RESERVATION,
+)
 from ni_measurement_plugin_converter.models import PinInfo, RelayInfo, SessionMapping
+
+SESSION_CONSTRUCTOR = "session_constructor"
+INSTRUMENT_TYPE = "instrument_type"
 
 
 def get_sessions_details(function_node: ast.FunctionDef) -> Dict[str, List[str]]:
@@ -66,7 +73,7 @@ def get_plugin_session_initializations(sessions_details: Dict[str, List[str]]) -
     session_initialization_code = []
 
     for driver in list(sessions_details.keys()):
-        if driver in SessionManagement.NI_DRIVERS:
+        if driver in NI_DRIVERS:
             session_initialization_code.append(get_ni_driver_session_initialization(driver))
 
         else:
@@ -89,7 +96,7 @@ def ni_drivers_supported_instrument(call: ast.Call) -> bool:
     if (
         isinstance(call.func, ast.Attribute)
         and isinstance(call.func.value, ast.Name)
-        and call.func.value.id in SessionManagement.NI_DRIVERS
+        and call.func.value.id in NI_DRIVERS
         and (call.func.attr == "Session" or call.func.attr == "Task")
     ):
         return True
@@ -158,9 +165,9 @@ def get_ni_driver_session_initialization(driver: str) -> str:
         str: NI driver plug-in session initialization as a string.
     """
     if driver == "nidaqmx":
-        return f"{SessionManagement.RESERVATION}.create_nidaqmx_tasks()"
+        return f"{RESERVATION}.create_nidaqmx_tasks()"
 
-    return f"{SessionManagement.RESERVATION}.initialize_{driver}_sessions()"
+    return f"{RESERVATION}.initialize_{driver}_sessions()"
 
 
 def get_visa_driver_plugin_session_initialization(driver: str) -> str:
@@ -172,7 +179,7 @@ def get_visa_driver_plugin_session_initialization(driver: str) -> str:
     Returns:
         str: VISA driver plugin session initialization as a string.
     """
-    return f"{SessionManagement.RESERVATION}.initialize_sessions({driver}_{SessionManagement.SESSION_CONSTRUCTOR}, {driver}_{SessionManagement.INSTRUMENT_TYPE})"
+    return f"{RESERVATION}.initialize_sessions({driver}_{SESSION_CONSTRUCTOR}, {driver}_{INSTRUMENT_TYPE})"
 
 
 def check_for_visa(sessions_details: Dict[str, List[str]]) -> bool:
@@ -185,7 +192,7 @@ def check_for_visa(sessions_details: Dict[str, List[str]]) -> bool:
         bool: True if VISA driver is used.
     """
     for driver in list(sessions_details.keys()):
-        if driver not in SessionManagement.NI_DRIVERS:
+        if driver not in NI_DRIVERS:
             return True
 
     return False
@@ -214,7 +221,6 @@ def get_sessions_signature(session_mappings: List[SessionMapping]) -> str:
         str: Session mapping signature.
     """
     sessions = [
-        f"{session_mapping.name}={session_mapping.name}"
-        for session_mapping in session_mappings
+        f"{session_mapping.name}={session_mapping.name}" for session_mapping in session_mappings
     ]
     return ", ".join(sessions)

@@ -6,8 +6,13 @@ from typing import Optional
 
 from pydantic import BaseModel, model_validator
 
-from ni_measurement_plugin_converter.constants import ENCODING, UserMessage
-from ._exceptions import InvalidCliArgsError
+from ni_measurement_plugin_converter._constants import ACCESS_DENIED, ENCODING
+from ni_measurement_plugin_converter.models._exceptions import InvalidCliArgsError
+
+INVALID_FILE_DIR = (
+    "Invalid measurement file directory. Please provide valid measurement file directory."
+)
+FUNCTION_NOT_FOUND = "Measurement function {function} not found in the file {measurement_file_dir}"
 
 
 class CliInputs(BaseModel):
@@ -29,11 +34,11 @@ class CliInputs(BaseModel):
         output_dir_path = Path(self.output_dir)
 
         if not measurement_file_path.exists():
-            raise InvalidCliArgsError(UserMessage.INVALID_FILE_DIR)
+            raise InvalidCliArgsError(INVALID_FILE_DIR)
 
         if not self.validate_function():
             raise InvalidCliArgsError(
-                UserMessage.FUNCTION_NOT_FOUND.format(
+                FUNCTION_NOT_FOUND.format(
                     function=self.function,
                     measurement_file_dir=self.measurement_file_dir,
                 )
@@ -42,7 +47,7 @@ class CliInputs(BaseModel):
         try:
             output_dir_path.mkdir(parents=True, exist_ok=True)
         except (PermissionError, OSError):
-            raise InvalidCliArgsError(UserMessage.ACCESS_DENIED)
+            raise InvalidCliArgsError(ACCESS_DENIED)
 
         return self
 
