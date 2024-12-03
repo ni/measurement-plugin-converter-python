@@ -8,7 +8,6 @@ from pathlib import Path
 import click
 from click import ClickException
 from mako.exceptions import CompileException, TemplateLookupException
-
 from ni_measurement_plugin_converter import __version__
 from ni_measurement_plugin_converter.constants import (
     ALPHANUMERIC_PATTERN,
@@ -34,7 +33,6 @@ from ni_measurement_plugin_converter.utils import (
     extract_outputs,
     generate_input_params,
     generate_input_signature,
-    generate_output_signature,
     get_function_node,
     get_pin_and_relay_names,
     get_pin_and_relay_names_signature,
@@ -103,7 +101,6 @@ def run(
         logger.info(UserMessage.EXTRACT_OUTPUT_INFO)
 
         outputs_info, iterable_outputs = extract_outputs(function_node)
-        output_signature = generate_output_signature(outputs_info)
 
         # Manage session.
         sessions_details = manage_session(migrated_file_dir, function)
@@ -143,7 +140,6 @@ def run(
             pin_and_relay_signature=pin_and_relay_signature,
             pin_or_relay_names=pin_or_relay_names,
             sessions=sessions,
-            version=MEASUREMENT_VERSION,
             serviceconfig_file=(
                 f"{sanitized_display_name}{TemplateFile.SERVICE_CONFIG_FILE_EXTENSION}"
             ),
@@ -151,7 +147,6 @@ def run(
             outputs_info=outputs_info,
             input_signature=input_signature,
             input_param_names=input_param_names,
-            output_signature=output_signature,
             is_visa=is_visa,
             migrated_file=Path(MIGRATED_MEASUREMENT_FILENAME).stem,
             function_name=function,
@@ -177,6 +172,7 @@ def run(
                 f"{sanitized_display_name}{TemplateFile.SERVICE_CONFIG_FILE_EXTENSION}",
             ),
             display_name=sanitized_display_name,
+            version=MEASUREMENT_VERSION,
             service_class=service_class,
             directory_out=output_dir,
         )

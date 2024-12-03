@@ -1,7 +1,7 @@
-<%page args="display_name, pins_info, relays_info, session_mappings, pin_and_relay_signature, pin_or_relay_names, session_initializations, version, serviceconfig_file, inputs_info, outputs_info, input_signature, input_param_names, output_signature, is_visa, migrated_file, function_name, iterable_outputs"/>
+<%page args="display_name, pins_info, relays_info, session_mappings, pin_and_relay_signature, pin_or_relay_names, session_initializations, serviceconfig_file, inputs_info, outputs_info, input_signature, input_param_names, is_visa, migrated_file, function_name, iterable_outputs"/>
 import pathlib
 import sys
-from typing import Iterable, List, Union
+from typing import List
 from ${migrated_file} import ${function_name}
 
 import ni_measurement_plugin_sdk_service as nims
@@ -10,7 +10,6 @@ script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent
 measurement_service = nims.MeasurementService(
     service_config_path=service_directory / "${serviceconfig_file}",
-    version="${version}",
     ui_file_paths=[service_directory / "${display_name}.measui"],
 )
 
@@ -32,7 +31,7 @@ measurement_service = nims.MeasurementService(
 @measurement_service.output("${output_info.variable_name}", ${output_info.nims_type})
 % endfor
 % if not iterable_outputs and not is_visa:
-def measure(${pin_and_relay_signature}, ${input_signature}) -> Iterable[Union[${output_signature}]]:
+def measure(${pin_and_relay_signature}, ${input_signature}):
     pin_or_relay_names = [${pin_or_relay_names}]
 
     with measurement_service.context.reserve_sessions(pin_or_relay_names) as reservation:
@@ -43,7 +42,7 @@ def measure(${pin_and_relay_signature}, ${input_signature}) -> Iterable[Union[${
             return (${function_name}(${sessions}, ${input_param_names}),)
 
 % elif not iterable_outputs and is_visa:
-def measure(${pin_and_relay_signature}, ${input_signature}) -> Iterable[Union[${output_signature}]]:
+def measure(${pin_and_relay_signature}, ${input_signature}):
     pin_or_relay_names = [${pin_or_relay_names}]
 
     # Update session_constructor object, instrument_types and Session type accordingly.
@@ -56,7 +55,7 @@ def measure(${pin_and_relay_signature}, ${input_signature}) -> Iterable[Union[${
             return (${function_name}(${sessions}, ${input_param_names}),)
 
 % elif iterable_outputs and not is_visa:
-def measure(${pin_and_relay_signature}, ${input_signature}) -> Iterable[Union[${output_signature}]]:
+def measure(${pin_and_relay_signature}, ${input_signature}):
     pin_or_relay_names = [${pin_or_relay_names}]
 
     with measurement_service.context.reserve_sessions(pin_or_relay_names) as reservation:
@@ -67,7 +66,7 @@ def measure(${pin_and_relay_signature}, ${input_signature}) -> Iterable[Union[${
             return ${function_name}(${sessions}, ${input_param_names})
 
 % elif iterable_outputs and is_visa:
-def measure(${pin_and_relay_signature}, ${input_signature}) -> Iterable[Union[${output_signature}]]:
+def measure(${pin_and_relay_signature}, ${input_signature}):
     pin_or_relay_names = [${pin_or_relay_names}]
 
     # Update session_constructor object, instrument_types and Session type accordingly.

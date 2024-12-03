@@ -6,10 +6,7 @@ from ni_measurement_plugin_converter.utils._extract_inputs import (
     generate_input_params,
     generate_input_signature,
 )
-from ni_measurement_plugin_converter.utils._extract_outputs import (
-    extract_outputs,
-    generate_output_signature,
-)
+from ni_measurement_plugin_converter.utils._extract_outputs import extract_outputs
 from ni_measurement_plugin_converter.utils._get_function_tree import get_function_node
 from ni_measurement_plugin_converter.utils._logger import (
     add_file_handler,

@@ -112,16 +112,3 @@ def get_output_info(
         logger.info(UserMessage.UNSUPPORTED_OUTPUTS.format(variables=unsupported_outputs))
 
     return output_configurations
-
-
-def generate_output_signature(outputs_info: List[OutputInfo]) -> str:
-    """Generate string separated by comma where each element represents output data type.
-
-    Args:
-        outputs_info (List[Output]): Outputs information.
-
-    Returns:
-        str: Output data type as comma separated string.
-    """
-    variable_types = [info.variable_type for info in outputs_info]
-    return ", ".join(variable_types)
