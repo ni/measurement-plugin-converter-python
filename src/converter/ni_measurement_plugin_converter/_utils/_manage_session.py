@@ -194,13 +194,13 @@ def process_sessions_and_update_metadata(
 ) -> Tuple[List[PinInfo], List[RelayInfo]]:
     """Process session details and update plugin metadata.
 
-    1. Retrieve session details and mappings.
-    2. Add session mappings, initializations, and relevant metadata.
+    This function retrieves session information from the migrated file and updates the
+    provided plugin metadata with session initializations, mappings, pins, and relays.
 
     Args:
-        migrated_file_path: Path to the migrated file.
+        migrated_file_path: Path to the migrated Python file.
         function: Name of the measurement function.
-        plugin_metadata: Metadata dictionary for the plugin.
+        plugin_metadata: Metadata dictionary to be updated with session data.
         logger: Logger instance.
 
     Returns:

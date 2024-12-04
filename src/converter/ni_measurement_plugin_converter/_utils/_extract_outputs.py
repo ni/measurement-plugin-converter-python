@@ -69,13 +69,13 @@ def _get_output_info(
 
 
 def generate_output_signature(outputs_info: List[OutputInfo]) -> str:
-    """Generate string separated by comma where each element represents output data type.
+    """Generate a comma-separated string representing the data types of outputs.
 
     Args:
-        outputs_info (List[Output]): Outputs information.
+        outputs_info: A list of output information objects.
 
     Returns:
-        str: Output data type as comma separated string.
+        A string of output data types, separated by commas.
     """
     variable_types = [info.variable_type for info in outputs_info]
     return ", ".join(variable_types)
@@ -84,14 +84,14 @@ def generate_output_signature(outputs_info: List[OutputInfo]) -> str:
 def extract_outputs(
     function_node: ast.FunctionDef, plugin_metadata: Dict[str, Any]
 ) -> List[OutputInfo]:
-    """Extract outputs information from `function_node`.
+    """Extract output information from a function definition node.
 
     Args:
-        function_node (ast.FunctionDef): Measurement function node.
+        function_node: The AST node representing the function definition.
+        plugin_metadata: Dictionary to store extracted metadata.
 
     Returns:
-        Tuple[List[Output], bool]: Measurement function outputs info and \
-        boolean representing output type is tuple or not.
+        List of output information.
     """
     iterable_output, output_variables = _extract_type_and_variable_names(function_node.body)
     output_types = extract_type(

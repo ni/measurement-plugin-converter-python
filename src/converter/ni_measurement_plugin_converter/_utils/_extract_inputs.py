@@ -110,13 +110,14 @@ def _generate_input_signature(inputs_info: List[InputInfo]) -> str:
 def extract_inputs(
     function_node: ast.FunctionDef, plugin_metadata: Dict[str, Any]
 ) -> List[InputInfo]:
-    """Extract inputs' info from `function_node`.
+    """Extract metadata about input parameters from a function definition.
 
     Args:
-        function_node (FunctionDef): Measurement function node.
+        function_node: Node representing the function definition.
+        plugin_metadata: Dictionary to store extracted metadata.
 
     Returns:
-        List[InputInfo]: Measurement function input information.
+        List of input parameter information.
     """
     inputs_info: Dict[str, Dict[str, str]] = {}
     param_defaults = function_node.args.defaults or []

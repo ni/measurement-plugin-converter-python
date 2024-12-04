@@ -11,20 +11,21 @@ def get_function_node(
     file_dir: str,
     function: str,
 ) -> ast.FunctionDef:
-    """Get `function` node from `file_dir`.
+    """Retrieve the function node for a given function name from a file.
 
-    1. Parse file code into abstract syntax tree.
-    2. Find the function in the parsed code.
-    3. If `function` is present in `file_dir`, then the function node is returned. If \
-    not, then `None` is returned.
+    1. Parse the file content into an abstract syntax tree (AST).
+    2. Search for the specified function in the AST.
+    3. Return the function node if found; otherwise, raise a ValueError.
 
     Args:
-        file_dir (str): File directory.
-        function (str): Name of function.
+        file_dir: The path to the file containing the function.
+        function: The name of the function to find.
 
     Returns:
-        ast.FunctionDef: If `function` is present in `file_dir`, \
-        then the function node is returned. If not, then raises ValueError.
+        The AST node representing the function.
+
+    Raises:
+        ValueError: If the specified function is not found in the file.
     """
     function_node = None
 

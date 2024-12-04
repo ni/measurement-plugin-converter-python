@@ -215,18 +215,18 @@ def create_measui_file(
     relays: List[RelayInfo],
     inputs: List[InputInfo],
     outputs: List[OutputInfo],
-    file_path: str,
+    file_path: Path,
     measurement_name: str,
 ) -> None:
-    """Create `.measui` file for the converted measurement.
+    """Generate a `.measui` file for the converted measurement.
 
     Args:
-        pins (List[PinInfo]): List of pins.
-        relays (List[RelayInfo]): List of relays.
-        inputs (List[InputInfo]): List of inputs from measurement.
-        outputs (List[OutputInfo]): List of outputs from measurement.
-        file_path (str): File path of the measurement.
-        measurement_name (str): Measurement name.
+        pins: List of pins.
+        relays: List of relays.
+        inputs: List of inputs from measurement.
+        outputs: List of outputs from measurement.
+        file_path: File path of the measurement.
+        measurement_name: Measurement name.
     """
     input_data_elements = _get_input_data_elements(pins, relays, inputs)
     output_data_elements = _get_output_data_elements(outputs)
@@ -234,7 +234,7 @@ def create_measui_file(
     input_ui_elements = create_control_elements(input_data_elements)
     output_ui_elements = create_indicator_elements(output_data_elements)
 
-    measui_path = Path(file_path) / measurement_name
+    measui_path = file_path / measurement_name
     create_measui(
         filepath=str(measui_path),
         input_output_elements=input_ui_elements + output_ui_elements,

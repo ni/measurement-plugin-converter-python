@@ -18,13 +18,13 @@ UNKNOWN_PYTHON_NIMS_TYPE = "Unknown Python native data type: {python_native_data
 
 
 def get_nims_datatype(python_native_data_type: str) -> str:
-    """Get `measurement_plugin_sdk_service` data type.
+    """Get the corresponding `measurement_plugin_sdk_service` data type.
 
     Args:
-        python_native_data_type (str): Python native data type.
+        python_native_data_type: Python native data type as a string.
 
     Returns:
-        str: Corresponding `measurement_plugin_sdk_service` data type.
+        Corresponding `measurement_plugin_sdk_service` data type.
     """
     try:
         return NIMS_TYPE[python_native_data_type]
@@ -38,10 +38,10 @@ def extract_type(node: Union[ast.Name, ast.Subscript, ast.expr]) -> str:
     """Extract data type from the input/output node.
 
     Args:
-        node (Union[ast.Name, ast.Subscript, ast.expr]): Input/output node.
+        node: Input/output node.
 
     Returns:
-        str: Data type.
+        Data type as string.
     """
     if isinstance(node, ast.Name):
         return node.id

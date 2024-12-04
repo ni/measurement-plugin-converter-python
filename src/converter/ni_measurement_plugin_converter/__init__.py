@@ -194,7 +194,7 @@ def convert_to_plugin(
             relays=relays_info,
             inputs=inputs_info,
             outputs=outputs_info,
-            file_path=str(directory_out_path),
+            file_path=directory_out_path,
             measurement_name=sanitized_display_name,
         )
         logger.debug(MEASUI_FILE_CREATED)
