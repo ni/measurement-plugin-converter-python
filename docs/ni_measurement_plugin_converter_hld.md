@@ -146,7 +146,7 @@ The Logger will play a crucial role in this tool for displaying the status messa
 Two types of loggers will be implemented in this tool, one will be a `Console logger` and another will be a `File logger`. Console logger will be used for displaying messages in the console whereas the File logger will be used for logging all types of messages in a separate file called `log.txt`. Both the logger will log the messages in different formats. The console logger will log the message as plain text whereas the file logger will log the messages along with the time stamp.
 
 For example,
-![file_logger](images/file_logger.png)
+![file_logger](images/converter_file_logger.png)
 
 The console logger will get loaded followed by the file logger. The file logger will contain all messages, including console messages, as well as any exceptions that occur during the execution.
 
