@@ -55,6 +55,12 @@ ignore_missing_imports = true
 module = "astor.*"
 ignore_missing_imports = true
 
+[tool.bandit]
+skips = [
+  "B702", # use_of_mako_templates
+]
+exclude_dirs = [".venv"]
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
