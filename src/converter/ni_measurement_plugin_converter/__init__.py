@@ -5,7 +5,7 @@ __version__ = "1.0.0-dev8"
 import re
 import shutil
 from pathlib import Path
-from typing import List, Union
+from typing import Any, Dict, List, Union
 
 import click
 from click import ClickException
@@ -75,6 +75,8 @@ MIGRATED_MEASUREMENT_FILENAME = "_migrated.py"
 
 MEASUREMENT_VERSION = 1.0
 
+MEASUREMENT_FILE_PATH_OPTION = "--measurement-file-path"
+
 
 @click.command(context_settings=CONTEXT_SETTINGS)
 @click.option(
@@ -85,14 +87,14 @@ MEASUREMENT_VERSION = 1.0
 )
 @click.option(
     "-m",
-    "--measurement-file-path",
+    MEASUREMENT_FILE_PATH_OPTION,
     help="Path to the directory containing the Python measurement file to be converted.",
     required=True,
 )
 @click.option(
     "-f",
     "--function",
-    help="Name of the function within the measurement file --measurement-file-path that contains the measurement logic.",
+    help=f"Name of the function within the measurement file {MEASUREMENT_FILE_PATH_OPTION} that contains the measurement logic.",
     required=True,
 )
 @click.option(
@@ -135,66 +137,59 @@ def convert_to_plugin(
             file_dir=str(Path(measurement_file_path)), function=function
         )
 
-        logger.info(EXTRACT_INPUT_INFO)
+        plugin_metadata: Dict[str, Any] = {}
 
+        sanitized_display_name = re.sub(ALPHANUMERIC_PATTERN, "_", display_name)
+        plugin_metadata["display_name"] = sanitized_display_name
+
+        logger.info(EXTRACT_INPUT_INFO)
         inputs_info = extract_inputs(function_node)
-        input_param_names = generate_input_params(inputs_info)
-        input_signature = generate_input_signature(inputs_info)
+        plugin_metadata["inputs_info"] = inputs_info
+        plugin_metadata["input_param_names"] = generate_input_params(inputs_info)
+        plugin_metadata["input_signature"] = generate_input_signature(inputs_info)
 
         logger.info(EXTRACT_OUTPUT_INFO)
-
         outputs_info, iterable_outputs = extract_outputs(function_node)
-        output_signature = generate_output_signature(outputs_info)
+        plugin_metadata["outputs_info"] = outputs_info
+        plugin_metadata["output_signature"] = generate_output_signature(outputs_info)
+        plugin_metadata["iterable_outputs"] = iterable_outputs
 
-        # Manage session.
         sessions_details = manage_session(str(migrated_file_path), function)
 
         logger.info(DEFINE_PINS_RELAYS)
-
         pins_info, relays_info = get_pins_and_relays_info(sessions_details)
+        plugin_metadata["pins_info"] = pins_info
+        plugin_metadata["relays_info"] = relays_info
 
-        pins_and_relays: List[Union[PinInfo, RelayInfo]] = pins_info + relays_info
-
-        pin_and_relay_signature = get_pin_and_relay_names_signature(pins_and_relays)
-        pin_or_relay_names = get_pin_and_relay_names(pins_and_relays)
+        pins_and_relays = pins_info[:] + relays_info
+        plugin_metadata["pin_and_relay_signature"] = get_pin_and_relay_names_signature(
+            pins_and_relays
+        )
+        plugin_metadata["pin_or_relay_names"] = get_pin_and_relay_names(pins_and_relays)
 
         logger.info(ADD_SESSION_MAPPING)
-
         session_mappings = get_session_mapping(sessions_details)
-        sessions = get_sessions_signature(session_mappings)
+        plugin_metadata["session_mappings"] = session_mappings
+        plugin_metadata["sessions"] = get_sessions_signature(session_mappings)
 
         logger.info(ADD_SESSION_INITIALIZATION)
+        plugin_metadata["session_initializations"] = get_plugin_session_initializations(
+            sessions_details
+        )
 
-        plugin_session_initializations = get_plugin_session_initializations(sessions_details)
-
-        is_visa = check_for_visa(sessions_details)
-
-        sanitized_display_name = re.sub(ALPHANUMERIC_PATTERN, "_", display_name)
-        service_class = f"{sanitized_display_name}_Python"
+        plugin_metadata["is_visa"] = check_for_visa(sessions_details)
+        plugin_metadata["version"] = MEASUREMENT_VERSION
+        plugin_metadata["serviceconfig_file"] = (
+            f"{sanitized_display_name}{SERVICE_CONFIG_FILE_EXTENSION}"
+        )
+        plugin_metadata["migrated_file"] = migrated_file_path.stem
+        plugin_metadata["function_name"] = function
+        plugin_metadata["directory_out"] = str(directory_out_path)
 
         create_file(
             MEASUREMENT_TEMPLATE,
             directory_out_path / MEASUREMENT_FILENAME,
-            display_name=sanitized_display_name,
-            pins_info=pins_info,
-            relays_info=relays_info,
-            session_mappings=session_mappings,
-            session_initializations=plugin_session_initializations,
-            pin_and_relay_signature=pin_and_relay_signature,
-            pin_or_relay_names=pin_or_relay_names,
-            sessions=sessions,
-            version=MEASUREMENT_VERSION,
-            serviceconfig_file=(f"{sanitized_display_name}{SERVICE_CONFIG_FILE_EXTENSION}"),
-            inputs_info=inputs_info,
-            outputs_info=outputs_info,
-            input_signature=input_signature,
-            input_param_names=input_param_names,
-            output_signature=output_signature,
-            is_visa=is_visa,
-            migrated_file=migrated_file_path.stem,
-            function_name=function,
-            directory_out=str(directory_out_path),
-            iterable_outputs=iterable_outputs,
+            **plugin_metadata,
         )
         logger.debug(MEASUREMENT_FILE_CREATED)
 
@@ -212,7 +207,7 @@ def convert_to_plugin(
             SERVICE_CONFIG_TEMPLATE,
             directory_out_path / f"{sanitized_display_name}{SERVICE_CONFIG_FILE_EXTENSION}",
             display_name=sanitized_display_name,
-            service_class=service_class,
+            service_class=f"{sanitized_display_name}_Python",
             directory_out=str(directory_out_path),
         )
         logger.debug(SERVICE_CONFIG_CREATED)
