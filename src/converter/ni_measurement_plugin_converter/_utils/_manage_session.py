@@ -3,7 +3,8 @@
 import ast
 import itertools
 from enum import Enum
-from logging import getLogger
+from logging import Logger, getLogger
+from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 
 import astor
@@ -19,7 +20,11 @@ from ni_measurement_plugin_converter._constants import (
 from ni_measurement_plugin_converter._models import PinInfo, RelayInfo, SessionMapping
 from ni_measurement_plugin_converter._utils import get_function_node
 from ni_measurement_plugin_converter._utils._manage_session_helper import (
+    check_for_visa,
+    get_pin_and_relay_names_signature,
+    get_plugin_session_initializations,
     get_sessions_details,
+    get_sessions_signature,
     instrument_is_visa_type,
     ni_drivers_supported_instrument,
 )
@@ -29,6 +34,9 @@ INSTRUMENT_TYPE = "instrument_type"
 INVALID_DRIVERS = "Invalid/No driver used. Supported drivers: {supported_drivers}"
 EXTRACT_DRIVER_SESSIONS = "Extracting driver sessions from measurement function..."
 MIGRATED_FILE_MODIFIED = "Migrated file is modified."
+ADD_SESSION_INITIALIZATION = "Adding session initialization..."
+ADD_SESSION_MAPPING = "Adding session mapping..."
+DEFINE_PINS_RELAYS = "Defining pins and relays..."
 
 
 class DriverSession(Enum):
@@ -79,19 +87,7 @@ def _check_driver_session(child_node: ast.With) -> bool:
     return False
 
 
-def manage_session(migrated_file_dir: str, function: str) -> Dict[str, List[str]]:
-    """Manage session.
-
-    1. Get sessions details.
-    2. Add session variables to migrated file.
-
-    Args:
-        migrated_file_dir (str): Migrated measurement file directory.
-        function (str): Measurement function name.
-
-    Returns:
-        Dict[str, List[str]]: Drivers as keys and list of session variables as values.
-    """
+def _manage_session(migrated_file_dir: str, function: str) -> Dict[str, List[str]]:
     logger = getLogger(DEBUG_LOGGER)
 
     measurement_function_node = get_function_node(file_dir=migrated_file_dir, function=function)
@@ -131,20 +127,9 @@ def manage_session(migrated_file_dir: str, function: str) -> Dict[str, List[str]
     return sessions_details
 
 
-def get_pins_and_relays_info(
-    sessions_details: Dict[str, List[str]]
+def _get_pins_and_relays_info(
+    sessions_details: Dict[str, List[str]], plugin_metadata: Dict[str, Any]
 ) -> Tuple[List[PinInfo], List[RelayInfo]]:
-    """Get pins and relays info.
-
-    1. Get pins for sessions of instrument drivers other than niswitch driver.
-    2. Get relays for sessions of niswitch driver.
-
-    Args:
-        sessions_details (Dict[str, List[str]]): Session details.
-
-    Returns:
-        Tuple[List[PinInfo], List[RelayInfo]]: List of pins and List of relays.
-    """
     pins_info = []
     relays_info = []
 
@@ -173,21 +158,16 @@ def get_pins_and_relays_info(
                 )
             )
 
+    plugin_metadata["pins_info"] = pins_info
+    plugin_metadata["relays_info"] = relays_info
+    pins_and_relays = pins_info[:] + relays_info
+    plugin_metadata["pin_and_relay_signature"] = get_pin_and_relay_names_signature(pins_and_relays)
+    plugin_metadata["pin_or_relay_names"] = _get_pin_and_relay_names(pins_and_relays)
+
     return pins_info, relays_info
 
 
-def get_session_mapping(sessions_details: Dict[str, List[str]]) -> List[SessionMapping]:
-    """Get session mapping.
-
-    1. Get session mapping using `get_connection` as strings.
-    2. Create `SessionMapping` model.
-
-    Args:
-        sessions_details (Dict[str, List[str]]): Session details.
-
-    Returns:
-        List[SessionMapping]: Sessions and its mappings.
-    """
+def _get_session_mapping(sessions_details: Dict[str, List[str]]) -> List[SessionMapping]:
     sessions_connections = []
 
     for driver, session_vars in sessions_details.items():
@@ -204,14 +184,43 @@ def get_session_mapping(sessions_details: Dict[str, List[str]]) -> List[SessionM
     return sessions_connections
 
 
-def get_pin_and_relay_names(pins_and_relays: List[Union[PinInfo, RelayInfo]]) -> str:
-    """Get pin and relay names.
-
-    Args:
-        pins_and_relays (List[Union[PinInfo, RelayInfo]]): Pin info and relay info.
-
-    Returns:
-        str: pin and relay names.
-    """
+def _get_pin_and_relay_names(pins_and_relays: List[Union[PinInfo, RelayInfo]]) -> str:
     pin_and_relay_names = [f"{pin_and_relay.name}" for pin_and_relay in pins_and_relays]
     return ", ".join(pin_and_relay_names)
+
+
+def process_sessions_and_update_metadata(
+    migrated_file_path: Path, function: str, plugin_metadata: Dict[str, Any], logger: Logger
+) -> Tuple[List[PinInfo], List[RelayInfo]]:
+    """Process session details and update plugin metadata.
+
+    1. Retrieve session details and mappings.
+    2. Add session mappings, initializations, and relevant metadata.
+
+    Args:
+        migrated_file_path: Path to the migrated file.
+        function: Name of the measurement function.
+        plugin_metadata: Metadata dictionary for the plugin.
+        logger: Logger instance.
+
+    Returns:
+        Information about pins and relays.
+    """
+    sessions_details = _manage_session(str(migrated_file_path), function)
+
+    logger.info(DEFINE_PINS_RELAYS)
+    pins_info, relays_info = _get_pins_and_relays_info(sessions_details, plugin_metadata)
+
+    logger.info(ADD_SESSION_MAPPING)
+    sessions_connections = _get_session_mapping(sessions_details)
+
+    plugin_metadata["session_mappings"] = sessions_connections
+    plugin_metadata["sessions"] = get_sessions_signature(sessions_connections)
+
+    logger.info(ADD_SESSION_INITIALIZATION)
+
+    plugin_metadata["session_initializations"] = get_plugin_session_initializations(
+        sessions_details
+    )
+    plugin_metadata["is_visa"] = check_for_visa(sessions_details)
+    return pins_info, relays_info

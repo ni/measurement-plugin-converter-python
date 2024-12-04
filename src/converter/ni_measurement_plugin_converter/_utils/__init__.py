@@ -3,8 +3,6 @@
 from ni_measurement_plugin_converter._utils._create_measui_file import create_measui_file
 from ni_measurement_plugin_converter._utils._extract_inputs import (
     extract_inputs,
-    generate_input_params,
-    generate_input_signature,
 )
 from ni_measurement_plugin_converter._utils._extract_outputs import (
     extract_outputs,
@@ -17,10 +15,7 @@ from ni_measurement_plugin_converter._utils._logger import (
     remove_handlers,
 )
 from ni_measurement_plugin_converter._utils._manage_session import (
-    get_pin_and_relay_names,
-    get_pins_and_relays_info,
-    get_session_mapping,
-    manage_session,
+    process_sessions_and_update_metadata,
 )
 from ni_measurement_plugin_converter._utils._manage_session_helper import (
     check_for_visa,
