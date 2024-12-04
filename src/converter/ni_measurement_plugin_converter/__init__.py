@@ -5,6 +5,7 @@ __version__ = "1.0.0-dev8"
 import re
 import shutil
 from pathlib import Path
+from typing import List, Union
 
 import click
 from click import ClickException
@@ -17,6 +18,8 @@ from ni_measurement_plugin_converter._constants import (
 )
 from ni_measurement_plugin_converter._models import (
     CliInputs,
+    PinInfo,
+    RelayInfo,
 )
 from ni_measurement_plugin_converter._utils import (
     check_for_visa,
@@ -48,6 +51,7 @@ PROCESS_COMPLETED = "Process completed."
 ERROR_OCCURRED = (
     "Error occurred. Please verify that the provided measurement is in the expected format."
 )
+FUNCTION_NODE_NOT_FOUND = "Function node could not be found for function: {function}"
 MEASUREMENT_PLUGIN_CREATED = "Measurement plug-in is created at {plugin_dir}"
 MEASUI_FILE_CREATED = "Measurement UI file is created."
 MEASUREMENT_FILE_CREATED = "Measurement file is created."
@@ -127,13 +131,15 @@ def convert_to_plugin(
         logger.info(VALIDATE_CLI_ARGS)
 
         directory_out_path = Path(directory_out)
-        measurement_file_path = Path(measurement_file_path)
         migrated_file_path = directory_out_path / MIGRATED_MEASUREMENT_FILENAME
-        shutil.copy(measurement_file_path, migrated_file_path)
+        shutil.copy(Path(measurement_file_path), migrated_file_path)
         logger.debug(FILE_MIGRATED)
 
         logger.debug(GET_FUNCTION)
-        function_node = get_function_node(file_dir=str(measurement_file_path), function=function)
+        function_node = get_function_node(file_dir=str(Path(measurement_file_path)), function=function)
+        
+        if function_node is None:
+            raise ValueError(FUNCTION_NODE_NOT_FOUND.format(function=function))
 
         logger.info(EXTRACT_INPUT_INFO)
 
@@ -153,8 +159,7 @@ def convert_to_plugin(
 
         pins_info, relays_info = get_pins_and_relays_info(sessions_details)
 
-        pins_and_relays = pins_info[:]
-        pins_and_relays.extend(relays_info)
+        pins_and_relays: List[Union[PinInfo, RelayInfo]] = pins_info + relays_info
 
         pin_and_relay_signature = get_pin_and_relay_names_signature(pins_and_relays)
         pin_or_relay_names = get_pin_and_relay_names(pins_and_relays)
