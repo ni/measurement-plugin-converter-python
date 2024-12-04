@@ -74,6 +74,8 @@ MIGRATED_MEASUREMENT_FILENAME = "_migrated.py"
 
 MEASUREMENT_VERSION = 1.0
 
+MEASUREMENT_FILE_PATH_OPTION = "--measurement-file-path"
+
 
 @click.command(context_settings=CONTEXT_SETTINGS)
 @click.option(
@@ -84,14 +86,14 @@ MEASUREMENT_VERSION = 1.0
 )
 @click.option(
     "-m",
-    "--measurement-file-path",
+    MEASUREMENT_FILE_PATH_OPTION,
     help="Path to the directory containing the Python measurement file to be converted.",
     required=True,
 )
 @click.option(
     "-f",
     "--function",
-    help="Name of the function within the measurement file --measurement-file-path that contains the measurement logic.",
+    help=f"Name of the function within the measurement file {MEASUREMENT_FILE_PATH_OPTION} that contains the measurement logic.",
     required=True,
 )
 @click.option(
