@@ -5,11 +5,12 @@ from typing import Union
 
 from ni_measurement_plugin_converter._constants import ENCODING
 
+FUNCTION_NODE_NOT_FOUND = "Function node could not be found for function: {function}"
 
 def get_function_node(
     file_dir: str,
     function: str,
-) -> Union[ast.FunctionDef, None]:
+) -> ast.FunctionDef:
     """Get `function` node from `file_dir`.
 
     1. Parse file code into abstract syntax tree.
@@ -22,8 +23,8 @@ def get_function_node(
         function (str): Name of function.
 
     Returns:
-        Union[ast.FunctionDef, None]: If `function` is present in `file_dir`, \
-        then the function node is returned. If not, then `None` is returned.
+        ast.FunctionDef: If `function` is present in `file_dir`, \
+        then the function node is returned. If not, then raises ValueError.
     """
     function_node = None
 
@@ -36,5 +37,8 @@ def get_function_node(
         if isinstance(node, ast.FunctionDef) and node.name == function:
             function_node = node
             break
+        
+    if function_node is None:
+        raise ValueError(FUNCTION_NODE_NOT_FOUND.format(function=function))
 
     return function_node

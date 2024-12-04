@@ -2,7 +2,7 @@
 
 import ast
 from logging import getLogger
-from typing import Dict, List, Union
+from typing import Dict, List, Optional, Union
 
 from ni_measurement_plugin_converter._constants import (
     DEBUG_LOGGER,
@@ -30,10 +30,9 @@ UNSUPPORTED_INPUTS = "The inputs {params} are skipped because their data types a
 
 
 def _get_input_params_without_defaults(args: List[ast.arg]) -> Dict[str, Dict[str, str]]:
-    input_params = {}
+    input_params: Dict[str, Dict[str, str]] = {}
     for arg in args:
         param_name = arg.arg
-        param_type = None
 
         # Extract parameter type from annotation
         if arg.annotation:
@@ -44,14 +43,14 @@ def _get_input_params_without_defaults(args: List[ast.arg]) -> Dict[str, Dict[st
         except KeyError:
             default_value = None
 
-        input_params[param_name] = {PYTHON_DATATYPE: param_type, _DEFAULT: default_value}
+        input_params[param_name] = {PYTHON_DATATYPE: param_type, _DEFAULT: str(default_value)}
 
     return input_params
 
 
 def _get_input_params_with_defaults(
     args: List[ast.arg],
-    defaults: List[Union[ast.Constant, ast.List]],
+    defaults: List[ast.expr],
 ) -> Dict[str, Dict[str, str]]:
     input_params = {}
 
@@ -109,7 +108,7 @@ def extract_inputs(function_node: ast.FunctionDef) -> List[InputInfo]:
     Returns:
         List[InputInfo]: Measurement function input information.
     """
-    inputs_info = {}
+    inputs_info: Dict[str, Dict[str, str]] = {}
     param_defaults = function_node.args.defaults or []
 
     params_without_defaults = function_node.args.args[
@@ -120,9 +119,7 @@ def extract_inputs(function_node: ast.FunctionDef) -> List[InputInfo]:
     inputs_info.update(_get_input_params_without_defaults(params_without_defaults))
     inputs_info.update(_get_input_params_with_defaults(params_with_defaults, param_defaults))
 
-    inputs_info = _update_inputs_info(inputs_info=inputs_info)
-
-    return inputs_info
+    return _update_inputs_info(inputs_info=inputs_info)
 
 
 def generate_input_params(inputs_info: List[InputInfo]) -> str:

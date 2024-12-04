@@ -51,7 +51,6 @@ PROCESS_COMPLETED = "Process completed."
 ERROR_OCCURRED = (
     "Error occurred. Please verify that the provided measurement is in the expected format."
 )
-FUNCTION_NODE_NOT_FOUND = "Function node could not be found for function: {function}"
 MEASUREMENT_PLUGIN_CREATED = "Measurement plug-in is created at {plugin_dir}"
 MEASUI_FILE_CREATED = "Measurement UI file is created."
 MEASUREMENT_FILE_CREATED = "Measurement file is created."
@@ -137,9 +136,6 @@ def convert_to_plugin(
 
         logger.debug(GET_FUNCTION)
         function_node = get_function_node(file_dir=str(Path(measurement_file_path)), function=function)
-        
-        if function_node is None:
-            raise ValueError(FUNCTION_NODE_NOT_FOUND.format(function=function))
 
         logger.info(EXTRACT_INPUT_INFO)
 

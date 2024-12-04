@@ -45,7 +45,8 @@ class DriverSession(Enum):
 
 def _add_params(function_node: ast.FunctionDef, params: List[str]) -> ast.FunctionDef:
     for param in params[::-1]:
-        function_node.args.args.insert(0, param)
+        arg_node = ast.arg(arg=param, annotation=None)
+        function_node.args.args.insert(0, arg_node)
 
     return function_node
 

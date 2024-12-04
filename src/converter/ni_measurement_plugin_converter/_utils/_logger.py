@@ -4,6 +4,7 @@ import logging
 import sys
 from logging import Logger, StreamHandler, handlers
 from pathlib import Path
+from typing import Optional
 
 from ni_measurement_plugin_converter._constants import DEBUG_LOGGER
 
@@ -66,7 +67,7 @@ def print_log_file_location() -> None:
             logger.info(LOG_FILE.format(log_file_path=handler.baseFilename))
 
 
-def initialize_logger(name: str, log_directory: str) -> Logger:
+def initialize_logger(name: str, log_directory: Optional[str]) -> Logger:
     """Initialize logger object.
 
     Args:

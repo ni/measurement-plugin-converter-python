@@ -16,25 +16,32 @@ INSTRUMENT_TYPE = "instrument_type"
 
 
 def _get_session_details(child_node: ast.With) -> Dict[str, List[str]]:
-    sessions_details = {}
+    sessions_details: Dict[str, List[str]] = {}
 
     for item in child_node.items:
-        if isinstance(item.context_expr, ast.Call):
+        if isinstance(item.context_expr, ast.Call) and (item.optional_vars is not None):
             call = item.context_expr
 
             if ni_drivers_supported_instrument(call):
-                if call.func.value.id not in sessions_details:
-                    sessions_details[call.func.value.id] = [item.optional_vars.id]
-                else:
-                    sessions_details[call.func.value.id].append(item.optional_vars.id)
+                if isinstance(call.func, ast.Attribute) and isinstance(call.func.value, ast.Name) and isinstance(item.optional_vars, ast.Name):
+                    driver_id = call.func.value.id
+                    session_id = item.optional_vars.id
+                    
+                    if driver_id not in sessions_details:
+                        sessions_details[driver_id] = [session_id]
+                    else:
+                        sessions_details[driver_id].append(session_id)
 
             elif instrument_is_visa_type(call):
                 resource_name = _get_resource_name(call)
 
-                if resource_name not in sessions_details:
-                    sessions_details[resource_name] = [item.optional_vars.id]
-                else:
-                    sessions_details[resource_name].append(item.optional_vars.id)
+                if isinstance(item.optional_vars, ast.Name):
+                    session_id = item.optional_vars.id
+                    
+                    if resource_name not in sessions_details:
+                        sessions_details[resource_name] = [session_id]
+                    else:
+                        sessions_details[resource_name].append(session_id)
 
     return sessions_details
 
@@ -50,7 +57,7 @@ def _get_resource_name(call: ast.Call) -> str:
     if resource_name is None and call.args and len(call.args) > 0:
         resource_name = ast.literal_eval(call.args[0])
 
-    resource_name = re.sub(ALPHANUMERIC_PATTERN, "_", resource_name)
+    resource_name = re.sub(ALPHANUMERIC_PATTERN, "_", str(resource_name))
 
     return resource_name
 
