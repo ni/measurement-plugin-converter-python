@@ -3,7 +3,7 @@
 import ast
 import re
 from logging import getLogger
-from typing import Any, List, Tuple
+from typing import Any, Dict, List, Tuple
 
 from ni_measurement_plugin_converter._constants import DEBUG_LOGGER
 from ni_measurement_plugin_converter._models import OutputInfo
@@ -80,7 +80,9 @@ def generate_output_signature(outputs_info: List[OutputInfo]) -> str:
     return ", ".join(variable_types)
 
 
-def extract_outputs(function_node: ast.FunctionDef) -> Tuple[List[OutputInfo], bool]:
+def extract_outputs(
+    function_node: ast.FunctionDef, plugin_metadata: Dict[str, Any]
+) -> List[OutputInfo]:
     """Extract outputs information from `function_node`.
 
     Args:
@@ -102,5 +104,8 @@ def extract_outputs(function_node: ast.FunctionDef) -> Tuple[List[OutputInfo], b
         output_types = [output_types]
 
     output_configurations = _get_output_info(output_variables, output_types)
+    plugin_metadata["outputs_info"] = output_configurations
+    plugin_metadata["output_signature"] = generate_output_signature(output_configurations)
+    plugin_metadata["iterable_outputs"] = iterable_output
 
-    return output_configurations, iterable_output
+    return output_configurations

@@ -2,11 +2,9 @@
 
 import ast
 from logging import getLogger
-from typing import Dict, List, Union
+from typing import Any, Dict, List, Union
 
-from ni_measurement_plugin_converter._constants import (
-    DEBUG_LOGGER,
-)
+from ni_measurement_plugin_converter._constants import DEBUG_LOGGER
 from ni_measurement_plugin_converter._models import InputInfo
 from ni_measurement_plugin_converter._utils._measurement_service import (
     extract_type,
@@ -100,7 +98,19 @@ def _update_inputs_info(inputs_info: Dict[str, Dict[str, str]]) -> List[InputInf
     return updated_inputs_info
 
 
-def extract_inputs(function_node: ast.FunctionDef) -> List[InputInfo]:
+def _generate_input_params(inputs_info: List[InputInfo]) -> str:
+    parameter_names = [f"{info.param_name}={info.param_name}" for info in inputs_info]
+    return ", ".join(parameter_names)
+
+
+def _generate_input_signature(inputs_info: List[InputInfo]) -> str:
+    parameter_info = [f"{info.param_name}:{info.param_type}" for info in inputs_info]
+    return ", ".join(parameter_info)
+
+
+def extract_inputs(
+    function_node: ast.FunctionDef, plugin_metadata: Dict[str, Any]
+) -> List[InputInfo]:
     """Extract inputs' info from `function_node`.
 
     Args:
@@ -122,31 +132,8 @@ def extract_inputs(function_node: ast.FunctionDef) -> List[InputInfo]:
 
     inputs_info = _update_inputs_info(inputs_info=inputs_info)
 
+    plugin_metadata["inputs_info"] = inputs_info
+    plugin_metadata["input_param_names"] = _generate_input_params(inputs_info)
+    plugin_metadata["input_signature"] = _generate_input_signature(inputs_info)
+
     return inputs_info
-
-
-def generate_input_params(inputs_info: List[InputInfo]) -> str:
-    """Generate string separated by comma where each element represents an input parameter.
-
-    Args:
-        inputs_info (List[InputInfo]): Input details.
-
-    Returns:
-        str: Input parameters names as a comma separated string.
-    """
-    parameter_names = [f"{info.param_name}={info.param_name}" for info in inputs_info]
-    return ", ".join(parameter_names)
-
-
-def generate_input_signature(inputs_info: List[InputInfo]) -> str:
-    """Generate string separated by comma where each element represents an \
-        input parameter with its data type.
-
-    Args:
-        inputs_info (List[InputInfo]): Input information.
-
-    Returns:
-        str: Each input parameters and its data type as a comma separated string.
-    """
-    parameter_info = [f"{info.param_name}:{info.param_type}" for info in inputs_info]
-    return ", ".join(parameter_info)
