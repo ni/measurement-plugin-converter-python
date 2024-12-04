@@ -9,10 +9,61 @@ from ni_measurement_plugin_converter._constants import (
     NI_DRIVERS,
     RESERVATION,
 )
-from ni_measurement_plugin_converter.models import PinInfo, RelayInfo, SessionMapping
+from ni_measurement_plugin_converter._models import PinInfo, RelayInfo, SessionMapping
 
 SESSION_CONSTRUCTOR = "session_constructor"
 INSTRUMENT_TYPE = "instrument_type"
+
+
+def _get_session_details(child_node: ast.With) -> Dict[str, List[str]]:
+    sessions_details = {}
+
+    for item in child_node.items:
+        if isinstance(item.context_expr, ast.Call):
+            call = item.context_expr
+
+            if ni_drivers_supported_instrument(call):
+                if call.func.value.id not in sessions_details:
+                    sessions_details[call.func.value.id] = [item.optional_vars.id]
+                else:
+                    sessions_details[call.func.value.id].append(item.optional_vars.id)
+
+            elif instrument_is_visa_type(call):
+                resource_name = _get_resource_name(call)
+
+                if resource_name not in sessions_details:
+                    sessions_details[resource_name] = [item.optional_vars.id]
+                else:
+                    sessions_details[resource_name].append(item.optional_vars.id)
+
+    return sessions_details
+
+
+def _get_resource_name(call: ast.Call) -> str:
+    resource_name = None
+
+    for keyword in call.keywords:
+        if keyword.arg == "resource_name":
+            resource_name = ast.literal_eval(keyword.value)
+            break
+
+    if resource_name is None and call.args and len(call.args) > 0:
+        resource_name = ast.literal_eval(call.args[0])
+
+    resource_name = re.sub(ALPHANUMERIC_PATTERN, "_", resource_name)
+
+    return resource_name
+
+
+def _get_ni_driver_session_initialization(driver: str) -> str:
+    if driver == "nidaqmx":
+        return f"{RESERVATION}.create_nidaqmx_tasks()"
+
+    return f"{RESERVATION}.initialize_{driver}_sessions()"
+
+
+def _get_visa_driver_plugin_session_initialization(driver: str) -> str:
+    return f"{RESERVATION}.initialize_sessions({driver}_{SESSION_CONSTRUCTOR}, {driver}_{INSTRUMENT_TYPE})"
 
 
 def get_sessions_details(function_node: ast.FunctionDef) -> Dict[str, List[str]]:
@@ -34,30 +85,6 @@ def get_sessions_details(function_node: ast.FunctionDef) -> Dict[str, List[str]]
     return sessions_details
 
 
-def _get_session_details(child_node: ast.With) -> Dict[str, List[str]]:
-    sessions_details = {}
-
-    for item in child_node.items:
-        if isinstance(item.context_expr, ast.Call):
-            call = item.context_expr
-
-            if ni_drivers_supported_instrument(call):
-                if call.func.value.id not in sessions_details:
-                    sessions_details[call.func.value.id] = [item.optional_vars.id]
-                else:
-                    sessions_details[call.func.value.id].append(item.optional_vars.id)
-
-            elif instrument_is_visa_type(call):
-                resource_name = get_resource_name(call)
-
-                if resource_name not in sessions_details:
-                    sessions_details[resource_name] = [item.optional_vars.id]
-                else:
-                    sessions_details[resource_name].append(item.optional_vars.id)
-
-    return sessions_details
-
-
 def get_plugin_session_initializations(sessions_details: Dict[str, List[str]]) -> str:
     """Get plugin session initializations.
 
@@ -74,11 +101,11 @@ def get_plugin_session_initializations(sessions_details: Dict[str, List[str]]) -
 
     for driver in list(sessions_details.keys()):
         if driver in NI_DRIVERS:
-            session_initialization_code.append(get_ni_driver_session_initialization(driver))
+            session_initialization_code.append(_get_ni_driver_session_initialization(driver))
 
         else:
             session_initialization_code.append(
-                get_visa_driver_plugin_session_initialization(driver)
+                _get_visa_driver_plugin_session_initialization(driver)
             )
 
     return ", ".join(session_initialization_code)
@@ -96,6 +123,7 @@ def ni_drivers_supported_instrument(call: ast.Call) -> bool:
     if (
         isinstance(call.func, ast.Attribute)
         and isinstance(call.func.value, ast.Name)
+        and call.func.value.id in NI_DRIVERS
         and call.func.value.id in NI_DRIVERS
         and (call.func.attr == "Session" or call.func.attr == "Task")
     ):
@@ -125,61 +153,6 @@ def instrument_is_visa_type(call: ast.Call) -> bool:
         return True
 
     return False
-
-
-def get_resource_name(call: ast.Call) -> str:
-    """Get resource_name.
-
-    1. Get `resource_name` if it is a keyword argument.
-    2. If it is an argument, use the first argument as `resource_name`.
-    3. Sanitize `resource_name` to have only alphanumeric characters.
-
-    Args:
-        call (ast.Call): Function call code tree.
-
-    Returns:
-        str: Alphanumeric `resource_name`.
-    """
-    resource_name = None
-
-    for keyword in call.keywords:
-        if keyword.arg == "resource_name":
-            resource_name = ast.literal_eval(keyword.value)
-            break
-
-    if resource_name is None and call.args and len(call.args) > 0:
-        resource_name = ast.literal_eval(call.args[0])
-
-    resource_name = re.sub(ALPHANUMERIC_PATTERN, "_", resource_name)
-
-    return resource_name
-
-
-def get_ni_driver_session_initialization(driver: str) -> str:
-    """Get NI driver session initialization as a string.
-
-    Args:
-        driver (str): NI instrument driver name.
-
-    Returns:
-        str: NI driver plug-in session initialization as a string.
-    """
-    if driver == "nidaqmx":
-        return f"{RESERVATION}.create_nidaqmx_tasks()"
-
-    return f"{RESERVATION}.initialize_{driver}_sessions()"
-
-
-def get_visa_driver_plugin_session_initialization(driver: str) -> str:
-    """Get VISA session initialization.
-
-    Args:
-        driver (str): VISA instrument driver name.
-
-    Returns:
-        str: VISA driver plugin session initialization as a string.
-    """
-    return f"{RESERVATION}.initialize_sessions({driver}_{SESSION_CONSTRUCTOR}, {driver}_{INSTRUMENT_TYPE})"
 
 
 def check_for_visa(sessions_details: Dict[str, List[str]]) -> bool:
