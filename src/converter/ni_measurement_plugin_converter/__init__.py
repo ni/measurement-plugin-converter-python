@@ -16,11 +16,7 @@ from ni_measurement_plugin_converter._constants import (
     ALPHANUMERIC_PATTERN,
     DEBUG_LOGGER,
 )
-from ni_measurement_plugin_converter._models import (
-    CliInputs,
-    PinInfo,
-    RelayInfo,
-)
+from ni_measurement_plugin_converter._models import CliInputs, PinInfo, RelayInfo
 from ni_measurement_plugin_converter._utils import (
     check_for_visa,
     create_file,
@@ -135,7 +131,9 @@ def convert_to_plugin(
         logger.debug(FILE_MIGRATED)
 
         logger.debug(GET_FUNCTION)
-        function_node = get_function_node(file_dir=str(Path(measurement_file_path)), function=function)
+        function_node = get_function_node(
+            file_dir=str(Path(measurement_file_path)), function=function
+        )
 
         logger.info(EXTRACT_INPUT_INFO)
 

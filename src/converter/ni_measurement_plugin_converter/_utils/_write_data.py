@@ -11,11 +11,11 @@ TEMPLATE_DIR = "templates"
 
 
 def create_file(template_name: str, file_path: Path, **template_args: Any) -> None:
-    """Create file.
+    """Create a file by rendering a template with provided arguments.
 
     Args:
         template_name (str): Template file name.
-        file_name (str): Output file name.
+        file_path (Path): Output file name.
     """
     output = _render_template(template_name, **template_args)
 

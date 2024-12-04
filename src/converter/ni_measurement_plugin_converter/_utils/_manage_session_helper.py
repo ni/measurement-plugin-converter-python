@@ -23,10 +23,14 @@ def _get_session_details(child_node: ast.With) -> Dict[str, List[str]]:
             call = item.context_expr
 
             if ni_drivers_supported_instrument(call):
-                if isinstance(call.func, ast.Attribute) and isinstance(call.func.value, ast.Name) and isinstance(item.optional_vars, ast.Name):
+                if (
+                    isinstance(call.func, ast.Attribute)
+                    and isinstance(call.func.value, ast.Name)
+                    and isinstance(item.optional_vars, ast.Name)
+                ):
                     driver_id = call.func.value.id
                     session_id = item.optional_vars.id
-                    
+
                     if driver_id not in sessions_details:
                         sessions_details[driver_id] = [session_id]
                     else:
@@ -37,7 +41,7 @@ def _get_session_details(child_node: ast.With) -> Dict[str, List[str]]:
 
                 if isinstance(item.optional_vars, ast.Name):
                     session_id = item.optional_vars.id
-                    
+
                     if resource_name not in sessions_details:
                         sessions_details[resource_name] = [session_id]
                     else:

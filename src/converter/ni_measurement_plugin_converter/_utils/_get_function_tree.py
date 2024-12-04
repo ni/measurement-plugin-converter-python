@@ -1,11 +1,11 @@
 """Implementation of get measurement function."""
 
 import ast
-from typing import Union
 
 from ni_measurement_plugin_converter._constants import ENCODING
 
 FUNCTION_NODE_NOT_FOUND = "Function node could not be found for function: {function}"
+
 
 def get_function_node(
     file_dir: str,
@@ -37,7 +37,7 @@ def get_function_node(
         if isinstance(node, ast.FunctionDef) and node.name == function:
             function_node = node
             break
-        
+
     if function_node is None:
         raise ValueError(FUNCTION_NODE_NOT_FOUND.format(function=function))
 

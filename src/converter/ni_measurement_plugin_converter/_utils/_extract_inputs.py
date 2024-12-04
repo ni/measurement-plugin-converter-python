@@ -2,11 +2,9 @@
 
 import ast
 from logging import getLogger
-from typing import Dict, List, Optional, Union
+from typing import Dict, List
 
-from ni_measurement_plugin_converter._constants import (
-    DEBUG_LOGGER,
-)
+from ni_measurement_plugin_converter._constants import DEBUG_LOGGER
 from ni_measurement_plugin_converter._models import InputInfo
 from ni_measurement_plugin_converter._utils._measurement_service import (
     extract_type,

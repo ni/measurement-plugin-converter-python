@@ -29,7 +29,9 @@ def get_nims_datatype(python_native_data_type: str) -> str:
     try:
         return NIMS_TYPE[python_native_data_type]
     except (KeyError, TypeError):
-        raise ValueError(UNKNOWN_PYTHON_NIMS_TYPE.format(python_native_data_type=python_native_data_type))
+        raise ValueError(
+            UNKNOWN_PYTHON_NIMS_TYPE.format(python_native_data_type=python_native_data_type)
+        )
 
 
 def extract_type(node: Union[ast.Name, ast.Subscript, ast.expr]) -> str:
@@ -46,10 +48,10 @@ def extract_type(node: Union[ast.Name, ast.Subscript, ast.expr]) -> str:
 
     if isinstance(node, ast.Subscript):
         generic_type = extract_type(node.value)
-        
+
         slice_value = node.slice
-        
-        if hasattr(slice_value, 'value'):
+
+        if hasattr(slice_value, "value"):
             slice_value = slice_value.value
 
         if isinstance(slice_value, ast.Tuple):
@@ -61,6 +63,6 @@ def extract_type(node: Union[ast.Name, ast.Subscript, ast.expr]) -> str:
 
         else:
             return f"{generic_type}[{extract_type(node.slice)}]"
-    
+
     # Fallback for other node types
     return str(type(node).__name__)

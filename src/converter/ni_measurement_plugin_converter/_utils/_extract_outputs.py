@@ -92,7 +92,9 @@ def extract_outputs(function_node: ast.FunctionDef) -> Tuple[List[OutputInfo], b
         boolean representing output type is tuple or not.
     """
     iterable_output, output_variables = _extract_type_and_variable_names(function_node.body)
-    output_types = extract_type(function_node.returns if function_node.returns else ast.Name(id="Any"))
+    output_types = extract_type(
+        function_node.returns if function_node.returns else ast.Name(id="Any")
+    )
 
     if isinstance(output_types, str) and iterable_output:
         # Separate each output types from combined output types.
