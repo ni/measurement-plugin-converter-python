@@ -28,8 +28,9 @@ ni-measurement-plugin-sdk-service = "^2.1.0"
 black = "^24.8.0"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.2.0"
 ni-python-styleguide = "^0.4.1"
+mypy = "^1.11.2"
+bandit = { version = "^1.7", extras = ["toml"] }
 nidcpower = { version = "^1.4.8", extras = ["grpc"] }
 nidmm = { version = "^1.4.8", extras = ["grpc"] }
 nidigital = { version = "^1.4.8", extras = ["grpc"] }
