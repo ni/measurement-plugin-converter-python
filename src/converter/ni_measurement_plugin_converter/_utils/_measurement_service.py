@@ -2,7 +2,7 @@
 
 import ast
 import sys
-from typing import Union
+from typing import Optional, Union
 
 # Python native data types and its corresponding `measurement_plugin_sdk_service` data types.
 NIMS_TYPE = {
@@ -15,10 +15,9 @@ NIMS_TYPE = {
     "List[str]": "nims.DataType.StringArray1D",
     "List[bool]": "nims.DataType.BooleanArray1D",
 }
-UNKNOWN_PYTHON_NIMS_TYPE = "Unknown Python native data type: {python_native_data_type}"
 
 
-def get_nims_datatype(python_native_data_type: str) -> str:
+def get_nims_datatype(python_native_data_type: str) -> Optional[str]:
     """Get the corresponding `measurement_plugin_sdk_service` data type.
 
     Args:
@@ -30,9 +29,7 @@ def get_nims_datatype(python_native_data_type: str) -> str:
     try:
         return NIMS_TYPE[python_native_data_type]
     except (KeyError, TypeError):
-        raise ValueError(
-            UNKNOWN_PYTHON_NIMS_TYPE.format(python_native_data_type=python_native_data_type)
-        )
+        return None
 
 
 def extract_type(node: Union[ast.Name, ast.Subscript, ast.expr]) -> str:
