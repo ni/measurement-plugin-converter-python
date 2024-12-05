@@ -1,4 +1,4 @@
-"""Helper classes and functions for MeasurementPlugIns."""
+"""Helper classes and functions for measurement plug-in."""
 
 import logging
 import pathlib
@@ -9,6 +9,8 @@ import click
 
 class TestStandSupport(object):
     """Class that communicates with TestStand."""
+
+    _PIN_MAP_ID_VAR = "NI.MeasurementPlugIns.PinMapId"
 
     def __init__(self, sequence_context: Any) -> None:
         """Initialize the TestStandSupport object.
@@ -24,11 +26,13 @@ class TestStandSupport(object):
         """Get the active pin map id from the NI.MeasurementPlugIns.PinMapId runtime variable.
 
         Returns:
-            The resource id of the pin map that is registered to the pin map service.
+            The resource id of the pin map if one is registered to the pin map service,
+            otherwise an empty string.
         """
-        return self._sequence_context.Execution.RunTimeVariables.GetValString(
-            "NI.MeasurementPlugIns.PinMapId", 0x0
-        )
+        run_time_variables = self._sequence_context.Execution.RunTimeVariables
+        if not run_time_variables.Exists(self._PIN_MAP_ID_VAR, 0x0):
+            return ""
+        return run_time_variables.GetValString(self._PIN_MAP_ID_VAR, 0x0)
 
     def resolve_file_path(self, file_path: str) -> str:
         """Resolve the absolute path to a file using the TestStand search directories.
