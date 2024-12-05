@@ -1,6 +1,6 @@
-# Measurement Plug-In UI Creator
+# NI Measurement Plug-In UI Creator
 
-- [Measurement Plug-In UI Creator](#measurement-plug-in-ui-creator)
+- [NI Measurement Plug-In UI Creator](#ni-measurement-plug-in-ui-creator)
       - [Create measurement plug-in UI file](#create-measurement-plug-in-ui-file)
       - [Update measurement plug-in UI file](#update-measurement-plug-in-ui-file)
       - [Prerequisites](#prerequisites)

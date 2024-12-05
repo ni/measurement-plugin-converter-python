@@ -1,6 +1,6 @@
-# Measurement Plug-In Converter for Python
+# NI Measurement Plug-In Converter
 
-- [Measurement Plug-In Converter for Python](#measurement-plug-in-converter-for-python)
+- [NI Measurement Plug-In Converter](#ni-measurement-plug-in-converter)
   - [Introduction](#introduction)
   - [Dependencies](#dependencies)
   - [How to install?](#how-to-install)
