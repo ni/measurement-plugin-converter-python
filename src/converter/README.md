@@ -1,6 +1,6 @@
-# NI Measurement Plug-In Converter
+# Measurement Plug-In Converter for Python
 
-- [NI Measurement Plug-In Converter](#ni-measurement-plug-in-converter)
+- [Measurement Plug-In Converter for Python](#measurement-plug-in-converter-for-python)
   - [Introduction](#introduction)
   - [Dependencies](#dependencies)
   - [How to install?](#how-to-install)
@@ -18,8 +18,8 @@
 
 ## Dependencies
 
-- [Python = 3.8.5](https://www.python.org/downloads/release/python-385/)
-- [NI Measurement Plug-In UI Creator](dependencies/ni_measurement_ui_creator-1.0.0.dev8-py3-none-any.whl)
+- [Python = ^3.8](https://www.python.org/downloads/release/python-385/)
+- [NI Measurement Plug-In UI Creator](../../dependencies/ni_measurement_plugin_ui_creator-1.0.0-py3-none-any.whl)
 
 ## How to install?
 
@@ -38,16 +38,21 @@
   ```cmd
   Usage: ni-measurement-plugin-converter [OPTIONS]
 
-    NI Measurement Plug-In Converter is a Command Line tool to convert     
-    Python measurements to measurement plug-ins.
+    Convert Python measurements to Python Measurement plug-ins.
 
   Options:
-    -d, --display-name TEXT         Display name.  [required]
+    -d, --display-name TEXT         Display name for the plug-in that will be
+                                    converted.  [required]
     -m, --measurement-file-path TEXT
-                                    Measurement file path.  [required]
-    -f, --function TEXT             Measurement function name.  [required]
-    -o, --output-dir TEXT           Output directory.  [required]
-    -h, --help                      Show this message and exit.
+                                    Path to the directory containing the Python
+                                    measurement file to be converted.
+                                    [required]
+    -f, --function TEXT             Name of the function within the measurement
+                                    file --measurement-file-path that contains
+                                    the measurement logic.  [required]
+    -o, --directory-out TEXT        Output directory for measurement plug-in
+                                    files.  [required]
+    -h, --help                      Show this message and exit
   ```
 
 - Run the following command to convert Python measurements to measurement plug-ins.

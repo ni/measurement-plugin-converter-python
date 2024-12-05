@@ -122,7 +122,7 @@ The `_migrated.py` file is the copy of the user-inputted measurement file with t
 
 For measurement that use VISA instruments, the `session_constructor`, session type and `instrument_type` must be updated with appropriate values.
 
-![VISA_updates](docs/images/VISA_updates.png)
+![VISA_updates](images/VISA_updates.png)
 
 Steps to be followed
 
@@ -130,7 +130,7 @@ Steps to be followed
 - Define the session class for the instrument type.
 - Define the session constructor for the instrument type.
 
-  ![VISA_updated](docs/images/VISA_updated.png)
+  ![VISA_updated](images/VISA_updated.png)
 
 - For `session_constructor`, create SessionConstructor object of the instrument driver used.
 - For `instrument_type`, use the pin map instrument type id.
@@ -138,7 +138,7 @@ Steps to be followed
 
 For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tree/releases/2.0/examples/nivisa_dmm_measurement).
 
-![VISA_examples](docs/images/VISA_examples.png)
+![VISA_examples](images/VISA_examples.png)
 
 ### Logger Implementation
 

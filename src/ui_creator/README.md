@@ -1,18 +1,14 @@
-# NI Measurement UI Creator
+# Measurement Plug-In UI Creator
 
-- [NI Measurement UI Creator](#ni-measurement-ui-creator)
-  - [Introduction](#introduction)
-  - [Dependencies](#dependencies)
-  - [How to install?](#how-to-install)
-  - [How to run?](#how-to-run)
-    - [Create measurement plug-in UI file](#create-measurement-plug-in-ui-file)
-    - [Update measurement plug-in UI file](#update-measurement-plug-in-ui-file)
-    - [Prerequisites](#prerequisites)
-    - [Supported data types](#supported-data-types)
-    - [Supported data elements](#supported-data-elements)
-    - [Unsupported data elements for update command](#unsupported-data-elements-for-update-command)
-    - [Event logger](#event-logger)
-    - [Limitations](#limitations)
+- [Measurement Plug-In UI Creator](#measurement-plug-in-ui-creator)
+      - [Create measurement plug-in UI file](#create-measurement-plug-in-ui-file)
+      - [Update measurement plug-in UI file](#update-measurement-plug-in-ui-file)
+      - [Prerequisites](#prerequisites)
+      - [Supported data types](#supported-data-types)
+      - [Supported data elements](#supported-data-elements)
+      - [Unsupported data elements for update command](#unsupported-data-elements-for-update-command)
+      - [Event logger](#event-logger)
+      - [Limitations](#limitations)
 
 ## Introduction
 
@@ -62,10 +58,10 @@ The create command will create a new UI file for the selected active measurement
 
   ```cmd
   Starting the NI Measurement Plug-In UI Creator...
-  Supported UI Elements: ['Numeric Indicator', 'Numeric Control', 'Numeric Array Input', 'Numeric Array Output', 'Boolean Horizontal Slider', 'Boolean Round LED', 'String Control', 'String Indicator', 'String Array Input', 'String Array Output', 'Pin']
+  Supported UI Elements: ['Boolean Horizontal Slider', 'Boolean Round LED', 'Numeric Array Input', 'Numeric Array Output', 'Numeric Control', 'Numeric Indicator', 'Pin', 'String Array Input', 'String Array Output', 'String Control', 'String Indicator']
   Getting the active measurements...
 
-  Registered/Available measurements:
+  Registered measurements:
   1. First Measurement (Py)
   2. Second Measurement (Py)
 
@@ -96,10 +92,10 @@ The update command will update the UI file by
 
   ```cmd
   Starting the NI Measurement Plug-In UI Creator...
-  Supported UI Elements: ['Numeric Indicator', 'Numeric Control', 'Numeric Array Input', 'Numeric Array Output', 'Boolean Horizontal Slider', 'Boolean Round LED', 'String Control', 'String Indicator', 'String Array Input', 'String Array Output', 'Pin']
+  Supported UI Elements: ['Boolean Horizontal Slider', 'Boolean Round LED', 'Numeric Array Input', 'Numeric Array Output', 'Numeric Control', 'Numeric Indicator', 'Pin', 'String Array Input', 'String Array Output', 'String Control', 'String Indicator']
   Getting the active measurements...
 
-  Registered/Available measurements:
+  Registered measurements:
   1. First Measurement (Py)
   2. Second Measurement (Py)
 
@@ -169,7 +165,7 @@ For update command,
 ### Event logger
 
 - The tool generates a log at the start of the conversion process, recording all actions performed throughout.
-- The log file is located inside the "Logs" folder within the output directory.
+- The log file is located inside the "ui_creator_logs" folder within the output directory.
 - This log includes detailed information on any errors encountered during the process.
 
 ### Limitations

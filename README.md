@@ -34,7 +34,7 @@ Measurement Plug-In Converter for Python has the following packages
 - Measurement Plug-In Converter
 
   - [Python = ^3.8](https://www.python.org/downloads/release/python-385/)
-  - [NI Measurement Plug-In UI Creator](dependencies/ni_measurement_ui_creator-1.0.0-py3-none-any.whl)
+  - [NI Measurement Plug-In UI Creator](dependencies/ni_measurement_plugin_ui_creator-1.0.0-py3-none-any.whl)
 
 - Measurement Plug-In UI Creator
 
@@ -69,12 +69,18 @@ Measurement Plug-In Converter for Python has the following packages
     Convert Python measurements to Python Measurement plug-ins.
 
   Options:
-    -d, --display-name TEXT         Display name of the plug-in that .  [required]
+    -d, --display-name TEXT         Display name for the plug-in that will be
+                                    converted.  [required]
     -m, --measurement-file-path TEXT
-                                    Measurement file path.  [required]
-    -f, --function TEXT             Measurement function name.  [required]
-    -o, --output-dir TEXT           Output directory.  [required]
-    -h, --help                      Show this message and exit.
+                                    Path to the directory containing the Python
+                                    measurement file to be converted.
+                                    [required]
+    -f, --function TEXT             Name of the function within the measurement
+                                    file --measurement-file-path that contains
+                                    the measurement logic.  [required]
+    -o, --directory-out TEXT        Output directory for measurement plug-in
+                                    files.  [required]
+    -h, --help                      Show this message and exit
   ```
 
 - Run the following command to convert Python measurements to measurement plug-ins.
@@ -253,7 +259,7 @@ The create command will create a new UI file for the selected active measurement
 
   ```cmd
   Starting the NI Measurement Plug-In UI Creator...
-  Supported UI Elements: ['Numeric Indicator', 'Numeric Control', 'Numeric Array Input', 'Numeric Array Output', 'Boolean Horizontal Slider', 'Boolean Round LED', 'String Control', 'String Indicator', 'String Array Input', 'String Array Output', 'Pin']
+  Supported UI Elements: ['Boolean Horizontal Slider', 'Boolean Round LED', 'Numeric Array Input', 'Numeric Array Output', 'Numeric Control', 'Numeric Indicator', 'Pin', 'String Array Input', 'String Array Output', 'String Control', 'String Indicator']
   Getting the active measurements...
 
   Registered measurements:
@@ -287,7 +293,7 @@ The update command will update the UI file by
 
   ```cmd
   Starting the NI Measurement Plug-In UI Creator...
-  Supported UI Elements: ['Numeric Indicator', 'Numeric Control', 'Numeric Array Input', 'Numeric Array Output', 'Boolean Horizontal Slider', 'Boolean Round LED', 'String Control', 'String Indicator', 'String Array Input', 'String Array Output', 'Pin']
+  Supported UI Elements: ['Boolean Horizontal Slider', 'Boolean Round LED', 'Numeric Array Input', 'Numeric Array Output', 'Numeric Control', 'Numeric Indicator', 'Pin', 'String Array Input', 'String Array Output', 'String Control', 'String Indicator']
   Getting the active measurements...
 
   Registered measurements:

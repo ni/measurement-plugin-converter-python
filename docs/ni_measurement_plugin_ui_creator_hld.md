@@ -34,7 +34,7 @@ Team: ModernLab Success
 
 Create a Python package `NI Measurement Plug-In UI Creator` which creates `.measui` files for the measurements, thereby reducing the manual efforts of creating measui files after modifying the measurement.
 
-The CLI tool prompts the user with necessary information about the measurements and the output files created. The measui files will be created in the current working directory. If any error occurs, the tool prompts the user to go through the `log.txt` file which will be created in the same file location as the measui files under a directory named `UI_creator_logs`. The active measurements in the system will be listed down for the user using the `ni_measurement_plugin_sdk_service` package.
+The CLI tool prompts the user with necessary information about the measurements and the output files created. The measui files will be created in the current working directory. If any error occurs, the tool prompts the user to go through the `log.txt` file which will be created in the same file location as the measui files under a directory named `ui_creator_logs`. The active measurements in the system will be listed down for the user using the `ni_measurement_plugin_sdk_service` package.
 
 It supports the following UI elements,
 
@@ -68,7 +68,7 @@ ni-measurement-plugin-ui-creator create
 
 For creating measui files, the input and output configured in the measurement are required. It will create `xml` file contents for each supported UI element and finally create the `.measui` file.
 
-![measui_file](./images/measui_file.png)
+![measui_file](images/measui_file.png)
 
 ### Logger implementation
 
@@ -76,15 +76,15 @@ Logger implementation plays a crucial role in this tool for displaying the statu
 Two types of loggers have been implemented in this tool, one is a `Console logger` and another is a `File logger`. Console logger is used for displaying messages in the console whereas the File logger is used for logging all types of messages in a separate file called `log.txt`. Both the logger logs the messages in different formats. The console logger logs the message as plain text whereas the file logger logs the messages along with the time stamp.
 
 For example,
-![file_logger](./images/ui_creator_file_logger.png)
+![file_logger](images/ui_creator_file_logger.png)
 
 The console logger gets loaded and then the file logger. The file logger contains all messages, including console messages, as well as any exceptions that occured during the execution.
 
-The log file will be created under the folder `UI_creator_logs` inside the user-provided output path, this folder will be created during the execution of the tool, if it does not exist.
+The log file will be created under the folder `ui_creator_logs` inside the user-provided output path, this folder will be created during the execution of the tool, if it does not exist.
 
 ## Installation
 
-This python package can be installed using the `pip install <path_to_ni_measurement_ui_creator-X_X_X-py3-none-any.whl>` command.
+This python package can be installed using the `pip install <path_to_ni_measurement_plugin_ui_creator-X_X_X-py3-none-any.whl>` command.
 
 ## Alternative implementations and designs
 

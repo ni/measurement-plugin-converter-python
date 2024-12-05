@@ -4,15 +4,15 @@ from pathlib import Path
 from typing import List
 
 import ni_measurement_plugin_sdk_service as nims
-from ni_measurement_ui_creator.constants import (
+from ni_measurement_plugin_ui_creator.constants import (
     CLIENT_ID,
     DataType,
     MeasUIElementPosition,
     SpecializedDataType,
 )
-from ni_measurement_ui_creator.models import DataElement
-from ni_measurement_ui_creator.utils._create_measui import create_measui
-from ni_measurement_ui_creator.utils._helpers import (
+from ni_measurement_plugin_ui_creator.models import DataElement
+from ni_measurement_plugin_ui_creator.utils.create_measui import write_measui
+from ni_measurement_plugin_ui_creator.utils.helpers import (
     create_control_elements,
     create_indicator_elements,
 )
@@ -216,6 +216,7 @@ def create_measui_file(
     outputs: List[OutputInfo],
     file_path: str,
     measurement_name: str,
+    service_class: str,
 ) -> None:
     """Create `.measui` file for the converted measurement.
 
@@ -226,6 +227,7 @@ def create_measui_file(
         outputs (List[OutputInfo]): List of outputs from measurement.
         file_path (str): File path of the measurement.
         measurement_name (str): Measurement name.
+        service_class (str): Service class name.
     """
     input_data_elements = _get_input_data_elements(pins, relays, inputs)
     output_data_elements = _get_output_data_elements(outputs)
@@ -234,7 +236,8 @@ def create_measui_file(
     output_ui_elements = create_indicator_elements(output_data_elements)
 
     measui_path = Path(file_path) / measurement_name
-    create_measui(
-        filepath=str(measui_path),
+    write_measui(
+        filepath=measui_path,
+        service_class=service_class,
         input_output_elements=input_ui_elements + output_ui_elements,
     )
