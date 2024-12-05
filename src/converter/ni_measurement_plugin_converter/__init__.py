@@ -11,6 +11,7 @@ from typing import Any, Dict, Optional
 import click
 from click import ClickException
 from mako.exceptions import CompileException, TemplateLookupException
+
 from ni_measurement_plugin_converter._constants import (
     ACCESS_DENIED,
     ALPHANUMERIC_PATTERN,
