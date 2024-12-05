@@ -68,19 +68,6 @@ def _get_output_info(
     return output_configurations
 
 
-def generate_output_signature(outputs_info: List[OutputInfo]) -> str:
-    """Generate a comma-separated string representing the data types of outputs.
-
-    Args:
-        outputs_info: A list of output information objects.
-
-    Returns:
-        A string of output data types, separated by commas.
-    """
-    variable_types = [info.variable_type for info in outputs_info]
-    return ", ".join(variable_types)
-
-
 def extract_outputs(
     function_node: ast.FunctionDef, plugin_metadata: Dict[str, Any]
 ) -> List[OutputInfo]:
@@ -108,7 +95,6 @@ def extract_outputs(
 
     output_configurations = _get_output_info(output_variables, parsed_output_types)
     plugin_metadata["outputs_info"] = output_configurations
-    plugin_metadata["output_signature"] = generate_output_signature(output_configurations)
     plugin_metadata["iterable_outputs"] = iterable_output
 
     return output_configurations

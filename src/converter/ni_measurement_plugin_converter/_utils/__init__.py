@@ -4,10 +4,7 @@ from ni_measurement_plugin_converter._utils._create_measui_file import create_me
 from ni_measurement_plugin_converter._utils._extract_inputs import (
     extract_inputs,
 )
-from ni_measurement_plugin_converter._utils._extract_outputs import (
-    extract_outputs,
-    generate_output_signature,
-)
+from ni_measurement_plugin_converter._utils._extract_outputs import extract_outputs
 from ni_measurement_plugin_converter._utils._get_function_tree import get_function_node
 from ni_measurement_plugin_converter._utils._logger import (
     initialize_logger,
