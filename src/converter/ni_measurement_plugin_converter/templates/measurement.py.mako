@@ -1,10 +1,13 @@
-<%page args="display_name, pins_info, relays_info, session_mappings, pin_and_relay_signature, pin_or_relay_names, session_initializations, serviceconfig_file, inputs_info, outputs_info, input_signature, input_param_names, is_visa, migrated_file, function_name, iterable_outputs"/>
+<%page args="display_name, pins_info, relays_info, session_mappings, pin_and_relay_signature, pin_or_relay_names, session_initializations, serviceconfig_file, inputs_info, outputs_info, input_signature, input_param_names, is_visa, migrated_file, function_name, iterable_outputs"/>\
+\
+import logging
 import pathlib
 import sys
 from typing import List
-from ${migrated_file} import ${function_name}
 
+import click
 import ni_measurement_plugin_sdk_service as nims
+from ${migrated_file} import ${function_name}
 
 script_or_exe = sys.executable if getattr(sys, "frozen", False) else __file__
 service_directory = pathlib.Path(script_or_exe).resolve().parent
@@ -79,7 +82,23 @@ def measure(${pin_and_relay_signature}, ${input_signature}):
             return ${function_name}(${sessions}, ${input_param_names})
 % endif
 
-def main() -> None:
+@click.command
+@click.option(
+    "-v",
+    "--verbose",
+    count=True,
+    help="Enable verbose logging. Repeat to increase verbosity.",
+)
+def main(verbose: int) -> None:
+    """Host the sample service."""
+    if verbose > 1:
+        level = logging.DEBUG
+    elif verbose == 1:
+        level = logging.INFO
+    else:
+        level = logging.WARNING
+    logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=level)
+
     with measurement_service.host_service():
         input("Press enter to close the measurement service.\n")
 

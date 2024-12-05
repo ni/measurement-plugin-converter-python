@@ -11,7 +11,6 @@ from typing import Any, Dict, Optional
 import click
 from click import ClickException
 from mako.exceptions import CompileException, TemplateLookupException
-
 from ni_measurement_plugin_converter._constants import (
     ACCESS_DENIED,
     ALPHANUMERIC_PATTERN,
@@ -61,7 +60,7 @@ BATCH_TEMPLATE = "start.bat.mako"
 BATCH_FILENAME = "start.bat"
 MIGRATED_MEASUREMENT_FILENAME = "_migrated.py"
 
-MEASUREMENT_VERSION = 1.0
+MEASUREMENT_VERSION = "1.0.0.0"
 
 MEASUREMENT_FILE_PATH_OPTION = "--measurement-file-path"
 
