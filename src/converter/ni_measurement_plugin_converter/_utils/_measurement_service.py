@@ -1,6 +1,7 @@
 """Implementation of Get NI Measurement Plug In SDK Service Data type and Instrument."""
 
 import ast
+import sys
 from typing import Union
 
 # Python native data types and its corresponding `measurement_plugin_sdk_service` data types.
@@ -45,6 +46,10 @@ def extract_type(node: Union[ast.Name, ast.Subscript]) -> str:
 
     if isinstance(node, ast.Subscript):
         generic_type = extract_type(node.value)
+
+        if sys.version_info >= (3, 9) and isinstance(node.slice, ast.Tuple):
+            inner_types = [extract_type(elt) for elt in node.slice.elts]
+            return inner_types
 
         if isinstance(node.slice.value, ast.Tuple):
             inner_types = [extract_type(elt) for elt in node.slice.value.elts]
