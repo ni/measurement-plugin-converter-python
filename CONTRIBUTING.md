@@ -80,7 +80,6 @@ To install the dependencies,
 
 For `ni-measurement-plugin-converter`, it is required to install the `ni-measurement-plugin-ui-creator` wheel file before installing other dependencies.
 
-<!-- Refer the published repo and Check with Prem -->
 ```cmd
 pip install <dependencies/wheel_file> 
 ```
