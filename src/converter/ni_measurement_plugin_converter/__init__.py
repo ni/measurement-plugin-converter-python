@@ -61,7 +61,7 @@ BATCH_TEMPLATE = "start.bat.mako"
 BATCH_FILENAME = "start.bat"
 MIGRATED_MEASUREMENT_FILENAME = "_migrated.py"
 
-MEASUREMENT_VERSION = 1.0
+MEASUREMENT_VERSION = "1.0.0.0"
 
 MEASUREMENT_FILE_PATH_OPTION = "--measurement-file-path"
 
@@ -204,6 +204,7 @@ def convert_to_plugin(
             directory_out_path / f"{sanitized_display_name}{SERVICE_CONFIG_FILE_EXTENSION}",
             display_name=sanitized_display_name,
             service_class=f"{sanitized_display_name}_Python",
+            version=MEASUREMENT_VERSION,
             directory_out=str(directory_out_path),
         )
         logger.debug(SERVICE_CONFIG_CREATED)
