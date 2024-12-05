@@ -1,4 +1,4 @@
-"""Constants reused across files."""
+"""Constants that are used across files."""
 
 DEBUG_LOGGER = "debug_logger"
 ENCODING = "utf-8"

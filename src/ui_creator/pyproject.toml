@@ -1,0 +1,40 @@
+[tool.poetry]
+name = "ni_measurement_plugin_ui_creator"
+version = "1.0.0-dev10"
+description = "CLI tool to create/update `.measui` files for measurement plug-ins."
+authors = ["NI <opensource@ni.com>"]
+repository = "https://github.com/ni/measurement-plugin-converter-python"
+license = "MIT"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Operating System :: Microsoft :: Windows",
+    # Poetry automatically adds classifiers for the license and the supported Python versions.
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Scientific/Engineering",
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pydantic = "^2.7.1"
+click = "^8.1.7"
+mako = "^1.3.5"
+ni-measurement-plugin-sdk-service = "^2.1.0"
+
+[tool.poetry.scripts]
+ni-measurement-plugin-ui-creator = "ni_measurement_plugin_ui_creator:start"
+
+[tool.poetry.group.dev.dependencies]
+ni-python-styleguide = "^0.4.6"
+mypy = "^1.13.0"
+bandit = "^1.7.10"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.bandit]
+exclude_dirs = [".venv"]
+
+[tool.mypy]
+ignore_missing_imports = true

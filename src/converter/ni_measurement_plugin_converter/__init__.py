@@ -2,9 +2,11 @@
 
 __version__ = "1.0.0-dev8"
 
+import ast
 import re
 import shutil
 from pathlib import Path
+from typing import Any, Dict, Optional
 
 import click
 from click import ClickException
@@ -14,30 +16,17 @@ from ni_measurement_plugin_converter._constants import (
     ACCESS_DENIED,
     ALPHANUMERIC_PATTERN,
     DEBUG_LOGGER,
+    ENCODING,
 )
-from ni_measurement_plugin_converter.models import (
-    CliInputs,
-    InvalidCliArgsError,
-    UnsupportedDriverError,
-)
-from ni_measurement_plugin_converter.utils import (
-    check_for_visa,
+from ni_measurement_plugin_converter._utils import (
     create_file,
     create_measui_file,
     extract_inputs,
     extract_outputs,
-    generate_input_params,
-    generate_input_signature,
     get_function_node,
-    get_pin_and_relay_names,
-    get_pin_and_relay_names_signature,
-    get_pins_and_relays_info,
-    get_plugin_session_initializations,
-    get_session_mapping,
-    get_sessions_signature,
     initialize_logger,
-    manage_session,
     print_log_file_location,
+    process_sessions_and_update_metadata,
     remove_handlers,
 )
 
@@ -60,9 +49,6 @@ GET_FUNCTION = "Getting function node tree..."
 VALIDATE_CLI_ARGS = "Inputs validated successfully."
 EXTRACT_INPUT_INFO = "Extracting inputs information from measurement function..."
 EXTRACT_OUTPUT_INFO = "Extracting outputs information from measurement function..."
-DEFINE_PINS_RELAYS = "Defining pins and relays..."
-ADD_SESSION_MAPPING = "Adding session mapping..."
-ADD_SESSION_INITIALIZATION = "Adding session initialization..."
 LOG_FILE = "Please find the log file at {log_file_path}"
 
 MEASUREMENT_TEMPLATE = "measurement.py.mako"
@@ -75,7 +61,46 @@ BATCH_TEMPLATE = "start.bat.mako"
 BATCH_FILENAME = "start.bat"
 MIGRATED_MEASUREMENT_FILENAME = "_migrated.py"
 
-MEASUREMENT_VERSION = "1.0.0.0"
+MEASUREMENT_VERSION = 1.0
+
+MEASUREMENT_FILE_PATH_OPTION = "--measurement-file-path"
+
+INVALID_FILE_DIR = (
+    "Invalid measurement file directory. Please provide valid measurement file directory."
+)
+FUNCTION_NOT_FOUND = "Measurement function {function} not found in the file {measurement_file_path}"
+
+
+def _validate_measurement_file(file_path: Path):
+    if not file_path.exists() or not file_path.is_file():
+        raise click.BadParameter(INVALID_FILE_DIR)
+
+
+def _validate_function(function_name: str, measurement_file_path: Path):
+    with measurement_file_path.open("r", encoding="utf-8") as file:
+        code = file.read()
+    code_tree = ast.parse(code)
+
+    if not any(
+        isinstance(node, ast.FunctionDef) and node.name == function_name
+        for node in ast.walk(code_tree)
+    ):
+        raise click.BadParameter(
+            FUNCTION_NOT_FOUND.format(
+                function=function_name, measurement_file_path=measurement_file_path
+            )
+        )
+
+
+def _validate_output_directory(output_dir: Path):
+    try:
+        output_dir.mkdir(parents=True, exist_ok=True)
+    except PermissionError:
+        raise click.BadParameter(
+            "Permission denied: Unable to create or access the output directory."
+        )
+    except OSError as e:
+        raise click.BadParameter(f"An error occurred: {e}")
 
 
 @click.command(context_settings=CONTEXT_SETTINGS)
@@ -87,14 +112,14 @@ MEASUREMENT_VERSION = "1.0.0.0"
 )
 @click.option(
     "-m",
-    "--measurement-file-dir",
+    MEASUREMENT_FILE_PATH_OPTION,
     help="Path to the directory containing the Python measurement file to be converted.",
     required=True,
 )
 @click.option(
     "-f",
     "--function",
-    help="Name of the function within the measurement file --measurement-file-dir that contains the measurement logic.",
+    help=f"Name of the function within the measurement file {MEASUREMENT_FILE_PATH_OPTION} that contains the measurement logic.",
     required=True,
 )
 @click.option(
@@ -102,23 +127,22 @@ MEASUREMENT_VERSION = "1.0.0.0"
 )
 def convert_to_plugin(
     display_name: str,
-    measurement_file_dir: str,
+    measurement_file_path: str,
     function: str,
     directory_out: str,
 ) -> None:
-    """NI Measurement Plug-In Converter is a Command Line tool to convert \
-        Python measurements to measurement plug-ins."""
+    """Convert Python measurements to Python Measurement plug-ins."""
     try:
         log_directory = None
         logger = initialize_logger(name="console_logger", log_directory=log_directory)
         logger.info(STARTING_EXECUTION)
 
-        CliInputs(
-            display_name=display_name,
-            measurement_file_dir=measurement_file_dir,
-            function=function,
-            output_dir=directory_out,
-        )
+        directory_out_path = Path(directory_out)
+        measurement_file_path = Path(measurement_file_path)
+
+        _validate_measurement_file(measurement_file_path)
+        _validate_function(function, measurement_file_path)
+        _validate_output_directory(directory_out_path)
 
         remove_handlers(logger)
 
@@ -128,8 +152,6 @@ def convert_to_plugin(
 
         logger.info(VALIDATE_CLI_ARGS)
 
-        directory_out_path = Path(directory_out)
-        measurement_file_path = Path(measurement_file_dir)
         migrated_file_path = directory_out_path / MIGRATED_MEASUREMENT_FILENAME
         shutil.copy(measurement_file_path, migrated_file_path)
         logger.debug(FILE_MIGRATED)
@@ -137,64 +159,33 @@ def convert_to_plugin(
         logger.debug(GET_FUNCTION)
         function_node = get_function_node(file_dir=str(measurement_file_path), function=function)
 
-        logger.info(EXTRACT_INPUT_INFO)
-
-        inputs_info = extract_inputs(function_node)
-        input_param_names = generate_input_params(inputs_info)
-        input_signature = generate_input_signature(inputs_info)
-
-        logger.info(EXTRACT_OUTPUT_INFO)
-
-        outputs_info, iterable_outputs = extract_outputs(function_node)
-
-        # Manage session.
-        sessions_details = manage_session(str(migrated_file_path), function)
-
-        logger.info(DEFINE_PINS_RELAYS)
-
-        pins_info, relays_info = get_pins_and_relays_info(sessions_details)
-
-        pins_and_relays = pins_info[:]
-        pins_and_relays.extend(relays_info)
-
-        pin_and_relay_signature = get_pin_and_relay_names_signature(pins_and_relays)
-        pin_or_relay_names = get_pin_and_relay_names(pins_and_relays)
-
-        logger.info(ADD_SESSION_MAPPING)
-
-        session_mappings = get_session_mapping(sessions_details)
-        sessions = get_sessions_signature(session_mappings)
-
-        logger.info(ADD_SESSION_INITIALIZATION)
-
-        plugin_session_initializations = get_plugin_session_initializations(sessions_details)
-
-        is_visa = check_for_visa(sessions_details)
+        plugin_metadata: Dict[str, Any] = {}
 
         sanitized_display_name = re.sub(ALPHANUMERIC_PATTERN, "_", display_name)
-        service_class = f"{sanitized_display_name}_Python"
+        plugin_metadata["display_name"] = sanitized_display_name
+
+        logger.info(EXTRACT_INPUT_INFO)
+        inputs_info = extract_inputs(function_node, plugin_metadata)
+
+        logger.info(EXTRACT_OUTPUT_INFO)
+        outputs_info = extract_outputs(function_node, plugin_metadata)
+
+        pins_info, relays_info = process_sessions_and_update_metadata(
+            migrated_file_path, function, plugin_metadata, logger
+        )
+
+        plugin_metadata["version"] = MEASUREMENT_VERSION
+        plugin_metadata["serviceconfig_file"] = (
+            f"{sanitized_display_name}{SERVICE_CONFIG_FILE_EXTENSION}"
+        )
+        plugin_metadata["migrated_file"] = migrated_file_path.stem
+        plugin_metadata["function_name"] = function
+        plugin_metadata["directory_out"] = str(directory_out_path)
 
         create_file(
             MEASUREMENT_TEMPLATE,
             directory_out_path / MEASUREMENT_FILENAME,
-            display_name=sanitized_display_name,
-            pins_info=pins_info,
-            relays_info=relays_info,
-            session_mappings=session_mappings,
-            session_initializations=plugin_session_initializations,
-            pin_and_relay_signature=pin_and_relay_signature,
-            pin_or_relay_names=pin_or_relay_names,
-            sessions=sessions,
-            serviceconfig_file=(f"{sanitized_display_name}{SERVICE_CONFIG_FILE_EXTENSION}"),
-            inputs_info=inputs_info,
-            outputs_info=outputs_info,
-            input_signature=input_signature,
-            input_param_names=input_param_names,
-            is_visa=is_visa,
-            migrated_file=migrated_file_path.stem,
-            function_name=function,
-            directory_out=str(directory_out_path),
-            iterable_outputs=iterable_outputs,
+            **plugin_metadata,
         )
         logger.debug(MEASUREMENT_FILE_CREATED)
 
@@ -212,7 +203,7 @@ def convert_to_plugin(
             SERVICE_CONFIG_TEMPLATE,
             directory_out_path / f"{sanitized_display_name}{SERVICE_CONFIG_FILE_EXTENSION}",
             display_name=sanitized_display_name,
-            service_class=service_class,
+            service_class=f"{sanitized_display_name}_Python",
             version=MEASUREMENT_VERSION,
             directory_out=str(directory_out_path),
         )
@@ -240,11 +231,14 @@ def convert_to_plugin(
         print_log_file_location()
 
     except (
-        InvalidCliArgsError,
+        FileNotFoundError,
+        NameError,
+        OSError,
+        PermissionError,
         ClickException,
         TemplateLookupException,
         CompileException,
-        UnsupportedDriverError,
+        ValueError,
     ) as error:
         logger.error(error)
         print_log_file_location()
