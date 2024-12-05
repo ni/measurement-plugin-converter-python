@@ -19,7 +19,7 @@
 ## Dependencies
 
 - [Python = 3.8.5](https://www.python.org/downloads/release/python-385/)
-- [NI Measurement Plug-In UI Creator](dependencies/ni_measurement_ui_creator-1.0.0.dev8-py3-none-any.whl)
+- [NI Measurement Plug-In UI Creator](dependencies/ni_measurement_plugin_ui_creator-1.0.0.dev8-py3-none-any.whl)
 
 ## How to install?
 

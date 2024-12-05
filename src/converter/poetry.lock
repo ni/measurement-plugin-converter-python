@@ -625,16 +625,16 @@ niscope = ["niscope[grpc] (>=1.4.4)"]
 niswitch = ["niswitch[grpc] (>=1.4.4)"]
 
 [[package]]
-name = "ni_measurement_ui_creator"
-version = "1.0.0.dev8"
-description = "NI Measurement UI Creator"
+name = "ni_measurement_plugin_ui_creator"
+version = "1.0.0"
+description = "CLI tool to create/update `.measui` files for measurement plug-ins."
 optional = false
 python-versions = "*"
 files = []
 
 [package.source]
 type = "file"
-url = "../../dependencies/ni_measurement_ui_creator-1.0.0.dev8-py3-none-any.whl"
+url = "../../dependencies/ni_measurement_plugin_ui_creator-1.0.0-py3-none-any.whl"
 
 [[package]]
 name = "ni-python-styleguide"
@@ -1550,4 +1550,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "b02dab8be8aad415046879e78ed91092635aec560543d1770a8d75808c73a6db"
+content-hash = "d021014b46c84942212a3c20f64838afa48d30a8ac85d5d4b480f7e0191c471a"
