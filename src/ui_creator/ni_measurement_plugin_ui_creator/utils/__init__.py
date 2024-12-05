@@ -1,1 +1,1 @@
-# flake8: noqa
+"""Measurement Plug-In UI Creator helper functions"""
