@@ -197,6 +197,7 @@ def convert_to_plugin(
             outputs=outputs_info,
             file_path=directory_out_path,
             measurement_name=sanitized_display_name,
+            service_class=f"{sanitized_display_name}_Python",
         )
         logger.debug(MEASUI_FILE_CREATED)
 

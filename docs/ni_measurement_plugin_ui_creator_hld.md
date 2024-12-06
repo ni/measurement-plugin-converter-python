@@ -84,7 +84,7 @@ The log file will be created under the folder `UI_creator_logs` inside the user-
 
 ## Installation
 
-This python package can be installed using the `pip install <path_to_ni_measurement_ui_creator-X_X_X-py3-none-any.whl>` command.
+This python package can be installed using the `pip install <path_to_ni_measurement_plugin_ui_creator-X_X_X-py3-none-any.whl>` command.
 
 ## Alternative implementations and designs
 
