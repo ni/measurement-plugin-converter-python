@@ -16,6 +16,7 @@ from ni_measurement_plugin_converter._constants import (
     ACCESS_DENIED,
     ALPHANUMERIC_PATTERN,
     DEBUG_LOGGER,
+    ENCODING,
 )
 from ni_measurement_plugin_converter._utils import (
     create_file,
@@ -76,7 +77,7 @@ def _validate_measurement_file(file_path: Path):
 
 
 def _validate_function(function_name: str, measurement_file_path: Path):
-    with measurement_file_path.open("r", encoding="utf-8") as file:
+    with measurement_file_path.open("r", encoding=ENCODING) as file:
         code = file.read()
     code_tree = ast.parse(code)
 

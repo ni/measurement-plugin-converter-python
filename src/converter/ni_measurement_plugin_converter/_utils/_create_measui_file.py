@@ -1,7 +1,7 @@
 """Creation of .measui file for the converted measurement."""
 
 from pathlib import Path
-from typing import List
+from typing import List, Union
 
 import ni_measurement_plugin_sdk_service as nims
 from ni_measurement_ui_creator.constants import (
@@ -42,7 +42,7 @@ def _get_input_data_elements(
 ) -> List[DataElement]:
     input_data_elements = []
     left_alignment = MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
-    top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
+    top_alignment: Union[float, int] = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
 
     height = MeasUIElementPosition.DEFAULT_HEIGHT
     width = MeasUIElementPosition.DEFAULT_WIDTH
@@ -143,7 +143,7 @@ def _get_input_data_elements(
 
 def _get_output_data_elements(outputs: List[OutputInfo]) -> List[DataElement]:
     output_data_elements = []
-    top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
+    top_alignment: Union[float, int] = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
 
     left_alignment = (
         MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
