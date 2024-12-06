@@ -41,8 +41,7 @@ def get_metadata_and_service_class() -> Optional[Tuple[Union[V1MetaData, V2MetaD
     """Get metadata and service class of the measurement plug-in.
 
     Returns:
-        Optional[Tuple[Union[V1MetaData, V2MetaData], str]]: Metadata and service class name
-        if selected measurement plug-in is valid. Else None.
+        Metadata and service class name if selected measurement plug-in is valid. Else None.
     """
     os.environ["GRPC_VERBOSITY"] = "NONE"
     discovery_client = DiscoveryClient()
@@ -63,13 +62,13 @@ def get_measui_selection(total_uis: int) -> int:
     """Get measurment plug-in UI selection.
 
     Args:
-        total_uis (int): Total UIs available for the measurement plug-in.
+        total_uis: Total UIs available for the measurement plug-in.
 
     Raises:
         InvalidCliInputError: If the entered number is invalid.
 
     Returns:
-        int: Selected measurement plug-in UI index.
+        Selected measurement plug-in UI index.
     """
     logger = getLogger(LOGGER)
     try:
@@ -96,10 +95,10 @@ def get_measui_files(metadata: Union[V1MetaData, V2MetaData]) -> List[str]:
     """Get measurement plug-in UI files.
 
     Args:
-        metadata (Union[V1MetaData, V2MetaData]): Metadata of measurement plug-in.
+        metadata: Metadata of measurement plug-in.
 
     Returns:
-        List[str]: Measurement plug-in UI file paths.
+        Measurement plug-in UI file paths.
     """
     file_uris = metadata.user_interface_details
     return [
@@ -110,14 +109,6 @@ def get_measui_files(metadata: Union[V1MetaData, V2MetaData]) -> List[str]:
 
 
 def _uri_to_path(uri: str) -> str:
-    """Convert the URI to path.
-
-    Args:
-        uri (str): Input URI.
-
-    Returns:
-        str: Path from the URI.
-    """
     return urllib.parse.unquote(urllib.parse.urlparse(uri).path)
 
 
@@ -125,7 +116,7 @@ def validate_measui(root: ETree.ElementTree) -> None:
     """Validate measurement plug-in UI file.
 
     Args:
-        root (ETree.ElementTree): Element tree of measurement plug-in UI file.
+        root: Element tree of measurement plug-in UI file.
 
     Raises:
         InvalidMeasUIError: If measurement plug-in UI file is invalid.
@@ -141,10 +132,10 @@ def get_available_elements(measui_tree: ETree.ElementTree) -> List[AvailableElem
     """Get available elements from the measurement plug-in UI.
 
     Args:
-        measui_tree (ETree.ElementTree): Measurement plug-in UI file tree.
+        measui_tree: Measurement plug-in UI file tree.
 
     Returns:
-        List[AvailableElement]: Info of already available elements.
+        Info of already available elements.
     """
     screen_surface = _find_screen_surface(measui_tree)
     avlble_elements = _parse_measui_elements(screen_surface)
@@ -152,28 +143,12 @@ def get_available_elements(measui_tree: ETree.ElementTree) -> List[AvailableElem
 
 
 def _find_screen_surface(measui_tree: ETree.ElementTree) -> ETree.Element:
-    """Find screen surface tag.
-
-    Args:
-        measui_tree (ETree.ElementTree): Measurement plug-in UI file tree.
-
-    Returns:
-        ETree.Element: Screen surface element.
-    """
     root = measui_tree.getroot()
     screen_surface = root.findall(UpdateUI.SCREEN_SURFACE_TAG, UpdateUI.NAMESPACES)
     return screen_surface[0]
 
 
 def _parse_measui_elements(screen_surface: ETree.Element) -> List[AvailableElement]:
-    """Parse the `measui` elements.
-
-    Args:
-        screen_surface (ETree.Element): Elements of measurement plug-in UI.
-
-    Returns:
-        List[AvailableElement]: Parsed elements.
-    """
     avlble_elements = []
 
     for element in screen_surface.iter():
@@ -266,15 +241,6 @@ def _parse_measui_elements(screen_surface: ETree.Element) -> List[AvailableEleme
 
 
 def _get_output_info_of_array_element(element: ETree.Element) -> Optional[Tuple[bool, bool]]:
-    """Get output info of an array element.
-
-    Args:
-        element (ETree.Element): Element available already created.
-
-    Returns:
-        Optional[Tuple[bool, bool]]: True if the element is an output, False if not and \
-        True if the element is string array, False if it is a numeric array.
-    """
     for array_element in element.iter():
         tag = array_element.tag.split("}")[-1]
 
@@ -288,14 +254,6 @@ def _get_output_info_of_array_element(element: ETree.Element) -> Optional[Tuple[
 
 
 def _get_output_info(element: ETree.Element) -> Optional[bool]:
-    """Get output info. Check if the element is control or indicator or neither.
-
-    Args:
-        element (ETree.Element): Element available already.
-
-    Returns:
-        Optional[bool]: True if the element is an output. Else False.
-    """
     tag = element.tag.split("}")[-1]
 
     if tag in UpdateUI.ONLY_INDICATORS:
@@ -311,14 +269,6 @@ def _get_output_info(element: ETree.Element) -> Optional[bool]:
 
 
 def _get_output_info_for_read_only_based(element: ETree.Element) -> bool:
-    """Get output information for read only elements.
-
-    Args:
-        element (ETree.Element): Output element.
-
-    Returns:
-        bool: True if the element is read only. Else False.
-    """
     if (
         ElementAttrib.IS_READ_ONLY in element.attrib.keys()
         and element.attrib[ElementAttrib.IS_READ_ONLY] == "[bool]True"
@@ -329,14 +279,6 @@ def _get_output_info_for_read_only_based(element: ETree.Element) -> bool:
 
 
 def _get_output_info_for_interaction_mode_based(element: ETree.Element) -> bool:
-    """Return if the element is interaction mode based.
-
-    Args:
-        element (ETree.Element): Output element.
-
-    Returns:
-        bool: True if the element is interaction mode based. Else False.
-    """
     if (
         ElementAttrib.INTERACTION_MODE in element.attrib.keys()
         and element.attrib[ElementAttrib.INTERACTION_MODE]
@@ -348,14 +290,6 @@ def _get_output_info_for_interaction_mode_based(element: ETree.Element) -> bool:
 
 
 def _get_bind_info(element: ETree.Element) -> Tuple[bool, Optional[str]]:
-    """Get bind info of the element. If bound, name is also taken up.
-
-    Args:
-        element (ETree.Element): Measurement plug-in UI element.
-
-    Returns:
-        Tuple[bool, Optional[str]]: Bind and name of the element being bound. None if not bound.
-    """
     bind = False
     name = None
 
@@ -370,8 +304,8 @@ def write_updated_measui(filepath: Path, updated_ui: List[AvailableElement]) -> 
     """Write updated measurement plug-in UI elements.
 
     Args:
-        filepath (Path): Filepath of the updated measurement plug-in UI.
-        updated_ui (List[AvailableElement]): Updated UI elements.
+        filepath: Filepath of the updated measurement plug-in UI.
+        updated_ui: Updated UI elements.
     """
     tree = ETree.parse(filepath)  # nosec: B314
     root = tree.getroot()
@@ -391,8 +325,8 @@ def insert_created_elements(filepath: Path, elements_str: str) -> None:
     """Insert created elements.
 
     Args:
-        filepath (Path): Measurement plug-in UI file path.
-        elements_str (str): Created elements.
+        filepath: Measurement plug-in UI file path.
+        elements_str: Created elements.
     """
     with open(filepath, "r", encoding=MeasUIFile.ENCODING) as file:
         xml_content = file.read()

@@ -32,7 +32,7 @@ def get_nims_datatype(python_native_data_type: str) -> Optional[str]:
         return None
 
 
-def extract_type(node: Union[ast.Name, ast.Subscript, ast.expr]) -> str:
+def extract_type(node: Union[ast.Name, ast.Subscript, ast.expr, ast.slice, ast.Index]) -> str:
     """Extract data type from the input/output node.
 
     Args:

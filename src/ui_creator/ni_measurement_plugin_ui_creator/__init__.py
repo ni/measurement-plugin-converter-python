@@ -4,10 +4,13 @@ from pathlib import Path
 from typing import Callable
 
 import click
+
 from ni_measurement_plugin_ui_creator.utils.create_measui import create_measui
 from ni_measurement_plugin_ui_creator.utils.exceptions import InvalidCliInputError
 from ni_measurement_plugin_ui_creator.utils.logger import get_logger
-from ni_measurement_plugin_ui_creator.utils.measui_file import get_metadata_and_service_class
+from ni_measurement_plugin_ui_creator.utils.measui_file import (
+    get_metadata_and_service_class,
+)
 from ni_measurement_plugin_ui_creator.utils.update_measui import update_measui
 
 CLI_CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}

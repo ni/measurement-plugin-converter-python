@@ -1,1 +1,1 @@
-"""Measurement Plug-In UI Creator helper functions"""
+"""Measurement Plug-In UI Creator helper functions."""
