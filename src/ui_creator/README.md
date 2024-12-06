@@ -1,14 +1,18 @@
 # NI Measurement Plug-In UI Creator
 
-- [NI Measurement Plug-In UI Creator](#ni-measurement-plug-in-ui-creator)
-      - [Create measurement plug-in UI file](#create-measurement-plug-in-ui-file)
-      - [Update measurement plug-in UI file](#update-measurement-plug-in-ui-file)
-      - [Prerequisites](#prerequisites)
-      - [Supported data types](#supported-data-types)
-      - [Supported data elements](#supported-data-elements)
-      - [Unsupported data elements for update command](#unsupported-data-elements-for-update-command)
-      - [Event logger](#event-logger)
-      - [Limitations](#limitations)
+- [NI Measurement Plug-In UI Creator](#create-measurement-plug-in-ui-fileni-measurement-plug-in-ui-creator)
+  - [Introduction](#introduction)
+  - [Dependencies](#dependencies)
+  - [How to install?](#how-to-install)
+  - [How to run?](#how-to-run)
+    - [Create measurement plug-in UI file](#create-measurement-plug-in-ui-file)
+    - [Update measurement plug-in UI file](#update-measurement-plug-in-ui-file)
+    - [Prerequisites](#prerequisites)
+    - [Supported data types](#supported-data-types)
+    - [Supported data elements](#supported-data-elements)
+    - [Unsupported data elements for update command](#unsupported-data-elements-for-update-command)
+    - [Event logger](#event-logger)
+    - [Limitations](#limitations)
 
 ## Introduction
 

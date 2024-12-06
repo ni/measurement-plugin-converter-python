@@ -136,7 +136,7 @@ Steps to be followed
 - For `instrument_type`, use the pin map instrument type id.
 - For session type, the type of session should be passed.
 
-For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tree/releases/2.0/examples/nivisa_dmm_measurement).
+For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tree/releases/2.1/examples/nivisa_dmm_measurement).
 
 ![VISA_examples](images/VISA_examples.png)
 
