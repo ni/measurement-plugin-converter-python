@@ -35,12 +35,11 @@ def get_measurement_service_stub_and_class(
     """Get measurement service stub and measurement service class.
 
     Args:
-        discovery_client (DiscoveryClient): Client for accessing NI Discovery service.
+        discovery_client: Client for accessing NI Discovery service.
 
     Returns:
-        Optional[Tuple[Union[V1MeasurementServiceStub, V2MeasurementServiceStub], str]]: if
-        available measurement service stub and service class. None in case of no active measurement
-        services.
+        if available measurement service stub and service class. None in case of
+        no active measurement services.
     """
     logger = getLogger(LOGGER)
     available_services = _get_active_measurement_services(discovery_client)
@@ -83,14 +82,6 @@ def get_measurement_service_stub_and_class(
 
 
 def _get_active_measurement_services(discovery_client: DiscoveryClient) -> List[ServiceInfo]:
-    """Get available measurement services.
-
-    Args:
-        discovery_client (DiscoveryClient): Client for accessing NI Discovery service.
-
-    Returns:
-        List[ServiceInfo]: Sequence of active measurement services.
-    """
     v1_measurement_services = discovery_client.enumerate_services(MEASUREMENT_SERVICE_INTERFACE_V1)
     v2_measurement_services = discovery_client.enumerate_services(MEASUREMENT_SERVICE_INTERFACE_V2)
 
@@ -99,14 +90,6 @@ def _get_active_measurement_services(discovery_client: DiscoveryClient) -> List[
 
 
 def _get_measurement_selection(total_measurements: int) -> int:
-    """Prompt user to select a measurement.
-
-    Args:
-        total_measurements (int): Count of total measurements.
-
-    Returns:
-        int: Selected measurement.
-    """
     logger = getLogger(LOGGER)
     try:
         user_input = int(
@@ -134,15 +117,6 @@ def _get_measurement_service_class(
     measurement_services: Sequence[ServiceInfo],
     measurement_name: str,
 ) -> Optional[str]:
-    """Get measurement service class information.
-
-    Args:
-        measurement_services (Sequence[ServiceInfo]): List of measurement services.
-        measurement_name (str): Measurement name.
-
-    Returns:
-        Optional[str]: If available, measurement's service class. Else, None.
-    """
     for service in measurement_services:
         if service.display_name == measurement_name:
             return service.service_class
@@ -154,15 +128,6 @@ def _get_channel_and_interface(
     discovery_client: DiscoveryClient,
     service_class: str,
 ) -> Optional[Tuple[Channel, str]]:
-    """Get gRPC channel and measurement service interface name.
-
-    Args:
-        discovery_client (DiscoveryClient): Client for accessing NI Discovery service.
-        service_class (str): Measurement Service Class name.
-
-    Returns:
-        Optional[Tuple[Channel, str]]: Channel to server and measurement service interface name.
-    """
     logger = getLogger(LOGGER)
     resolved_service = None
     measurement_service_interface = None

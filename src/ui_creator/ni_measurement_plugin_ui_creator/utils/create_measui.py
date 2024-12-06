@@ -31,9 +31,9 @@ def create_measui(
     """Create measurement UI file.
 
     Args:
-        metadata (Union[V1MetaData, V2MetaData]): Metadata of a measurement plug-in.
-        service_class (str): Service class name of a measurement plug-in.
-        output_dir (Path): Output directory.
+        metadata: Metadata of a measurement plug-in.
+        service_class: Service class name of a measurement plug-in.
+        output_dir: Output directory.
     """
     logger = getLogger(LOGGER)
     logger.debug(CREATING_FILE)
@@ -59,9 +59,9 @@ def write_measui(filepath: Path, service_class: str, input_output_elements: str)
     """Write `measui` file.
 
     Args:
-        filepath (Path): File path.
-        service_class (str): Service class name of the measurement plug-in.
-        input_output_elements (str): Input and Output XML tags.
+        filepath: File path.
+        service_class: Service class name of the measurement plug-in.
+        input_output_elements: Input and Output XML tags.
     """
     current_dir = Path(__file__).resolve().parent
     template_file_path = current_dir.parent / "templates" / "measurement.measui.mako"
@@ -85,18 +85,6 @@ def _render_template(
     service_class: str,
     input_output_elements: str,
 ) -> bytes:
-    """Render `measui` mako file template.
-
-    Args:
-        template_name (str): Name of mako file.
-        client_id (Union[str, UUUID]): Client ID to be assigned in the template.
-        display_name (str): Display name to be assigned in the template.
-        service_class (str): Service class name of the measurement plug-in.
-        input_output_elements (str): Inputs and Output elements of MeasUI file.
-
-    Returns:
-        bytes: MeasUI file content.
-    """
     template = Template(  # nosec: B702
         filename=template_name,
         input_encoding=MeasUIFile.ENCODING,

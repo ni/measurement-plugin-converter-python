@@ -27,10 +27,10 @@ def create_pin_control(element_parameter: DataElement) -> str:
     """Create `Pin Control` Measurement plug-in UI Element.
 
     Args:
-        element_parameter (DataElement): Pin Control Element Parameters.
+        element_parameter: Pin Control Element Parameters.
 
     Returns:
-        str: Pin Control Element.
+        Pin Control Element.
     """
     label_id = get_unique_id()
     shared_id = get_unique_id()
@@ -63,10 +63,10 @@ def create_ioresource_array_control(element_parameter: DataElement) -> str:
     """Create `Pin Control` Measurement plug-in UI Element as IOResourceArray1D.
 
     Args:
-        element_parameter (DataElement): Pin Control Element Parameters.
+        element_parameter: Pin Control Element Parameters.
 
     Returns:
-        str: Pin Control Element as IOResourceArray1D.
+        Pin Control Element as IOResourceArray1D.
     """
     label_id = get_unique_id()
     shared_id = get_unique_id()

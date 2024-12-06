@@ -26,10 +26,10 @@ def create_horizontal_slider(element_parameter: DataElement) -> str:
     """Create `Horizontal Slider` Measurement plug-in UI Element.
 
     Args:
-        element_parameter (DataElement): Horizontal Slider Element Parameters.
+        element_parameter: Horizontal Slider Element Parameters.
 
     Returns:
-        str: Horizontal Slider Element.
+        Horizontal Slider Element.
     """
     shared_id = get_unique_id()
     label_id = get_unique_id()
@@ -62,10 +62,10 @@ def create_boolean_led(element_parameter: DataElement) -> str:
     """Create `Round LED` Measurement plug-in UI Element.
 
     Args:
-        element_parameter (DataElement): Round LED Element Parameters.
+        element_parameter: Round LED Element Parameters.
 
     Returns:
-        str: Round LED Element.
+        Round LED Element.
     """
     shared_id = get_unique_id()
     label_id = get_unique_id()

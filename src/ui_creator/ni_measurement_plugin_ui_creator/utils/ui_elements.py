@@ -36,15 +36,15 @@ def create_input_elements_from_client(
     """Create input elements.
 
     Args:
-        inputs (List[Union[V1ConfigParam, V2ConfigParam]]): Inputs from Metadata.
-        client_id (Union[str, UUID], optional): Client ID. Defaults to CLIENT_ID.
-        input_top_alignment (Union[int, float], optional): Input top alignment value. \
-        Defaults to MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE.
-        input_left_alignment (Union[int, float], optional): Input left alignment value. \
+        inputs: Inputs from Metadata.
+        client_id: Client ID. Defaults to CLIENT_ID.
+        input_top_alignment: Input top alignment value. Defaults to
+        MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE.
+        input_left_alignment: Input left alignment value. 
         Defaults to MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE.
 
     Returns:
-        Tuple[str, Union[int, float]]: Control elements and input elements' top alignment.
+        Control elements and input elements' top alignment.
     """
     input_elements = []
 
@@ -195,17 +195,16 @@ def create_output_elements_from_client(
     """Create output elements.
 
     Args:
-        outputs (List[Union[V1Output, V2Output]]): Output elements from Metadata.
-        client_id (Union[str, UUID], optional): Client ID. Defaults to CLIENT_ID.
-        output_top_alignment (Union[int, float], optional): Output top alignment value. \
-        Defaults to MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE.
-        output_left_alignment (Union[int, float], optional): Output left alignment value.\
-        Defaults to \
+        outputs: Output elements from Metadata.
+        client_id: Client ID. Defaults to CLIENT_ID.
+        output_top_alignment: Output top alignment value. Defaults to 
+        MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE.
+        output_left_alignment: Output left alignment value. Defaults to 
         (MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE + 
         MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE).
 
     Returns:
-        str: Indicator elements.
+        Indicator elements.
     """
     output_elements = []
 
