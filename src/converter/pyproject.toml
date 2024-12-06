@@ -28,8 +28,9 @@ ni-measurement-plugin-sdk-service = "^2.1.0"
 black = "^24.8.0"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.2.0"
 ni-python-styleguide = "^0.4.1"
+mypy = "^1.13.0"
+bandit = { version = "^1.7", extras = ["toml"] }
 nidcpower = { version = "^1.4.8", extras = ["grpc"] }
 nidmm = { version = "^1.4.8", extras = ["grpc"] }
 nidigital = { version = "^1.4.8", extras = ["grpc"] }
@@ -42,6 +43,19 @@ pyvisa-sim = "^0.6.0"
 
 [tool.poetry.scripts]
 ni-measurement-plugin-converter = "ni_measurement_plugin_converter:convert_to_plugin"
+
+[[tool.mypy.overrides]]
+module = [
+  "mako.*",
+  "astor.*",
+]
+ignore_missing_imports = true
+
+[tool.bandit]
+skips = [
+  "B702", # use_of_mako_templates
+]
+exclude_dirs = [".venv"]
 
 [build-system]
 requires = ["poetry-core"]
