@@ -88,7 +88,9 @@ def extract_outputs(
     if isinstance(output_types, str) and iterable_output:
         # Separate each output types from combined output types.
         parsed_output_types = re.findall(r"\b\w+\[[^\[\]]+\]|\b\w+", output_types)
-        parsed_output_types = parsed_output_types[1:] if parsed_output_types[0] == "Tuple" else parsed_output_types
+        parsed_output_types = (
+            parsed_output_types[1:] if parsed_output_types[0] == "Tuple" else parsed_output_types
+        )
 
     elif isinstance(output_types, str) and not iterable_output:
         parsed_output_types = [output_types]
