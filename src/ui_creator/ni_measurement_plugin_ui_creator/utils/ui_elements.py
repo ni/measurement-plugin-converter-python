@@ -40,7 +40,7 @@ def create_input_elements_from_client(
         client_id: Client ID. Defaults to CLIENT_ID.
         input_top_alignment: Input top alignment value. Defaults to
         MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE.
-        input_left_alignment: Input left alignment value. 
+        input_left_alignment: Input left alignment value.
         Defaults to MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE.
 
     Returns:
@@ -197,10 +197,10 @@ def create_output_elements_from_client(
     Args:
         outputs: Output elements from Metadata.
         client_id: Client ID. Defaults to CLIENT_ID.
-        output_top_alignment: Output top alignment value. Defaults to 
+        output_top_alignment: Output top alignment value. Defaults to
         MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE.
-        output_left_alignment: Output left alignment value. Defaults to 
-        (MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE + 
+        output_left_alignment: Output left alignment value. Defaults to
+        (MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE +
         MeasUIElementPosition.LEFT_ALIGNMENT_INCREMENTAL_VALUE).
 
     Returns:

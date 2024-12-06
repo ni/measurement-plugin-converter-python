@@ -37,6 +37,7 @@ build-backend = "poetry.core.masonry.api"
 [[tool.mypy.overrides]]
 module = [
   "mako.*",
+  "grpc.*"
 ]
 ignore_missing_imports = true
 
