@@ -4,6 +4,7 @@ import ast
 import itertools
 from enum import Enum
 from logging import Logger, getLogger
+from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 
 import astor
@@ -52,7 +53,8 @@ class DriverSession(Enum):
 
 def _add_params(function_node: ast.FunctionDef, params: List[str]) -> ast.FunctionDef:
     for param in params[::-1]:
-        function_node.args.args.insert(0, param)
+        arg_node = ast.arg(arg=param, annotation=None)
+        function_node.args.args.insert(0, arg_node)
 
     return function_node
 
@@ -188,17 +190,17 @@ def _get_pin_and_relay_names(pins_and_relays: List[Union[PinInfo, RelayInfo]]) -
 
 
 def process_sessions_and_update_metadata(
-    migrated_file_path: str, function: str, plugin_metadata: Dict[str, Any], logger: Logger
+    migrated_file_path: Path, function: str, plugin_metadata: Dict[str, Any], logger: Logger
 ) -> Tuple[List[PinInfo], List[RelayInfo]]:
     """Process session details and update plugin metadata.
 
-    1. Retrieve session details and mappings.
-    2. Add session mappings, initializations, and relevant metadata.
+    This function retrieves session information from the migrated file and updates the
+    provided plugin metadata with session initializations, mappings, pins, and relays.
 
     Args:
-        migrated_file_path: Path to the migrated file.
+        migrated_file_path: Path to the migrated Python file.
         function: Name of the measurement function.
-        plugin_metadata: Metadata dictionary for the plugin.
+        plugin_metadata: Metadata dictionary to be updated with session data.
         logger: Logger instance.
 
     Returns:

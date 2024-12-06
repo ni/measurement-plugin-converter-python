@@ -4,6 +4,7 @@ import logging
 import sys
 from logging import Logger, StreamHandler, handlers
 from pathlib import Path
+from typing import Optional
 
 from ni_measurement_plugin_converter._constants import DEBUG_LOGGER
 
@@ -48,17 +49,17 @@ def _create_stream_handler() -> StreamHandler:
 
 
 def remove_handlers(logger: Logger) -> None:
-    """Remove log handlers.
+    """Remove all handlers from the specified logger.
 
     Args:
-        logger (Logger): Logger object.
+        logger: The logger instance from which handlers will be removed.
     """
     for handler in logger.handlers:
         logger.removeHandler(handler)
 
 
 def print_log_file_location() -> None:
-    """Print log file location if log file is available."""
+    """Print the location of the log file if it is available."""
     logger = logging.getLogger(DEBUG_LOGGER)
 
     for handler in logger.handlers:
@@ -66,15 +67,15 @@ def print_log_file_location() -> None:
             logger.info(LOG_FILE.format(log_file_path=handler.baseFilename))
 
 
-def initialize_logger(name: str, log_directory: str) -> Logger:
-    """Initialize logger object.
+def initialize_logger(name: str, log_directory: Optional[str]) -> Logger:
+    """Initialize and configure a logger instance.
 
     Args:
-        name (str): Logger name.
-        log_directory (str): Log directory.
+        name: The name of the logger.
+        log_directory: The directory where log files should be stored.
 
     Returns:
-        Logger: Logger object.
+        The configured logger instance.
     """
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
