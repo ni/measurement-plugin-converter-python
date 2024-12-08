@@ -25,7 +25,8 @@ def _extract_type_and_variable_names(function_body: List[Any]) -> Tuple[bool, Li
         if isinstance(node, ast.Return):
             if isinstance(node.value, (ast.Tuple, ast.List)):
                 iterable_output = True
-                output_variables.extend(_get_output_variables(node.value.elts))
+                name_nodes = [elt for elt in node.value.elts if isinstance(elt, ast.Name)]
+                output_variables.extend(_get_output_variables(name_nodes))
 
             elif isinstance(node.value, ast.Name):
                 output_variables.append(node.value.id)
@@ -70,27 +71,31 @@ def _get_output_info(
 def extract_outputs(
     function_node: ast.FunctionDef, plugin_metadata: Dict[str, Any]
 ) -> List[OutputInfo]:
-    """Extract outputs information from `function_node`.
+    """Extract output information from a function definition node.
 
     Args:
-        function_node (ast.FunctionDef): Measurement function node.
+        function_node: The AST node representing the function definition.
+        plugin_metadata: Dictionary to store extracted metadata.
 
     Returns:
-        Tuple[List[Output], bool]: Measurement function outputs info and \
-        boolean representing output type is tuple or not.
+        List of output information.
     """
     iterable_output, output_variables = _extract_type_and_variable_names(function_node.body)
-    output_types = extract_type(function_node.returns)
+    output_types = extract_type(
+        function_node.returns if function_node.returns else ast.Name(id="Any")
+    )
 
     if isinstance(output_types, str) and iterable_output:
         # Separate each output types from combined output types.
-        output_types = re.findall(r"\b\w+\[[^\[\]]+\]|\b\w+", output_types)
-        output_types = output_types[1:]
+        parsed_output_types = re.findall(r"\b\w+\[[^\[\]]+\]|\b\w+", output_types)
+        parsed_output_types = (
+            parsed_output_types[1:] if parsed_output_types[0] == "Tuple" else parsed_output_types
+        )
 
     elif isinstance(output_types, str) and not iterable_output:
-        output_types = [output_types]
+        parsed_output_types = [output_types]
 
-    output_configurations = _get_output_info(output_variables, output_types)
+    output_configurations = _get_output_info(output_variables, parsed_output_types)
     plugin_metadata["outputs_info"] = output_configurations
     plugin_metadata["iterable_outputs"] = iterable_output
 

@@ -6,7 +6,7 @@ import ast
 import re
 import shutil
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 import click
 from click import ClickException
@@ -77,7 +77,7 @@ def _validate_measurement_file(file_path: Path):
 
 
 def _validate_function(function_name: str, measurement_file_path: Path):
-    with measurement_file_path.open("r", encoding="utf-8") as file:
+    with measurement_file_path.open("r", encoding=ENCODING) as file:
         code = file.read()
     code_tree = ast.parse(code)
 
@@ -113,17 +113,20 @@ def _validate_output_directory(output_dir: Path):
 @click.option(
     "-m",
     MEASUREMENT_FILE_PATH_OPTION,
-    help="Path to the directory containing the Python measurement file to be converted.",
+    help="Path of the Python measurement file to be converted.",
     required=True,
 )
 @click.option(
     "-f",
     "--function",
-    help=f"Name of the function within the measurement file {MEASUREMENT_FILE_PATH_OPTION} that contains the measurement logic.",
+    help=f"Name of the function within the measurement file that contains the measurement logic.",
     required=True,
 )
 @click.option(
-    "-o", "--directory-out", help="Output directory for measurement plug-in files.", required=True
+    "-o",
+    "--directory-out",
+    help="Output directory for measurement plug-in files.",
+    required=True,
 )
 def convert_to_plugin(
     display_name: str,
@@ -138,10 +141,9 @@ def convert_to_plugin(
         logger.info(STARTING_EXECUTION)
 
         directory_out_path = Path(directory_out)
-        measurement_file_path = Path(measurement_file_path)
 
-        _validate_measurement_file(measurement_file_path)
-        _validate_function(function, measurement_file_path)
+        _validate_measurement_file(Path(measurement_file_path))
+        _validate_function(function, Path(measurement_file_path))
         _validate_output_directory(directory_out_path)
 
         remove_handlers(logger)
@@ -153,11 +155,13 @@ def convert_to_plugin(
         logger.info(VALIDATE_CLI_ARGS)
 
         migrated_file_path = directory_out_path / MIGRATED_MEASUREMENT_FILENAME
-        shutil.copy(measurement_file_path, migrated_file_path)
+        shutil.copy(Path(measurement_file_path), migrated_file_path)
         logger.debug(FILE_MIGRATED)
 
         logger.debug(GET_FUNCTION)
-        function_node = get_function_node(file_dir=str(measurement_file_path), function=function)
+        function_node = get_function_node(
+            file_dir=str(Path(measurement_file_path)), function=function
+        )
 
         plugin_metadata: Dict[str, Any] = {}
 
@@ -194,7 +198,7 @@ def convert_to_plugin(
             relays=relays_info,
             inputs=inputs_info,
             outputs=outputs_info,
-            file_path=str(directory_out_path),
+            file_path=directory_out_path,
             measurement_name=sanitized_display_name,
             service_class=f"{sanitized_display_name}_Python",
         )

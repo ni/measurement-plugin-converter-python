@@ -11,10 +11,10 @@ def get_logger(log_file_path: Path) -> Logger:
     """Get logger object.
 
     Args:
-        log_file_path (Path): Log file path.
+        log_file_path: Log file path.
 
     Returns:
-        Logger: Logger object.
+        Logger object.
     """
     Path(log_file_path).mkdir(parents=True, exist_ok=True)
     log_file_path = log_file_path / "log.txt"
@@ -29,11 +29,6 @@ def get_logger(log_file_path: Path) -> Logger:
 
 
 def _add_file_handler(log_file_path: Path) -> None:
-    """Add file handler to logger object.
-
-    Args:
-        log_file_path (Path): log file path.
-    """
     logger = logging.getLogger(LOGGER)
     formatter = logging.Formatter("%(asctime)s | %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
 
@@ -45,7 +40,6 @@ def _add_file_handler(log_file_path: Path) -> None:
 
 
 def _add_stream_handler() -> None:
-    """Add stream handler to logger object."""
     console_handler = logging.StreamHandler()
     console_handler.setLevel(logging.INFO)
 

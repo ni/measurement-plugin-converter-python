@@ -1,7 +1,7 @@
 """Creation of .measui file for the converted measurement."""
 
 from pathlib import Path
-from typing import List
+from typing import List, Union
 
 import ni_measurement_plugin_sdk_service as nims
 from ni_measurement_plugin_ui_creator.constants import (
@@ -41,7 +41,7 @@ def _get_input_data_elements(
 ) -> List[DataElement]:
     input_data_elements = []
     left_alignment = MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
-    top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
+    top_alignment: Union[float, int] = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
 
     height = MeasUIElementPosition.DEFAULT_HEIGHT
     width = MeasUIElementPosition.DEFAULT_WIDTH
@@ -142,7 +142,7 @@ def _get_input_data_elements(
 
 def _get_output_data_elements(outputs: List[OutputInfo]) -> List[DataElement]:
     output_data_elements = []
-    top_alignment = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
+    top_alignment: Union[float, int] = MeasUIElementPosition.TOP_ALIGNMENT_START_VALUE
 
     left_alignment = (
         MeasUIElementPosition.LEFT_ALIGNMENT_START_VALUE
@@ -214,20 +214,20 @@ def create_measui_file(
     relays: List[RelayInfo],
     inputs: List[InputInfo],
     outputs: List[OutputInfo],
-    file_path: str,
+    file_path: Path,
     measurement_name: str,
     service_class: str,
 ) -> None:
-    """Create `.measui` file for the converted measurement.
+    """Generate a `.measui` file for the converted measurement.
 
     Args:
-        pins (List[PinInfo]): List of pins.
-        relays (List[RelayInfo]): List of relays.
-        inputs (List[InputInfo]): List of inputs from measurement.
-        outputs (List[OutputInfo]): List of outputs from measurement.
-        file_path (str): File path of the measurement.
-        measurement_name (str): Measurement name.
-        service_class (str): Service class name.
+        pins: List of pins.
+        relays: List of relays.
+        inputs: List of inputs from measurement.
+        outputs: List of outputs from measurement.
+        file_path: File path of the measurement.
+        measurement_name: Measurement name.
+        service_class: Service class name.
     """
     input_data_elements = _get_input_data_elements(pins, relays, inputs)
     output_data_elements = _get_output_data_elements(outputs)
@@ -235,7 +235,7 @@ def create_measui_file(
     input_ui_elements = create_control_elements(input_data_elements)
     output_ui_elements = create_indicator_elements(output_data_elements)
 
-    measui_path = Path(file_path) / measurement_name
+    measui_path = file_path / measurement_name
     write_measui(
         filepath=measui_path,
         service_class=service_class,

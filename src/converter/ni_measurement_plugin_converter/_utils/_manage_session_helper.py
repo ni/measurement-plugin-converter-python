@@ -16,25 +16,36 @@ INSTRUMENT_TYPE = "instrument_type"
 
 
 def _get_session_details(child_node: ast.With) -> Dict[str, List[str]]:
-    sessions_details = {}
+    sessions_details: Dict[str, List[str]] = {}
 
     for item in child_node.items:
-        if isinstance(item.context_expr, ast.Call):
+        if isinstance(item.context_expr, ast.Call) and (item.optional_vars is not None):
             call = item.context_expr
 
             if ni_drivers_supported_instrument(call):
-                if call.func.value.id not in sessions_details:
-                    sessions_details[call.func.value.id] = [item.optional_vars.id]
-                else:
-                    sessions_details[call.func.value.id].append(item.optional_vars.id)
+                if (
+                    isinstance(call.func, ast.Attribute)
+                    and isinstance(call.func.value, ast.Name)
+                    and isinstance(item.optional_vars, ast.Name)
+                ):
+                    driver_id = call.func.value.id
+                    session_id = item.optional_vars.id
+
+                    if driver_id not in sessions_details:
+                        sessions_details[driver_id] = [session_id]
+                    else:
+                        sessions_details[driver_id].append(session_id)
 
             elif instrument_is_visa_type(call):
                 resource_name = _get_resource_name(call)
 
-                if resource_name not in sessions_details:
-                    sessions_details[resource_name] = [item.optional_vars.id]
-                else:
-                    sessions_details[resource_name].append(item.optional_vars.id)
+                if isinstance(item.optional_vars, ast.Name):
+                    session_id = item.optional_vars.id
+
+                    if resource_name not in sessions_details:
+                        sessions_details[resource_name] = [session_id]
+                    else:
+                        sessions_details[resource_name].append(session_id)
 
     return sessions_details
 
@@ -50,7 +61,7 @@ def _get_resource_name(call: ast.Call) -> str:
     if resource_name is None and call.args and len(call.args) > 0:
         resource_name = ast.literal_eval(call.args[0])
 
-    resource_name = re.sub(ALPHANUMERIC_PATTERN, "_", resource_name)
+    resource_name = re.sub(ALPHANUMERIC_PATTERN, "_", str(resource_name))
 
     return resource_name
 
@@ -67,13 +78,13 @@ def _get_visa_driver_plugin_session_initialization(driver: str) -> str:
 
 
 def get_sessions_details(function_node: ast.FunctionDef) -> Dict[str, List[str]]:
-    """Get drivers used and its corresponding session instance variable.
+    """Get drivers used and their corresponding session instance variable.
 
     Args:
-        function_node (ast.FunctionDef): Measurement function code tree.
+        function_node: The code tree of the measurement function.
 
     Returns:
-        Dict[str, List[str]]: Drivers as keys and list of session instance variables as values.
+        A dictionary with drivers as keys and lists of session instance variables as values.
     """
     sessions_details = {}
 
@@ -92,10 +103,10 @@ def get_plugin_session_initializations(sessions_details: Dict[str, List[str]]) -
     2. Create plugin session initialization for VISA.
 
     Args:
-        sessions_details (Dict[str, List[str]]): Session details.
+        sessions_details: A dictionary containing session details.
 
     Returns:
-        str: Plugin session initializations.
+        The plugin session initializations for each driver.
     """
     session_initialization_code = []
 
@@ -115,10 +126,10 @@ def ni_drivers_supported_instrument(call: ast.Call) -> bool:
     """Check if the instrument used is one of the supported NI drivers.
 
     Args:
-        call (ast.Call): Function call code tree.
+        call: Function call code tree.
 
     Returns:
-        bool: True if instrument is one of the supported NI drivers. Else False.
+        True if instrument is one of the supported NI drivers, else False.
     """
     if (
         isinstance(call.func, ast.Attribute)
@@ -136,10 +147,10 @@ def instrument_is_visa_type(call: ast.Call) -> bool:
     """Check if the instrument used is of VISA type.
 
     Args:
-        call (ast.Call): Function call code tree.
+        call: Function call code tree.
 
     Returns:
-        bool: True if instrument is VISA type. Else False.
+        bool: True if instrument is VISA type, else False.
     """
     if (
         isinstance(call.func, ast.Attribute)
@@ -159,10 +170,10 @@ def check_for_visa(sessions_details: Dict[str, List[str]]) -> bool:
     """Check for VISA instruments used.
 
     Args:
-        sessions_details (Dict[str, List[str]]): Session details.
+        sessions_details: A dictionary containing session details.
 
     Returns:
-        bool: True if VISA driver is used.
+        True if a VISA driver is used, else False.
     """
     for driver in list(sessions_details.keys()):
         if driver not in NI_DRIVERS:
@@ -175,10 +186,10 @@ def get_pin_and_relay_names_signature(pins_and_relays: List[Union[PinInfo, Relay
     """Get pin and relay names signature.
 
     Args:
-        pins_and_relays (List[Union[PinInfo, RelayInfo]]): Pin info and relay info.
+        pins_and_relays: A list of PinInfo or RelayInfo objects.
 
     Returns:
-        str: Pin and relay names signature.
+        Pin and relay names signature.
     """
     pin_or_relay_signature = [f"{pin_and_relay.name}: str" for pin_and_relay in pins_and_relays]
     return ", ".join(pin_or_relay_signature)
@@ -188,10 +199,10 @@ def get_sessions_signature(session_mappings: List[SessionMapping]) -> str:
     """Get session signature.
 
     Args:
-        session_mappings (List[SessionMapping]): Session mappings.
+        session_mappings: A list of SessionMapping objects.
 
     Returns:
-        str: Session mapping signature.
+        Session mapping signature.
     """
     sessions = [
         f"{session_mapping.name}={session_mapping.name}" for session_mapping in session_mappings

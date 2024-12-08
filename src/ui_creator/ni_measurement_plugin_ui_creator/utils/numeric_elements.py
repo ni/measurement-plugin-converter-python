@@ -48,10 +48,10 @@ def create_numeric_control(element_parameter: DataElement) -> str:
     """Create `Numeric Control` Measurement plug-in UI Element .
 
     Args:
-        element_parameter (DataElement): Numeric Control Element Parameters.
+        element_parameter: Numeric Control Element Parameters.
 
     Returns:
-        str: Numeric Control Element.
+        Numeric Control Element.
     """
     element_id = get_unique_id()
     shared_id = get_unique_id()
@@ -85,10 +85,10 @@ def create_numeric_indicator(element_parameter: DataElement) -> str:
     """Create `Numeric Indicator` measurement plug-in UI element.
 
     Args:
-        element_parameter (DataElement): Numeric Indicator Element Parameters.
+        element_parameter: Numeric Indicator Element Parameters.
 
     Returns:
-        str: Numeric Indicator Element.
+        Numeric Indicator Element.
     """
     element_id = get_unique_id()
     shared_id = get_unique_id()
@@ -122,10 +122,10 @@ def create_numeric_array_control(element_parameter: DataElement) -> str:
     """Create `Numeric Array Input` Measurement plug-in UI Element.
 
     Args:
-        element_parameter (DataElement): Numeric Array Input Element Parameters.
+        element_parameter: Numeric Array Input Element Parameters.
 
     Returns:
-        str: Numeric Array Input Element.
+        Numeric Array Input Element.
     """
     array_element_id = get_unique_id()
     shared_id = get_unique_id()
@@ -162,10 +162,10 @@ def create_numeric_array_indicator(element_parameter: DataElement) -> str:
     """Create `Numeric Array Output` Measurement plug-in UI Element.
 
     Args:
-        element_parameter (DataElement): Numeric Array Output Element Parameters.
+        element_parameter: Numeric Array Output Element Parameters.
 
     Returns:
-        str: Numeric Array Output Element.
+        Numeric Array Output Element.
     """
     array_element_id = get_unique_id()
     shared_id = get_unique_id()
