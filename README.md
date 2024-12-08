@@ -34,7 +34,7 @@ Measurement Plug-In Converter for Python has the following packages
 - Measurement Plug-In Converter
 
   - [Python = ^3.8](https://www.python.org/downloads/release/python-385/)
-  - [NI Measurement Plug-In UI Creator](dependencies/ni_measurement_plugin_ui_creator-1.0.0-py3-none-any.whl)
+  - NI Measurement Plug-In UI Creator
 
 - Measurement Plug-In UI Creator
 
@@ -72,15 +72,14 @@ Measurement Plug-In Converter for Python has the following packages
     -d, --display-name TEXT         Display name for the plug-in that will be
                                     converted.  [required]
     -m, --measurement-file-path TEXT
-                                    Path to the directory containing the Python
-                                    measurement file to be converted.
-                                    [required]
+                                    Path of the Python measurement file to be
+                                    converted.  [required]
     -f, --function TEXT             Name of the function within the measurement
-                                    file --measurement-file-path that contains
-                                    the measurement logic.  [required]
+                                    file that contains the measurement logic.
+                                    [required]
     -o, --directory-out TEXT        Output directory for measurement plug-in
                                     files.  [required]
-    -h, --help                      Show this message and exit
+    -h, --help                      Show this message and exit.
   ```
 
 - Run the following command to convert Python measurements to measurement plug-ins.

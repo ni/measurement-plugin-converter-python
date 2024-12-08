@@ -1,6 +1,6 @@
 # NI Measurement Plug-In UI Creator
 
-- [NI Measurement Plug-In UI Creator](#create-measurement-plug-in-ui-fileni-measurement-plug-in-ui-creator)
+- [NI Measurement Plug-In UI Creator](#ni-measurement-plug-in-ui-creator)
   - [Introduction](#introduction)
   - [Dependencies](#dependencies)
   - [How to install?](#how-to-install)
