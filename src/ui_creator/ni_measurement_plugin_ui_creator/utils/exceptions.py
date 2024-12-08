@@ -8,7 +8,7 @@ class InvalidCliInputError(Exception):
         """Initialize the exception.
 
         Args:
-            message (str): Error message to be displayed.
+            message: Error message to be displayed.
         """
         self.message = message
         super().__init__(self.message)
