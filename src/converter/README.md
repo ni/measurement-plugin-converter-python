@@ -23,6 +23,7 @@
 
 ## How to install?
 
+- Please find the wheel files in the latest release.
 - Place the UI Creator and the Plug-In Converter wheel files parallel to the [install.bat](../../batch_files/install.bat).
 - Run the `install.bat` file by double clicking it.
 
@@ -46,8 +47,8 @@
     -m, --measurement-file-path TEXT
                                     Path of the Python measurement file to be
                                     converted.  [required]
-    -f, --function TEXT             Name of the function within the measurement
-                                    file that contains the measurement logic.
+    -f, --function TEXT             Name of the function in the measurement file
+                                    that contains the logic for the measurement.
                                     [required]
     -o, --directory-out TEXT        Output directory for measurement plug-in
                                     files.  [required]

@@ -52,6 +52,8 @@ Measurement Plug-In Converter for Python has the following packages
   - Place the UI Creator wheel file parallel to the [install.bat](batch_files/install.bat).
   - Run the `install.bat` file by double clicking it.
 
+- Please find the wheel files in the latest release.
+
 ## How to run?
 
 ### Measurement Plug-In Converter
@@ -74,8 +76,8 @@ Measurement Plug-In Converter for Python has the following packages
     -m, --measurement-file-path TEXT
                                     Path of the Python measurement file to be
                                     converted.  [required]
-    -f, --function TEXT             Name of the function within the measurement
-                                    file that contains the measurement logic.
+    -f, --function TEXT             Name of the function in the measurement file
+                                    that contains the logic for the measurement.
                                     [required]
     -o, --directory-out TEXT        Output directory for measurement plug-in
                                     files.  [required]
