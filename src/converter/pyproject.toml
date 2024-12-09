@@ -7,7 +7,7 @@ readme = "README.md"
 repository = "https://github.com/ni/measurement-plugin-converter-python"
 license = "MIT"
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Operating System :: Microsoft :: Windows",
     # Poetry automatically adds classifiers for the license and the supported Python versions.
