@@ -119,7 +119,7 @@ def _validate_output_directory(output_dir: Path):
 @click.option(
     "-f",
     "--function",
-    help=f"Name of the function within the measurement file that contains the measurement logic.",
+    help="Name of the function in the measurement file that contains the logic for the measurement.",
     required=True,
 )
 @click.option(
