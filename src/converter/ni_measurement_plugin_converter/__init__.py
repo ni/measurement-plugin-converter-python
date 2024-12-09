@@ -113,17 +113,20 @@ def _validate_output_directory(output_dir: Path):
 @click.option(
     "-m",
     MEASUREMENT_FILE_PATH_OPTION,
-    help="Path to the directory containing the Python measurement file to be converted.",
+    help="Path of the Python measurement file to be converted.",
     required=True,
 )
 @click.option(
     "-f",
     "--function",
-    help=f"Name of the function within the measurement file {MEASUREMENT_FILE_PATH_OPTION} that contains the measurement logic.",
+    help="Name of the function in the measurement file that contains the logic for the measurement.",
     required=True,
 )
 @click.option(
-    "-o", "--directory-out", help="Output directory for measurement plug-in files.", required=True
+    "-o",
+    "--directory-out",
+    help="Output directory for measurement plug-in files.",
+    required=True,
 )
 def convert_to_plugin(
     display_name: str,

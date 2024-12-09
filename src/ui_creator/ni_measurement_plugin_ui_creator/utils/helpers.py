@@ -39,10 +39,10 @@ def create_control_elements(inputs: List[DataElement]) -> str:
     """Create control elements for `.measui` file.
 
     Args:
-        inputs (List[DataElement]): List of input elements.
+        inputs: List of input elements.
 
     Returns:
-        str: Measurement UI input elements.
+        Measurement UI input elements.
     """
     input_elements = ""
 
@@ -78,10 +78,10 @@ def create_indicator_elements(outputs: List[DataElement]) -> str:
     """Create indicator elements for `.measui` file.
 
     Args:
-        outputs (List[DataElement]): List of outputs elements.
+        outputs: List of outputs elements.
 
     Returns:
-        str: Measurement UI output elements.
+        Measurement UI output elements.
     """
     output_elements = ""
 

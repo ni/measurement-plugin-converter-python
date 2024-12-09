@@ -53,10 +53,10 @@ def create_string_control(element_parameter: DataElement) -> str:
     """Create `String Control` Measurement plug-in UI Element.
 
     Args:
-        element_parameter (DataElement): String Control Element Parameters.
+        element_parameter: String Control Element Parameters.
 
     Returns:
-        str: String Control Element.
+        String Control Element.
     """
     label_id = get_unique_id()
     shared_id = get_unique_id()
@@ -89,10 +89,10 @@ def create_string_indicator(element_parameter: DataElement) -> str:
     """Create `String Indicator` Measurement plug-in UI Element.
 
     Args:
-        element_parameter (DataElement): String Indicator Element Parameters.
+        element_parameter: String Indicator Element Parameters.
 
     Returns:
-        str: String Indicator Element.
+        String Indicator Element.
     """
     label_id = get_unique_id()
     shared_id = get_unique_id()
@@ -125,10 +125,10 @@ def create_string_array_control(element_parameter: DataElement) -> str:
     """Create `String Array Input` Measurement plug-in UI Element.
 
     Args:
-        element_parameter (DataElement): String Array Input Element Parameters.
+        element_parameter: String Array Input Element Parameters.
 
     Returns:
-        str: String Array Input Element.
+        String Array Input Element.
     """
     array_element_id = get_unique_id()
     shared_id = get_unique_id()
@@ -165,10 +165,10 @@ def create_string_array_indicator(element_parameter: DataElement) -> str:
     """Create `String Array Output` Measurement plug-in UI Element.
 
     Args:
-        element_parameter (DataElement): String Array Output Element Parameters.
+        element_parameter: String Array Output Element Parameters.
 
     Returns:
-        str: Sting Array Output Element.
+        Sting Array Output Element.
     """
     array_element_id = get_unique_id()
     shared_id = get_unique_id()

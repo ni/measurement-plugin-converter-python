@@ -62,12 +62,12 @@ def update_measui(
     service_class: str,
     output_dir: Path,
 ) -> None:
-    """Update measurment UI.
+    """Update the measurment plug-in UI.
 
     Args:
-        metadata (Union[V1MetaData, V2MetaData]): Metadata of the measurement plug-in.
-        service_class (str): Service class name of the measurement plug-in.
-        output_dir (Path): Output directory where updated measurement UI is outputted.
+        metadata: Metadata of the measurement plug-in.
+        service_class: Service class name of the measurement plug-in.
+        output_dir: Output directory where updated measurement UI is outputted.
     """
     logger = getLogger(LOGGER)
 
@@ -150,17 +150,6 @@ def _bind_elements(
     unbind_inputs: List[Union[V1ConfigParam, V2ConfigParam]],
     unbind_outputs: List[Union[V1Output, V2Output]],
 ) -> List[AvailableElement]:
-    """Bind elements to its possible input/output.
-
-    Args:
-        client_id (Union[str, UUID]): Client ID.
-        elements (List[AvailableElement]): Available elements.
-        unbind_inputs (List[Union[V1ConfigParam, V2ConfigParam]]): Unbind inputs.
-        unbind_outputs (List[Union[V1Output, V2Output]]): Unbind outputs
-
-    Returns:
-        List[AvailableElement]: Updated elements.
-    """
     updated_elements = _bind_inputs(client_id, elements, unbind_inputs)
     updated_elements = _bind_outputs(client_id, updated_elements, unbind_outputs)
     return updated_elements
@@ -171,16 +160,6 @@ def _bind_inputs(
     elements: List[AvailableElement],
     unbind_inputs: List[Union[V1ConfigParam, V2ConfigParam]],
 ) -> List[AvailableElement]:
-    """Bind inputs to controls if feasible.
-
-    Args:
-        client_id (Union[str, UUID]): Client ID.
-        elements (List[AvailableElement]): List of available elements.
-        unbind_inputs (List[Union[V1ConfigParam, V2ConfigParam]]): Unbind inputs.
-
-    Returns:
-        List[AvailableElement]: Updated elements that are being bound.
-    """
     logger = getLogger(LOGGER)
 
     for unbind_input in unbind_inputs:
@@ -205,17 +184,8 @@ def _bind_outputs(
     elements: List[AvailableElement],
     unbind_outputs: List[Union[V1Output, V2Output]],
 ) -> List[AvailableElement]:
-    """Bind outputs to indicators if feasible.
-
-    Args:
-        client_id (Union[str, UUID]): Client ID.
-        elements (List[AvailableElement]): List of available elements.
-        unbind_outputs (List[Union[V1Output, V2Output]]): Unbind outputs.
-
-    Returns:
-        List[AvailableElement]: Updated elements that are being bound.
-    """
     logger = getLogger(LOGGER)
+
     for unbind_output in unbind_outputs:
         for index, element in enumerate(elements):
             if (
@@ -237,15 +207,6 @@ def _check_feasibility(
     unbind_param: Union[V1ConfigParam, V2ConfigParam, V1Output, V2Output],
     element: AvailableElement,
 ) -> bool:
-    """Check if unbind input/output can be bound to the element.
-
-    Args:
-        unbind_param (Union[V1ConfigParam, V2ConfigParam]): Unbind input/output.
-        element (AvailableElement): Unbind element.
-
-    Returns:
-        bool: True if unbind input/output is possible to bound to the element.
-    """
     if (
         unbind_param.type in NUMERIC_DATA_TYPE_VALUES
         and not unbind_param.repeated
@@ -304,16 +265,6 @@ def _add_channel(
     element: AvailableElement,
     unbind_param: Union[V1ConfigParam, V2ConfigParam, V1Output, V2Output],
 ) -> AvailableElement:
-    """Add channel attribute to bind the lement.
-
-    Args:
-        client_id (Union[str, UUID]): Client ID.
-        element (AvailableElement): Unbind element.
-        unbind_input (Union[V1ConfigParam, V2ConfigParam, V1Output, V2Output]): Unbind input/output.
-
-    Returns:
-        AvailableElement: Bound element.
-    """
     if isinstance(unbind_param, V1ConfigParam) or isinstance(unbind_param, V2ConfigParam):
         channel = f"[string]{client_id}/Configuration/{unbind_param.name}"
     else:
@@ -324,15 +275,6 @@ def _add_channel(
 
 
 def _update_lable(index: int, elements: List[AvailableElement]) -> List[AvailableElement]:
-    """Update label element.
-
-    Args:
-        index (int): Index of bound element.
-        elements (List[AvailableElement]): Available elements.
-
-    Returns:
-        List[AvailableElement]: Elements with updated label.
-    """
     for label_index in range(index + 1, len(elements)):
         if (
             elements[label_index].tag == ElementAttrib.LABEL
@@ -351,15 +293,6 @@ def _update_lable(index: int, elements: List[AvailableElement]) -> List[Availabl
 
 
 def _find_alignments(updated_elements: List[AvailableElement]) -> Tuple[float, float]:
-    """Find bottom most element to get the top and left values.
-
-    Args:
-        updated_elements (List[AvailableElement]): Updated UI elements.
-
-    Returns:
-        Tuple[float, float]: Top and left values.
-    """
-
     def extract_top_value(element: AvailableElement):
         try:
             return float(element.element.attrib[ElementAttrib.TOP].split("]")[-1])
@@ -393,20 +326,6 @@ def _create_elements(
     unmatched_inputs: List[Union[V1ConfigParam, V2ConfigParam]],
     unmatched_outputs: List[Union[V1Output, V2Output]],
 ) -> str:
-    """Create controls and indicators for the unmatched inputs and outputs.
-
-    Args:
-        client_id (str): Client ID of the file.
-        top_alignment (float): Top alignment value.
-        left_alignment (float): Left alignment value.
-        unmatched_inputs (List[Union[V1ConfigParam, V2ConfigParam]]): Inputs that \
-        doesn't have a corresponding element.
-        unmatched_outputs (List[Union[V1Output, V2Output]]): Outputs that \
-        doesn't have a corresponding element.
-
-    Returns:
-        str: UI elements for supported unmatched inputs and unmatched outputs.
-    """
     inputs, top_alignment = create_input_elements_from_client(
         inputs=unmatched_inputs,
         client_id=client_id,
@@ -425,14 +344,6 @@ def _create_elements(
 
 
 def _add_namespace(ui_elements: str) -> str:
-    """Add namespace to UI elements created.
-
-    Args:
-        ui_elements (str): UI elements.
-
-    Returns:
-        str: Namespaces added UI elements.
-    """
     ui_elements = re.sub(r"<ChannelPinSelector", "<ns1:ChannelPinSelector", ui_elements)
     ui_elements = re.sub(r"<ChannelArrayViewer", "<ns2:ChannelArrayViewer", ui_elements)
     ui_elements = re.sub(r"</ChannelArrayViewer", "</ns2:ChannelArrayViewer", ui_elements)
