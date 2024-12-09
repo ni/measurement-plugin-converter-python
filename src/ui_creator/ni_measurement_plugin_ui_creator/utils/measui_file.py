@@ -58,11 +58,11 @@ def get_metadata_and_service_class() -> Optional[Tuple[Union[V1MetaData, V2MetaD
     return metadata, measurement_service_class
 
 
-def get_measui_selection(total_uis: int) -> int:
+def get_measui_selection(measui_count: int) -> int:
     """Get measurment plug-in UI selection.
 
     Args:
-        total_uis: Total UIs available for the measurement plug-in.
+        measui_count: Total UIs available for the measurement plug-in.
 
     Raises:
         InvalidCliInputError: If the entered number is invalid.
@@ -76,12 +76,12 @@ def get_measui_selection(total_uis: int) -> int:
             input(
                 SELECT_MEASUI_FILE.format(
                     start=1,
-                    end=total_uis,
+                    end=measui_count,
                 )
             )
         )
         logger.info("")
-        if user_input not in list(range(1, total_uis + 1)):
+        if user_input not in list(range(1, measui_count + 1)):
             raise InvalidCliInputError(INVALID_MEASUI_CHOICE)
 
         return user_input
@@ -135,7 +135,7 @@ def get_available_elements(measui_tree: ETree.ElementTree) -> List[AvailableElem
         measui_tree: Measurement plug-in UI file tree.
 
     Returns:
-        Info of already available elements.
+        Information about existing elements.
     """
     screen_surface = _find_screen_surface(measui_tree)
     avlble_elements = _parse_measui_elements(screen_surface)
