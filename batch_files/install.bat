@@ -24,5 +24,11 @@ echo pip install !whl_files!
 :: Execute the pip install command
 pip install !whl_files!
 
+:: Check if the pip install command was successful
+if %errorlevel% neq 0 (
+    echo Installation failed. Please check the error above.
+    exit /b 1
+)
+
 echo All installations are complete.
 exit /b 0
