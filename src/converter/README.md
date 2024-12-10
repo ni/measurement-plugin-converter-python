@@ -23,8 +23,7 @@
 
 ## How to install?
 
-- Please find the wheel files in the latest release.
-- Place the UI Creator and the Plug-In Converter wheel files parallel to the [install.bat](../../batch_files/install.bat).
+- Place the UI Creator and the Plug-In Converter wheel files parallel to the [install.bat](../../batch_files/install.bat). You can find the wheel files in the latest release.
 - Run the `install.bat` file by double clicking it.
 
 ## How to run?

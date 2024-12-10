@@ -52,7 +52,7 @@ Measurement Plug-In Converter for Python has the following packages
   - Place the UI Creator wheel file parallel to the [install.bat](batch_files/install.bat).
   - Run the `install.bat` file by double clicking it.
 
-- Please find the wheel files in the latest release.
+- You can find the wheel files in the latest release.
 
 ## How to run?
 

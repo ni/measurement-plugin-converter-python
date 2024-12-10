@@ -24,8 +24,7 @@
 
 ## How to install?
 
-- Please find the wheel file in the latest release.
-- Place the UI Creator wheel file parallel to the [install.bat](../../batch_files/install.bat).
+- Place the UI Creator wheel file parallel to the [install.bat](../../batch_files/install.bat). You can find the wheel files in the latest release.
 - Run the `install.bat` file by double clicking it.
 
 ## How to run?
