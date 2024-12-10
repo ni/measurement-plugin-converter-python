@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## NI Measurement Plug-In Converter
 
+## [1.0.0-dev9] - 2024-12-11
+
+### Added
+
+- Support for string array.
+
+### Fixed
+
+- Mypy errors, bandit issues and lint issues.
+
 ## [1.0.0-dev8] - 2024-09-03
 
 ### Fixed

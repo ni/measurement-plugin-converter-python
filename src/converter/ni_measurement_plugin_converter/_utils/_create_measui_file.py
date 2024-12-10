@@ -189,7 +189,7 @@ def _get_output_data_elements(outputs: List[OutputInfo]) -> List[DataElement]:
 
             height = MeasUIElementPosition.ARRAY_HEIGHT
             width = MeasUIElementPosition.ARRAY_WIDTH
-        
+
         elif value_type == nims.DataType.StringArray1D.name:
             value_type = DataType.String.name
             is_array = True
