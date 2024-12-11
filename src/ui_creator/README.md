@@ -20,7 +20,7 @@
 
 ## Dependencies
 
-- [Python 3.8](https://www.python.org/downloads/release/python-385/) or later
+- [Python 3.8](https://www.python.org/downloads/release/python-3810/) or later
 
 ## How to install?
 
@@ -127,7 +127,7 @@ The update command will update the UI file by
 
 - The updated file will be suffixed with `_updated`.
 
-  Note: Ensure that the filename in `measurement.py` is updated with the `_updated` suffix whenever the `.measui` file is updated.
+  Note: Ensure that the UI file path is updated in the `measurement.py` whenever the `.measui` file of the measurement is updated.
   
 ### Prerequisites
 
