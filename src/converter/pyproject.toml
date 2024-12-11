@@ -29,6 +29,9 @@ pydantic = "^2.8.2"
 ni-python-styleguide = "^0.4.1"
 mypy = "^1.13.0"
 bandit = { version = "^1.7", extras = ["toml"] }
+# During development, use file path to reference the latest source for package
+# in the same Git repository.
+ni-measurement-plugin-ui-creator = {path = "../ui_creator", develop = true}
 nidcpower = { version = "^1.4.8", extras = ["grpc"] }
 nidmm = { version = "^1.4.8", extras = ["grpc"] }
 nidigital = { version = "^1.4.8", extras = ["grpc"] }
@@ -54,7 +57,4 @@ module = [
 ignore_missing_imports = true
 
 [tool.bandit]
-skips = [
-  "B702", # use_of_mako_templates
-]
 exclude_dirs = [".venv"]
