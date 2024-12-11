@@ -33,8 +33,8 @@ Measurement Plug-In Converter for Python has the following packages
 
 - Measurement Plug-In Converter
 
-  - [Python = 3.8.5](https://www.python.org/downloads/release/python-385/)
-  - [NI Measurement Plug-In UI Creator](dependencies/ni_measurement_plugin_ui_creator-1.0.0-py3-none-any.whl)
+  - [Python = ^3.8](https://www.python.org/downloads/release/python-385/)
+  - NI Measurement Plug-In UI Creator
 
 - Measurement Plug-In UI Creator
 
@@ -52,6 +52,8 @@ Measurement Plug-In Converter for Python has the following packages
   - Place the UI Creator wheel file parallel to the [install.bat](batch_files/install.bat).
   - Run the `install.bat` file by double clicking it.
 
+- You can find the wheel files in the latest release.
+
 ## How to run?
 
 ### Measurement Plug-In Converter
@@ -66,15 +68,19 @@ Measurement Plug-In Converter for Python has the following packages
   ```cmd
   Usage: ni-measurement-plugin-converter [OPTIONS]
 
-    NI Measurement Plug-In Converter is a Command Line tool to convert     
-    Python measurements to measurement plug-ins.
+    Convert Python measurements to Python Measurement plug-ins.
 
   Options:
-    -d, --display-name TEXT         Display name.  [required]
+    -d, --display-name TEXT         Display name for the plug-in that will be
+                                    converted.  [required]
     -m, --measurement-file-path TEXT
-                                    Measurement file path.  [required]
-    -f, --function TEXT             Measurement function name.  [required]
-    -o, --output-dir TEXT           Output directory.  [required]
+                                    Path of the Python measurement file to be
+                                    converted.  [required]
+    -f, --function TEXT             Name of the function in the measurement file
+                                    that contains the logic for the measurement.
+                                    [required]
+    -o, --directory-out TEXT        Output directory for measurement plug-in
+                                    files.  [required]
     -h, --help                      Show this message and exit.
   ```
 
@@ -231,8 +237,8 @@ For details, refer [Examples](https://github.com/ni/measurement-plugin-python/tr
   ```cmd
   Usage: ni-measurement-plugin-ui-creator [OPTIONS] COMMAND [ARGS]...
 
-    NI Measurement Plug-In UI Creator is a Command Line tool for creating/updating
-    measui files.
+  NI Measurement Plug-In UI Creator is a Command Line tool to create/update 
+  .measui files.
 
   Options:
     -h, --help  Show this message and exit.
@@ -254,10 +260,10 @@ The create command will create a new UI file for the selected active measurement
 
   ```cmd
   Starting the NI Measurement Plug-In UI Creator...
-  Supported UI Elements: ['Numeric Indicator', 'Numeric Control', 'Numeric Array Input', 'Numeric Array Output', 'Boolean Horizontal Slider', 'Boolean Round LED', 'String Control', 'String Indicator', 'String Array Input', 'String Array Output', 'Pin']
+  Supported UI Elements: ['Boolean Horizontal Slider', 'Boolean Round LED', 'Numeric Array Input', 'Numeric Array Output', 'Numeric Control', 'Numeric Indicator', 'Pin', 'String Array Input', 'String Array Output', 'String Control', 'String Indicator']
   Getting the active measurements...
 
-  Registered/Available measurements:
+  Registered measurements:
   1. First Measurement (Py)
   2. Second Measurement (Py)
 
@@ -288,10 +294,10 @@ The update command will update the UI file by
 
   ```cmd
   Starting the NI Measurement Plug-In UI Creator...
-  Supported UI Elements: ['Numeric Indicator', 'Numeric Control', 'Numeric Array Input', 'Numeric Array Output', 'Boolean Horizontal Slider', 'Boolean Round LED', 'String Control', 'String Indicator', 'String Array Input', 'String Array Output', 'Pin']
+  Supported UI Elements: ['Boolean Horizontal Slider', 'Boolean Round LED', 'Numeric Array Input', 'Numeric Array Output', 'Numeric Control', 'Numeric Indicator', 'Pin', 'String Array Input', 'String Array Output', 'String Control', 'String Indicator']
   Getting the active measurements...
 
-  Registered/Available measurements:
+  Registered measurements:
   1. First Measurement (Py)
   2. Second Measurement (Py)
 
@@ -361,7 +367,7 @@ For update command,
 #### Event logger
 
 - The tool generates a log at the start of the conversion process, recording all actions performed throughout.
-- The log file is located inside the "Logs" folder within the output directory.
+- The log file is located inside the "ui_creator_logs" folder within the output directory.
 - This log includes detailed information on any errors encountered during the process.
 
 #### Limitations

@@ -18,12 +18,12 @@
 
 ## Dependencies
 
-- [Python = 3.8.5](https://www.python.org/downloads/release/python-385/)
-- [NI Measurement Plug-In UI Creator](dependencies/ni_measurement_plugin_ui_creator-1.0.0.dev8-py3-none-any.whl)
+- [Python = ^3.8](https://www.python.org/downloads/release/python-385/)
+- NI Measurement Plug-In UI Creator
 
 ## How to install?
 
-- Place the UI Creator and the Plug-In Converter wheel files parallel to the [install.bat](../../batch_files/install.bat).
+- Place the UI Creator and the Plug-In Converter wheel files parallel to the [install.bat](../../batch_files/install.bat). You can find the wheel files in the latest release.
 - Run the `install.bat` file by double clicking it.
 
 ## How to run?
@@ -38,15 +38,19 @@
   ```cmd
   Usage: ni-measurement-plugin-converter [OPTIONS]
 
-    NI Measurement Plug-In Converter is a Command Line tool to convert     
-    Python measurements to measurement plug-ins.
+    Convert Python measurements to Python Measurement plug-ins.
 
   Options:
-    -d, --display-name TEXT         Display name.  [required]
+    -d, --display-name TEXT         Display name for the plug-in that will be
+                                    converted.  [required]
     -m, --measurement-file-path TEXT
-                                    Measurement file path.  [required]
-    -f, --function TEXT             Measurement function name.  [required]
-    -o, --output-dir TEXT           Output directory.  [required]
+                                    Path of the Python measurement file to be
+                                    converted.  [required]
+    -f, --function TEXT             Name of the function in the measurement file
+                                    that contains the logic for the measurement.
+                                    [required]
+    -o, --directory-out TEXT        Output directory for measurement plug-in
+                                    files.  [required]
     -h, --help                      Show this message and exit.
   ```
 

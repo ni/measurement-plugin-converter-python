@@ -53,8 +53,8 @@ git pull
 
 The Measurement Plug-In Converter for Python includes two packages:
 
-- [ni-measurement-plugin-converter](https://github.com/ni/measurement-plugin-converter-python/tree/users/amurali/update-documents/src/converter) - A CLI tool to convert traditional Python measurements into measurement plug-ins.
-- [ni-measurement-plugin-ui-creator](https://github.com/ni/measurement-plugin-converter-python/tree/users/amurali/update-documents/src/ui_creator) - A CLI tool to create or update `.measui` files for measurement plug-ins.
+- [ni-measurement-plugin-converter](https://github.com/ni/measurement-plugin-converter-python/tree/main/src/converter) - A CLI tool to convert traditional Python measurements into measurement plug-ins.
+- [ni-measurement-plugin-ui-creator](https://github.com/ni/measurement-plugin-converter-python/tree/main/src/ui_creator) - A CLI tool to create or update `.measui` files for measurement plug-ins.
 
 Open a terminal window and `cd` to the package that you want to develop.
 
