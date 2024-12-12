@@ -20,12 +20,12 @@
 
 ## Dependencies
 
-- [Python = ^3.8](https://www.python.org/downloads/release/python-385/)
+- [Python 3.8](https://www.python.org/downloads/release/python-3810/) or later
 
 ## How to install?
 
 - Place the UI Creator wheel file parallel to the [install.bat](../../batch_files/install.bat). You can find the wheel files in the latest release.
-- Run the `install.bat` file by double clicking it.
+- Run the `install.bat` file by double-clicking it.
 
 ## How to run?
 
@@ -54,7 +54,7 @@
 
 The create command will create a new UI file for the selected active measurement.
 
-- Run the following command to create new `.measui` file(s).
+- Run the following command to create new `.measui` file.
 
   ```cmd
   ni-measurement-plugin-ui-creator create
@@ -88,7 +88,7 @@ The update command will update the UI file by
 - Linking controls and indicators to its respective inputs and outputs if there are any controls and indicators unlinked
 - Creating new controls and indicators and linking it to the inputs and outputs.
 
-- Run the following command to update `.measui` files.
+- Run the following command to update `.measui` file.
 
   ```cmd
   ni-measurement-plugin-ui-creator update
@@ -110,8 +110,9 @@ The update command will update the UI file by
 
   ```cmd
   Available Measurement Plug-In UI Files:
-  1. First measui file path
-  2. Second measui file path
+  1. path\to\first\measui\file\first_measui_file.measui
+  2. path\to\second\measui\file\second_measui_file.measui
+
   Select a measurement plug-in UI file index (1-2) to update:
   ```
 
@@ -126,12 +127,14 @@ The update command will update the UI file by
 
 - The updated file will be suffixed with `_updated`.
 
+  Note: Ensure that the UI file path is updated in the `measurement.py` whenever the `.measui` file of the measurement is updated.
+  
 ### Prerequisites
 
 For update command,
 
 - The selected measurement plug-in UI file should have been created using the Measurement Plug-In UI Editor.
-- Atleast one control/indicator should be present in the measurement plug-in UI file.
+- At least one control/indicator should be present in the measurement plug-in UI file.
 
 ### Supported data types
 
@@ -174,5 +177,6 @@ For update command,
 
 ### Limitations
 
+- The tool supports creating or updating only one `.measui` file in a single execution.
 - For the update command, if an unsupported data element exists in the input UI file and is not linked to any input or output, it will remain unbound and will not be updated. New elements will be created for inputs and outputs if their data types are [supported](#supported-data-types).
 - Data types such as `Path`, `Enum`, `DoubleXYData`, and their 1D array variants are not supported.
