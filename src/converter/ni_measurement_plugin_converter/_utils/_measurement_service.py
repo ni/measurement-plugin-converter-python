@@ -48,8 +48,8 @@ def extract_type(node: Union[ast.Name, ast.Subscript, ast.expr, ast.slice, ast.I
         generic_type = extract_type(node.value)
         slice_value = node.slice
 
-        if sys.version_info < (3, 9):
-            slice_value = slice_value.value  # type: ignore
+        if sys.version_info < (3, 9) and hasattr(slice_value, "value"):
+            slice_value = slice_value.value
 
         if isinstance(slice_value, ast.Tuple):
             inner_types = [extract_type(elt) for elt in slice_value.elts]
