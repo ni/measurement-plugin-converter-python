@@ -1,6 +1,6 @@
 """Implementation of command line interface and measurement plug-in conversion."""
 
-__version__ = "1.0.0-dev9"
+__version__ = "1.0.0-dev8"
 
 import ast
 import re
