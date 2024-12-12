@@ -32,6 +32,7 @@ SUPPORTED_NIMS_DATATYPES = [
     nims.DataType.Boolean.name,
     nims.DataType.Int64Array1D.name,
     nims.DataType.DoubleArray1D.name,
+    nims.DataType.StringArray1D.name,
 ]
 
 
@@ -111,6 +112,13 @@ def _get_input_data_elements(
             height = MeasUIElementPosition.ARRAY_HEIGHT
             width = MeasUIElementPosition.ARRAY_WIDTH
 
+        elif value_type == nims.DataType.StringArray1D.name:
+            value_type = DataType.String.name
+            is_array = True
+
+            height = MeasUIElementPosition.ARRAY_HEIGHT
+            width = MeasUIElementPosition.ARRAY_WIDTH
+
         input_data_elements.append(
             DataElement(
                 client_id=CLIENT_ID,
@@ -132,6 +140,7 @@ def _get_input_data_elements(
                 in [
                     nims.DataType.Int64Array1D.name,
                     nims.DataType.DoubleArray1D.name,
+                    nims.DataType.StringArray1D.name,
                 ]
                 else height
             )
@@ -181,6 +190,13 @@ def _get_output_data_elements(outputs: List[OutputInfo]) -> List[DataElement]:
             height = MeasUIElementPosition.ARRAY_HEIGHT
             width = MeasUIElementPosition.ARRAY_WIDTH
 
+        elif value_type == nims.DataType.StringArray1D.name:
+            value_type = DataType.String.name
+            is_array = True
+
+            height = MeasUIElementPosition.ARRAY_HEIGHT
+            width = MeasUIElementPosition.ARRAY_WIDTH
+
         output_data_elements.append(
             DataElement(
                 client_id=CLIENT_ID,
@@ -201,6 +217,7 @@ def _get_output_data_elements(outputs: List[OutputInfo]) -> List[DataElement]:
                 in [
                     nims.DataType.Int64Array1D.name,
                     nims.DataType.DoubleArray1D.name,
+                    nims.DataType.StringArray1D.name,
                 ]
                 else height
             )

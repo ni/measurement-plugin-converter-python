@@ -46,22 +46,14 @@ def extract_type(node: Union[ast.Name, ast.Subscript, ast.expr, ast.slice, ast.I
 
     if isinstance(node, ast.Subscript):
         generic_type = extract_type(node.value)
-
         slice_value = node.slice
 
-        if hasattr(slice_value, "value"):
+        if sys.version_info < (3, 9) and hasattr(slice_value, "value"):
             slice_value = slice_value.value
-
-        if sys.version_info >= (3, 9) and isinstance(slice_value, ast.Tuple):
-            inner_types = [extract_type(elt) for elt in slice_value.elts]
-            return f"{generic_type}[{', '.join(inner_types)}]"
 
         if isinstance(slice_value, ast.Tuple):
             inner_types = [extract_type(elt) for elt in slice_value.elts]
             return f"{generic_type}[{', '.join(inner_types)}]"
-
-        if isinstance(slice_value, ast.Index):
-            return f"{generic_type}[{extract_type(slice_value)}]"
 
         else:
             return f"{generic_type}[{extract_type(slice_value)}]"
