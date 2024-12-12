@@ -68,6 +68,20 @@ def _get_output_info(
     return output_configurations
 
 
+def _parse_output_types(output_types: str) -> List[str]:
+    parsed_output_types = []
+
+    match = re.match(r"Tuple\[(.*)\]", output_types)
+    if match:
+        inner_types = match.group(1)
+        parsed_output_types.extend([item.strip() for item in inner_types.split(",")])
+
+    else:
+        parsed_output_types.append(output_types.strip())
+
+    return parsed_output_types
+
+
 def extract_outputs(
     function_node: ast.FunctionDef, plugin_metadata: Dict[str, Any]
 ) -> List[OutputInfo]:
@@ -85,14 +99,11 @@ def extract_outputs(
         function_node.returns if function_node.returns else ast.Name(id="Any")
     )
 
-    if isinstance(output_types, str) and iterable_output:
+    if iterable_output:
         # Separate each output types from combined output types.
-        parsed_output_types = re.findall(r"\b\w+\[[^\[\]]+\]|\b\w+", output_types)
-        parsed_output_types = (
-            parsed_output_types[1:] if parsed_output_types[0] == "Tuple" else parsed_output_types
-        )
+        parsed_output_types = _parse_output_types(output_types)
 
-    elif isinstance(output_types, str) and not iterable_output:
+    else:
         parsed_output_types = [output_types]
 
     output_configurations = _get_output_info(output_variables, parsed_output_types)
