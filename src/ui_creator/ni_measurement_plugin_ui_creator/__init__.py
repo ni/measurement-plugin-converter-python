@@ -75,7 +75,7 @@ def _update() -> None:
 
 @click.group(context_settings=CLI_CONTEXT_SETTINGS)
 def start() -> None:
-    """Creates or updates .measui file for Measurement plug-ins."""
+    """Creates or updates .measui file for Python Measurement plug-ins."""
     pass
 
 
