@@ -13,7 +13,7 @@ TEMPLATE_DIR = "templates"
 def _render_template(template_name: str, **template_args: Any) -> bytes:
     file_dir = str(Path(__file__).parent.parent / TEMPLATE_DIR / template_name)
 
-    template = Template(
+    template = Template(  # nosec: B702
         filename=file_dir,
         input_encoding=ENCODING,
         output_encoding=ENCODING,
