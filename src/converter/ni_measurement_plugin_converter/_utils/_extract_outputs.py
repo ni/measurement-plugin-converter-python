@@ -68,21 +68,14 @@ def _get_output_info(
     return output_configurations
 
 
-def _parse_output_types(output_types: str):
+def _parse_output_types(output_types: str) -> List[str]:
     parsed_output_types = []
 
     if output_types.startswith("Tuple"):
         match = re.match(r"Tuple\[(.*)\]", output_types)
         if match:
             inner_types = match.group(1)
-            parsed_output_types.append("Tuple")
             parsed_output_types.extend([item.strip() for item in inner_types.split(",")])
-
-    elif output_types.startswith("List"):
-        match = re.match(r"List\[(.*)\]", output_types)
-        if match:
-            inner_type = match.group(1)
-            parsed_output_types.append(f"List[{inner_type.strip()}]")
 
     else:
         parsed_output_types.append(output_types.strip())
@@ -110,9 +103,6 @@ def extract_outputs(
     if iterable_output:
         # Separate each output types from combined output types.
         parsed_output_types = _parse_output_types(output_types)
-        parsed_output_types = (
-            parsed_output_types[1:] if parsed_output_types[0] == "Tuple" else parsed_output_types
-        )
 
     elif not iterable_output:
         parsed_output_types = [output_types]
