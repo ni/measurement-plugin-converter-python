@@ -39,8 +39,7 @@
   ```cmd
   Usage: ni-measurement-plugin-ui-creator [OPTIONS] COMMAND [ARGS]...
 
-    NI Measurement Plug-In UI Creator is a Command Line tool for creating/updating
-    measui files.
+    Creates or updates .measui file for Python Measurement plug-ins.
 
   Options:
     -h, --help  Show this message and exit.
