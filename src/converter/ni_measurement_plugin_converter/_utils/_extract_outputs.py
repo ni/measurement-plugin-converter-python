@@ -71,11 +71,10 @@ def _get_output_info(
 def _parse_output_types(output_types: str) -> List[str]:
     parsed_output_types = []
 
-    if output_types.startswith("Tuple"):
-        match = re.match(r"Tuple\[(.*)\]", output_types)
-        if match:
-            inner_types = match.group(1)
-            parsed_output_types.extend([item.strip() for item in inner_types.split(",")])
+    match = re.match(r"Tuple\[(.*)\]", output_types)
+    if match:
+        inner_types = match.group(1)
+        parsed_output_types.extend([item.strip() for item in inner_types.split(",")])
 
     else:
         parsed_output_types.append(output_types.strip())
@@ -104,7 +103,7 @@ def extract_outputs(
         # Separate each output types from combined output types.
         parsed_output_types = _parse_output_types(output_types)
 
-    elif not iterable_output:
+    else:
         parsed_output_types = [output_types]
 
     output_configurations = _get_output_info(output_variables, parsed_output_types)
