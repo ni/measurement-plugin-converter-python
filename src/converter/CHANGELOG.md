@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## NI Measurement Plug-In Converter
 
+## [1.0.0] - 2024-12-13
+
+### Added
+
+- Support for Python 3.9 and later versions.
+- Enabled support for string arrays in the `.measui` file.
+- Support for non-tuple output types.
+- Support for Tuple outputs containing only non-iterable types.
+
 ## [1.0.0-dev8] - 2024-09-03
 
 ### Fixed
