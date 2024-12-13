@@ -66,7 +66,7 @@ MEASUREMENT_VERSION = "1.0.0.0"
 MEASUREMENT_FILE_PATH_OPTION = "--measurement-file-path"
 
 INVALID_FILE_DIR = (
-    "Invalid measurement file directory. Please provide valid measurement file directory."
+    "Invalid measurement file path. Please provide valid measurement file path."
 )
 FUNCTION_NOT_FOUND = "Measurement function {function} not found in the file {measurement_file_path}"
 
