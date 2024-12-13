@@ -179,3 +179,4 @@ For update command,
 - The tool supports creating or updating only one `.measui` file in a single execution.
 - For the update command, if an unsupported data element exists in the input UI file and is not linked to any input or output, it will remain unbound and will not be updated. New elements will be created for inputs and outputs if their data types are [supported](#supported-data-types).
 - Data types such as `Path`, `Enum`, `DoubleXYData`, and their 1D array variants are not supported.
+- Updating a `.measui` file that has containers may cause improper alignments when new inputs are added.
