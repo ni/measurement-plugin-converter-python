@@ -286,7 +286,7 @@ The create command will create a new UI file for the selected active measurement
 The update command will update the UI file by
 
 - Linking controls and indicators to its respective inputs and outputs if there are any controls and indicators unlinked
-- Creating new controls and indicators and linking it to the inputs and outputs.
+- Creating new controls and indicators and linking them to the inputs and outputs.
 
 - Run the following command to update `.measui` file.
 
