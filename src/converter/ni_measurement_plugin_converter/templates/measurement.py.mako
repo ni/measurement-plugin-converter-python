@@ -33,7 +33,15 @@ measurement_service = nims.MeasurementService(
 % for output_info in outputs_info:
 @measurement_service.output("${output_info.variable_name}", ${output_info.nims_type})
 % endfor
-% if not iterable_outputs and not is_visa:
+% if not session_mappings and not pins_info and not relays_info and not iterable_outputs:
+def measure(${input_signature}):
+    return (${function_name}(${input_param_names}),)
+
+% elif not session_mappings and not pins_info and not relays_info and iterable_outputs:
+def measure(${input_signature}):
+    return ${function_name}(${input_param_names})
+
+% elif not iterable_outputs and not is_visa:
 def measure(${pin_and_relay_signature}, ${input_signature}):
     pin_or_relay_names = [${pin_or_relay_names}]
 
