@@ -7,7 +7,6 @@ from logging import Logger, getLogger
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 
-import astor
 import black
 
 from ni_measurement_plugin_converter._constants import (
@@ -116,7 +115,7 @@ def _manage_session(migrated_file_dir: str, function: str) -> Dict[str, List[str
             node.body = _get_with_removed_function(function_node=params_added_function)
             break
 
-    source_code = astor.to_source(source_code_tree)
+    source_code = ast.unparse(source_code_tree)
     formatted_code = black.format_str(source_code, mode=black.FileMode())
 
     with open(migrated_file_dir, "w", encoding=ENCODING) as file:
