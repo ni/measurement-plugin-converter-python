@@ -16,8 +16,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
-astor = "^0.8.1"
+python = "^3.9"
 black = "^24.8.0"
 click = "^8.1.3"
 mako = "^1.2.1"
@@ -52,7 +51,6 @@ build-backend = "poetry.core.masonry.api"
 [[tool.mypy.overrides]]
 module = [
   "mako.*",
-  "astor.*",
 ]
 ignore_missing_imports = true
 
