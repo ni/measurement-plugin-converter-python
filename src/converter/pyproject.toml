@@ -16,7 +16,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.10,<4.0"
 astor = "^0.8.1"
 black = "^24.8.0"
 click = "^8.1.3"
