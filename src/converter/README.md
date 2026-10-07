@@ -18,7 +18,7 @@
 
 ## Dependencies
 
-- [Python 3.8](https://www.python.org/downloads/release/python-3810/) or later
+- [Python 3.10](https://www.python.org/downloads/release/python-3100/) or later
 - NI Measurement Plug-In UI Creator
 
 ## How to install?
