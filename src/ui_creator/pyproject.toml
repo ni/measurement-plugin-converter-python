@@ -34,6 +34,7 @@ ni-python-styleguide = "^0.4.6"
 setuptools = ">=83.0.0,<90"
 mypy = "^1.13.0"
 bandit = { version = "^1.7", extras = ["toml"] }
+pygments = ">=2.20.0,<3.0"
 
 [tool.poetry.scripts]
 ni-measurement-plugin-ui-creator = "ni_measurement_plugin_ui_creator:start"

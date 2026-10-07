@@ -34,6 +34,7 @@ ni-python-styleguide = "^0.4.1"
 setuptools = ">=83.0.0,<90"
 mypy = "^1.13.0"
 bandit = { version = "^1.7", extras = ["toml"] }
+pygments = ">=2.20.0,<3.0"
 # During development, use file path to reference the latest source for package
 # in the same Git repository.
 ni-measurement-plugin-ui-creator = {path = "../ui_creator", develop = true}

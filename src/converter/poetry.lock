@@ -776,6 +776,7 @@ ni-measurementlink-measurement-v1-proto = "^1.0.0"
 ni-measurementlink-measurement-v2-proto = "^1.0.0"
 protobuf = ">=5.29.6,<6.0"
 pydantic = "^2.7.1"
+requests = ">=2.32.4,<3.0"
 urllib3 = ">=2.8.0,<3.0"
 
 [package.source]
@@ -1555,14 +1556,14 @@ files = [
 
 [[package]]
 name = "pygments"
-version = "2.18.0"
+version = "2.21.0"
 description = "Pygments is a syntax highlighting package written in Python."
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 groups = ["dev"]
 files = [
-    {file = "pygments-2.18.0-py3-none-any.whl", hash = "sha256:b8e6aca0523f3ab76fee51799c488e38782ac06eafcf95e7ba832985c8e7b13a"},
-    {file = "pygments-2.18.0.tar.gz", hash = "sha256:786ff802f32e91311bff3889f6e9a86e81505fe99f2735bb6d60ae0c5004f199"},
+    {file = "pygments-2.21.0-py3-none-any.whl", hash = "sha256:2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9"},
+    {file = "pygments-2.21.0.tar.gz", hash = "sha256:610ca751c9bc2492b38eb9a38a7fbc93edbbb2d7182edaf34e66ae493dee5c8c"},
 ]
 
 [package.extras]
@@ -1996,4 +1997,4 @@ zstd = ["backports-zstd (>=1.0.0) ; python_version < \"3.14\""]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "1fc4a1f9039af1b98878b2d6324cdaeb8598bc381c5f9e5e0f626ccacf92cb23"
+content-hash = "a0e387169ab720c2e4f20955a5527af1a4a5278cd785f5a5c934a9bbdb7b1e7b"
