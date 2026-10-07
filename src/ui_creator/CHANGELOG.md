@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## NI Measurement Plug-In UI Creator
 
+## [1.1.0] - 2026-10-07
+
+### Fixed
+
+- Fix compatibility with `ni-measurement-plugin-sdk-service` 3.1.0.
+
 ## [1.0.0-dev10] - 2024-12-3
 
 ### Fixed
