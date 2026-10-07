@@ -6,10 +6,10 @@ from typing import Union
 from uuid import UUID
 
 from mako.template import Template
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
+from ni.measurementlink.measurement.v1.measurement_service_pb2 import (
     GetMetadataResponse as V1MetaData,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
+from ni.measurementlink.measurement.v2.measurement_service_pb2 import (
     GetMetadataResponse as V2MetaData,
 )
 

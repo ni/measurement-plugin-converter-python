@@ -6,10 +6,10 @@ from typing import List, Optional, Sequence, Tuple, Union
 import grpc
 from grpc import Channel
 from grpc._channel import _InactiveRpcError
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2_grpc import (
+from ni.measurementlink.measurement.v1.measurement_service_pb2_grpc import (
     MeasurementServiceStub as V1MeasurementServiceStub,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2_grpc import (
+from ni.measurementlink.measurement.v2.measurement_service_pb2_grpc import (
     MeasurementServiceStub as V2MeasurementServiceStub,
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient

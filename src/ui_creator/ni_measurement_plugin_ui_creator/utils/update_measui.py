@@ -8,12 +8,12 @@ from pathlib import Path
 from typing import List, Tuple, Union
 from uuid import UUID
 
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
+from ni.measurementlink.measurement.v1.measurement_service_pb2 import (
     ConfigurationParameter as V1ConfigParam,
     GetMetadataResponse as V1MetaData,
     Output as V1Output,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
+from ni.measurementlink.measurement.v2.measurement_service_pb2 import (
     ConfigurationParameter as V2ConfigParam,
     GetMetadataResponse as V2MetaData,
     Output as V2Output,

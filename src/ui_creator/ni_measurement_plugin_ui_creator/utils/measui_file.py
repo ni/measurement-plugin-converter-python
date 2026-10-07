@@ -7,13 +7,13 @@ from logging import getLogger
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v1.measurement_service_pb2 import (
+from ni.measurementlink.measurement.v1.measurement_service_pb2 import (
     GetMetadataResponse as V1MetaData,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2 import (
+from ni.measurementlink.measurement.v2 import (
     measurement_service_pb2 as v2_measurement_service_pb2,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.measurementlink.measurement.v2.measurement_service_pb2 import (
+from ni.measurementlink.measurement.v2.measurement_service_pb2 import (
     GetMetadataResponse as V2MetaData,
 )
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
