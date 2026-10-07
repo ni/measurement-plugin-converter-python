@@ -758,7 +758,7 @@ niswitch = ["niswitch[grpc] (>=1.4.4)"]
 
 [[package]]
 name = "ni-measurement-plugin-ui-creator"
-version = "1.0.0"
+version = "1.1.0"
 description = "CLI tool to create/update `.measui` files for measurement plug-ins."
 optional = false
 python-versions = ">=3.10,<4.0"
@@ -770,6 +770,8 @@ develop = true
 click = "^8.1.7"
 mako = ">=1.3.12,<2"
 ni-measurement-plugin-sdk-service = "^3.1.0"
+ni-measurementlink-measurement-v1-proto = "^1.0.0"
+ni-measurementlink-measurement-v2-proto = "^1.0.0"
 pydantic = "^2.7.1"
 
 [package.source]
@@ -1984,4 +1986,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "36b5ce166d82cea2727f4c2bf0453d2a932279b267d458d2f3fccd26b77ae0fe"
+content-hash = "9787a201f69b46f3291c642acbeb7de43d10996c00c85cc8862881254c934263"
