@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fix the changes for ni-measurement-plugin-sdk-service for version 3.1.0 
+- Fix compatibility with `ni-measurement-plugin-sdk-service` 3.1.0.
 
 ## [1.0.0-dev10] - 2024-12-3
 
