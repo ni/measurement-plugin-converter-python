@@ -33,12 +33,12 @@ Measurement Plug-In Converter for Python has the following packages
 
 - Measurement Plug-In Converter
 
-  - [Python 3.8](https://www.python.org/downloads/release/python-3810/) or later
+  - [Python 3.10](https://www.python.org/downloads/release/python-3100/) or later
   - NI Measurement Plug-In UI Creator
 
 - Measurement Plug-In UI Creator
 
-  - [Python 3.8](https://www.python.org/downloads/release/python-3810/) or later
+  - [Python 3.10](https://www.python.org/downloads/release/python-3100/) or later
 
 ## How to install?
 
