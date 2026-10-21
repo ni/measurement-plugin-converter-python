@@ -206,7 +206,20 @@ def process_sessions_and_update_metadata(
     Returns:
         Information about pins and relays.
     """
-    sessions_details = _manage_session(str(migrated_file_path), function)
+    try:
+        sessions_details = _manage_session(str(migrated_file_path), function)
+    except ValueError:
+        # No driver sessions found — pure Python function
+        logger.info("No instrument driver sessions found. Generating plug-in without sessions.")
+        plugin_metadata["pins_info"] = []
+        plugin_metadata["relays_info"] = []
+        plugin_metadata["pin_and_relay_signature"] = ""
+        plugin_metadata["pin_or_relay_names"] = ""
+        plugin_metadata["session_mappings"] = []
+        plugin_metadata["sessions"] = ""
+        plugin_metadata["session_initializations"] = ""
+        plugin_metadata["is_visa"] = False
+        return [], []
 
     logger.info(DEFINE_PINS_RELAYS)
     pins_info, relays_info = _get_pins_and_relays_info(sessions_details, plugin_metadata)
