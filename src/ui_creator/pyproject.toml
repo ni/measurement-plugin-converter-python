@@ -30,7 +30,7 @@ urllib3 = ">=2.8.0,<3.0"
 requests = ">=2.32.4,<3.0"
 
 [tool.poetry.group.dev.dependencies]
-ni-python-styleguide = "^0.4.6"
+ni-python-styleguide = "^0.5.0"
 setuptools = ">=83.0.0,<90"
 mypy = "^1.13.0"
 bandit = { version = "^1.7", extras = ["toml"] }
