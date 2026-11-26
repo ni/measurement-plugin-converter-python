@@ -2,5 +2,12 @@
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "extends": [
         "local>ni/python-renovate-config:recommended"
+    ],
+    "packageRules": [
+        {
+            "description": "ni-python-styleguide 0.5.x requires black <26 and setuptools <82, which conflicts with security minimums. Wait for 0.6.",
+            "matchPackageNames": ["ni-python-styleguide"],
+            "allowedVersions": "!/^0\\.5\\./"
+        }
     ]
 }
